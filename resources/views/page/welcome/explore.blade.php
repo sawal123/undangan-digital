@@ -13,8 +13,8 @@
       <div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-4 pt-2">
         <div class="card nft nft-item nft-primary rounded shadow overflow-hidden">
             <div class="nft-image position-relative overflow-hidden">
-                <img src="assets/images/digital/invitation4.webp" class="img-fluid item-img" alt="">
-                <div class="overlay"></div>
+                <img src="{{asset('assets/images/digital/invitation4.webp')}}" class="img-fluid item-img" alt="">
+                {{-- <div class="overlay"></div> --}}
                 <div class="bid-btn p-3 text-center">
                     <a href="nft-item-detail.html" class="btn btn-pills"><i class="mdi mdi-gavel fs-6 me-2"></i>
                         Bid</a>
@@ -31,11 +31,11 @@
             </div>
 
             <div class="card-body p-3">
-                <a href="nft-item-detail.html" class="h5 title text-dark">#01 nft title</a>
+                <small class=" text-dark">#01 nft title</small>
 
                 <div class="d-flex align-items-center justify-content-between mt-2">
-                   <button class="btn btn-secondary">Lihat</button>
-                    <span class="text-dark">Price: <span class="link">2.333ETH</span></span>
+                  
+                    <span class="text-dark">Harga: <span class="link">Rp 20.000</span></span>
                 </div>
             </div>
         </div>

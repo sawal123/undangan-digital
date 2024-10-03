@@ -14,7 +14,7 @@
             </div><!--end col-->
 
             <div class="col-lg-6 col-md-6 mt-4 pt-2 mt-sm-0 pt-sm-0">
-                <img src="assets/images/nft/home.png" class="img-fluid" alt="">
+                <img src="assets/images/landing/undangan.png" class="img-fluid" alt="">
             </div><!--end col-->
         </div><!--end row-->
     </div><!--end container-->

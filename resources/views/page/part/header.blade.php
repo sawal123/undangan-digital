@@ -1,4 +1,4 @@
-<header id="topnav" class="defaultscroll sticky">
+{{-- <header id="topnav" class="defaultscroll sticky">
     <div class="container">
         <!-- Logo container-->
         <a class="logo" href="index.html">
@@ -55,9 +55,9 @@
         <div id="navigation">
             <!-- Navigation Menu-->   
             <ul class="navigation-menu">
-                <li><a href="index-nft.html" class="sub-menu-item">Home</a></li>
+                <li><a href="/" class="sub-menu-item">Home</a></li>
 
-                <li><a href="nft-explore.html" class="sub-menu-item"> Explore</a></li>
+                <li><a href="/explore" wire:navigate class="sub-menu-item"> Explore</a></li>
 
                 <li><a href="nft-creators.html" class="sub-menu-item"> Creators</a></li>
 
@@ -80,4 +80,4 @@
             </ul><!--end navigation menu-->
         </div><!--end navigation-->
     </div><!--end container-->
-</header><!--end header-->
+</header> --}}

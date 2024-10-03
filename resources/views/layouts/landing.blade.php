@@ -19,37 +19,31 @@
         <!-- Scripts -->
         {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
         @vite([])
+        @livewireStyles
     </head>
     <body class="antialiased">
      <!-- Loader -->
-        <div id="preloader">
+{{-- <div id="preloader">
             <div id="status">
                 <div class="spinner">
                     <div class="double-bounce1"></div>
-                    <div class="double-bounce2"></div>
+                    <div class="double-bounce2"></div> 
                 </div>
             </div>
-        </div> 
+        </div>  --}}
         <!-- Loader -->
+        {{-- @include('page.part.header')  --}}
+        <livewire:part.header>
         
         <main>
             {{ $slot }}
+            @livewireScripts
         </main>
+        @include('page.part.footer')
 
-        
-        <!-- Cookies Start -->
-        {{-- <div class="card cookie-popup shadow rounded py-3 px-4">
-            <p class="text-muted mb-0">This website uses cookies to provide you with a great user experience. By using it, you accept our <a href="https://shreethemes.in" target="_blank" class="text-success h6">use of cookies</a></p>
-            <div class="cookie-popup-actions text-end">
-                <button><i class="uil uil-times text-dark fs-4"></i></button>
-            </div>
-        </div> --}}
-        <!--Note: Cookies Js including in plugins.init.js (path like; js/plugins.init.js) and Cookies css including in _helper.scss (path like; scss/_helper.scss)-->
-        <!-- Cookies End -->
-        
 
        
-
+        
         <!-- Javascript -->
         <!-- JAVASCRIPT -->
         <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -57,7 +51,9 @@
         <script src="{{ asset('assets/libs/tiny-slider/min/tiny-slider.js') }}"></script>
         <!-- Main Js -->
         <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
-        <script src="{{ asset('assets/js/plugins.init.js') }}"></script><!--Note: All init js like tiny slider, counter, countdown, maintenance, lightbox, gallery, swiper slider, aos animation etc.-->
-        <script src="{{ asset('assets/js/app.js') }}"></script><!--Note: All important javascript like page loader, menu, sticky menu, menu-toggler, one page menu etc. -->
+        <script src="{{ asset('assets/js/plugins.init.js') }}"></script>
+        <!--Note: All init js like tiny slider, counter, countdown, maintenance, lightbox, gallery, swiper slider, aos animation etc.-->
+        <script src="{{ asset('assets/js/app.js') }}"></script>
+        <!--Note: All important javascript like page loader, menu, sticky menu, menu-toggler, one page menu etc. -->
     </body>
 </html>

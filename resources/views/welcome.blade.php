@@ -1,15 +1,17 @@
 <x-landing-layout>
-    <!-- Navbar Start -->
-    @include('page.part.header')
-    <!-- Navbar End -->
-
-    <!-- Hero Start -->
     @include('page.welcome.hero')
-    <!-- Hero End -->
+
+
+    @include('page.welcome.best-creator')
 
     <!-- Start -->
     <section class="section">
-        @include('page.welcome.start')
+        @include('page.welcome.fitur')
+        <div class="mt-5">
+            <h4 class="text-center">Kategori</h4>
+        </div>
+        @include('page.welcome.kategori')
+        @include('page.welcome.explore')
     </section><!--end section-->
     <!-- End -->
 
@@ -19,9 +21,4 @@
     </section>
     <!-- End -->
 
-    <!-- Footer Start -->
-    <!-- Footer Start -->
-    @include('page.part.footer')
-    <!-- Footer End -->
-    <!-- Footer End -->
 </x-landing-layout>
