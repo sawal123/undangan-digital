@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name_packet');
             $table->string('price');
-            // $table->foreignId('deskripsi_price_id')->constrained()->onDelete('cascade');
             $table->text('deskripsi');
-            $table->foreignId('diskon_id')->constrained()->onDelete('cascade');
             $table->text('keterangan');
             $table->softDeletes();
             $table->timestamps();

@@ -43,7 +43,10 @@ Route::middleware(['auth','role:Owner'])->prefix('admin')->name('admin.')->group
     Route::resource('theme', ThemeController::class);
     Route::get('/setting', [CategoryController::class, 'index'])->name('setting');
     Route::resource('categories', CategoryController::class)->except('index');
-    Route::resource('price', PriceListController::class);
+
+    Route::resource('price', PriceListController::class)->except('destroy');
+    Route::delete('/price/{id}', [PriceListController::class, 'destroy'])->name('price.destroy');
+    
 });
 
 Route::view('profile', 'profile')

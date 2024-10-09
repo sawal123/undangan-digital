@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Diskon extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory,  SoftDeletes;
 
-    protected $fillable = ['type', 'diskon'];
+    protected $fillable = ['price_id','type', 'diskon'];
 
     public function priceList(){
-        return $this->hasMany(PriceList::class);
+        return $this->belongsTo(PriceList::class);
     }
 }

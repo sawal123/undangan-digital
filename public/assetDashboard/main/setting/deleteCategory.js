@@ -34,6 +34,7 @@ $(document).ready(function() {
                                 response.message +
                                 "</div>"
                         );
+                        console.log(response.data)
                         // Hapus baris data dari tabel jika sukses
                         row.remove(); // Menghapus baris
                     },

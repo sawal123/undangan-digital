@@ -125,6 +125,7 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Category Berhasil dihapus!',
+                'data' =>$category
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

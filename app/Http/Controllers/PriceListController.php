@@ -22,7 +22,7 @@ class PriceListController extends Controller
         session(['halaman' => $title]);
         return view('admin.priceList', [
             'price' => $price,
-            'diskons' => $diskon
+            'diskons' => $diskon,
         ]);
     }
 
@@ -45,20 +45,21 @@ class PriceListController extends Controller
         DB::beginTransaction();
         try {
             // $request = $request->request();
-            $diskon = Diskon::create([
-                'type' => $request['type'],
-                'diskon' => $request['diskon']
-            ]);
+
 
             $pricelist = PriceList::create([
                 'name_packet' => $request['namaPaket'],
                 'price' => $request['price'],
                 'deskripsi' => json_encode($deskripsiArray),
-                'diskon_id' => $diskon->id,
+                // 'diskon_id' => $diskon->id,
                 'keterangan' => $request['keterangan']
             ]);
-            // dd($pricelist);
-            logger($pricelist); 
+            $diskon = Diskon::create([
+                'price_id' => $pricelist->id,
+                'type' => $request['type'],
+                'diskon' => $request['diskon']
+            ]);
+
             $price = PriceList::all();
             DB::commit();
             return response()->json([
@@ -103,8 +104,27 @@ class PriceListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PriceList $priceList)
-    {
-        //
+    public function destroy($id)
+{
+    DB::beginTransaction();
+    try {
+        $priceList= PriceList::find($id);
+        if ($priceList->diskon) {
+            $priceList->diskon->delete();
+        }
+        $priceList->delete();
+        DB::commit();
+        return response()->json([
+            'success' => true,
+            'message' => "Price Berhasil Di Hapus!",
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
     }
+}
+
 }

@@ -12,13 +12,13 @@
                 <div class="modal-body">
                     <div class="p-3 rounded box-shadow">
                         <div class="form-floating mb-2">
-                            <input type="text" class="form-control" name="namaPaket" id="namaPaket"
+                            <input type="text" class="form-control" name="namaPaket" 
                                 placeholder="Nama Paket">
-                            <label for="namaPaket">Nama Paket</label>
+                            <label for="paket">Nama Paket</label>
                             <div id="namaPaketMessage"></div>
                         </div>
                         <div class="form-floating mb-2">
-                            <input type="number" class="form-control" name="price" id="price"
+                            <input type="number" class="form-control" name="price" 
                                 placeholder="Nama Paket">
                             <label for="price">Harga Paket</label>
                             <div id="priceMessage"></div>
@@ -29,50 +29,37 @@
                                     <div class="custom-control custom-radio custom-control-inline">
                                         <div class="form-check mb-0">
                                             <input class="form-check-input" checked type="radio" value="rupiah" name="type"
-                                                id="flexRadioDefault1">
-                                            <label class="form-check-label" for="flexRadioDefault1">Rupiah</label>
+                                                id="rupiah">
+                                            <label class="form-check-label" for="rupiah">Rupiah</label>
                                         </div>
                                     </div>
                                     <div class="custom-control custom-radio custom-control-inline">
                                         <div class="form-check mb-0">
                                             <input class="form-check-input" checked type="radio" value="persen" name="type"
-                                                id="flexRadioDefault2">
-                                            <label class="form-check-label" for="flexRadioDefault2">Persen</label>
+                                                id="persen">
+                                            <label class="form-check-label" for="persen">Persen</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-floating ">
-                                    <input type="number" class="form-control" name="diskon" id="diskon"
+                                    <input type="number" class="form-control" name="diskon" id="disk"
                                         placeholder="Nama Paket">
-                                    <label for="diskon">Diskon</label>
+                                    <label for="disk">Diskon</label>
                                     <div id="diskonMessage"></div>
                                 </div>
 
                             </div>
                         </div>
-                        {{-- <div class=" mb-2">
-                            <select class="form-select form-control" name="diskon" aria-label="Default select example">
-                                <option selected>Pilih Diskon</option>
-                                @forelse ($diskons as $diskon)
-                                    <option value="{{ $diskon->id }}">
-                                        {{ $diskon->type == 'rupiah' ? 'Rp' . number_format($diskon->diskon, 2, ',', '.') : $diskon->diskon . '%' }}
-                                    </option>
-                                @empty
-                                    <div class="alert  alert-info d-flex justify-content-center mx-auto" id="empty">
-                                        <strong>harga Masih Kosong!</strong>
-                                    </div>
-                                @endforelse
-                            </select>
-                        </div> --}}
+
                         <div class="form-floating mb-2">
-                            <input type="text" class="d-flex rounded" name="deskripsi" id="deskripsi"
+                            <input type="text" class="d-flex rounded deskripsi" name="deskripsi" id="desk"
                                 placeholder="Deskripsi Paket">
                             {{-- <label for="deskripsi">Deskripsi</label> --}}
                             <div id="deskripsiMessage"></div>
                         </div>
                         <div class="form-floating mb-2">
-                            <textarea name="keterangan" class="form-control" id="keterangan" cols="30" rows="10"></textarea>
-                            <label for="price">Keterangan</label>
+                            <textarea name="keterangan" class="form-control" id="ket" cols="30" rows="10"></textarea>
+                            <label for="ket">Keterangan</label>
                             <div id="keteranganMessage"></div>
                         </div>
                     </div>
@@ -85,8 +72,5 @@
     </div>
 </div>
 
-<script>
-    var urlPrice = "{{ route('admin.price.store') }}"
-</script>
-<script src="{{ asset('assetDashboard/main/price/addPrice.js') }}"></script>
+
 <!-- Modal Content End -->

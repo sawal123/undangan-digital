@@ -31,7 +31,13 @@ $("#form-price").on("submit", function (event) {
                 $("#keteranganMessage").html("");
                 appendToTable(response.data, response.count);
                 $("#priceForm").modal("hide");
-                console.log("Modal closed");
+                $(document).ready(function() {
+                    $("#empty").css({
+                        "display": "none"
+                    });
+                });
+                
+                // console.log("Modal closed");
             } else {
                 $("#alert-container").html(
                     '<div class="alert alert-danger">' +
@@ -90,26 +96,34 @@ $("#form-price").on("submit", function (event) {
     });
 });
 function appendToTable(data, count) {
+    var deskripsiButton = `<button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#viewDeskripsi${data.id}">Deskripsi</button>`;
+
+    var diskon = '';
+    if (data.diskon && data.diskon.diskon > 0) {
+        diskon = data.diskon.type == 'persen' ? `${data.diskon.diskon}%` : `Rp${data.diskon.diskon}`;
+    } else {
+        diskon = `<button class="btn btn-sm btn-secondary" disabled>Tidak Tersedia</button>`;
+    }
+
+    // Batasi 3 kata pertama dari keterangan
+    var words = data.keterangan.split(' ');
+    var limitedWords = words.slice(0, 3);
+    var displayText = limitedWords.join(' ') + (words.length > 3 ? '...' : '');
+
     var newRow = `
-                <tr>
+        <tr>
             <th class="p-3">${count}</th>
-            <td class="p-3">
-                <a href="#" class="text-primary">
-                    <div class="d-flex align-items-center">
-                        <img src="/storage/${data.nama_packet}"
-                            class="avatar avatar-ex-small rounded-circle shadow" alt="">
-                        <span class="ms-2">${data.category}</span>
-                    </div>
-                </a>
-            </td>
+            <td class="p-3">${data.name_packet}</td>
+            <td class="p-3">${data.price}</td>
+            <td class="p-3">${deskripsiButton}</td>
+            <td class="p-3">${diskon}</td>
+            <td class="p-3">${displayText}</td>
             <td class="text-end p-3 d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-sm btn-primary">Edit</button>
-                <form id="categoryDelete">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
+                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editPrice${data.id}">Edit</button>
+                <button class="deleteharga btn btn-sm btn-danger" data-url="/admin/categories/destroy/${data.id}">Delete</button>
             </td>
         </tr>
+    `;
 
-        `;
-    $("#category-table tbody").append(newRow); // Tambahkan row baru ke tabel
+    $("#harga-table tbody").append(newRow); // Tambahkan row baru ke tabel
 }

@@ -8,14 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PriceList extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory , SoftDeletes;
 
-    protected $fillable =['name_packet', 'price', 'deskripsi', 'diskon_id', 'keterangan'];
+    protected $fillable =['name_packet', 'price', 'deskripsi', 'keterangan'];
 
-    // public function deskripsiPrice(){
-    //     return $this->belongsTo(DeskripsiPrice::class);
-    // }
     public function diskon(){
-        return $this->belongsTo(Diskon::class);
+        return $this->hasOne(Diskon::class, 'price_id');
     }
 }

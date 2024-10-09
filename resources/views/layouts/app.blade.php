@@ -65,28 +65,34 @@
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>
-    <script src="assetDashboard/libs/apexcharts/apexcharts.min.js"></script>
+    {{-- <script src="assetDashboard/libs/apexcharts/apexcharts.min.js"></script> --}}
     <!-- Main Js -->
     {{-- Library Link --}}
-    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="{{ asset('assetDashboard/js/plugins.init.js') }}"></script>
     <script src="{{ asset('assetDashboard/js/app.js') }}"></script>
 
+    @if (request()->routeIs('admin.setting'))
+        <script src="{{ asset('assetDashboard/main/setting/deleteCategory.js') }}"></script>
+    @endif
 
-    <script src="{{ asset('assetDashboard/main/setting/deleteCategory.js') }}"></script>
 
     @if (request()->routeIs('admin.price.index'))
+        <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.min.js"></script>
         <script>
-            var input = document.querySelector('#deskripsi');
+            var urlPrice = "{{ route('admin.price.store') }}"
+        </script>
+        <script src="{{ asset('assetDashboard/main/price/addPrice.js') }}"></script>
+        <script src="{{ asset('assetDashboard/main/price/deletePrice.js') }}"></script>
+        <script src="{{ asset('assetDashboard/main/price/modalUpdate.js') }}"></script>
+        <script>
+            $('#empty').html('<strong>harga Masih Kosong! </strong>');
+        </script>
+        <script>
+            var input = document.querySelector('.deskripsi');
             var tagify = new Tagify(input);
-
-            // input.addEventListener('change', function() {
-            //     var deskripsiArray = tagify.value; 
-            //     console.log(deskripsiArray); 
-            // });
-
             input.addEventListener('change', function() {
                 var deskripsiArray = tagify.value.map(function(tag) {
                     return tag.value; // Ambil nilai dari setiap objek tag
@@ -94,6 +100,7 @@
                 console.log(deskripsiArray); // Akan menghasilkan array berisi string ["Ayam", "Anjing"]
             });
         </script>
+       
     @endif
 
 </body>

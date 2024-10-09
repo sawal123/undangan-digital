@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('diskons', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('price_id');
+            $table->foreign('price_id')->references('id')->on('price_lists')->onDelete('cascade');
             $table->string('type');
             $table->unsignedBigInteger('diskon');
             $table->softDeletes();
