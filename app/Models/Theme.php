@@ -10,7 +10,7 @@ class Theme extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['kode', 'category_id'];
+    protected $fillable = ['nama', 'category_id', 'path', 'thumbnail'];
 
     public function category(){
         return $this->belongsTo(Category::class);

@@ -41,10 +41,13 @@ Route::middleware(['auth','role:Owner'])->prefix('admin')->name('admin.')->group
     Route::view('/', 'admin.dashboard')->name('dashboard');
     // Route::view('/theme', 'admin.theme')->name('theme');
     Route::resource('theme', ThemeController::class);
+
+    
     Route::get('/setting', [CategoryController::class, 'index'])->name('setting');
     Route::resource('categories', CategoryController::class)->except('index');
 
-    Route::resource('price', PriceListController::class)->except('destroy');
+    Route::resource('price', PriceListController::class)->except('destroy','update');
+    Route::post('/price/update', [PriceListController::class, 'update'])->name('price.update');
     Route::delete('/price/{id}', [PriceListController::class, 'destroy'])->name('price.destroy');
     
 });

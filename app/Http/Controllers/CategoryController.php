@@ -44,7 +44,7 @@ class CategoryController extends Controller
         ]);
         DB::beginTransaction();
         try {
-            DB::commit();
+        
             if ($request->hasFile('icon')) {
                 $iconPath = $request->file('icon')->store('icons', 'public');
                 $validatedData['icon'] = $iconPath;
@@ -52,6 +52,7 @@ class CategoryController extends Controller
                 $iconPath = 'images/icon-category-default.png';
             }
             $category = Category::create($validatedData);
+            DB::commit();
             $count = Category::all();
             return response()->json([
                 'success' => true,

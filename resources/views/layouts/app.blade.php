@@ -83,10 +83,13 @@
         <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.min.js"></script>
         <script>
             var urlPrice = "{{ route('admin.price.store') }}"
+            var updatePrice = "{{ route('admin.price.update') }}"
         </script>
         <script src="{{ asset('assetDashboard/main/price/addPrice.js') }}"></script>
         <script src="{{ asset('assetDashboard/main/price/deletePrice.js') }}"></script>
         <script src="{{ asset('assetDashboard/main/price/modalUpdate.js') }}"></script>
+        <script src="{{ asset('assetDashboard/main/price/updatePrice.js') }}"></script>
+
         <script>
             $('#empty').html('<strong>harga Masih Kosong! </strong>');
         </script>
@@ -99,8 +102,30 @@
                 });
                 console.log(deskripsiArray); // Akan menghasilkan array berisi string ["Ayam", "Anjing"]
             });
+
+
+            var des = document.querySelector(".deskripsiUp");
+            var tag = new Tagify(des);
+            des.addEventListener("change", function() {
+                var deskripsiArray = tag.value.map(function(tag) {
+                    return tag.value; // Ambil nilai dari setiap objek tag
+                });
+                console.log(deskripsiArray); // Akan menghasilkan array berisi string ["Ayam", "Anjing"]
+            });
         </script>
-       
+    @endif
+
+    @if (request()->routeIs('admin.theme.index'))
+        <script>
+            var urlAddTheme = "{{ route('admin.theme.store') }}"
+            var urlUpdateTheme = "{{ url('admin/theme/') }}"
+        </script>
+        <script src="{{ asset('assetDashboard/main/theme/addTheme.js') }}"></script>
+        <script src="{{ asset('assetDashboard/main/theme/deleteTheme.js') }}"></script>
+        <script src="{{ asset('assetDashboard/main/theme/modalTheme.js') }}"></script>
+        <script src="{{ asset('assetDashboard/main/theme/thumbnailChanges.js') }}"></script>
+        <script src="{{ asset('assetDashboard/main/theme/modalThumbnail.js') }}"></script>
+        <script src="{{ asset('assetDashboard/main/theme/updateTheme.js') }}"></script>
     @endif
 
 </body>

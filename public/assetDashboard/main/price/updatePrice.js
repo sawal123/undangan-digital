@@ -1,17 +1,18 @@
-$("#form-price").on("submit", function (event) {
+$("#update-price").on("submit", function (event) {
     event.preventDefault();
 
     // Create FormData object to handle file upload
-    var formData = new FormData(this);
+    var formUpdate = new FormData(this);
+    var deskArray = formUpdate.set(
+        "deskripsiUp",
+        JSON.stringify(tag.value.map((tag) => tag.value))
+    );
 
-    var deskripsiArray = tagify.value.map((tag) => tag.value); // Ambil nilai tag
-    formData.set("deskripsi", JSON.stringify(deskripsiArray)); // Kirim sebagai string J
-
-    // console.log(deskripsiArray);
+    // console.log(tag.value.map((tag) => tag.value));
     $.ajax({
-        url: urlPrice,
+        url: updatePrice,
         method: "POST",
-        data: formData,
+        data: formUpdate,
         contentType: false, // Prevent jQuery from overriding content type
         processData: false, // Prevent jQuery from converting the data
         headers: {
@@ -19,25 +20,24 @@ $("#form-price").on("submit", function (event) {
         },
         success: function (response) {
             if (response.success) {
-                $("#alert-container").html(
-                    '<div class="alert alert-success">' +
-                        response.message +
-                        "</div>"
-                );
+                console.log(response.data);
+                if (response.success) {
+                    // Simpan pesan ke localStorage
+                    localStorage.setItem("alertMessage", response.message);
+                    localStorage.setItem("alertType", "success"); // Menyimpan tipe alert
+                    location.reload();
+                } else {
+                    $("#alert-container").html(
+                        '<div class="alert alert-danger">' +
+                            response.message +
+                            "</div>"
+                    );
+                }
                 $("#form-price")[0].reset();
                 $("#namaPaketMessage").html("");
                 $("#priceMessage").html("");
                 $("#deskripsiMessage").html("");
                 $("#keteranganMessage").html("");
-                appendToTable(response.data, response.count);
-                $("#priceForm").modal("hide");
-                $(document).ready(function() {
-                    $("#empty").css({
-                        "display": "none"
-                    });
-                });
-                
-                // console.log("Modal closed");
             } else {
                 $("#alert-container").html(
                     '<div class="alert alert-danger">' +
@@ -95,35 +95,24 @@ $("#form-price").on("submit", function (event) {
         },
     });
 });
-function appendToTable(data, count) {
-    var deskripsiButton = `<button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#viewDeskripsi${data.id}">Deskripsi</button>`;
 
-    var diskon = '';
-    if (data.diskon && data.diskon.diskon > 0) {
-        diskon = data.diskon.type == 'persen' ? `${data.diskon.diskon}%` : `Rp${data.diskon.diskon}`;
-    } else {
-        diskon = `<button class="btn btn-sm btn-secondary" disabled>Tidak Tersedia</button>`;
+$(document).ready(function () {
+    // Cek apakah ada pesan alert di localStorage
+    var alertMessage = localStorage.getItem("alertMessage");
+    var alertType = localStorage.getItem("alertType");
+
+    if (alertMessage) {
+        $("#alert-container").html(
+            '<div class="alert alert-' +
+                alertType +
+                '">' +
+                alertMessage +
+                "</div>"
+        );
+        // Hapus pesan dari localStorage setelah ditampilkan
+        localStorage.removeItem("alertMessage");
+        localStorage.removeItem("alertType");
     }
 
-    // Batasi 3 kata pertama dari keterangan
-    var words = data.keterangan.split(' ');
-    var limitedWords = words.slice(0, 3);
-    var displayText = limitedWords.join(' ') + (words.length > 3 ? '...' : '');
-
-    var newRow = `
-        <tr>
-            <th class="p-3">${count}</th>
-            <td class="p-3">${data.name_packet}</td>
-            <td class="p-3">${data.price}</td>
-            <td class="p-3">${deskripsiButton}</td>
-            <td class="p-3">${diskon}</td>
-            <td class="p-3">${displayText}</td>
-            <td class="text-end p-3 d-flex justify-content-end gap-2">
-                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editPrice${data.id}">Edit</button>
-                <button class="deleteharga btn btn-sm btn-danger" data-url="/admin/categories/destroy/${data.id}">Delete</button>
-            </td>
-        </tr>
-    `;
-
-    $("#harga-table tbody").append(newRow); // Tambahkan row baru ke tabel
-}
+    // ... kode lain di sini
+});

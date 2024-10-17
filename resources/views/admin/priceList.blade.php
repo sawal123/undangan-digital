@@ -63,6 +63,7 @@
                                     <td class="text-end p-3 d-flex justify-content-end gap-2">
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#editharga" data-id="{{ $harga->id }}"
+                                            {{-- data-diskonId="{{ $harga->diskon->id }}" --}}
                                             data-name="{{ $harga->name_packet }}" data-price="{{ $harga->price }}"
                                             data-type="{{ $harga->diskon->type }}"
                                             data-diskon="{{ $harga->diskon->diskon }}"

@@ -8,11 +8,12 @@
                     <i class="uil uil-times fs-4 text-dark"></i>
                 </button>
             </div>
-            <form id="form-price" enctype="multipart/form-data">
+            <form id="update-price" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="p-3 rounded box-shadow">
                         <!-- Nama Paket -->
+                        <input type="hidden" class="form-control" name="id" id="id">
                         <div class="form-floating mb-2">
                             <input type="text" class="form-control" name="namaPaket" id="namaPaket" placeholder="Nama Paket">
                             <label for="namaPaket">Nama Paket</label>
@@ -46,7 +47,7 @@
                             </div>
                         </div>
                         <div class="form-floating mb-2">
-                            <input type="text" class="d-flex rounded deskripsiUp" name="deskripsi" id="deskripsiUp"
+                            <input type="text" class="d-flex rounded deskripsiUp" name="deskripsiUp" id="deskripsiUp"
                                 placeholder="Deskripsi Paket">
                             <div id="deskripsiMessage"></div>
                         </div>

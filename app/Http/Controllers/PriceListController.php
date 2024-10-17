@@ -80,10 +80,7 @@ class PriceListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PriceList $priceList)
-    {
-        //
-    }
+    public function show(PriceList $priceList) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -98,33 +95,58 @@ class PriceListController extends Controller
      */
     public function update(Request $request, PriceList $priceList)
     {
-        //
+        $validate = $request->validate([
+            'namaPaket' => 'required|string|max:255',
+            'price' => 'required',
+            'type' => 'required',
+            'diskon' => 'required',
+            'deskripsiUp' => 'required',
+            'keterangan' => 'required'
+        ]);
+        $deskripsiArray = json_decode($request['deskripsiUp'], true);
+        $price = PriceList::find($request->id);
+        try {
+            $price->name_packet = $request->namaPaket;
+            $price->price = $request->price;
+            $price->diskon->type = $request->type;
+            $price->diskon->diskon = $request->diskon;
+            $price->deskripsi= json_encode($deskripsiArray);
+            $price->keterangan= $request->keterangan;
+            $price->save();
+            $price->diskon->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Price Berhasil diUpdate!',
+                'data' => json_encode($deskripsiArray)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-{
-    DB::beginTransaction();
-    try {
-        $priceList= PriceList::find($id);
-        if ($priceList->diskon) {
-            $priceList->diskon->delete();
+    {
+        DB::beginTransaction();
+        try {
+            $priceList = PriceList::find($id);
+            if ($priceList->diskon) {
+                $priceList->diskon->delete();
+            }
+            $priceList->delete();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => "Price Berhasil Di Hapus!",
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
         }
-        $priceList->delete();
-        DB::commit();
-        return response()->json([
-            'success' => true,
-            'message' => "Price Berhasil Di Hapus!",
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ]);
     }
-}
-
 }

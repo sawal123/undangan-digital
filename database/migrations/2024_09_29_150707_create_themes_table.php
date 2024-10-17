@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('themes', function (Blueprint $table) {
             $table->id();
-            $table->string('kode');
+            $table->string('nama');
             $table->foreignId('category_id')->constrained();
+            $table->string('path');
+            $table->string('thumbnail');
             $table->softDeletes();
             $table->timestamps();
         });

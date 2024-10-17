@@ -1,30 +1,29 @@
 $(document).ready(function () {
-    $(".update-category").on("click", function (e) {
-        e.preventDefault();
+    // Event listener untuk form submit
+    $("#update-theme").on("submit", function (e) {
+        e.preventDefault();  // Mencegah form dari submit standar
 
-        var categoryId = $(this).data("id");
-        var form = $("#dataCategory" + categoryId)[0];
+        var themeid = $(this).data("themeid");  // Ambil themeid dari form
+        var formData = new FormData(this);  // Mengambil form data
 
-        var formData = new FormData(form);
-        console.log(urlCategory + "/" + categoryId);
-        console.log(form);
+        console.log(urlUpdateTheme + "/" + themeid);
 
         $.ajax({
-            url: urlCategory + "/" + categoryId,
+            url: urlUpdateTheme + "/" + themeid,
             type: "POST",
             data: formData,
             contentType: false,
             processData: false,
             dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"), // Sertakan CSRF token di header
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),  // Sertakan CSRF token di header
             },
             success: function (response) {
+                console.log(response);
                 if (response.success) {
-                    // Simpan pesan ke localStorage
                     localStorage.setItem("alertMessage", response.message);
-                    localStorage.setItem("alertType", "success"); // Menyimpan tipe alert
-                    location.reload(); // Reload halaman
+                    localStorage.setItem("alertType", "success");
+                    location.reload();
                 } else {
                     $("#alert-container").html(
                         '<div class="alert alert-danger">' +
@@ -34,20 +33,16 @@ $(document).ready(function () {
                 }
             },
             error: function (xhr, status, error) {
-                // Tangani error
                 $("#alert-container").html(
                     '<div class="alert alert-danger">' +
                         xhr.responseText +
                         "</div>"
                 );
-                // alert('Error updating category: ' + xhr.responseText);
-            },
+            }
         });
     });
-});
 
-$(document).ready(function () {
-    // Cek apakah ada pesan alert di localStorage
+    // Cek apakah ada pesan alert di localStorage dan tampilkan
     var alertMessage = localStorage.getItem("alertMessage");
     var alertType = localStorage.getItem("alertType");
 
@@ -59,10 +54,10 @@ $(document).ready(function () {
                 alertMessage +
                 "</div>"
         );
-        // Hapus pesan dari localStorage setelah ditampilkan
         localStorage.removeItem("alertMessage");
         localStorage.removeItem("alertType");
     }
 
-    // ... kode lain di sini
+    // Ketika modal ditampilkan, isi data form
+   
 });

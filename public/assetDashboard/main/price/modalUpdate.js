@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // Inisialisasi Tagify hanya sekali
-    var input = document.querySelector(".deskripsiUp");
-    var tagify = new Tagify(input);
+    
+
     $(document).on("show.bs.modal", "#editharga", function (e) {
         // Mendapatkan tombol yang memicu modal
         var button = $(e.relatedTarget);
@@ -15,6 +15,7 @@ $(document).ready(function () {
         var keterangan = button.data("keterangan");
         var deskripsi = button.data("deskripsi");
         // Isi data ke dalam form modal
+        $("#id").val(id);
         $("#namaPaket").val(name);
         $("#price").val(price);
         $("#diskon").val(diskon);
@@ -25,7 +26,7 @@ $(document).ready(function () {
         } else if (type === "persen") {
             $("#flexRadioDefault2").prop("checked", true);
         }
-        tagify.removeAllTags();
-        tagify.addTags(deskripsi);
+        tag.removeAllTags();
+        tag.addTags(deskripsi);
     });
 });
