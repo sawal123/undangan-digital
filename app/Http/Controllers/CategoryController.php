@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\GiftPay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -19,8 +20,10 @@ class CategoryController extends Controller
         $title = "Setting";
         session(['halaman' => $title]);
         $categories = Category::all();
+        $gift = GiftPay::all();
         return view('admin.setting', [
             'categories'=>$categories,
+            'gifts' => $gift,
             'halaman'=>$title
         ]);
     }

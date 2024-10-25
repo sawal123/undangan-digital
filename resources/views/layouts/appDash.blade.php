@@ -38,17 +38,25 @@
 
 <body class="font-sans antialiased">
     <div class="page-wrapper toggled">
-        <livewire:admin.layout.navigation />
+        @if (!request()->routeIs('dashboard.setup'))
+            <livewire:dashboard.sidebar />
+        @endif
         <!-- Page Content -->
         <main class="page-content bg-light">
-            @include('layouts.app.top-header')
+            @if (!request()->routeIs('dashboard.setup'))
+                @include('layouts.app.top-header')
+            @endif
+
             <div class="container-fluid">
                 <div class="layout-specing">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="text-muted mb-1">Welcome back, {{ Auth::user()->name }}</h6>
-                            <h5 class="mb-0">{{ $halaman ?? 'Dashboard' }}</h5>
-                        </div>
+                        @if (!request()->routeIs('dashboard.setup'))
+                            <div>
+                                <h6 class="text-muted mb-1">Welcome back, {{ Auth::user()->name }}</h6>
+                                {{-- <h5 class="mb-0">{{ $halaman ?? 'Dashboard' }}</h5> --}}
+                            </div>
+                        @endif
+
                     </div>
                     <div class="my-5">
                         {{ $slot }}
@@ -73,60 +81,6 @@
     <script src="{{ asset('assetDashboard/js/plugins.init.js') }}"></script>
     <script src="{{ asset('assetDashboard/js/app.js') }}"></script>
 
-    @if (request()->routeIs('admin.setting'))
-        <script src="{{ asset('assetDashboard/main/setting/deleteCategory.js') }}"></script>
-        <script src="{{asset('assetDashboard/main/setting/deleteGiftPay.js')}}"></script>
-    @endif
-
-
-    @if (request()->routeIs('admin.price.index'))
-        <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.min.js"></script>
-        <script>
-            var urlPrice = "{{ route('admin.price.store') }}"
-            var updatePrice = "{{ route('admin.price.update') }}"
-        </script>
-        <script src="{{ asset('assetDashboard/main/price/addPrice.js') }}"></script>
-        <script src="{{ asset('assetDashboard/main/price/deletePrice.js') }}"></script>
-        <script src="{{ asset('assetDashboard/main/price/modalUpdate.js') }}"></script>
-        <script src="{{ asset('assetDashboard/main/price/updatePrice.js') }}"></script>
-
-        <script>
-            $('#empty').html('<strong>harga Masih Kosong! </strong>');
-        </script>
-        <script>
-            var input = document.querySelector('.deskripsi');
-            var tagify = new Tagify(input);
-            input.addEventListener('change', function() {
-                var deskripsiArray = tagify.value.map(function(tag) {
-                    return tag.value; // Ambil nilai dari setiap objek tag
-                });
-                console.log(deskripsiArray); // Akan menghasilkan array berisi string ["Ayam", "Anjing"]
-            });
-
-
-            var des = document.querySelector(".deskripsiUp");
-            var tag = new Tagify(des);
-            des.addEventListener("change", function() {
-                var deskripsiArray = tag.value.map(function(tag) {
-                    return tag.value; // Ambil nilai dari setiap objek tag
-                });
-                console.log(deskripsiArray); // Akan menghasilkan array berisi string ["Ayam", "Anjing"]
-            });
-        </script>
-    @endif
-
-    @if (request()->routeIs('admin.theme.index'))
-        <script>
-            var urlAddTheme = "{{ route('admin.theme.store') }}"
-            var urlUpdateTheme = "{{ url('admin/theme/') }}"
-        </script>
-        <script src="{{ asset('assetDashboard/main/theme/addTheme.js') }}"></script>
-        <script src="{{ asset('assetDashboard/main/theme/deleteTheme.js') }}"></script>
-        <script src="{{ asset('assetDashboard/main/theme/modalTheme.js') }}"></script>
-        <script src="{{ asset('assetDashboard/main/theme/thumbnailChanges.js') }}"></script>
-        <script src="{{ asset('assetDashboard/main/theme/modalThumbnail.js') }}"></script>
-        <script src="{{ asset('assetDashboard/main/theme/updateTheme.js') }}"></script>
-    @endif
 
 
 </body>

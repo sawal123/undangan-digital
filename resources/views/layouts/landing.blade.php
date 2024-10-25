@@ -23,23 +23,14 @@
     </head>
     <body class="antialiased">
      <!-- Loader -->
-{{-- <div id="preloader">
-            <div id="status">
-                <div class="spinner">
-                    <div class="double-bounce1"></div>
-                    <div class="double-bounce2"></div> 
-                </div>
-            </div>
-        </div>  --}}
-        <!-- Loader -->
-        {{-- @include('page.part.header')  --}}
+
         <livewire:part.header>
         
         <main>
             {{ $slot }}
             @livewireScripts
         </main>
-        @include('page.part.footer')
+        @include('landingpage.part.footer')
 
 
        

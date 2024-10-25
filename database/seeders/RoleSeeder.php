@@ -22,9 +22,22 @@ class RoleSeeder extends Seeder
             'name'=> 'Sawal',
             'avatar'=> 'images/default-avatar.png',
             'phone'=> '0812626562',
+            'google_id'=> 'NULL',
+            'is_active'=> false,
             'email'=>'sawal@owner.com',
             'password'=>bcrypt('sawal123')
         ]);
+
+        $userUser = User::create([
+            'name'=> 'Lin',
+            'avatar'=> 'images/default-avatar.png',
+            'phone'=> '0812626562',
+            'google_id'=> 'NULL',
+            'is_active'=> false,
+            'email'=>'lin@user.com',
+            'password'=>bcrypt('sawal123')
+        ]);
         $userOwner->assignRole($owner);
+        $userUser->assignRole($user);
     }
 }

@@ -11,6 +11,6 @@ class Home extends Component
     public function render()
     {
         // setActiveLink();
-        return view('livewire.page.home')->layout('layouts.landing');
+        return view('landingpage.home')->layout('layouts.landing');
     }
 }

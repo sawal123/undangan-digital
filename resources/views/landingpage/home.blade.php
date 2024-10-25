@@ -1,24 +1,24 @@
 <div>
     <x-landing-layout>
-        @include('page.welcome.hero')
+        @include('landingpage.welcome.hero')
     
     
-        @include('page.welcome.best-creator')
+        @include('landingpage.welcome.best-creator')
     
         <!-- Start -->
         <section class="section">
-            @include('page.welcome.fitur')
+            @include('landingpage.welcome.fitur')
             <div class="mt-5">
                 <h4 class="text-center">Kategori </h4>
             </div>
-            @include('page.welcome.kategori')
-            @include('page.welcome.explore')
+            @include('landingpage.welcome.kategori')
+            @include('landingpage.welcome.explore')
         </section><!--end section-->
         <!-- End -->
     
         <!-- Start -->
         <section class="section" style="background: url('assets/images/nft/bg.jpg') top center;">
-            @include('page.welcome.start2')
+            @include('landingpage.welcome.start2')
         </section>
         <!-- End -->
     

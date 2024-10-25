@@ -10,6 +10,6 @@ class ExploreController extends Controller
 
     public function explore(){
 
-        return view('explore');
+        return view('landingpage.explore');
     }
 }

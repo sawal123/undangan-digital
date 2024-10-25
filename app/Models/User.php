@@ -21,12 +21,14 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'avatar', 
+        'avatar',
         'phone',
+        'google_id',
+        'is_active',
         'address',
         'last_login_at',
         'password',
-        
+
     ];
 
     /**
@@ -48,4 +50,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function data(){
+        return $this->hasOne(Data::class);
+    }
 }
