@@ -16,7 +16,7 @@
             <x-admin.menu :link="route('dashboard.dashboard')" :icon="'ti ti-home'" :active="request()->routeIs('dashboard.dashboard')">
                 {{ __('Dashboard') }}
             </x-admin.menu>
-            <x-admin.menu :link="route('dashboard.dashboard')" :icon="'ti ti-mail'" :active="request()->routeIs('dashboard.dashboard')">
+            <x-admin.menu :link="route('dashboard.undangan.index')" :icon="'ti ti-mail'" :active="request()->routeIs('dashboard.undangan.index')">
                 {{ __('Undangan') }}
             </x-admin.menu>
             <x-admin.menu :link="route('dashboard.dashboard')" :icon="'ti ti-shopping-cart'" :active="request()->routeIs('dashboard.dashboard')">

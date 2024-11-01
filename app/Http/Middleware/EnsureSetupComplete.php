@@ -17,13 +17,21 @@ class EnsureSetupComplete
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->routeIs('dashboard.setup') || $request->routeIs('dashboard.logout')) {
+        $data = Data::where('user_id', Auth::user()->id)->first();
+        if ($request->routeIs('dashboard.logout') || $request->routeIs('dashboard.data.store')) {
             return $next($request);
         }
-        $data = Data::where('user_id', Auth::user()->id)->first();
-        if ($data == null) {
-
-            return redirect()->to('dashboard/setup');
-        } return $next($request);
+       
+        if ($request->routeIs('dashboard.setup')) {
+            // Jika data sudah ada (setup terpenuhi), redirect ke halaman lain (misalnya dashboard utama)
+            if ($data !== null) {
+                return redirect()->to('dashboard');
+            }
+        } else {
+            // Jika bukan akses ke setup, tapi data belum ada, redirect ke halaman setup
+            if ($data === null) {
+                return redirect()->to('dashboard/setup');
+            }
+        }return $next($request);
     }
 }

@@ -39,7 +39,7 @@
 
                             <div class="col-12 text-center mt-3">
                                 <p class="mb-0 mt-3"><small class="text-dark me-2">Don't have an account ?</small> <a
-                                        href="{{ route('register') }}" wire:navigate class="text-dark fw-bold">Sign Up</a>
+                                        href="{{ route('register.index') }}" wire:navigate class="text-dark fw-bold">Sign Up</a>
                                 </p>
                             </div><!--end col-->
 

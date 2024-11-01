@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card form-signin p-4 rounded shadow">
-                        <form id="form-setup">
+                        <form  action="{{ route('dashboard.data.store') }}" method="POST">
                             @csrf
                             {{-- <a href="index.html"><img src="assets/images/logo-icon.png"
                                     class="avatar avatar-small mb-4 d-block mx-auto" alt=""></a> --}}
@@ -23,7 +23,7 @@
                                 <label for="basic-url" class="form-label">Your vanity URL</label>
                                 <div class="input-group ">
                                     <span class="input-group-text" id="basic-addon3">https://erawedding.com/</span>
-                                    <input type="text" class="form-control" id="basic-url"
+                                    <input type="text" class="form-control" id="basic-url" name="slug"
                                         aria-describedby="basic-addon3 basic-addon4" placeholder="harrydannia">
                                 </div>
                                 <div id="nameValidationMessage" class="form-text"></div>
@@ -32,10 +32,6 @@
 
                             <button class="btn btn-primary w-100 my-3" type="submit" id="next"
                                 disabled>Lanjutkan!</button>
-
-
-
-
                         </form>
                         <form action="{{ route('dashboard.logout') }}" method="POST" class="">
                             @csrf

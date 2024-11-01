@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Data;
+use App\Models\SosialMedia;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class DataController extends Controller
+class SosialMediaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class DataController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Data $data)
+    public function show(SosialMedia $sosialMedia)
     {
         //
     }
@@ -42,7 +43,7 @@ class DataController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Data $data)
+    public function edit(SosialMedia $sosialMedia)
     {
         //
     }
@@ -50,7 +51,7 @@ class DataController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Data $data)
+    public function update(Request $request, SosialMedia $sosialMedia)
     {
         //
     }
@@ -58,7 +59,7 @@ class DataController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Data $data)
+    public function destroy(SosialMedia $sosialMedia)
     {
         //
     }

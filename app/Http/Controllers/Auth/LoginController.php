@@ -59,6 +59,6 @@ class LoginController extends Controller
        $request->session()->regenerateToken();
 
        // Redirect ke halaman login atau home setelah logout
-       return redirect('/login')->with('success', 'You have successfully logged out.');
+       return redirect('/')->with('success', 'You have successfully logged out.');
    }
 }

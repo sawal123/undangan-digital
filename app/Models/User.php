@@ -52,6 +52,6 @@ class User extends Authenticatable
     ];
 
     public function data(){
-        return $this->hasOne(Data::class);
+        return $this->hasMany(Data::class);
     }
 }

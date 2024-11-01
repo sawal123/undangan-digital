@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('avatar')->nullable();
             $table->unsignedBigInteger('phone');
-            $table->string('google_id');
-            $table->boolean('is_active');
+            $table->string('google_id')->nullable();
+            $table->boolean('is_active')->nullable();
             $table->string('address')->nullable();
             $table->string('last_login_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();

@@ -43,7 +43,7 @@ class CategoryController extends Controller
     {
         $validatedData = $request->validate([
             'category' => 'required|string|max:255',
-            'icon' => 'required|image|mimes:png,jpg,jpeg'
+            'icon' => 'required|image|mimes:png,jpg,jpeg,svg'
         ]);
         DB::beginTransaction();
         try {

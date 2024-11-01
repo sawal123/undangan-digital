@@ -45,6 +45,7 @@ $(document).ready(function () {
                     $("#nameValidationMessage").html(
                         '<small class="text-danger">' + response.message + '</small>'
                     );
+                    $("#next").prop("disabled", true);
                 }
             },
             error: function (response) {

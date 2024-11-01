@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use App\Models\Data;
 use Illuminate\Http\Request;
 
@@ -45,6 +46,8 @@ class SetupController extends Controller
     public function store(Request $request)
     {
         //
+
+       
     }
 
     /**
