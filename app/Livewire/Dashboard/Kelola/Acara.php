@@ -15,7 +15,11 @@ class Acara extends Component
     public $start;
     public $end;
     public $zona;
-    public $maps='';
+    public $maps = '';
+
+    public $deleteId;
+
+    public $selectedAcaraId;
 
     public $dataAcara;
 
@@ -29,39 +33,114 @@ class Acara extends Component
         'zona' => 'required|string|max:255',
         'maps' => 'string|max:255',
     ];
-    
 
+
+    public function edit($id)
+    {
+        $acara = KelolaUndanganAcara::findOrFail($id);
+
+
+        $this->selectedAcaraId = $acara->id;
+        $this->acara = $acara->nama_acara;
+        $this->vanue = $acara->vanue;
+        $this->alamat = $acara->alamat;
+        $this->date = $acara->date;
+        $this->start = $acara->jam_start;
+        $this->end = $acara->jam_end;
+        $this->zona = $acara->zona_waktu;
+        $this->maps = $acara->maps;
+        $this->dispatch('openEditModal');
+        // dd($acara);
+    }
+
+
+
+    public function confirmDelete($id)
+    {
+        $this->deleteId = $id;
+        $this->dispatch('openDeleteModal');
+        // $this->dispatch('open-delete-modal'); 
+    }
+
+
+    public function delete()
+    {
+        KelolaUndanganAcara::find($this->deleteId)->delete();
+        $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
+        session()->flash('message', 'Data Acara Berhasil Dihapus.');
+        $this->dispatch('close-hapus');
+    }
+    public function close()
+    {
+        $this->dispatch('tutup-modal');
+        $this->dispatch('close-modal');
+        $this->dispatch('close-hapus');
+        $this->resetInputFields();
+    }
     public function save()
     {
         $this->validate();
-        KelolaUndanganAcara::create([
-            'data_id' => $this->dataId,
-            'nama_acara' => $this->acara,
-            'vanue' => $this->vanue,
-            'alamat' => $this->alamat,
-            'date' => $this->date,
-            'jam_start' => $this->start,
-            'jam_end' => $this->end,
-            'zona_waktu' => $this->zona,
-            'maps' => $this->maps,
-        ]);
-        session()->flash('message', 'Data Acara Berhasil Disimpan.');
-        $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
-        $this->dispatch('close-modal');
 
+
+        if ($this->selectedAcaraId) {
+            // Update jika ada `selectedAcaraId`
+            $acara = KelolaUndanganAcara::find($this->selectedAcaraId);
+            $acara->update([
+                'nama_acara' => $this->acara,
+                'vanue' => $this->vanue,
+                'alamat' => $this->alamat,
+                'date' => $this->date,
+                'jam_start' => $this->start,
+                'jam_end' => $this->end,
+                'zona_waktu' => $this->zona,
+                'maps' => $this->maps,
+            ]);
+            session()->flash('message', 'Data acara berhasil diperbarui.');
+            $this->dispatch('tutup-modal');
+        } else {
+            // Create jika `selectedAcaraId` kosong
+            KelolaUndanganAcara::create([
+                'data_id' => $this->dataId,
+                'nama_acara' => $this->acara,
+                'vanue' => $this->vanue,
+                'alamat' => $this->alamat,
+                'date' => $this->date,
+                'jam_start' => $this->start,
+                'jam_end' => $this->end,
+                'zona_waktu' => $this->zona,
+                'maps' => $this->maps,
+            ]);
+            $this->resetInputFields();
+            session()->flash('message', 'Data acara berhasil disimpan.');
+            $this->dispatch('close-modal');
+        }
+        // session()->flash('message', 'Data Acara Berhasil Disimpan.');
+        $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
     }
 
     public function mount($dataId)
     {
         $this->dataId = $dataId;
         $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
-      
     }
-    
+
+    private function resetInputFields()
+    {
+        $this->acara = '';
+        $this->vanue = '';
+        $this->alamat = '';
+        $this->date = '';
+        $this->start = '';
+        $this->end = '';
+        $this->zona = '';
+        $this->maps = '';
+        $this->selectedAcaraId = null;
+    }
+
     public function render()
     {
         return view('livewire.dashboard.kelola.acara', [
-            'dataAcara'=> $this->dataAcara
+            'dataAcara' => $this->dataAcara
         ]);
     }
 }

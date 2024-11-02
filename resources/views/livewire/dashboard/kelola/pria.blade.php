@@ -36,7 +36,7 @@
                     <div class="form-icon position-relative">
                         <i  class="fea icon-sm icons mdi mdi-comment-text d-flex align-items-center"></i>
                         <input id="deskripsi" name="deskripsi" type="text" wire:model="deskripsi"
-                            class="form-control ps-5" placeholder="Putri Bpk Polan & Ibu Paulani">
+                            class="form-control ps-5" placeholder="Putra Bpk Polan & Ibu Paulani">
                     </div>
                     @error('deskripsi')
                         <small class="text-danger">{{ $message }}</small>
