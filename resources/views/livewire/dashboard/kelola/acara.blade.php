@@ -1,7 +1,7 @@
 <div>
     <div class="row my-2">
         <div class="col">
-            <div class="card">
+            <div class="card border border-info">
                 <div
                     class="card-body d-flex d-md-flex flex-column flex-md-row justify-content-between align-items-center">
                     <small>Silahkan Tambah Acara Anda!</small>
@@ -37,12 +37,13 @@
                                 class="mdi mdi-office-building"></i>{{ $item->vanue }}</small>
                         <div class="d-flex gap-2">
                             <button data-bs-toggle="modal"
-                            data-bs-target="#hapusAcara"   onclick="@this.call('confirmDelete', {{ $item->id }})"  class="btn btn-sm btn-danger">
+                             onclick="@this.call('confirmDelete', {{ $item->id }})"  class="btn btn-sm btn-danger">
                                 <i class="mdi mdi-trash-can"></i> Hapus
                             </button>
                             
                             <button wire:click="edit({{$item->id}})" data-bs-toggle="modal"
-                                data-bs-target="#EditAcara" class="btn btn-sm btn-info"><i class="mdi mdi-book-edit"></i> Edit</button>
+                                {{-- data-bs-target="#EditAcara"  --}}
+                                class="btn btn-sm btn-info"><i class="mdi mdi-book-edit"></i> Edit</button>
                         </div>
                     </div>
                 </div>

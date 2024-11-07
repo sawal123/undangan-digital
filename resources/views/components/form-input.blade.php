@@ -1,6 +1,6 @@
-@props(['label', 'wire', 'place' => '', 'error', '$message', 'danger'=>'', 'type'])
+@props(['label', 'wire'=>null, 'place' => null, 'error', '$message', 'danger'=>null, 'type', 'class' => 'mb-3'])
 
-<div class="mb-3">
+<div class="{{$class}}">
     <label class="form-label">{{$label}} <span class="text-danger">{{$danger}}</span></label>
     <div class="form-icon position-relative">
         <input  wire:model="{{$wire}}" type="{{$type}}"

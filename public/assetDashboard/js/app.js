@@ -21,19 +21,19 @@
  ================================*/
 
 
- window.onload = function loader() {
-    // Preloader
-    if(document.getElementById('preloader')){
-        setTimeout(() => {
-            document.getElementById('preloader').style.visibility = 'hidden';
-            document.getElementById('preloader').style.opacity = '0';
-        }, 350);
-    }
+//  window.onload = function loader() {
 
-    // Menus
-    activateMenu();
-    activateSidebarMenu();
-}
+//     if(document.getElementById('preloader')){
+//         setTimeout(() => {
+//             document.getElementById('preloader').style.visibility = 'hidden';
+//             document.getElementById('preloader').style.opacity = '0';
+//         }, 350);
+//     }
+
+
+//     activateMenu();
+//     activateSidebarMenu();
+// }
 
 //Menu
 // Toggle menu

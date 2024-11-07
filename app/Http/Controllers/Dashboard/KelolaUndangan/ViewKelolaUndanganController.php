@@ -30,4 +30,21 @@ class ViewKelolaUndanganController extends Controller
             'data' => $this->getData($id),
         ]);
     }
+    public function galery($id)
+    {
+
+        return view('user.kelola.galery', [
+            'data' => $this->getData($id),
+        ]);
+    }
+    public function sound($id){
+        return view('user.kelola.sound',[
+            'data' => $this->getData($id),
+        ]);
+    }
+    public function ucapan($id){
+        return view('user.kelola.ucapan',[
+            'data' => $this->getData($id),
+        ]);
+    }
 }

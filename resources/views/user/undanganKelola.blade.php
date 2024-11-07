@@ -2,7 +2,7 @@
 
     <a href="/dashboard/undangan" class="btn btn-secondary btn-sm" wire:navigate><i class="mdi mdi-arrow-left-bold"></i>
         Kembali</a>
-
+        
         <div class="alert alert-info   d-lg-flex flex-lg-row flex-md-column  justify-content-between   align-items-center  my-2" role="alert">
             <div class="text-truncate" style="max-width: 100%;">Link Undangan Kamu: 
                 <span id="copyText">https://erawedding.com/{{ $data->slug }}</span>
@@ -26,7 +26,7 @@
         @foreach ($objects as $item)
             <div class="col mx-2 my-2">
                 <a href="{{url('/dashboard/kelola/'.Crypt::encryptString($data->id).'/'. $item->url)}}" wire:navigate
-                    class="features feature-primary d-flex justify-content-between align-items-center rounded  p-3 hover-shadow">
+                    class="features feature-primary d-flex justify-content-between align-items-center rounded border border-info  p-3 hover-shadow">
                     <div class="d-flex align-items-center">
                         <div class="icon text-center rounded-pill">
                             <img src="{{ asset('storage/iconKu/' . $item->icon) }}" width="30" alt=""

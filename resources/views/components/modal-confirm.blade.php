@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <div class="text-center">
+                <div class="text-center mb-3">
                     {{$deskripsi}}
                 </div>
                 <div class="d-flex justify-content-center gap-2">

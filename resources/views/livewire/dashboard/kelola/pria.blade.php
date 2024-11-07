@@ -4,7 +4,7 @@
             {{ session('message') }}
         </div>
     @endif
-    <div class="card shadow-sm">
+    <div class="card border border-info">
         <div class="card-body">
             <form wire:submit.prevent="save">
                 <span>Data Mempelai Pria</span>
@@ -64,7 +64,7 @@
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
-
+                    <div wire:loading wire:target="photo">Uploading...</div>
                 </div>
                 <button type="submit" class="btn btn-primary">
                     <i class="mdi mdi-check-circle-outline"></i> Simpan

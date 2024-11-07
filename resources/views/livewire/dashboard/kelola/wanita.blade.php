@@ -4,7 +4,7 @@
             {{ session('message') }}
         </div>
     @endif
-    <div class="card shadow-sm">
+    <div class="card border border-info">
         <div class="card-body">
             <form wire:submit.prevent="save">
                 <span>Data Mempelai Wanita</span>

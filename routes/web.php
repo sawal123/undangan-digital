@@ -40,8 +40,8 @@ Route::prefix('')->group(function () {
     Route::get('/forgot-password', [ForgotPasswordController::class, 'index'])->name('forgot.password');
 });
 Route::resource('register', RegisterController::class);
-
 Route::post('/check-name', [SetupController::class, 'checkName'])->name('checkName');
+
 Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
     Route::view('/', 'user.dashboard')->name('dashboard');
@@ -49,9 +49,15 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::resource('undangan', UndanganController::class);
 
+
+    // Kelola Undangan
     Route::get('/kelola/{id}', [UndanganController::class, 'kelola'])->name('undangan.kelola');
     Route::get('/kelola/{id}/pengantin', [ViewKelolaUndanganController::class, 'pengantin'])->name('undangan.pengantin');
     Route::get('/kelola/{id}/acara', [ViewKelolaUndanganController::class, 'acara'])->name('undangan.acara');
+    Route::get('/kelola/{id}/galeri', [ViewKelolaUndanganController::class, 'galery'])->name('undangan.galery');
+    Route::get('/kelola/{id}/musik', [ViewKelolaUndanganController::class, 'sound'])->name('undangan.musik');
+    Route::get('/kelola/{id}/ucapan', [ViewKelolaUndanganController::class, 'ucapan'])->name('undangan.ucapan');
+
 });
 
 

@@ -4,6 +4,11 @@ namespace App\Models;
 
 use App\Models\KelolaUndangan\Pria;
 use App\Models\KelolaUndangan\Acara;
+use App\Models\KelolaUndangan\FiturUcapan;
+use App\Models\KelolaUndangan\Galery;
+use App\Models\KelolaUndangan\Sound;
+use App\Models\KelolaUndangan\Tamu;
+use App\Models\KelolaUndangan\Ucapan;
 use App\Models\KelolaUndangan\Wanita;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,6 +32,22 @@ class Data extends Model
 
     public function acara(){
         return $this->belongsTo(Acara::class);
+    }
+    public function galery(){
+        return $this->belongsTo(Galery::class);
+    }
+
+    public function sound(){
+        return $this->belongsTo(Sound::class);
+    }
+    public function tamu(){
+        return $this->belongsTo(Tamu::class);
+    }
+    public function ucapan(){
+        return $this->belongsTo(Ucapan::class);
+    }
+    public function FiturUcapan(){
+        return $this->belongsTo(FiturUcapan::class);
     }
 
     

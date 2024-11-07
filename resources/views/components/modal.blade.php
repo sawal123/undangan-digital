@@ -1,6 +1,6 @@
-@props(['id', 'title', 'wire', 'textButton'])
+@props(['id', 'title', 'wire', 'textButton', 'other'=>null])
 
-<div class="modal fade" id="{{$id}}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="{{$id}}-title" aria-hidden="true">
+<div class="modal fade" id="{{$id}}" data-bs-backdrop="static" {{$other}} tabindex="-1" aria-labelledby="{{$id}}-title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded shadow border-0">
             <div class="modal-header border-bottom">
@@ -14,7 +14,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" wire:click='close' data-bs-dismiss="modal"  ><i
                         class="mdi mdi-close"></i> Tutup</button>
-                    <button type="submit" class="btn btn-primary"><i class="mdi mdi-check-bold"></i> {{$textButton}}</button>
+                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled"><i class="mdi mdi-check-bold"></i> {{$textButton}}</button>
                 </div>
             </form>
         </div>

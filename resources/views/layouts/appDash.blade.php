@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html> --}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -24,17 +24,16 @@
         type="text/css">
     <link href="{{ asset('assetDashboard/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assetDashboard/libs/@iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet" />
-    <!-- Style Css-->
-    <link href="{{ asset('assetDashboard/css/style.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
+
     <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('assetDashboard/userJs/css/dashboard.css') }}">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-
+    <!-- Style Css-->
+    <link href="{{ asset('assetDashboard/css/style.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
     @vite([])
 </head>
 
@@ -85,69 +84,19 @@
         <script src="{{ asset('assetDashboard/userJs/dashboard/copyLink.js') }}"></script>
     @endif
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const removeBackdrop = () => {
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-                document.body.classList.remove('modal-open'); // Menghilangkan class `modal-open` dari body
-            };
 
-            // Event untuk membuka modal EditAcara
-            window.addEventListener('openEditModal', () => {
-                const editModal = new bootstrap.Modal(document.getElementById('EditAcara'));
-                editModal.show();
-            });
-            window.addEventListener('openDeleteModal', () => {
-                const editModal = new bootstrap.Modal(document.getElementById('hapusAcara'));
-                editModal.show();
-            });
+    @if (request()->routeIs('dashboard.undangan.acara'))
+        <script src="{{ asset('assetDashboard/userJs/kelola-undangan/acara.js') }}"></script>
+    @endif
 
-            // Event untuk menutup modal AddAcara
-            window.addEventListener('close-modal', () => {
-                const addModalElement = document.getElementById('AddAcara');
-                const addModalInstance = bootstrap.Modal.getInstance(addModalElement);
-                if (addModalInstance) {
-                    addModalInstance.hide();
-                }
-                removeBackdrop();
-            });
+    @if (request()->routeIs('dashboard.undangan.galery'))
+        <script src="{{asset('assetDashboard/userJs/kelola-undangan/galery.js')}}"></script>
+    @endif
+    @if (request()->routeIs('dashboard.undangan.ucapan'))
+        <script src="{{asset('assetDashboard/userJs/kelola-undangan/ucapan.js')}}"></script>
+    @endif
 
-            // Event untuk menutup modal EditAcara
-            window.addEventListener('tutup-modal', () => {
-                const editModalElement = document.getElementById('EditAcara');
-                const editModalInstance = bootstrap.Modal.getInstance(editModalElement);
-                if (editModalInstance) {
-                    editModalInstance.hide();
-                }
-                removeBackdrop();
-            });
-            window.addEventListener('close-hapus', () => {
-                const editModalElement = document.getElementById('hapusAcara');
-                const editModalInstance = bootstrap.Modal.getInstance(editModalElement);
-                if (editModalInstance) {
-                    editModalInstance.hide();
-                }
-                removeBackdrop();
-            });
-        });
-    </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Close the modal after the deletion
-            window.livewire.on('close-modal', () => {
-                $('#deleteModal').modal('hide');
-            });
-
-            // Confirm delete button click event
-            document.getElementById('confirmDelete').addEventListener('click', function() {
-                window.livewire.emit('delete'); // Call the delete method
-            });
-        });
-    </script>
 
 
 
