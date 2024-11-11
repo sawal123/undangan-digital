@@ -57,6 +57,7 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::get('/kelola/{id}/galeri', [ViewKelolaUndanganController::class, 'galery'])->name('undangan.galery');
     Route::get('/kelola/{id}/musik', [ViewKelolaUndanganController::class, 'sound'])->name('undangan.musik');
     Route::get('/kelola/{id}/ucapan', [ViewKelolaUndanganController::class, 'ucapan'])->name('undangan.ucapan');
+    Route::get('/kelola/{id}/tamu', [ViewKelolaUndanganController::class, 'tamu'])->name('undangan.tamu');
 
 });
 

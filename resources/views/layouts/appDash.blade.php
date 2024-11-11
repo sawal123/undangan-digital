@@ -95,6 +95,13 @@
     @if (request()->routeIs('dashboard.undangan.ucapan'))
         <script src="{{asset('assetDashboard/userJs/kelola-undangan/ucapan.js')}}"></script>
     @endif
+    @if (request()->routeIs('dashboard.undangan.tamu'))
+        <script src="{{asset('assetDashboard/userJs/kelola-undangan/tamu.js')}}"></script>
+        <script>
+           
+        </script>
+        
+    @endif
 
 
 

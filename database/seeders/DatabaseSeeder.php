@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             RoleSeeder::class,
+            Music::class,
+            // TamuSeeder::class
             // DiskonSeeder::class
         ]);
     }

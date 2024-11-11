@@ -15,6 +15,6 @@ class Tamu extends Model
         return $this->hasOne(Ucapan::class, 'tamu_id');
     }
     public function data(){
-        return $this->hasMany(Data::class);
+        return $this->belongsTo(Data::class, 'data_id');
     }
 }

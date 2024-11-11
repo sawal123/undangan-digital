@@ -77,13 +77,13 @@
                                     @endif
                                 </div>
                                 <form wire:submit.prevent='tanggapi({{ $item->id }})'>
-                                    <x-input-live type="text" label="" class="mb-1" danger=""
+                                    <x-form-input type="text" label="" class="mb-1" danger=""   wire="balas.{{$item->id}}" 
                                         place="Tanggapi Ucapan & Doa Disini :" error="balas" message="$message" />
                                         
                                     <button class="btn btn-sm btn-light border text-danger" data-bs-toggle="modal"
                                     wire:click="confirmDelete({{ $item->id }})">Hapus</button>
 
-                                    <button
+                                    <button type="submit"
                                         class="btn btn-sm btn-primary ">{{ $item->balas ? 'Ubah Tanggapan' : 'Tanggapi' }}</button>
                                 </form>
                             </div>

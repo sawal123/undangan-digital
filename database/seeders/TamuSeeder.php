@@ -16,7 +16,7 @@ class TamuSeeder extends Seeder
     {
         Tamu::factory()
             ->count(10)
-            ->has(Ucapan::factory()->count(1), 'ucapans') // Relasi one-to-one ke ucapan
-            ->create();
+            ->has(Ucapan::factory()->count(1), 'ucapans')  // Relasi one-to-one ke ucapan
+            ->create();  // Membuat data tamu beserta ucapan secara otomatis
     }
 }

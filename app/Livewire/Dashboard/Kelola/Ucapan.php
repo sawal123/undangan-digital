@@ -36,6 +36,7 @@ class Ucapan extends Component
     {
         $balas = $this->balas[$id] ?? null;
         $ucapan = KelolaUndanganUcapan::find($id);
+        // dd($balas);
         if ($ucapan) {
             if (!$ucapan->balas || $ucapan->balas) {
                 $ucapan->balas = $balas;

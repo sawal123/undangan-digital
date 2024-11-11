@@ -47,4 +47,9 @@ class ViewKelolaUndanganController extends Controller
             'data' => $this->getData($id),
         ]);
     }
+    public function tamu($id){
+        return view('user.kelola.tamu',[
+            'data' => $this->getData($id),
+        ]);
+    }
 }

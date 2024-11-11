@@ -41,7 +41,7 @@ class Data extends Model
         return $this->belongsTo(Sound::class);
     }
     public function tamu(){
-        return $this->belongsTo(Tamu::class);
+        return $this->hasMany(Tamu::class, 'data_id');
     }
     public function ucapan(){
         return $this->belongsTo(Ucapan::class);
