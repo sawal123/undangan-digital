@@ -12,6 +12,6 @@ class Sound extends Model
     protected $fillable = ['data_id', 'sound', 'start', 'isActive'];
 
     public function data(){
-        return $this->hasOne(Data::class);
+        return $this->belongsTo(Data::class);
     }
 }

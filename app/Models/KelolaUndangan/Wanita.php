@@ -14,6 +14,6 @@ class Wanita extends Model
     protected $fillable =['data_id', 'nama_lengkap', 'nama_panggilan','deskripsi', 'image'];
 
     public function data(){
-        return $this->hasOne(Data::class);
+        return $this->belongsTo(Data::class);
     }
 }

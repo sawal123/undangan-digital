@@ -12,6 +12,6 @@ class Galery extends Model
     protected $fillable  = ['data_id', 'sort', 'poto', 'video'];
 
     public function data(){
-        return $this->hasMany(Data::class);
+        return $this->belongsTo(Data::class);
     }
 }

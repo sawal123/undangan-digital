@@ -15,6 +15,6 @@ class Ucapan extends Model
         return $this->belongsTo(Tamu::class, 'tamu_id');
     }
     public function data(){
-        return $this->hasMany(Data::class);
+        return $this->belongsTo(Data::class);
     }
 }

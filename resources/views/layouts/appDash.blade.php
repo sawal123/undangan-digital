@@ -24,16 +24,16 @@
         type="text/css">
     <link href="{{ asset('assetDashboard/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assetDashboard/libs/@iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet" />
-
     <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
-
     <link rel="stylesheet" href="{{ asset('assetDashboard/userJs/css/dashboard.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
     <!-- Style Css-->
     <link href="{{ asset('assetDashboard/css/style.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
+    @if (request()->routeIs('dashboard.undangan.kado'))
+        <link href="{{ asset('assetDashboard/libs/select2/dist/css/select2.css') }}" rel="stylesheet" />
+    @endif
     @vite([])
 </head>
 
@@ -90,18 +90,19 @@
     @endif
 
     @if (request()->routeIs('dashboard.undangan.galery'))
-        <script src="{{asset('assetDashboard/userJs/kelola-undangan/galery.js')}}"></script>
+        <script src="{{ asset('assetDashboard/userJs/kelola-undangan/galery.js') }}"></script>
     @endif
     @if (request()->routeIs('dashboard.undangan.ucapan'))
-        <script src="{{asset('assetDashboard/userJs/kelola-undangan/ucapan.js')}}"></script>
+        <script src="{{ asset('assetDashboard/userJs/kelola-undangan/ucapan.js') }}"></script>
     @endif
     @if (request()->routeIs('dashboard.undangan.tamu'))
-        <script src="{{asset('assetDashboard/userJs/kelola-undangan/tamu.js')}}"></script>
-        <script>
-           
-        </script>
-        
+        <script src="{{ asset('assetDashboard/userJs/kelola-undangan/tamu.js') }}"></script>
+        <script></script>
     @endif
+    @if (request()->routeIs('dashboard.undangan.kado'))
+    <script src="{{ asset('assetDashboard/userJs/kelola-undangan/kado.js') }}"></script>
+    @endif
+
 
 
 

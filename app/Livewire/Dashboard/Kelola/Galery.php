@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Dashboard\Kelola;
 
-use App\Models\KelolaUndangan\Galery as KelolaUndanganGalery;
 use Livewire\Component;
-// use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithFileUploads;
+// use Livewire\Features\SupportFileUploads\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+use App\Models\KelolaUndangan\Galery as KelolaUndanganGalery;
 
 
 class Galery extends Component
@@ -39,8 +40,12 @@ class Galery extends Component
 
     public function delete()
     {
-        KelolaUndanganGalery::find($this->deleteId)->delete();
+        $galery = KelolaUndanganGalery::find($this->deleteId)->delete();
         // Ambil semua data dengan data_id yang sesuai, urutkan berdasarkan `sort`, dan reset ulang nilai `sort`
+        if ($galery->poto) {
+            Storage::delete('public/' . $galery->poto); // Pastikan path benar
+        }
+
         $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort')->get();
         foreach ($this->data as $index => $data) {
             $data->update(['sort' => $index + 1]);

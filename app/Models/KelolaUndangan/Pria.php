@@ -14,7 +14,7 @@ class Pria extends Model
 
 
     public function data(){
-        return $this->hasOne(Data::class);
+        return $this->belongsTo(Data::class);
     }
 
 

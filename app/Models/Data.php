@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Models\KelolaUndangan\Pria;
 use App\Models\KelolaUndangan\Acara;
+use App\Models\KelolaUndangan\FiturKado;
 use App\Models\KelolaUndangan\FiturUcapan;
 use App\Models\KelolaUndangan\Galery;
+use App\Models\KelolaUndangan\Kado;
 use App\Models\KelolaUndangan\Sound;
+use App\Models\KelolaUndangan\Streaming;
 use App\Models\KelolaUndangan\Tamu;
 use App\Models\KelolaUndangan\Ucapan;
 use App\Models\KelolaUndangan\Wanita;
@@ -24,31 +27,40 @@ class Data extends Model
     }
 
     public function pria(){
-        return $this->belongsTo(Pria::class);
+        return $this->hasOne(Pria::class);
     }
     public function wanita(){
-        return $this->belongsTo(Wanita::class);
+        return $this->hasOne(Wanita::class);
     }
 
     public function acara(){
-        return $this->belongsTo(Acara::class);
+        return $this->hasMany(Acara::class);
     }
     public function galery(){
-        return $this->belongsTo(Galery::class);
+        return $this->hasMany(Galery::class);
     }
 
     public function sound(){
-        return $this->belongsTo(Sound::class);
+        return $this->hasOne(Sound::class);
     }
+    
     public function tamu(){
         return $this->hasMany(Tamu::class, 'data_id');
     }
     public function ucapan(){
-        return $this->belongsTo(Ucapan::class);
+        return $this->hasMany(Ucapan::class);
     }
     public function FiturUcapan(){
-        return $this->belongsTo(FiturUcapan::class);
+        return $this->hasOne(FiturUcapan::class);
     }
-
+    public function streaming(){
+        return $this->hasOne(Streaming::class);
+    }
+    public function kado(){
+        return $this->hasMany(Kado::class);
+    }
+    public function fiturKado(){
+        return $this->hasOne(FiturKado::class);
+    }
     
 }

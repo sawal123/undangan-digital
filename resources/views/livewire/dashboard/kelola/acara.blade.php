@@ -11,8 +11,6 @@
             </div>
         </div>
     </div>
-   
-
 
     <h5>Jadwal Acara</h5>
     <hr>

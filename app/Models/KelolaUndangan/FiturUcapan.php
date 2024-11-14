@@ -12,6 +12,6 @@ class FiturUcapan extends Model
     protected $fillable=['data_id', 'isActive', 'publicIsActive','viewIsActive'];
 
     public function data(){
-        return $this->hasMany(Data::class);
+        return $this->belongsTo(Data::class);
     }
 }

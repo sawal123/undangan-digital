@@ -52,4 +52,14 @@ class ViewKelolaUndanganController extends Controller
             'data' => $this->getData($id),
         ]);
     }
+    public function streaming($id){
+        return view('user.kelola.streaming',[
+            'data' => $this->getData($id),
+        ]);
+    }
+    public function kado($id){
+        return view('user.kelola.kado',[
+            'data' => $this->getData($id),
+        ]);
+    }
 }
