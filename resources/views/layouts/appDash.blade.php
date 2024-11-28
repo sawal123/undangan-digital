@@ -35,6 +35,7 @@
         <link href="{{ asset('assetDashboard/libs/select2/dist/css/select2.css') }}" rel="stylesheet" />
     @endif
     @vite([])
+    @livewireStyles
 </head>
 
 <body class="font-sans antialiased">
@@ -60,20 +61,18 @@
                     <div class="">
                         {{ $slot }}
                     </div>
+                    {{-- @livewire('your-component') --}}
                 </div>
             </div>
         </main>
     </div>
-
 
     <!-- javascript -->
     <!-- JAVASCRIPT -->
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>
-    {{-- <script src="assetDashboard/libs/apexcharts/apexcharts.min.js"></script> --}}
-    <!-- Main Js -->
-    {{-- Library Link --}}
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -100,9 +99,25 @@
         <script></script>
     @endif
     @if (request()->routeIs('dashboard.undangan.kado'))
-    <script src="{{ asset('assetDashboard/userJs/kelola-undangan/kado.js') }}"></script>
+        <script src="{{ asset('assetDashboard/userJs/kelola-undangan/kado.js') }}"></script>
+    @endif
+    @if (request()->routeIs('dashboard.undangan.kisah'))
+        <script src="{{ asset('assetDashboard/userJs/kelola-undangan/kisah.js') }}"></script>
     @endif
 
+
+    <script>
+       
+        // const removeBackdrop = () => {
+        //     const backdrop = document.querySelector(".modal-backdrop");
+        //     if (backdrop) {
+        //         backdrop.remove();
+        //     }
+        //     document.body.classList.remove("modal-open"); // Menghilangkan class `modal-open` dari body
+        //     document.body.style.overflow = "auto";
+        // };
+    </script>
+    @livewireScripts
 
 
 

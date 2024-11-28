@@ -38,9 +38,9 @@ class LoginController extends Controller
       }
       if (auth()->user()->hasRole('User')) {
         if(Data::find(Auth::user()->id)){
-         return redirect()->to('/dashboard');
+         return redirect()->route('dashboard.dashboard');
         }else{
-         return redirect()->to('/dashboard/setup');
+         return redirect()->route('dashboard.setup');
         }
          
          

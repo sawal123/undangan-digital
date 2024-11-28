@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('data_id');
             $table->foreign('data_id')->references('id')->on('data')->onDelete('cascade');
             $table->unsignedInteger('sort')->nullable();
-            $table->string('poto')->nullable();
-            $table->string('video')->nullable();
+            $table->string('poto')->nullable()->default(null);
+            $table->string('video')->nullable()->default(null);
             $table->timestamps();
         });
     }

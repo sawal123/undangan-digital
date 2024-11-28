@@ -62,4 +62,23 @@ class ViewKelolaUndanganController extends Controller
             'data' => $this->getData($id),
         ]);
     }
+    public function kisah($id){
+        return view('user.kelola.kisah',[
+            'data' => $this->getData($id),
+        ]);
+    }
+    public function setting($id){
+        $data = Data::find($this->getData($id));
+        // dd($this->getData($id));
+        return view('user.kelola.setting',[
+            'data' => $this->getData($id),
+        ]);
+    }
+    public function tema($id){
+        $data = Data::find($this->getData($id));
+        // dd($this->getData($id));
+        return view('user.kelola.tema',[
+            'data' => $this->getData($id),
+        ]);
+    }
 }

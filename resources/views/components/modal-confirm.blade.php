@@ -1,6 +1,6 @@
 <!-- Delete Confirmation Modal -->
 @props(['id', 'deskripsi', 'wire'=>'','buttonId'=>''])
-<div class="modal fade" id="{{ $id }}" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="{{ $id }}Label"
+<div class="modal fade" id="{{ $id }}" data-bs-backdrop="static" wire:ignore.self tabindex="-1" role="dialog" aria-labelledby="{{ $id }}Label"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

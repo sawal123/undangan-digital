@@ -1,4 +1,4 @@
-<x-modal id="AddVideo" title="Tambah Video" wire="save" textButton="Simpan">
+<x-modal id="AddVideo" title="Tambah Video" wire="save" textButton="Simpan" wire:ignore.self>
     <div class="modal-body">
         <x-form-input type="url" label="Galery Video" danger="*" wire="video" place="https://www.youtube.com/watch?v=galery" error="video"
             message="$message" />

@@ -1,4 +1,7 @@
 <div>
+    <a href="/dashboard/kelola/{{ Crypt::encryptString($dataId) }}" class="btn btn-secondary btn-sm"><i
+            class="mdi mdi-arrow-left-bold"></i>
+        Kembali</a>
     <div class="alert alert-info mt-2 d-flex justify-content-between align-items-center">
         <p class="m-0"> Aktifkan Fitur Kado, Agar Teman Bisa Kasih Hadiah</p>
         <div class="form-check form-switch">
@@ -25,6 +28,7 @@
                             {{ $fitur === null || $fitur->isActive === 0 ? 'disabled' : '' }}>
                             <i class="mdi mdi-plus-box"></i>Tambah
                         </button>
+                        @include('user.kelola.kado.addKado')
                     </div>
                     <hr>
                     <ul class="list-group">
@@ -36,7 +40,8 @@
                                     <small>{{ $item->nomorPay }}</small>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <button class="btn btn-sm btn-info"
+                                    <button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#openModalCode"
                                         wire:click='barcodePreview({{ $item->id }})'><i
                                             class="mdi mdi-barcode-scan"></i></button>
                                     <button class="btn btn-sm btn-danger" wire:click='delete({{ $item->id }})'><i
@@ -53,9 +58,10 @@
             </div>
         </div>
     </div>
-    @include('user.kelola.kado.addKado')
+    {{-- @include('user.kelola.kado.addKado') --}}
 
-    <div class="modal fade" id="openModalCode" tabindex="-1" aria-labelledby="openModalCodeLabel"  aria-hidden="true">
+    <div class="modal fade" id="openModalCode" wire:ignore.self tabindex="-1" aria-labelledby="openModalCodeLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header d-flex justify-content-between">

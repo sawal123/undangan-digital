@@ -22,7 +22,7 @@ class Galery extends Component
     public $url;
   
 
-    public $deleteId;
+    public $deleteId ='';
 
 
     public function close()
@@ -34,17 +34,17 @@ class Galery extends Component
     public function confirmDelete($id)
     {
         $this->deleteId = $id;
-        $this->dispatch('openDeleteModal');
-        // $this->dispatch('open-delete-modal'); 
     }
 
-    public function delete()
+    public function delete($id)
     {
-        $galery = KelolaUndanganGalery::find($this->deleteId)->delete();
+        $galery = KelolaUndanganGalery::find($id);
+        // dd($galery);
         // Ambil semua data dengan data_id yang sesuai, urutkan berdasarkan `sort`, dan reset ulang nilai `sort`
-        if ($galery->poto) {
+        if ($galery->poto !== null) {
             Storage::delete('public/' . $galery->poto); // Pastikan path benar
         }
+        $galery->delete();
 
         $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort')->get();
         foreach ($this->data as $index => $data) {
@@ -52,6 +52,14 @@ class Galery extends Component
         }
         session()->flash('message', 'Data Galery Berhasil Dihapus.');
         $this->dispatch('close-hapus');
+    }
+
+    public $preview = null ;
+    public function pre($id){
+        // dd($id);
+        $this->preview = KelolaUndanganGalery::find($id);
+        // dd($this->preview);
+
     }
 
     public function convertUrl()
@@ -80,7 +88,7 @@ class Galery extends Component
         $data = KelolaUndanganGalery::where('data_id', $this->dataId)->get();
         $imagePath = is_object($this->poto) ? $this->poto->store('galery', 'public') : null;
 
-        if ($data->count() < 10) {
+        if ($data->count() < 10 || !$data) {
             if ($this->poto !== null) {
                 $this->validate([
                     'poto' => 'required|image|max:1024',
@@ -103,10 +111,11 @@ class Galery extends Component
             }
             $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
 
-            $this->close();
+            $this->dispatch('closeAdd');
+            $this->dispatch('closeAddPoto');
             session()->flash('message', 'Galery Telah Tersimpan.');
         } else {
-            $this->close();
+            $this->dispatch('closeAdd');
             session()->flash('message', 'Galery Anda Telah Mencapai Batas Maksimal.');
         }
     }

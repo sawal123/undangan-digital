@@ -25,6 +25,9 @@
             <x-admin.menu :link="route('admin.setting')" :icon="'mdi mdi-cog'" :active="request()->routeIs('admin.setting')">
                 {{ __('Setting') }}
             </x-admin.menu>
+            <x-admin.menu :link="route('admin.pay.setting')" :icon="'mdi mdi-cog'" :active="request()->routeIs('admin.pay.setting')">
+                {{ __('Pay Setting') }}
+            </x-admin.menu>
             {{-- <x-admin.menu :link="route('admin.logout')" :icon="'mdi mdi-power'">
                 {{ __('Log Out') }}
             </x-admin.menu> --}}

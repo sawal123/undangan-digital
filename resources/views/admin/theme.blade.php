@@ -45,8 +45,9 @@
                                     <td>
                                         {{ $theme->path }}
                                     </td>
-                                    <td class="text-end p-3 d-flex justify-content-end gap-2">
-                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                    <td class="text-end p-3 ">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#editTheme" data-id="{{ $theme->id }}"
                                             data-nama="{{ $theme->nama }}" data-path="{{ $theme->path }}"
                                             data-category="{{ $theme->category_id }}"
@@ -55,6 +56,8 @@
                                             data-url="{{ route('admin.theme.destroy', $theme->id) }}">
                                             Delete
                                         </button>
+                                        </div>
+                                      
                                     </td>
                                 </tr>
 

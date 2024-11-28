@@ -1,4 +1,4 @@
-<x-modal id="EditTamu" title="{{ $title }}" wire="save" textButton="Simpan" other="">
+<x-modal id="EditTamu" title="{{ $title }}" wire="save" textButton="Simpan" other="wire:ignore.self">
     <div class="modal-body">
         <x-form-input type="hidden" label=""  class="mb-1" danger="" wire="idTamu" error="balas" message="$message" />
         <x-form-input type="text" label="Nama Tamu" class="mb-1 " danger="*" wire="nama"

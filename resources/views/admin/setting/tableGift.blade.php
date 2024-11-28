@@ -36,8 +36,9 @@
                                 </div>
                             </a>
                         </td>
-                        <td class="text-end p-3 d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                        <td class="text-end p-3 ">
+                            <div class="d-flex justify-content-end gap-2">
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#editGift{{ $gift->id }}">Edit</button>
                             @include('admin.setting.modal-EditGift')
                            
@@ -45,6 +46,8 @@
                                 data-delete="{{ route('admin.giftpay.destroy', $gift->id) }}">
                                 Delete
                             </button>
+                            </div>
+                          
                         </td>
                     </tr>
 

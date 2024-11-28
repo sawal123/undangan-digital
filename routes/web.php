@@ -16,8 +16,11 @@ use App\Http\Controllers\Landing\LandingController;
 use App\Http\Controllers\Dashboard\UndanganController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\AcaraController;
+use App\Http\Controllers\Dashboard\KelolaUndangan\Pay\PayController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\PengantinController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
+use App\Http\Controllers\TemaController;
+use App\Http\Controllers\viewAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +45,11 @@ Route::prefix('')->group(function () {
 Route::resource('register', RegisterController::class);
 Route::post('/check-name', [SetupController::class, 'checkName'])->name('checkName');
 
+
+// Route::get('/{slug}', [TemaController::class, 'index'])->name('tema');
+
+
+// Role User
 Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
     Route::view('/', 'user.dashboard')->name('dashboard');
@@ -60,10 +68,16 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::get('/kelola/{id}/tamu', [ViewKelolaUndanganController::class, 'tamu'])->name('undangan.tamu');
     Route::get('/kelola/{id}/streaming', [ViewKelolaUndanganController::class, 'streaming'])->name('undangan.streaming');
     Route::get('/kelola/{id}/kado', [ViewKelolaUndanganController::class, 'kado'])->name('undangan.kado');
+    Route::get('/kelola/{id}/kisah-cinta', [ViewKelolaUndanganController::class, 'kisah'])->name('undangan.kisah');
+    Route::get('/kelola/{id}/setting', [ViewKelolaUndanganController::class, 'setting'])->name('undangan.setting');
+    Route::get('/kelola/{id}/tema', [ViewKelolaUndanganController::class, 'tema'])->name('undangan.tema');
+    Route::get('/demo/{slug}', [TemaController::class, 'demo'])->name('demo');
+    Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
 
 });
 
 
+// Role Admin
 Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->group(function () {
     Route::view('/', 'admin.admin')->name('admin');
     Route::resource('theme', ThemeController::class);
@@ -73,6 +87,7 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::post('/price/update', [PriceListController::class, 'update'])->name('price.update');
     Route::delete('/price/{id}', [PriceListController::class, 'destroy'])->name('price.destroy');
     Route::resource('giftpay', GiftPayController::class)->except('index');
+    Route::get('/pay-setting/', [viewAdminController::class, 'index'])->name('pay.setting');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 

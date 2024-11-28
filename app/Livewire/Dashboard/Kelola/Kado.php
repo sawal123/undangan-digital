@@ -23,11 +23,16 @@ class Kado extends Component
     public $qris = null;
     public $giftPay;
     public $barcode;
+    public $codeId = 0;
 
     public function close()
     {
-        $this->dispatch('closeDelModal');
+        $this->dispatch('closeAddKado');
         $this->dispatch('closeEditModal');
+    }
+
+    public function AddKado(){
+        $this->dispatch('modalAddKado');
     }
 
     public function inputReset()
@@ -40,8 +45,7 @@ class Kado extends Component
     public function barcodePreview($id){
         $kado = KelolaUndanganKado::find($id);
         $this->barcode = $kado->qris;
-
-        $this->dispatch('openModalCode');
+        $this->codeId = $id;
     }
 
     public function mount()

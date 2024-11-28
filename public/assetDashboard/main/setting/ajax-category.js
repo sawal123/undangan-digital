@@ -26,7 +26,10 @@ $("#form-data").on("submit", function (event) {
                 $("#form-data")[0].reset();
                 $("#categoryMessage").html("");
                 $("#iconMessage").html("");
-                appendToTable(response.data , response.count);
+                // appendToTable(response.data , response.count);
+                localStorage.setItem("alertMessage", response.message);
+                localStorage.setItem("alertType", "success"); // Menyimpan tipe alert
+                location.reload(); // Reload halaman
                 $("#categoryForm").modal("hide");
                 console.log("Modal closed");
             } else {
@@ -62,27 +65,49 @@ $("#form-data").on("submit", function (event) {
         },
     });
 });
-function appendToTable(data, count) {
-    var newRow = `
-                <tr>
-            <th class="p-3">${count}</th>
-            <td class="p-3">
-                <a href="#" class="text-primary">
-                    <div class="d-flex align-items-center">
-                        <img src="/storage/${data.icon}"
-                            class="avatar avatar-ex-small rounded-circle shadow" alt="">
-                        <span class="ms-2">${data.category}</span>
-                    </div>
-                </a>
-            </td>
-            <td class="text-end p-3 d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-sm btn-primary">Edit</button>
-                <form id="categoryDelete">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
+
+$(document).ready(function () {
+    // Cek apakah ada pesan alert di localStorage
+    var alertMessage = localStorage.getItem("alertMessage");
+    var alertType = localStorage.getItem("alertType");
+
+    if (alertMessage) {
+        $("#alert-container").html(
+            '<div class="alert alert-' +
+                alertType +
+                '">' +
+                alertMessage +
+                "</div>"
+        );
+        // Hapus pesan dari localStorage setelah ditampilkan
+        localStorage.removeItem("alertMessage");
+        localStorage.removeItem("alertType");
+    }
+
+    // ... kode lain di sini
+});
+
+// function appendToTable(data, count) {
+//     var newRow = `
+//                 <tr>
+//             <th class="p-3">${count}</th>
+//             <td class="p-3">
+//                 <a href="#" class="text-primary">
+//                     <div class="d-flex align-items-center">
+//                         <img src="/storage/${data.icon}"
+//                             class="avatar avatar-ex-small rounded-circle shadow" alt="">
+//                         <span class="ms-2">${data.category}</span>
+//                     </div>
+//                 </a>
+//             </td>
+//             <td class="text-end p-3 d-flex justify-content-end gap-2">
+//                 <button type="button" class="btn btn-sm btn-primary">Edit</button>
+//                 <form id="categoryDelete">
+//                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+//                 </form>
+//             </td>
+//         </tr>
           
-        `;
-    $("#category-table tbody").append(newRow); // Tambahkan row baru ke tabel
-}
+//         `;
+//     $("#category-table tbody").append(newRow); 
+// }

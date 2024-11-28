@@ -1,4 +1,10 @@
-<x-modal id="AddKado" title="Tambah Metode Kado" wire="save" textButton="Simpan" other="wire:ignore.self">
+<style>
+    small, h5, span{
+        color:#121212;
+    }
+    
+</style>
+<x-modal id="AddKado" title="Tambah Metode Kado" wire="save" textButton="Simpan" other="wire:ignore">
     <div class="modal-body">
         <div class="mb-3 ">
             <small class="form-label">Bank / E-wallet <span class="text-danger">*</span></small>
@@ -21,21 +27,32 @@
     <script src="{{ asset('assetDashboard/libs/select2/dist/js/select2.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            // Inisialisasi select2 pada modal
+            // Inisialisasi select2 pada modal saat modal ditampilkan
             $('#AddKado').on('shown.bs.modal', function() {
-                $('#giftId').select2({
-                    dropdownParent: $('#AddKado'), // Set parent ke modal
-                    width: '100%'
-                }).on('change', function(e) {
-                    // Update nilai giftId di Livewire
-                    @this.set('giftId', $(this).val());
-                });
+                var giftId = $('#giftId');
+                
+                // Cek jika select2 belum diinisialisasi, inisialisasi Select2
+                if (!giftId.hasClass('select2-hidden-accessible')) {
+                    giftId.select2({
+                        dropdownParent: $('#AddKado'), // Set parent ke modal
+                        width: '100%'  // Lebar dropdown menyesuaikan modal
+                    }).on('change', function() {
+                        // Update nilai giftId di Livewire
+                        @this.set('giftId', $(this).val());
+                    });
+                }
             });
 
-            // Hancurkan select2 saat modal ditutup
+            // Hancurkan select2 saat modal ditutup, jika ada instance Select2
             $('#AddKado').on('hidden.bs.modal', function() {
-                $('#giftId').select2('destroy');
+                var giftId = $('#giftId');
+                
+                // Hanya hancurkan Select2 jika sudah diinisialisasi
+                if (giftId.hasClass('select2-hidden-accessible')) {
+                    giftId.select2('destroy');
+                }
             });
         });
     </script>
 @endif
+

@@ -7,7 +7,9 @@ use App\Models\KelolaUndangan\Acara;
 use App\Models\KelolaUndangan\FiturKado;
 use App\Models\KelolaUndangan\FiturUcapan;
 use App\Models\KelolaUndangan\Galery;
+use App\Models\KelolaUndangan\ImgKisahCinta;
 use App\Models\KelolaUndangan\Kado;
+use App\Models\KelolaUndangan\KisahCinta;
 use App\Models\KelolaUndangan\Sound;
 use App\Models\KelolaUndangan\Streaming;
 use App\Models\KelolaUndangan\Tamu;
@@ -61,6 +63,26 @@ class Data extends Model
     }
     public function fiturKado(){
         return $this->hasOne(FiturKado::class);
+    }
+
+    public function imageKisah(){
+        return $this->hasMany(ImgKisahCinta::class);
+    }
+    public function kisah(){
+        return $this->hasMany(KisahCinta::class);
+    }
+
+    public function teksUndangan(){
+        return $this->hasOne(TeksUndangan::class);
+    }
+    public function coverUndangan(){
+        return $this->hasOne(coverUndangan::class);
+    }
+     public function teksWhatsApp(){
+        return $this->hasOne(teksWhatsApp::class);
+    }
+    public function teksPenutup(){
+        return $this->hasOne(teksPenutup::class);
     }
     
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('theme_id')->references('id')->on('themes')->onDelete('cascade');
             $table->string('title');
             $table->string('slug');
+            $table->boolean('isActive')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

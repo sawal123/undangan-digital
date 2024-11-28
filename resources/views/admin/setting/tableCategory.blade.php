@@ -36,14 +36,17 @@
                                 </div>
                             </a>
                         </td>
-                        <td class="text-end p-3 d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#editCategory{{ $category->id }}">Edit</button>
-                            @include('admin.setting.modal-EditCategory')
-                            <button class="deleteCategory btn btn-sm btn-danger"
-                                data-url="{{ route('admin.categories.destroy', $category->id) }}">
-                                Delete
-                            </button>
+                        <td class="text-end p-3 ">
+                            <div class="d-flex justify-content-end gap-2">
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#editCategory{{ $category->id }}">Edit</button>
+                                @include('admin.setting.modal-EditCategory')
+                                <button class="deleteCategory btn btn-sm btn-danger"
+                                    data-url="{{ route('admin.categories.destroy', $category->id) }}">
+                                    Delete
+                                </button>
+                            </div>
+
                         </td>
                     </tr>
 

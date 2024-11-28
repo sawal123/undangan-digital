@@ -19,7 +19,6 @@
                         <div class="form-floating mb-2">
                             <input type="file" class="form-control" name="icon" id="icon"
                                >
-                            {{-- <label for="icon">Icon</label> --}}
                             <div id="iconMessage"></div>
                         </div>
                     </div>

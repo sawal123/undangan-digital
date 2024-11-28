@@ -22,9 +22,13 @@ class Tamu extends Component
     public $title = 'Add Tamu';
     public function close()
     {
+       
         $this->dispatch('closeDelModal');
-        $this->dispatch('closeEditModal');
+        
+ 
     }
+ 
+
 
     public function shareWA($id)
     {
@@ -48,7 +52,8 @@ class Tamu extends Component
             $this->dispatch('open-new-tab', ['url' => $whatsappUrl]);
         }
     }
-    public function delete($kode){
+    public function delete($kode)
+    {
         $tamu = Tamus::where('kode', $kode)->first();
         $tamu->delete();
         session()->flash('message', 'Tamu Berhasil Didelete.');
@@ -60,7 +65,6 @@ class Tamu extends Component
             $this->invite = [$this->undang->nama, $this->undang->kode];
         }
         $this->slug = url('/') . '/' . $this->undang->data->slug . '/' . $this->undang->kode;
-        $this->dispatch('openModalShare');
     }
     public function EditTamu($id)
     {
@@ -70,9 +74,8 @@ class Tamu extends Component
         $this->nama = $this->undang->nama;
         $this->whatsapp = $this->undang->nomor;
 
-        $this->dispatch('openModalEdit');
+        // $this->dispatch('openModalEdit');
         $this->title = "Edit Tamu";
-
     }
     public function save()
     {
@@ -83,7 +86,7 @@ class Tamu extends Component
                 'nomor' => $this->whatsapp
             ]);
             session()->flash('message', 'Tamu Berhasil DiUpdate.');
-            $this->close();
+            $this->dispatch('closeEditTamu');
         } else {
             $kode = rand(99, 9999);
             KelolaUndanganTamu::create([
@@ -94,11 +97,17 @@ class Tamu extends Component
                 'slug' => Str::slug($this->nama)
             ]);
             session()->flash('message', 'Tamu Berhasil Ditambahkan.');
+            $this->dispatch('closeAddTamu');
         }
 
         KelolaUndanganTamu::where('data_id', $this->dataId)->get();
-
-        $this->close();
+        $this->resetField();
+        
+    }
+    public function resetField()
+    {
+        $this->nama = '';
+        $this->whatsapp = '';
     }
 
     public function render()
