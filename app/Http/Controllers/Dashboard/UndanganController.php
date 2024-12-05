@@ -34,7 +34,6 @@ class UndanganController extends Controller
             'objects' => $objects
         ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */

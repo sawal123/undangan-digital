@@ -19,6 +19,7 @@ use App\Http\Controllers\Dashboard\KelolaUndangan\AcaraController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\Pay\PayController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\PengantinController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
+use App\Http\Controllers\Dashboard\Transaksi;
 use App\Http\Controllers\TemaController;
 use App\Http\Controllers\viewAdminController;
 
@@ -56,6 +57,7 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::resource('data', DataController::class);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::resource('undangan', UndanganController::class);
+    Route::resource('transaksi', Transaksi::class);
 
 
     // Kelola Undangan
@@ -73,7 +75,6 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::get('/kelola/{id}/tema', [ViewKelolaUndanganController::class, 'tema'])->name('undangan.tema');
     Route::get('/demo/{slug}', [TemaController::class, 'demo'])->name('demo');
     Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
-
 });
 
 

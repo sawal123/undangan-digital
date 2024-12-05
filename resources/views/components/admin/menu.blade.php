@@ -1,4 +1,4 @@
-@props(['active', 'link', 'icon'])
+@props(['active', 'link'=> '#', 'icon'])
 
 @php
 $classes = ($active ?? false)

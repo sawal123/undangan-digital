@@ -19,13 +19,20 @@
             <x-admin.menu :link="route('dashboard.undangan.index')" :icon="'ti ti-mail'" :active="request()->routeIs('dashboard.undangan.index')">
                 {{ __('Undangan') }}
             </x-admin.menu>
-            <x-admin.menu :link="route('dashboard.dashboard')" :icon="'ti ti-shopping-cart'" :active="request()->routeIs('dashboard.dashboard')">
+            <x-admin.menu :link="route('dashboard.transaksi.index')" :icon="'ti ti-shopping-cart'" :active="request()->routeIs('dashboard.transaksi.index')">
                 {{ __('Transaksi') }}
             </x-admin.menu>
-            <x-admin.menu :link="route('dashboard.dashboard')" :icon="'ti ti-phone'" :active="request()->routeIs('dashboard.dashboard')">
-                {{ __('Costumer Service') }}
-            </x-admin.menu>
-            
+            @php
+                $classes = $active ?? false ? 'active' : '';
+            @endphp
+            <li class="{{ $classes }}">
+                <a href="https://wa.me/6282274677715" target="_blank">
+                    <i class="ti ti-phone me-2"></i>
+                    {{ __('Costumer Service') }}
+                </a>
+            </li>
+
+
             {{-- <x-admin.menu :link="route('admin.logout')" :icon="'mdi mdi-power'">
                 {{ __('Log Out') }}
             </x-admin.menu> --}}
@@ -55,7 +62,7 @@
 
 
 
-          
+
         </ul>
         <!-- sidebar-menu  -->
     </div>
