@@ -33,7 +33,7 @@
                         <a href="
                         @if (Auth::user()->hasRole('Owner')) {{ route('admin.admin') }}
                         @elseif(Auth::user()->hasRole('User'))
-                            {{ route('dashboard.dashboard') }} @endif
+                            {{ route('dashboard.index') }} @endif
                     "
                             class="btn btn-info"><i class="mdi mdi-kodi me-2"></i>Dashboard</a>
                     </li>
@@ -52,7 +52,7 @@
                     </li>
                 @else
                     <li class="list-inline-item ps-1 mb-0">
-                        <a href="{{ route('login') }}" wire:navigate class="btn btn-primary">Login</a>
+                        <a href="{{ route('login') }}" wire:navigate class="btn btn-primary">Buat Undangan Disini!</a>
                     </li>
                 @endif
 

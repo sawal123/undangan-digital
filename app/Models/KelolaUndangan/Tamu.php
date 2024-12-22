@@ -12,9 +12,9 @@ class Tamu extends Model
     protected $fillable =['data_id', 'nama', 'kode', 'nomor', 'slug'];
 
     public function ucapans(){
-        return $this->hasOne(Ucapan::class, 'tamu_id');
+        return $this->hasOne(Ucapan::class);
     }
     public function data(){
-        return $this->belongsTo(Data::class, 'data_id');
+        return $this->belongsTo(Data::class);
     }
 }

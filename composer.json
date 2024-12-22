@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
+        "midtrans/midtrans-php": "^2.6",
         "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {

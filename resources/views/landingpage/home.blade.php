@@ -3,16 +3,16 @@
         @include('landingpage.welcome.hero')
     
     
-        @include('landingpage.welcome.best-creator')
+        {{-- @include('landingpage.welcome.best-creator') --}}
     
         <!-- Start -->
         <section class="section">
             @include('landingpage.welcome.fitur')
-            <div class="mt-5">
+            {{-- <div class="mt-5">
                 <h4 class="text-center">Kategori </h4>
-            </div>
-            @include('landingpage.welcome.kategori')
-            @include('landingpage.welcome.explore')
+            </div> --}}
+            {{-- @include('landingpage.welcome.kategori') --}}
+            {{-- @include('landingpage.welcome.explore') --}}
         </section><!--end section-->
         <!-- End -->
     

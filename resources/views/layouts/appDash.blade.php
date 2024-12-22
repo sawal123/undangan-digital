@@ -8,6 +8,7 @@
     <meta name="author" content="Shreethemes" />
     <meta name="email" content="support@shreethemes.in" />
     <meta name="website" content="https://shreethemes.in" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->

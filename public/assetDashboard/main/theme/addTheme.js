@@ -20,16 +20,18 @@ $("#form-data").on("submit", function (event) {
             if (response.success) {
                 $("#alert-container").html(
                     '<div class="alert alert-success">' +
-                        response.message +
+                        response.message + response.data +
                         "</div>"
                 );
                 $("#form-data")[0].reset();
                 $("#namaMessage").html("");
                 $("#pathMessage").html("");
+                $("#demoMessage").html("");
                 $("#thumbnailMessage").html("");
                 console.log(response.data);
                 // appendToTable(response.data , response.count);
                 localStorage.setItem("alertMessage", response.message);
+                // localStorage.setItem(console.log(response));
                 localStorage.setItem("alertType", "success"); // Menyimpan tipe alert
                 location.reload(); // Reload halaman
                 $("#themeForm").modal("hide");
@@ -101,26 +103,4 @@ $(document).ready(function () {
     // ... kode lain di sini
 });
 
-// function appendToTable(data, count) {
-//     var newRow = `
-//         <tr>
-//             <th class="p-3">${count}</th>
-//             <td class="p-3">
-//                 <a href="#" class="text-primary">
-//                     <div class="d-flex align-items-center">
-//                         <img src="/storage/${data.thumbnail}" class="avatar avatar-ex-small rounded-circle shadow" alt="">
-//                         <span class="ms-2">${data.nama}</span>
-//                     </div>
-//                 </a>
-//             </td>
-//             <td>${data.category.category}</td>
-//             <td>${data.path}</td>
-//             <td class="text-end p-3 d-flex justify-content-end gap-2">
-//                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#edittheme${data.id}">Edit</button>
-//                 <button type="button" class="btn btn-sm btn-danger deletetheme" data-url="/admin/categories/destroy/${data.id}">Delete</button>
-//             </td>
-//         </tr>
-//     `;
 
-//     $("#category-table tbody").append(newRow);
-// }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('data_id');
             $table->foreign('data_id')->references('id')->on('data')->onDelete('cascade');
-            $table->unsignedBigInteger('tamu_id');
+            $table->unsignedBigInteger('tamu_id')->nullable();
             $table->foreign('tamu_id')->references('id')->on('tamus')->onDelete('cascade');
             $table->string('ucapan');
             $table->string('balas')->nullable();

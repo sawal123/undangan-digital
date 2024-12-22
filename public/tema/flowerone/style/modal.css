@@ -1,0 +1,54 @@
+.modal-content {
+    background-color: #f8f9fa; /* Light background for contrast */
+}
+
+.btn-success:hover {
+    background-color: #28a745; /* Darker green on hover */
+    color: white;
+}
+
+.modal-header {
+    text-decoration: none;
+    border: none; /* Thicker border for header */
+}
+
+.modal-body {
+    padding: 20px; /* More padding for a spacious feel */
+}
+
+.rounded-3 {
+    border-radius: 0.5rem; /* Rounded corners */
+}
+
+
+.custom-toggle-btn {
+    background-color: #9e0050;
+    color: #fff;
+    font-size: 1.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.custom-toggle-btn:hover {
+    background-color: #d1005c; 
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+
+.custom-toggle-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+}
+/* .modal-backdrop.fade.show {
+    z-index: 1;
+}
+.modal-content {
+    z-index: ;
+} */

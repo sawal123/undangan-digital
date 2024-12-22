@@ -1,0 +1,85 @@
+.ending-section .title{
+    font-size: 30px;
+    font-weight: 700;
+    font-family: "Great Vibes", cursive;
+    color: #9e0050;
+    margin-bottom: 30px;
+}
+
+.ending-section p{
+    font-size: 14px;
+    font-weight: 500;
+  
+} 
+
+.ending-section .card{
+    background-color: #9e0050;
+}
+
+.ending-section .card .card-body h5{
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.ending-section .card .card-body h5{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+
+.icon-circle {
+    background-color: #9e0050;
+    width: 40px; /* Smaller icon circle */
+    height: 40px;
+    font-size: 16px;
+}
+
+/* Remove underline (border) from each list-group-item */
+.list-group-item {
+    border: none;
+}
+
+/* Compact styling for each list item */
+.compact-item {
+    padding: 2px 2px; /* Smaller padding */
+    margin: 0;         /* No margin */
+    width: 100px; 
+    height: 80px; 
+    font-size: 12px;     /* Let the width adjust based on content */
+}
+
+.icon-container {
+    background-color: #9e0050; 
+    border-radius: 50%; 
+    width: 30px; 
+    height: 30px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.2s; 
+    outline: none; 
+   
+}
+
+.icon-container:hover,
+.icon-container:focus {
+    transform: scale(1.1); 
+    
+}
+
+.icon-container:focus {
+    box-shadow: 0 0 0 2px rgba(158, 0, 80, 0.5); 
+    outline: white;
+}
+
+.icon-container i {
+    color: white; 
+    font-size: 15px; 
+}
+
+/* active */
+.active {
+      transform: scale(1.3); 
+}
+
+

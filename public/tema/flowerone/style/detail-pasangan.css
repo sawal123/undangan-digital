@@ -1,0 +1,124 @@
+/* Detail Pasangan */
+
+/* Quotation Section */
+.quote-section {
+  padding: 30px;
+  max-width: 600px;
+  margin: 30px auto;
+}
+
+.quote-icon {
+  color: firebrick;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.quote-text {
+  font-family: "Philosopher", sans-serif;
+  color: #333;
+}
+
+.arabic-quote {
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+  font-family: "Scheherazade New", serif;
+  margin-top: 10px;
+}
+
+.translation {
+  font-size: 16px;
+  color: #555;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+.source {
+  font-size: 14px;
+  color: #777;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* Relationship Section */
+.relationship-section {
+  padding: 30px;
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.relationship-text h5 {
+  font-size: 15px;
+  font-weight: bold;
+  color: #9e0050;
+  font-family: "Scheherazade New", serif;
+}
+
+.relationship-text p {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.relationship-couple {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.relationship-photo {
+  text-align: center;
+}
+
+.relationship-photo img {
+  width: 150px;
+  height: 150px;
+}
+
+.relationship-photo h3 {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: "Great Vibes", cursive;
+  color: #333;
+  margin-top: 10px;
+}
+
+.relationship-info {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.and-sign {
+  font-family: "Great Vibes", cursive;
+  font-size: 60px;
+  color: #9e0050;
+  margin: 0 20px;
+}
+
+/* Social Icons */
+.social-icons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.social-icons a {
+  text-decoration: none;
+  color: #fff;
+  background-color: #9e0050;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  background-color: #9e0080;
+  transform: scale(1.1);
+}

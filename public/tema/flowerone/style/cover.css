@@ -1,0 +1,104 @@
+.min-vh-100 {
+    min-height: 100vh;
+
+}
+
+.flower-img {
+    max-width: 200px;
+    max-height: 200px;
+    width: 100%;
+    height: auto;
+}
+
+.flower-pembatas {
+    max-width: 60%;
+    max-height: 150px;
+}
+
+.button-style {
+    padding: 6px 24px;
+    font-size: 14px;
+    border-radius: 5px;
+    background-color: #9e0050;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.button-style:hover {
+    background-color: #9e0080;
+}
+
+.main-text {
+    font-size: 14px;
+    font-family: 'Philosopher', sans-serif;
+    color: #333;
+}
+
+.header-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #6c757d;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(90px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.index.fade-in {
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .flower-img {
+        max-width: 150px;
+        max-height: 150px;
+    }
+
+    .main-text {
+        font-size: 12px;
+    }
+
+    .header-text {
+        font-size: 12px;
+    }
+
+    .button-style {
+        padding: 10px 20px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-text {
+        font-size: 10px;
+    }
+
+    .header-text {
+        font-size: 10px;
+    }
+
+    .button-style {
+        padding: 8px 16px;
+        font-size: 10px;
+    }
+
+    .flower-img {
+        max-width: 120px;
+    }
+
+    
+     /* Maintain 3 columns on small screens */
+     .col-4 {
+        flex: 0 0 33.3333%; /* Ensure columns are equal, 3 columns of 33.33% width */
+        max-width: 33.3333%;
+    }
+}

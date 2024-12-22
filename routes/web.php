@@ -1,16 +1,21 @@
 <?php
 
+use App\Http\Controllers\Auth\ApiAuthController;
 use App\Models\Category;
 use App\Livewire\Page\Home;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Dashboard\DataController;
+use App\Http\Controllers\TemaController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\GiftPayController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Dashboard\Transaksi;
 use App\Http\Controllers\PriceListController;
+use App\Http\Controllers\viewAdminController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Pay\MidtransController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Dashboard\DataController;
 use App\Http\Controllers\Dashboard\SetupController;
 use App\Http\Controllers\Landing\LandingController;
 use App\Http\Controllers\Dashboard\UndanganController;
@@ -19,9 +24,6 @@ use App\Http\Controllers\Dashboard\KelolaUndangan\AcaraController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\Pay\PayController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\PengantinController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
-use App\Http\Controllers\Dashboard\Transaksi;
-use App\Http\Controllers\TemaController;
-use App\Http\Controllers\viewAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,8 @@ Route::get('/', Home::class)->name('home');
 Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 
 
+Route::post('/auth-api', [ApiAuthController::class, 'login']);
+
 Route::prefix('')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::post('/login-auth', [LoginController::class, 'login'])->name('login.auth');
@@ -49,14 +53,16 @@ Route::post('/check-name', [SetupController::class, 'checkName'])->name('checkNa
 
 // Route::get('/{slug}', [TemaController::class, 'index'])->name('tema');
 
+Route::get('/u/{slug}/{tamu?}', [TemaController::class, 'visit'])->name('visit');
+Route::post('u/savedoa', [TemaController::class, 'saveDoa'])->name('savedoa');
 
 // Role User
 Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
-    Route::view('/', 'user.dashboard')->name('dashboard');
+    // Route::view('/', 'user.dashboard')->name('dashboard');
     Route::resource('data', DataController::class);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    Route::resource('undangan', UndanganController::class);
+    Route::resource('/', UndanganController::class);
     Route::resource('transaksi', Transaksi::class);
 
 
@@ -73,10 +79,15 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::get('/kelola/{id}/kisah-cinta', [ViewKelolaUndanganController::class, 'kisah'])->name('undangan.kisah');
     Route::get('/kelola/{id}/setting', [ViewKelolaUndanganController::class, 'setting'])->name('undangan.setting');
     Route::get('/kelola/{id}/tema', [ViewKelolaUndanganController::class, 'tema'])->name('undangan.tema');
-    Route::get('/demo/{slug}', [TemaController::class, 'demo'])->name('demo');
+    Route::get('/demo/{demo}/{id}', [TemaController::class, 'demo'])->name('demo');
     Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
-});
 
+    
+    Route::get('/midtrans/finish', [MidtransController::class, 'finishRedirect']);
+    Route::get('/midtrans/unfinished', [MidtransController::class, 'unfinishRedirect']);
+    Route::get('/midtrans/failed', [MidtransController::class, 'errorRedirect']);
+});
+Route::post('/midtrans/callback', [MidtransController::class, 'notificationHandler']);
 
 // Role Admin
 Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->group(function () {
@@ -89,6 +100,7 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::delete('/price/{id}', [PriceListController::class, 'destroy'])->name('price.destroy');
     Route::resource('giftpay', GiftPayController::class)->except('index');
     Route::get('/pay-setting/', [viewAdminController::class, 'index'])->name('pay.setting');
+    Route::get('/harga', [viewAdminController::class, 'harga'])->name('harga');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 

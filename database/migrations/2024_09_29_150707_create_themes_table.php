@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->foreignId('category_id')->constrained();
-            $table->string('path');
-            $table->string('thumbnail');
+            $table->string('path')->nullable();
+            $table->string('demo')->nullable();
+            $table->string('thumbnail')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

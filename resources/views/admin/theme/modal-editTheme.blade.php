@@ -21,6 +21,11 @@
                             <label for="path">Path</label>
                             <div id="pathMessage"></div>
                         </div>
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control" name="demo" id="demo" placeholder="demo">
+                            <label for="path">Path Demo</label>
+                            <div id="demoMessage"></div>
+                        </div>
                         <select class="form-select form-floating mb-2" name="category_id" id="category" aria-label="Default select example">
                             <option selected disabled>Pilih Category</option>
                             @forelse ($categories as $category)

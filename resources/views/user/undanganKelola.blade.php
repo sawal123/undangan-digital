@@ -1,22 +1,20 @@
 <x-dashboard-layout>
 
-    <a href="/dashboard/undangan" class="btn btn-secondary btn-sm" wire:navigate><i class="mdi mdi-arrow-left-bold"></i>
+    <a href="/dashboard" class="btn btn-secondary btn-sm" wire:navigate><i class="mdi mdi-arrow-left-bold"></i>
         Kembali</a>
-        
         <div class="alert alert-info   d-lg-flex flex-lg-row flex-md-column  justify-content-between   align-items-center  my-2" role="alert">
             <div class="text-truncate" style="max-width: 100%;">Link Undangan Kamu: 
-                <span id="copyText">https://erawedding.com/{{ $data->slug }}</span>
+                <span id="copyText">{{url('/u/').'/'.$data->slug }}</span>
             </div>
             <div class="d-flex gap-2 mt-2 mt-lg-0">
                 <button class="btn btn-sm btn-dark border" id="copyButton" onclick="copyToClipboard()">
                     <i class="mdi mdi-content-paste"></i> <span id="text">Salin</span>
                 </button>
-                <a href="https://erawedding.com/{{ $data->slug }}" class="btn btn-sm btn-primary border">
+                <a href="{{url('/u/').'/'.$data->slug }}" class="btn btn-sm btn-primary border">
                     <i class="mdi mdi-link"></i> Kunjungi
                 </a>
             </div>
         </div>
-        
     <div class="alert alert-info d-lg-flex flex-lg-row flex-md-column justify-content-between align-items-center">
         <span>Kirim Undangan Ke Teman/Keluarga Kamu</span>
         <button class="btn btn-sm btn-secondary border"><i class="mdi mdi-send"></i> Kirim</button>

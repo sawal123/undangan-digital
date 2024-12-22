@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Dashboard\Kelola;
 
+use App\Models\Data;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use App\Models\teksWhatsApp;
 use Livewire\WithPagination;
 use App\Models\KelolaUndangan\Tamu as Tamus;
 use App\Models\KelolaUndangan\Tamu as KelolaUndanganTamu;
@@ -22,31 +24,39 @@ class Tamu extends Component
     public $title = 'Add Tamu';
     public function close()
     {
-       
+
         $this->dispatch('closeDelModal');
-        
- 
     }
- 
+
 
 
     public function shareWA($id)
     {
         $this->undang = Tamus::find($id);
+        $data = Data::find($this->undang->data_id);
         if ($this->undang) {
             $namaTamu = $this->undang->nama; // Nama tamu dari database
-            $linkUndangan = url('/') . '/' . $this->undang->data->slug . '/241025189525'; // Link undangan
 
             // Membuat teks undangan
-            $pesan = "Kepada {$namaTamu}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami *dsd & d*.
-    Pesan ini merupakan undangan resmi dari kami.
-    Silahkan kunjungi link berikut untuk membuka undangan anda: {$linkUndangan}
-    Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.
-    ===========================
-    _Pesan ini dikirim melalui_ wevitation.com";
+            $pesan = teksWhatsApp::where('data_id', $this->undang->data_id)->first()->pesan;
+
+            $dataPengganti = [
+                'tamu' => $this->undang->nama,
+                'nama_mempelai1' => $data->wanita->nama_panggilan,
+                'nama_mempelai2' => $data->pria->nama_panggilan,
+                'link' => url('/u') . '/' . $data->slug . '/' . $this->undang->kode,
+            ];
+            $pesanFinal = str_replace(
+                ['{{tamu}}', '{{nama_mempelai1}}', '{{nama_mempelai2}}', '{{link}}'],
+                [$dataPengganti['tamu'], $dataPengganti['nama_mempelai1'], $dataPengganti['nama_mempelai2'], $dataPengganti['link']],
+                $pesan
+            );
+            // dd($pesanFinal);
+
+            
 
             // Mengonversi teks pesan ke URL encoded
-            $pesanEncoded = urlencode($pesan);
+            $pesanEncoded = urlencode($pesanFinal);
             $whatsappUrl = "https://wa.me/{$this->undang->nomor}/?text={$pesanEncoded}";
 
             $this->dispatch('open-new-tab', ['url' => $whatsappUrl]);
@@ -102,7 +112,6 @@ class Tamu extends Component
 
         KelolaUndanganTamu::where('data_id', $this->dataId)->get();
         $this->resetField();
-        
     }
     public function resetField()
     {

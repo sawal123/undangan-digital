@@ -13,6 +13,7 @@ use App\Models\KelolaUndangan\KisahCinta;
 use App\Models\KelolaUndangan\Sound;
 use App\Models\KelolaUndangan\Streaming;
 use App\Models\KelolaUndangan\Tamu;
+use App\Models\KelolaUndangan\ThumbnailWa;
 use App\Models\KelolaUndangan\Ucapan;
 use App\Models\KelolaUndangan\Wanita;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,9 @@ class Data extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    public function theme(){
+        return $this->belongsTo(Theme::class);
     }
 
     public function pria(){
@@ -83,6 +87,9 @@ class Data extends Model
     }
     public function teksPenutup(){
         return $this->hasOne(teksPenutup::class);
+    }
+    public function thumbnailWas(){
+        return $this->hasOne(ThumbnailWa::class);
     }
     
 }

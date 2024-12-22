@@ -7,13 +7,17 @@
     </div>
     <select class="form-select mb-3" aria-label="Default  select example" wire:model='category'>
         <option selected>Pilih Kategori</option>
+        <option value="credit_card">Credit Card</option>
         <option value="ewallet">Qris / E-Wallet</option>
         <option value="va">Virtual Account</option>
-        <option value="other">Other Bank</option>
+        <option value="cstore">Gerai</option>
+        <option value="shopeepay">Shoope Pay</option>
+        <option value="echannel">Echannel</option>
+        <option value="cardless_credit">Cardless Credit</option>
     </select>
     <div class="mb-3">
         <label for="fee" class="form-label">Fee Admin*</label>
-        <input type="number" class="form-control" wire:model='fee' id="fee" aria-describedby="emailHelp">
+        <input type="text" class="form-control" wire:model='fee' id="fee" aria-describedby="emailHelp">
         <div id="emailHelp" class="form-text">We'll never share your bank with anyone else.</div>
     </div>
     <div class="mb-3">

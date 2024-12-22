@@ -26,7 +26,7 @@
                         <div class="mb-3">
                             <label for="basic-url" class="form-label">Your vanity URL</label>
                             <div class="input-group ">
-                                <span class="input-group-text" id="basic-addon3">https://erawedding.com/</span>
+                                <span class="input-group-text" id="basic-addon3">{{ url('/u') }}/</span>
                                 <input type="text" class="form-control" id="basic-url" wire:model.live='slug'
                                     aria-describedby="basic-addon3 basic-addon4">
                             </div>
@@ -38,6 +38,36 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+    <div class="card border border-info my-2">
+        @if (session()->has('thumbnailWa'))
+            <div class="alert alert-info mt-2 mx-2">
+                {{ session('thumbnailWa') }}
+            </div>
+        @endif
+        <div class="card-body d-flex flex-column flex-lg-row gap-3">
+
+            <div class="d-flex flex-column">
+                @if ($thumbnail)
+                    <img class="img-thumbnail rounded float-start object-fit-cover" style="height: 200px; width: auto"
+                        src="{{ $gambar ? $gambar->temporaryUrl() : asset('storage/' . $thumbnail->thumbnail) }}"
+                        alt="Thumbnail">
+                    <button class="btn btn-sm btn-danger mt-2" wire:click="delThumbnail">Hapus Gambar</button>
+                @else
+                    <img class="img-thumbnail rounded float-start object-fit-cover" style="height: 200px; width: auto"
+                        src="{{ $gambar ? $gambar->temporaryUrl() : 'https://i.pinimg.com/564x/8d/ff/49/8dff49985d0d8afa53751d9ba8907aed.jpg' }}"
+                        alt="Default Image">
+                    <button class="btn btn-sm btn-danger mt-2" wire:click="delThumbnail" disabled>Hapus Gambar</button>
+                @endif
+            </div>
+            <div class="text-lg-end">
+                <p>Gambar ini akan muncul ketika kamu mengirimi pesan melalui whatsapp</p>
+                <form wire:submit.prevent='thumbnailWa'>
+                    <input type="file" class="form-control" wire:model='gambar'>
+                    <button class="btn btn-sm btn-primary mt-2 ">Upload Gambar</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -101,16 +131,14 @@
                                 yang dapat dipakai sebagai berikut:
                                 Variabel Deskripsi
                                 <br>
-                                <strong>@{{ guest_name }}</strong> Menampilkan nama tamu secara otomatis
+                                <strong>@{{ tamu }}</strong> Menampilkan nama tamu secara otomatis
                                 <br>
-                                <strong>@{{ guest_code }}</strong> Menampilkan kode undangan tamu secara otomatis
-                                <br>
-                                <strong>@{{ guest_link }}</strong> Menampilkan link undangan khusus tamu secara
+                                <strong>@{{ link }}</strong> Menampilkan link undangan khusus tamu secara
                                 otomatis
                                 <br>
-                                <strong>@{{ bride1_name }}</strong> Menampilkan nama mempelai 1
+                                <strong>@{{ nama_mempelai1 }}</strong> Menampilkan nama mempelai 1
                                 <br>
-                                <strong>@{{ bride2_name }}</strong> Menampilkan nama mempelai 2
+                                <strong>@{{ nama_mempelai2 }}</strong> Menampilkan nama mempelai 2
                             </small>
                         </div>
                     </div>
@@ -126,10 +154,10 @@
     <div class="card border border-info my-2">
         <div class="card-body">
             @if (session()->has('teksPenutup'))
-            <div class="alert alert-info mt-2">
-                {{ session('teksPenutup') }}
-            </div>
-        @endif
+                <div class="alert alert-info mt-2">
+                    {{ session('teksPenutup') }}
+                </div>
+            @endif
             <h5>Turut Mengundang</h5>
             <form wire:submit='teksPenutup'>
                 <div class="row">

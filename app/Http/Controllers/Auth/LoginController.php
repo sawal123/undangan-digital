@@ -19,46 +19,43 @@ class LoginController extends Controller
 {
    public function index()
    {
-      if(!Auth::user()){
+      if (!Auth::user()) {
          return view('page.auth.login');
-      }else{
+      } else {
          return redirect()->to('/');
       }
    }
 
    public function login(LoginRequest $request): RedirectResponse
    {
-      // dd($request->email);
       $request->authenticate();
       $request->session()->regenerate();
-
 
       if (auth()->user()->hasRole('Owner')) {
          return redirect()->to('/admin');
       }
       if (auth()->user()->hasRole('User')) {
-        if(Data::find(Auth::user()->id)){
-         return redirect()->route('dashboard.dashboard');
-        }else{
-         return redirect()->route('dashboard.setup');
-        }
-         
-         
+         if (Data::find(Auth::user()->id)) {
+            dd('tes');
+            return redirect()->route('dashboard.undangan.index');
+         } else {
+            return redirect()->route('dashboard.setup');
+         }
       }
       // Default redirect jika bukan Owner
-      return redirect()->intended(RouteServiceProvider::HOME);
+      // return redirect()->intended(RouteServiceProvider::HOME);
    }
 
 
    public function logout(Request $request)
    {
-       Auth::logout(); // Fungsi untuk logout
+      Auth::logout(); // Fungsi untuk logout
 
-       // Menghapus session dan regenerasi untuk keamanan
-       $request->session()->invalidate();
-       $request->session()->regenerateToken();
+      // Menghapus session dan regenerasi untuk keamanan
+      $request->session()->invalidate();
+      $request->session()->regenerateToken();
 
-       // Redirect ke halaman login atau home setelah logout
-       return redirect('/')->with('success', 'You have successfully logged out.');
+      // Redirect ke halaman login atau home setelah logout
+      return redirect('/')->with('success', 'You have successfully logged out.');
    }
 }

@@ -13,6 +13,7 @@
     <meta name="Version" content="v4.8.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- favicon -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="shortcut icon" href="{{asset('assetDashboard/images/favicon.ico')}}" />
     <!-- Css -->
     <link href="{{asset('assetDashboard/libs/simplebar/simplebar.min.css')}}" rel="stylesheet">

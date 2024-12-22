@@ -41,11 +41,11 @@ class ThemeController extends Controller
             'nama' => 'required|string|max:255',
             'category_id' => 'required',
             'path' => 'required|string|max:255',
+            'demo' => 'nullable|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:1024'
         ]);
         DB::beginTransaction();
         try {
-
             if ($request->hasFile('thumbnail')) {
                 $thumbnailPath = $request->file('thumbnail')->store('thumbnail', 'public');
                 $validasi['thumbnail'] = $thumbnailPath;
@@ -64,6 +64,7 @@ class ThemeController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
+                'data' => $validasi['demo'],
             ]);
         }
     }
@@ -95,6 +96,7 @@ class ThemeController extends Controller
             'nama' => 'required|string|max:255',
             'category_id' => 'required',
             'path' => 'required|string|max:255',
+            'demo' => 'nullable|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:1024'
         ]);
         try {
@@ -107,6 +109,7 @@ class ThemeController extends Controller
             $theme->nama = $validasi['nama'];
             $theme->category_id = $validasi['category_id'];
             $theme->path = $validasi['path'];
+            $theme->demo = $validasi['demo'];
             $theme->save();
 
             return response()->json(['success' => true, 'message' => 'Theme updated successfully']);

@@ -61,7 +61,7 @@ class DataController extends Controller
             Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
         ]);
 
-        return redirect()->to('/dashboard');
+        return redirect()->route('dashboard.index');
     }
 
     /**

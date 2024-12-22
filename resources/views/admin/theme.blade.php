@@ -19,6 +19,7 @@
                                 <th class="border-bottom p-3" style="min-width: 220px;">Nama Undangan</th>
                                 <th class="border-bottom p-3" style="min-width: 220px;">Category</th>
                                 <th class="border-bottom p-3" style="min-width: 220px;">Path</th>
+                                <th class="border-bottom p-3" style="min-width: 220px;">Demo</th>
                                 <th class="text-end border-bottom p-3" style="min-width: 100px;">Preview</th>
                             </tr>
                         </thead>
@@ -45,11 +46,14 @@
                                     <td>
                                         {{ $theme->path }}
                                     </td>
+                                    <td>
+                                        {{ $theme->demo }}
+                                    </td>
                                     <td class="text-end p-3 ">
                                         <div class="d-flex justify-content-end gap-2">
                                             <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#editTheme" data-id="{{ $theme->id }}"
-                                            data-nama="{{ $theme->nama }}" data-path="{{ $theme->path }}"
+                                            data-nama="{{ $theme->nama }}" data-path="{{ $theme->path }}" data-demo="{{ $theme->demo }}"
                                             data-category="{{ $theme->category_id }}"
                                             data-thumbnail="{{ Storage::url($theme->thumbnail) }}">Edit</button>
                                         <button class="deletetheme btn btn-sm btn-danger"

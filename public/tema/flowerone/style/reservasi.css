@@ -1,0 +1,48 @@
+.rsvp-gift-section {
+    padding: 1rem;
+}
+
+.rsvp-gift-section h3{
+    font-size: 30px;
+    font-weight: 700;
+    font-family: "Great Vibes", cursive;
+    color: #9e0050;
+    margin-bottom: 30px;
+}
+.rsvp-gift-section .konfirmasi-kehadiran{
+    font-size: 15px;
+    background-color:  #9e0050;
+
+}
+
+.rsvp-gift-section .konfirmasi-kehadiran:hover{
+    background-color:  #9e0080;
+}
+
+.rsvp-gift-section .bank-info p{
+    font-size: 12px; 
+}
+
+.rsvp-gift-section .bank-info p span{
+    font-size: 15px; 
+    font-weight: 500;
+}
+
+.rsvp-card, .bank-card {
+    padding: 1rem;
+    max-width: 400px;
+}
+
+
+.gift-address {
+    font-size: 12px;
+    padding: 1rem;
+}
+
+.gift-address address {
+    color: #9e0050;
+    border: 1px dashed #9e0050;
+    border-radius: 5px; 
+}
+
+

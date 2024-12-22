@@ -10,7 +10,7 @@
 
         <div class="col-lg-4 col-md-6 col-12">
             <div class="text-md-end">
-                <a href="" class="btn btn-primary"><i class="uil uil-bookmark"></i> Creat your collection</a>
+                <a href="{{ url('/login') }}" class="btn btn-primary"><i class="uil uil-bookmark"></i> Buat Undangan Kamu!</a>
             </div>
         </div>
     </div>

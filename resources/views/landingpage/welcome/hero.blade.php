@@ -7,8 +7,7 @@
                     <p class="para-desc mx-auto text-muted mb-0">Lebih Hemat, Lebih Praktis, Lebih Simple dengan segala Kelebihan lainnya!</p>
                 
                     <div class="mt-4">
-                        <a href="" class="btn btn-primary"><i class="uil uil-bitcoin"></i> Mint NFT</a>
-                        <a href="" class="btn btn-soft-primary ms-1"><i class="uil uil-file-bookmark-alt"></i> Explore</a>
+                        <a href="" class="btn btn-primary"><i class="uil uil-whatsapp"></i> Boleh Tanya Tanya Dulu</a>
                     </div>
                 </div>
             </div><!--end col-->

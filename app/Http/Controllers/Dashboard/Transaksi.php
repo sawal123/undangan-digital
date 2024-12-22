@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class Transaksi extends Controller
 {
@@ -12,7 +14,11 @@ class Transaksi extends Controller
      */
     public function index()
     {
-        return view('user.transaksi', []);
+        $transaksi = Transaction::where('user_id', Auth::user()->id)->get();
+        // dd($transaksi->count());
+        return view('user.transaksi', [
+        'transaksi'=> $transaksi
+        ]);
     }
 
     /**

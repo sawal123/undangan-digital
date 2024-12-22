@@ -1,0 +1,41 @@
+.custom-input-bg {
+    background-color: #FFD3E9; /* Light pink background */
+}
+
+.custom-input-bg:focus {
+    background-color: #FFD3E9; /* Light pink background */
+}
+
+.message-section button{
+    background-color: #9e0050;
+    width: 100%;
+    
+}
+
+.message-section button:hover {
+    background-color: #9e0080;
+    width: 100%;
+}
+
+.message-section h5 {
+    font-size: 30px;
+    font-weight: 700;
+    font-family: "Great Vibes", cursive;
+    color: #9e0050;
+    margin-bottom: 30px;
+}
+.message-item {
+    border-bottom: 1px solid #ddd;
+    background-color:  #FFD3E9;
+   
+}
+.message-item strong {
+    display: block;
+    font-size: 1rem;
+    color: #9e0050;
+}
+.message-item p{
+    font-size: 12px;
+
+}
+

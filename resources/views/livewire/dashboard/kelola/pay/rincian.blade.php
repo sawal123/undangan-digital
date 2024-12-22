@@ -12,7 +12,13 @@
             <h6 class="my-0">Kode Promo</h6>
             <small>{{ $code }}</small>
         </div>
-        <span class="text-success">Rp {{number_format($promo, 0, ',', '.')  }}</span>
+        <span class="text-success">- Rp {{number_format($promo, 0, ',', '.')  }}</span>
+    </li>
+    <li class="d-flex justify-content-between bg-light p-3 border-bottom">
+        <div class="text-success">
+            <h6 class="my-0">Internet Fee</h6>
+        </div>
+        <span class="text-success">+ Rp {{number_format($fee , 0, ',', '.')  }}</span>
     </li>
     <li class="d-flex justify-content-between p-3">
         <span>Total (Rp)</span>

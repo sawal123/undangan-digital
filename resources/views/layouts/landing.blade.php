@@ -10,6 +10,8 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="{{ asset('assets/css/bootstrap.min.css') }}" id="bootstrap-style" class="theme-opt" rel="stylesheet" type="text/css">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
 
         <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
         <link href="{{ asset('assets/libs/@mdi/font/css/materialdesignicons.min.css') }}" rel="stylesheet" type="text/css">
@@ -30,7 +32,7 @@
             {{ $slot }}
             @livewireScripts
         </main>
-        @include('landingpage.part.footer')
+        {{-- @include('landingpage.part.footer') --}}
 
 
        

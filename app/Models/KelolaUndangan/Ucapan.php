@@ -12,7 +12,7 @@ class Ucapan extends Model
     protected $fillable = ['data_id', 'tamu_id', 'ucapan', 'status'];
 
     public function tamu(){
-        return $this->belongsTo(Tamu::class, 'tamu_id');
+        return $this->belongsTo(Tamu::class);
     }
     public function data(){
         return $this->belongsTo(Data::class);

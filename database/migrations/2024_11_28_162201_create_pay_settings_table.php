@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('bank');
             $table->string('category');
-            $table->bigInteger('fee');
+            $table->string('fee')->nullable();
             $table->string('image');
             $table->text('deskripsi')->nullable();
             $table->boolean('isActive')->nullable()->default(true);

@@ -13,10 +13,10 @@
         </div>
 
         <ul class="sidebar-menu">
-            <x-admin.menu :link="route('dashboard.dashboard')" :icon="'ti ti-home'" :active="request()->routeIs('dashboard.dashboard')">
+            {{-- <x-admin.menu :link="route('dashboard.dashboard')" :icon="'ti ti-home'" :active="request()->routeIs('dashboard.dashboard')">
                 {{ __('Dashboard') }}
-            </x-admin.menu>
-            <x-admin.menu :link="route('dashboard.undangan.index')" :icon="'ti ti-mail'" :active="request()->routeIs('dashboard.undangan.index')">
+            </x-admin.menu> --}}
+            <x-admin.menu :link="route('dashboard.index')" :icon="'ti ti-mail'" :active="request()->routeIs('dashboard.index')">
                 {{ __('Undangan') }}
             </x-admin.menu>
             <x-admin.menu :link="route('dashboard.transaksi.index')" :icon="'ti ti-shopping-cart'" :active="request()->routeIs('dashboard.transaksi.index')">

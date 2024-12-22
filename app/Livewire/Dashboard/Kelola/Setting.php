@@ -3,13 +3,17 @@
 namespace App\Livewire\Dashboard\Kelola;
 
 use App\Models\Data;
-use App\Models\teksPenutup;
 use Livewire\Component;
+use App\Models\teksPenutup;
 use App\Models\TeksUndangan;
 use App\Models\teksWhatsApp;
+use Illuminate\Support\Facades\Storage;
+use App\Models\KelolaUndangan\ThumbnailWa;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class Setting extends Component
 {
+    use WithFileUploads;
     public $dataId;
     public $title;
     public $slug;
@@ -23,17 +27,19 @@ class Setting extends Component
 
     public $hormatKami;
     public $turut;
-
+    public $gambar; // File yang diupload
     public $pesanWa = '';
 
-
+    public $thumbnail;
     public function mount()
     {
         $data = Data::find($this->dataId);
         $teksU = TeksUndangan::where('data_id', $this->dataId)->first();
         $pesan = teksWhatsApp::where('data_id', $this->dataId)->first();
         $turut = teksPenutup::where('data_id', $this->dataId)->first();
-        if($turut){
+        // $this->dataId = $dataId;
+        $this->loadThumbnail();
+        if ($turut) {
             $this->hormatKami = $turut->hormat_kami;
             $this->turut = $turut->mengundang;
         }
@@ -42,7 +48,6 @@ class Setting extends Component
             $this->pembuka = $teksU->pembuka;
             $this->acara = $teksU->acara;
             $this->penutup = $teksU->penutup;
-
         }
         $this->title = $data->title;
         $this->slug = $data->slug;
@@ -72,14 +77,69 @@ class Setting extends Component
         } else {
             teksWhatsApp::create([
                 'data_id' => $this->dataId,
-                'pesan' => "Kepada {{guest_name}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami 
-                *{{bride1_name}} & {{bride2_name}}*
-                Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
-                {{guest_link}} 
-                Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
+                'pesan' => "
+               Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami 
+{{nama_mempelai1}} & {{nama_mempelai2}}
+Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
+{{link }} 
+Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
             ]);
             session()->flash('teksWA', 'Teks WhatsApp Berhasil Dibuat.');
         }
+    }
+    public function loadThumbnail()
+    {
+        $this->thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
+        $this->gambar= null;
+    }
+
+    public function delThumbnail()
+    {
+        $thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
+
+        if ($thumbnail) {
+            // Hapus file dari storage
+            Storage::delete('public/' . $thumbnail->thumbnail);
+            $thumbnail->delete();
+
+            // Set feedback ke user
+            session()->flash('thumbnailWa', 'Gambar berhasil dihapus.');
+
+            // Refresh thumbnail
+            $this->loadThumbnail();
+        } else {
+            session()->flash('thumbnailWa', 'Data tidak ditemukan.');
+        }
+    }
+
+    public function thumbnailWa()
+    {
+        // Validasi file
+        $this->validate([
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,svg,webp|max:1024',
+        ]);
+        // Ambil thumbnail dari database
+        $data = ThumbnailWa::where('data_id', $this->dataId)->first();
+        // Upload file baru
+        $imagePath = $this->gambar->store('thumbnailwa', 'public');
+        if ($data) {
+            // Hapus file lama jika ada
+            if ($data->thumbnail) {
+                Storage::delete('public/' . $data->thumbnail);
+            }
+            // Perbarui data thumbnail
+            $data->update(['thumbnail' => $imagePath]);
+        } else {
+            // Simpan data thumbnail baru
+            ThumbnailWa::create([
+                'data_id' => $this->dataId,
+                'thumbnail' => $imagePath,
+            ]);
+        }
+        // Set feedback ke user
+        session()->flash('thumbnailWa', 'Gambar berhasil diupload.');
+        // Refresh thumbnail
+        $this->loadThumbnail();
     }
 
 
@@ -96,7 +156,8 @@ class Setting extends Component
         } else {
             TeksUndangan::create([
                 'data_id' => $this->dataId,
-                'pembuka' => "Kami mohon do'a & restunya atas pernikahan kami",
+                'pembuka' => "بسم الله الرحمن الرحيم
+                Kami mohon do'a & restunya atas pernikahan kami",
                 'acara' => "Kami bermaksud untuk mengundang saudara/(i) dalam acara pernikahan kami pada:",
                 'penutup' => "Atas kehadiran saudara/(i) & Do'a restunya, kami ucapkan terimakasih",
             ]);
@@ -104,19 +165,20 @@ class Setting extends Component
         }
     }
 
-    public function teksPenutup(){
+    public function teksPenutup()
+    {
         $teksP = teksPenutup::where('data_id', $this->dataId)->first();
-        if($teksP){
+        if ($teksP) {
             $teksP->update([
-                'hormat_kami'=> $this->hormatKami,
-                'mengundang'=> $this->turut,
+                'hormat_kami' => $this->hormatKami,
+                'mengundang' => $this->turut,
             ]);
             session()->flash('teksPenutup', 'Teks Penutup Berhasil Diubah.');
-        }else{
+        } else {
             teksPenutup::create([
                 'data_id' => $this->dataId,
-                'hormat_kami'=> $this->hormatKami,
-                'mengundang'=> $this->turut,
+                'hormat_kami' => $this->hormatKami,
+                'mengundang' => $this->turut,
             ]);
             session()->flash('teksPenutup', 'Teks Penutup Berhasil Dibuat.');
         }
@@ -124,6 +186,10 @@ class Setting extends Component
 
     public function render()
     {
+        $this->thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
+        if (!$this->thumbnail) {
+            $this->thumbnail = null;
+        }
         $dSlug = Data::where('slug', $this->slug)->first();
         if ($dSlug) {
             if ($dSlug->id === $this->dataId) {

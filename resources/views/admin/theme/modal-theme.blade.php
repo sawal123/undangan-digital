@@ -8,6 +8,7 @@
                         class="uil uil-times fs-4 text-dark"></i></button>
             </div>
             <form id="form-data" enctype="multipart/form-data">
+            {{-- <form action="{{route('admin.theme.store')}}" method="post" enctype="multipart/form-data"> --}}
                 @csrf
                 {{-- @method('PUT') --}}
                 <div class="modal-body">
@@ -22,6 +23,11 @@
                             <input type="text" class="form-control" name="path"  placeholder="Path">
                             <label for="path">Path</label>
                             <div id="pathMessage"></div>
+                        </div>
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control" name="demo"  placeholder="Demo">
+                            <label for="demo">Path Demo</label>
+                            <div id="demoMessage"></div>
                         </div>
                         <select class="form-select form-floating mb-2" name="category_id" id="category" aria-label="Default select example">
                             <option selected>Pilih Category</option>

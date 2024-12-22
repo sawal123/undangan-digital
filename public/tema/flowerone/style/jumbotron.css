@@ -1,0 +1,83 @@
+ /* Jumbotron */
+ .jumbotron {
+    margin-top: 2rem;
+}
+
+.jumbotron h4 {
+    font-size: 15px;
+    font-style: italic;
+    font-weight: 400;
+
+}
+
+.jumbotron .name-relationship {
+    font-size: 50px;
+    font-weight: 500;
+    font-family: 'Great Vibes', cursive;
+}
+
+.jumbotron .date {
+    font-size: 15px;
+    font-weight: 500;
+
+}
+
+/* .image-container  {
+   
+    position: absolute;
+    background-image: url('../img/flower-pembatas.png');
+} */
+
+/* Countdown Styles */
+.countdown-item {
+    background-color: #f8cdda;
+    padding: 5px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 4rem;
+    max-height: 4rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.countdown-item span {
+    font-size: 10px;
+    font-weight: bold;
+    display: block;
+    color: #1d2b64;
+}
+
+.countdown-item label {
+    font-size: 7px;
+    color: #555;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Invitation */
+.invitation {
+    padding-top: 30px;
+    text-align: center;
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+.invitation-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.invitation-subtitle {
+    font-size: 13px;
+    font-weight: 400;
+    color: #333;
+    margin: 5px 0;
+}
+
+.invitation-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 5px;
+    font-style: italic;
+}
