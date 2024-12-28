@@ -4,7 +4,6 @@
     </IfModule>
 
     RewriteEngine On
-    Header set Content-Security-Policy "default-src 'self'; frame-src 'self' https://youtube.com https://www.youtube.com;"
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

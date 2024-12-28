@@ -17,7 +17,8 @@ class RegisterController extends Controller
      */
     public function index()
     {
-        return view('page.auth.register');
+        $nonce = bin2hex(random_bytes(16));
+        return view('page.auth.register',['nonce'=>$nonce]);
     }
 
     /**

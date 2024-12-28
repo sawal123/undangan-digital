@@ -8,7 +8,10 @@
     <meta name="author" content="Shreethemes" />
     <meta name="email" content="support@shreethemes.in" />
     <meta name="website" content="https://shreethemes.in" />
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    {{-- @php
+        $nonce = bin2hex(random_bytes(16));
+    @endphp
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-{{ $nonce }}' {{url('/')}}; style-src 'self' 'nonce-{{ $nonce }}';"> --}}
     <title>Dashoard {{ Auth::user()->name }}</title>
 
     <!-- Fonts -->
@@ -25,13 +28,11 @@
         type="text/css">
     <link href="{{ asset('assetDashboard/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assetDashboard/libs/@iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
+    <link href="{{ asset('assetDashboard/tagify/tagify.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assetDashboard/userJs/css/dashboard.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   
     <!-- Style Css-->
-    <link href="{{ asset('assetDashboard/css/style.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assetDashboard/css/st.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
     @if (request()->routeIs('dashboard.undangan.kado'))
         <link href="{{ asset('assetDashboard/libs/select2/dist/css/select2.css') }}" rel="stylesheet" />
     @endif
@@ -73,6 +74,7 @@
         </main>
     </div>
 
+    <script src="{{ asset('assetDashboard/js/jquery.js') }}"></script>
     <!-- javascript -->
     <!-- JAVASCRIPT -->
     <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
@@ -82,7 +84,7 @@
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{asset('assetDashboard/libs/sweetalert/sweetAlert.js')}}"></script>
 
     <script src="{{ asset('assetDashboard/js/plugins.init.js') }}"></script>
     <script src="{{ asset('assetDashboard/js/app.js') }}"></script>

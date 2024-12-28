@@ -19,8 +19,9 @@ class LoginController extends Controller
 {
    public function index()
    {
+      $nonce = bin2hex(random_bytes(16));
       if (!Auth::user()) {
-         return view('page.auth.login');
+         return view('page.auth.login',['nonce'=>$nonce]);
       } else {
          return redirect()->to('/');
       }

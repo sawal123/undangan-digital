@@ -9,7 +9,7 @@
                     <div class="card form-signin p-4 rounded shadow">
                         <form action="{{route('login.auth')}}" method="POST">
                             @csrf
-                            <a href="/"><img src="{{asset('logo/logo.svg')}}"
+                            <a href="/"><img src="{{asset('logo/logo.svg')}}" width="80"
                                     class="avatar avatar-small mb-4 d-block mx-auto" alt=""></a>
                             <h5 class="mb-3 text-center">Please sign in</h5>
 

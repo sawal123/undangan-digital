@@ -12,43 +12,50 @@
     <meta name="website" content="https://shreethemes.in" />
     <meta name="Version" content="v4.8.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- favicon -->
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'nonce-{{ $nonce }}'; style-src 'self' 'nonce-{{ $nonce }}';">
+
+
     <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
     <!-- Css -->
-    <link href="{{asset('assetDashboard/libs/simplebar/simplebar.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('assetDashboard/libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
     <!-- Bootstrap Css -->
-    <link href="{{asset('assetDashboard/css/bootstrap.min.css')}}" class="theme-opt" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assetDashboard/css/bootstrap.min.css') }}" class="theme-opt" rel="stylesheet"
+        type="text/css" />
     <!-- Icons Css -->
-    <link href="{{asset('assetDashboard/libs/@mdi/font/css/materialdesignicons.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{asset('assetDashboard/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
-    <link href="{{asset('assetDashboard/libs/@iconscout/unicons/css/line.css')}}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('assetDashboard/libs/@mdi/font/css/materialdesignicons.min.css') }}" rel="stylesheet"
+        type="text/css">
+    <link href="{{ asset('assetDashboard/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assetDashboard/libs/@iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet" />
     <!-- Style Css-->
-    <link href="{{asset('assetDashboard/css/style.min.css')}}" class="theme-opt" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assetDashboard/css/st.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="{{asset('build/assets/app-CczSUIEg.css')}}">
-   
+
+
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
+
     @vite([])
 </head>
-<body> 
+
+<body>
 
     <main>
         @yield('content')
     </main>
-
-    <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
-    <script src="{{asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{asset('assetDashboard/libs/feather-icons/feather.min.js')}}"></script>
-    <script src="{{asset('assetDashboard/libs/simplebar/simplebar.min.js')}}"></script>
-    <!-- Main Js -->
-    <script src="{{asset('assetDashboard/js/plugins.init.js')}}"></script>
-    <script src="{{asset('assetDashboard/js/app.js')}}"></script>
-    <script>
-         var checkNameUrl = "{{ url('/check-name') }}"
+    <script nonce="{{ $nonce }}">
+        var checkNameUrl = "{{ url('/check-name') }}"
     </script>
+    <script src="{{ asset('assetDashboard/js/jquery.js') }}"></script>
+    <script src="{{ asset('build/assets/app-I5mmpHKZ.js') }}"></script>
+    <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
+    <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>
+    <!-- Main Js -->
+    <script src="{{ asset('assetDashboard/js/plugins.init.js') }}"></script>
+    <script src="{{ asset('assetDashboard/js/app.js') }}"></script>
+
     <script src="{{ asset('assetDashboard/userJs/setup/checkName.js') }}"></script>
 
 </body>

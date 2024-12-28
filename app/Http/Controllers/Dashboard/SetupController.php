@@ -14,7 +14,8 @@ class SetupController extends Controller
     public function index()
     {
         //
-        return view('user.setup');
+        $nonce = bin2hex(random_bytes(16));
+        return view('user.setup', ['nonce' => $nonce]);
     }
 
     public function checkName(Request $request)
@@ -47,7 +48,7 @@ class SetupController extends Controller
     {
         //
 
-       
+
     }
 
     /**
