@@ -9,7 +9,7 @@
                     <div class="card form-signin p-4 rounded shadow">
                         <form action="{{route('login.auth')}}" method="POST">
                             @csrf
-                            <a href="/"><img src="assets/images/logo-icon.png"
+                            <a href="/"><img src="{{asset('logo/logo.svg')}}"
                                     class="avatar avatar-small mb-4 d-block mx-auto" alt=""></a>
                             <h5 class="mb-3 text-center">Please sign in</h5>
 
@@ -23,7 +23,7 @@
                                 <label for="floatingPassword">Password</label>
                             </div>
 
-                            <div class="d-flex justify-content-between">
+                            {{-- <div class="d-flex justify-content-between">
                                 <div class="mb-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value=""
@@ -33,7 +33,7 @@
                                 </div>
                                 <p class="forgot-pass mb-0"><a href="{{route('forgot.password')}}"
                                         class="text-dark small fw-bold">Forgot password ?</a></p>
-                            </div>
+                            </div> --}}
 
                             <button class="btn btn-primary w-100" type="submit">Sign in</button>
 
@@ -44,7 +44,7 @@
                             </div><!--end col-->
 
                             <p class="mb-0 text-muted mt-3 text-center">©
-                                2024 Era Digital.
+                                2025 Wayae Nikah.
                             </p>
                         </form>
                     </div>

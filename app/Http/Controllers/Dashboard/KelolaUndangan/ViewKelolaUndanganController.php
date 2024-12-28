@@ -81,4 +81,11 @@ class ViewKelolaUndanganController extends Controller
             'data' => $this->getData($id),
         ]);
     }
+    public function bukutamu($id){
+        $data = Data::find($this->getData($id));
+        // dd($this->getData($id));
+        return view('user.kelola.bukutamu',[
+            'data' => $this->getData($id),
+        ]);
+    }
 }

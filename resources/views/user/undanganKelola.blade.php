@@ -17,7 +17,7 @@
         </div>
     <div class="alert alert-info d-lg-flex flex-lg-row flex-md-column justify-content-between align-items-center">
         <span>Kirim Undangan Ke Teman/Keluarga Kamu</span>
-        <button class="btn btn-sm btn-secondary border"><i class="mdi mdi-send"></i> Kirim</button>
+        <a href="{{url('/dashboard/kelola/'.Crypt::encryptString($data->id).'/tamu')}}" class="btn btn-sm btn-secondary border"><i class="mdi mdi-send"></i> Kirim</a>
 
     </div>
     <div class="row my-5">

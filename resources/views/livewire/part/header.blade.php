@@ -2,9 +2,9 @@
     <header id="topnav" class="defaultscroll sticky">
         <div class="container">
             <!-- Logo container-->
-            <a class="logo" href="index.html">
-                <img src="assets/images/logo-dark.png" height="24" class="logo-light-mode" alt="">
-                <img src="assets/images/logo-light.png" height="24" class="logo-dark-mode" alt="">
+            <a class="logo" href="/">
+                <img src="{{asset('logo/logo.svg')}}" height="50" class="logo-light-mode" alt="">
+                {{-- <img src="{{asset('logo/logo.svg')}}" height="24" class="logo-dark-mode" alt=""> --}}
             </a>
             <!-- End Logo container-->
 
@@ -62,12 +62,12 @@
                 <!-- Navigation Menu-->
                 <ul class="navigation-menu">
 
-                    <x-li-active :link="route('home')" :active="request()->routeIs('home')">
+                    {{-- <x-li-active :link="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
-                    </x-li-active>
-                    <x-li-active :link="route('explore')" :active="request()->routeIs('explore')">
+                    </x-li-active> --}}
+                    {{-- <x-li-active :link="route('explore')" :active="request()->routeIs('explore')">
                         {{ __('Explore') }}
-                    </x-li-active>
+                    </x-li-active> --}}
 
 
                 </ul><!--end navigation menu-->

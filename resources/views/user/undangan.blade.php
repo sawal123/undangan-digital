@@ -32,7 +32,7 @@
                             </a>
                         @endif
             
-                        <a href="{{ url('/' . Crypt::encryptString($data->id)) }}" class="btn btn-sm btn-secondary">
+                        <a href="{{url('/u/').'/'.$data->slug }}" class="btn btn-sm btn-secondary">
                             <i class="mdi mdi-web"></i> Lihat
                         </a>
                         <a href="{{ route('dashboard.undangan.kelola', Crypt::encryptString($data->id)) }}" 

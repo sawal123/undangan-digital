@@ -14,7 +14,7 @@
                         <div class="border border-red rounded rad my-2" wire:click='ifee({{ $item->id }})'>
                             {{-- <input type="hidden" value="{{$item->fee}}" wire:model.live='fee'> --}}
                             <input type="radio" class="btn-check" id="pay{{ $item->id }}" name="channel"
-                                value="{{ $item->category }}" wire:model.lazy="channel">
+                                value="{{ $item->slug }}" wire:model.lazy="channel">
                             <label for="pay{{ $item->id }}"
                                 class="btn btn-outline btn-outline-dashed btn-outline-default d-flex align-items-center p-3 mb-0">
                                 <div class="symbol symbol-50px me-3 overflow-hidden">

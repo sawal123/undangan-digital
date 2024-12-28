@@ -6,18 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="{{ $data->title }}" />
-    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <meta property="og:url" content="{{ url()->current() }}" />
-    <meta property="og:type" content="website" />
+    
 
-    <!-- WhatsApp Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $data->title }}">
-    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
-
-    <title>{{ $data->title  }}</title>
+    <title>Flower One</title>
 
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('tema/flowerone/assets/bootstrap/css/bootstrap.min.css') }}">

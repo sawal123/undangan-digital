@@ -5,7 +5,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>Wedding Invitation</title>
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{{ $data->title }}" />
+    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:type" content="website" />
+
+    <!-- WhatsApp Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $data->title }}">
+    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <title>{{$data->title}}</title>
 
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('tema/flowerone/assets/bootstrap/css/bootstrap.min.css') }}">
@@ -29,7 +39,7 @@
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/reservasi.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/message.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/ending-section.css') }}">
-    @vite([])
+    <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')">
     <!-- Custom Style Index-->
     <style>
         @font-face {
@@ -89,9 +99,9 @@
 
     <!-- Modal -->
     <!-- Tombol vertikal di pojok kanan -->
-    
-        @include('tema.flowerone.settingbar')
-   
+
+    @include('tema.flowerone.settingbar')
+
     <!-- Tombol vertikal di pojok kanan -->
 
     <!-- RSVP Modal -->
@@ -133,8 +143,10 @@
                 <a class="nav-link icon-container home" href="#home"><i class="fa-regular fa-file-lines"></i></a>
                 <a class="nav-link icon-container detail" href="#detail"><i class="fa-regular fa-heart"></i></a>
                 <a class="nav-link icon-container gallery" href="#gallery"><i class="fa-regular fa-images"></i></a>
-                <a class="nav-link icon-container reservation" href="#reservation"><i class="fa-solid fa-gifts"></i></a>
-                <a class="nav-link icon-container message" href="#message"><i class="fa-brands fa-rocketchat"></i></a>
+                <a class="nav-link icon-container reservation" href="#reservation"><i
+                        class="fa-solid fa-gifts"></i></a>
+                <a class="nav-link icon-container message" href="#message"><i
+                        class="fa-brands fa-rocketchat"></i></a>
             </div>
         </div>
     </nav>
@@ -149,8 +161,8 @@
 
                     <!-- Background Image -->
                     <div class="w-100 position-absolute" style="z-index: 1; top: 0; left: 0;  overflow: hidden;">
-                        <img src="{{ asset('tema/flowerone/img/abstract.png') }}" class="object-fit-cover w-100 h-100"
-                            alt="">
+                        <img src="{{ asset('tema/flowerone/img/abstract.png') }}"
+                            class="object-fit-cover w-100 h-100" alt="">
                     </div>
 
                     <!-- Image Section -->
@@ -546,7 +558,7 @@
         </div>
     </div>
     <!-- CONTENT -->
-
+    <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('scrollPosition')) {

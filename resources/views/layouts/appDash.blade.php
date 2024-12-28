@@ -9,13 +9,13 @@
     <meta name="email" content="support@shreethemes.in" />
     <meta name="website" content="https://shreethemes.in" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Dashoard {{ Auth::user()->name }}</title>
 
     <!-- Fonts -->
 
 
 
-    <link rel="shortcut icon" href="{{ asset('assetDashboard/images/favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
     <!-- Css -->
     <link href="{{ asset('assetDashboard/libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
     <!-- Bootstrap Css -->
@@ -35,6 +35,11 @@
     @if (request()->routeIs('dashboard.undangan.kado'))
         <link href="{{ asset('assetDashboard/libs/select2/dist/css/select2.css') }}" rel="stylesheet" />
     @endif
+
+    <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')">
+   
+    
+
     @vite([])
     @livewireStyles
 </head>
@@ -70,6 +75,8 @@
 
     <!-- javascript -->
     <!-- JAVASCRIPT -->
+    <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
+
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>

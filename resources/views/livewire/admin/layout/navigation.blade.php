@@ -16,18 +16,25 @@
             <x-admin.menu :link="route('admin.admin')" :icon="'ti ti-home'" :active="request()->routeIs('admin.admin')">
                 {{ __('Dashboard') }}
             </x-admin.menu>
-            <x-admin.menu :link="route('admin.theme.index')" :icon="'mdi mdi-format-color-fill'" :active="request()->routeIs('admin.theme.index')">
+            <x-admin.menu :link="route('admin.theme.index')" :icon="'mdi mdi-svg'" :active="request()->routeIs('admin.theme.index')">
                 {{ __('Theme') }}
             </x-admin.menu>
-            <x-admin.menu :link="route('admin.price.index')" :icon="'mdi mdi-cash-multiple'" :active="request()->routeIs('admin.price.index')">
-                {{ __('Price') }}
+            <x-admin.menu :link="route('admin.animation')" :icon="'mdi mdi-google-nearby'" :active="request()->routeIs('admin.animation')">
+                {{ __('Undangan Animasi') }}
             </x-admin.menu>
+            <x-admin.menu :link="route('admin.cetak')" :icon="'mdi mdi-book'" :active="request()->routeIs('admin.cetak')">
+                {{ __('Undangan Cetak') }}
+            </x-admin.menu>
+            {{-- <x-admin.menu :link="route('admin.price.index')" :icon="'mdi mdi-cash-multiple'" :active="request()->routeIs('admin.price.index')">
+                {{ __('Price') }}
+            </x-admin.menu> --}}
             <x-admin.menu :link="route('admin.harga')" :icon="'mdi mdi-cash-multiple'" :active="request()->routeIs('admin.harga')">
                 {{ __('Harga') }}
             </x-admin.menu>
             <x-admin.menu :link="route('admin.setting')" :icon="'mdi mdi-cog'" :active="request()->routeIs('admin.setting')">
                 {{ __('Setting') }}
             </x-admin.menu>
+           
             <x-admin.menu :link="route('admin.pay.setting')" :icon="'mdi mdi-cog'" :active="request()->routeIs('admin.pay.setting')">
                 {{ __('Gift Pay Setting') }}
             </x-admin.menu>

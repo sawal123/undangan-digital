@@ -15,7 +15,7 @@
 
 
 
-    <link rel="shortcut icon" href="{{ asset('assetDashboard/images/favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
     <!-- Css -->
     <link href="{{ asset('assetDashboard/libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
     <!-- Bootstrap Css -->
@@ -34,6 +34,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Scripts -->
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')">
+    
     @vite([])
 </head>
 
@@ -47,8 +49,8 @@
                 <div class="layout-specing">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h6 class="text-muted mb-1">Welcome back, {{ Auth::user()->name }}</h6>
-                            <h5 class="mb-0">{{ $halaman ?? 'Dashboard' }}</h5>
+                            {{-- <h6 class="text-muted mb-1">Welcome back, {{ Auth::user()->name }}</h6> --}}
+                            {{-- <h5 class="mb-0">{{ $halaman ?? 'Dashboard' }}</h5> --}}
                         </div>
                     </div>
                     <div class="my-5">
@@ -62,6 +64,8 @@
 
     <!-- javascript -->
     <!-- JAVASCRIPT -->
+    <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
+
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>

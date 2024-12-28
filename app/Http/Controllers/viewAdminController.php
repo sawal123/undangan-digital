@@ -14,4 +14,13 @@ class viewAdminController extends Controller
         $title = "Harga Thema";
         return view('admin.harga');
     }
+    public function animation(){
+        $title = "Undangan Animation";
+        return view('admin.animation');
+    }
+
+    public function undangancetak(){
+        $title = "Undangan Animation";
+        return view('admin.undangancetak');
+    }
 }

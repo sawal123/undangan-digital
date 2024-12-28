@@ -117,7 +117,8 @@
             </li> --}}
 
             <li class="list-inline-item mb-0 ms-1">
-                <div class="dropdown dropdown-primary">
+                <p>Halo {{Auth::user()->name}}, <strong>Wayae Nikah</strong></p>
+                {{-- <div class="dropdown dropdown-primary">
                     <button type="button" class="btn btn-soft-light dropdown-toggle p-0" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false"><img
                             src="{{ asset('assetDashboard/images/client/05.jpg') }}"
@@ -154,7 +155,7 @@
                             </a>
                         </form>
                     </div>
-                </div>
+                </div> --}}
             </li>
         </ul>
     </div>

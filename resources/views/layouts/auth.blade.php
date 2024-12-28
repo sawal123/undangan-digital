@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Landrick - Bootstrap 5 Multipurpose App, Saas & Software Landing & Admin Dashboard Template</title>
+    <title>Wayae Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Premium Bootstrap 5 Landing Page Template" />
     <meta name="keywords" content="Saas, Software, multi-uses, HTML, Clean, Modern" />
@@ -14,7 +14,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- favicon -->
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <link rel="shortcut icon" href="{{asset('assetDashboard/images/favicon.ico')}}" />
+    <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
     <!-- Css -->
     <link href="{{asset('assetDashboard/libs/simplebar/simplebar.min.css')}}" rel="stylesheet">
     <!-- Bootstrap Css -->
@@ -29,7 +29,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    
+    <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')">
+   
     @vite([])
 </head>
 
@@ -39,7 +40,7 @@
         @yield('content')
     </main>
 
-
+    <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
     <script src="{{asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assetDashboard/libs/feather-icons/feather.min.js')}}"></script>
     <script src="{{asset('assetDashboard/libs/simplebar/simplebar.min.js')}}"></script>

@@ -78,6 +78,7 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::get('/kelola/{id}/kado', [ViewKelolaUndanganController::class, 'kado'])->name('undangan.kado');
     Route::get('/kelola/{id}/kisah-cinta', [ViewKelolaUndanganController::class, 'kisah'])->name('undangan.kisah');
     Route::get('/kelola/{id}/setting', [ViewKelolaUndanganController::class, 'setting'])->name('undangan.setting');
+    Route::get('/kelola/{id}/buku-tamu', [ViewKelolaUndanganController::class, 'bukutamu'])->name('undangan.bukutamu');
     Route::get('/kelola/{id}/tema', [ViewKelolaUndanganController::class, 'tema'])->name('undangan.tema');
     Route::get('/demo/{demo}/{id}', [TemaController::class, 'demo'])->name('demo');
     Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
@@ -101,6 +102,8 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::resource('giftpay', GiftPayController::class)->except('index');
     Route::get('/pay-setting/', [viewAdminController::class, 'index'])->name('pay.setting');
     Route::get('/harga', [viewAdminController::class, 'harga'])->name('harga');
+    Route::get('/animation', [viewAdminController::class, 'animation'])->name('animation');
+    Route::get('/cetak', [viewAdminController::class, 'undangancetak'])->name('cetak');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
