@@ -8,21 +8,21 @@
 /* @import url("https://fonts.googleapis.com/css?family=Nunito:300,400,500,600,700&display=swap"); */
 @font-face {
   font-family: "Nunito";
-  src: url("/font/nunito/nunito-reguler.ttf") format("ttf");
+  src: url("/font/nunito/Nunito-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Nunito";
-  src: url("/font/nunito/nunito-bold.ttf") format("ttf");
+  src: url("/font/nunito/Nunito-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Nunito";
-  src: url("/font/nunito/nunito-light.ttf") format("ttf");
+  src: url("/font/nunito/Nunito-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
 }
