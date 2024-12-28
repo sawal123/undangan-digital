@@ -237,7 +237,7 @@
                             <div>
                                 <h1 data-aos="fade-up" data-aos-duration="1000"><i
                                         class="fa-solid fa-quote-right quote-icon"></i></h1>
-                            </div>
+                            </div> 
                             {{-- Qoute --}}
                             @include('tema.flowerone.qoute')
                         </div>
