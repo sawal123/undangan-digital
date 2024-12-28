@@ -17,7 +17,7 @@
 
     <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
     <!-- Css -->
-    <link href="{{ asset('assetDashboard/libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('assetDashboard/libs/simplebar/simplebar.min.css') }}" rel="stylesheet"> --}}
     <!-- Bootstrap Css -->
     <link href="{{ asset('assetDashboard/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
@@ -34,7 +34,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Scripts -->
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')">
+    <link rel="stylesheet" href="{{asset('build/assets/app-CczSUIEg.css')}}">
     
     @vite([])
 </head>

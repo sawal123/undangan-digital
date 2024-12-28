@@ -36,7 +36,7 @@
         <link href="{{ asset('assetDashboard/libs/select2/dist/css/select2.css') }}" rel="stylesheet" />
     @endif
 
-    <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')">
+    <link rel="stylesheet" href="{{asset('build/assets/app-CczSUIEg.css')}}">
    
     
 

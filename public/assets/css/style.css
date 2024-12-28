@@ -5,7 +5,28 @@
    Version: 4.8.0
    File Description: Main Css file of the template
 */
-@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,500,600,700&display=swap");
+/* @import url("https://fonts.googleapis.com/css?family=Nunito:300,400,500,600,700&display=swap"); */
+@font-face {
+  font-family: "Nunito";
+  src: url("/font/nunito/nunito-reguler.ttf") format("ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("/font/nunito/nunito-bold.ttf") format("ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("/font/nunito/nunito-light.ttf") format("ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
 body {
   font-family: "Nunito", sans-serif;
   overflow-x: hidden !important;
