@@ -1,0 +1,15 @@
+[33mcommit 5f2c4417465bbf7bbd91512eb79d8b1f446e5b2f[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: sawal123 <sawalinto@gmail.com>
+Date:   Tue Dec 31 18:07:00 2024 +0700
+
+    Feat : wanita
+
+[1mdiff --git a/.env.example b/.env.example[m
+[1mindex bcd7237..acc8bf7 100644[m
+[1m--- a/.env.example[m
+[1m+++ b/.env.example[m
+[36m@@ -58,8 +58,3 @@[m [mVITE_PUSHER_PORT="${PUSHER_PORT}"[m
+ VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"[m
+ VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"[m
+ [m
+
