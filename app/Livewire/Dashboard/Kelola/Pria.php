@@ -2,14 +2,16 @@
 
 namespace App\Livewire\Dashboard\Kelola;
 
-use App\Models\KelolaUndangan\Pria as KelolaUndanganPria;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+use App\Models\KelolaUndangan\Pria as KelolaUndanganPria;
+// use Livewire\Features\SupportFileUploads\WithFileUploads;
+use Livewire\WithFileUploads as LivewireWithFileUploads;
 
 class Pria extends Component
 {
 
-    use WithFileUploads;
+    use LivewireWithFileUploads;
     public $dataId;
     public $nama;
     public $panggilan;
@@ -41,6 +43,12 @@ class Pria extends Component
         $this->validate();
 
         $data = KelolaUndanganPria::where('data_id', $this->dataId)->first();
+        if ($data && $data->gambar) {
+            // Hapus gambar lama jika ada
+            if (Storage::disk('public')->exists($data->gambar)) {
+                Storage::disk('public')->delete($data->gambar);
+            }
+        }
         $imagePath = is_object($this->gambar) ? $this->gambar->store('pria', 'public') : null;
         if ($data) {
             $updateData = [

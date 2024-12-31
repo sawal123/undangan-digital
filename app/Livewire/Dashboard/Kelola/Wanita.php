@@ -2,9 +2,10 @@
 
 namespace App\Livewire\Dashboard\Kelola;
 
-use App\Models\KelolaUndangan\Wanita as ModelsWanita;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+use App\Models\KelolaUndangan\Wanita as ModelsWanita;
 
 class Wanita extends Component
 {
@@ -41,6 +42,12 @@ class Wanita extends Component
         $this->validate();
 
         $data = ModelsWanita::where('data_id', $this->dataId)->first();
+        if ($data && $data->gambar) {
+            // Hapus gambar lama jika ada
+            if (Storage::disk('public')->exists($data->gambar)) {
+                Storage::disk('public')->delete($data->gambar);
+            }
+        }
         $imagePath = is_object($this->gambar) ? $this->gambar->store('pria', 'public') : null;
         if ($data) {
             $updateData = [
