@@ -54,10 +54,10 @@ class DataController extends Controller
         ]);
         teksWhatsApp::create([
             'data_id' => $data->id,
-            'pesan' => "Kepada {{guest_name}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami 
-            *{{bride1_name}} & {{bride2_name}}*
+            'pesan' => "Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami 
+            *{{nama_mempelai1}} & {{nama_mempelai2}}*
             Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
-            {{guest_link}} 
+            {{link}} 
             Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
         ]);
 

@@ -23,7 +23,7 @@
     <div class="row my-5">
         @foreach ($objects as $item)
             <div class="col mx-2 my-2">
-                <a href="{{url('/dashboard/kelola/'.Crypt::encryptString($data->id).'/'. $item->url)}}" wire:navigate 
+                <a href="{{url('/dashboard/kelola/'.Crypt::encryptString($data->id).'/'. $item->url)}}" 
                     class="features feature-primary d-flex justify-content-between align-items-center rounded border border-info  p-3 hover-shadow">
                     <div class="d-flex align-items-center">
                         <div class="icon text-center rounded-pill">
