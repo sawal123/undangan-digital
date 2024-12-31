@@ -42,10 +42,10 @@ class Wanita extends Component
         $this->validate();
 
         $data = ModelsWanita::where('data_id', $this->dataId)->first();
-        if ($data && $data->gambar) {
-            // Hapus gambar lama jika ada
-            if (Storage::disk('public')->exists($data->gambar)) {
-                Storage::disk('public')->delete($data->gambar);
+        if ($data && $data->image) {
+            // Hapus image lama jika ada
+            if (Storage::disk('public')->exists($data->image)) {
+                Storage::disk('public')->delete($data->image);
             }
         }
         $imagePath = is_object($this->gambar) ? $this->gambar->store('pria', 'public') : null;

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\ApiAuthController;
 use App\Models\Category;
 use App\Livewire\Page\Home;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +12,8 @@ use App\Http\Controllers\Dashboard\Transaksi;
 use App\Http\Controllers\PriceListController;
 use App\Http\Controllers\viewAdminController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\FilePreviewController;
+use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\Pay\MidtransController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Dashboard\DataController;
@@ -39,6 +40,8 @@ use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
 Route::get('/', Home::class)->name('home');
 Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 
+Route::get('/preview-file/{filename}', [FilePreviewController::class, 'show'])
+    ->name('preview-file');
 
 Route::post('/auth-api', [ApiAuthController::class, 'login']);
 

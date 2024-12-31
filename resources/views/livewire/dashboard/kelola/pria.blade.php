@@ -6,7 +6,7 @@
     @endif
     <div class="card border border-info">
         <div class="card-body">
-            <form wire:submit.prevent="save">
+            <form wire:submit.prevent="save" wire:ignore.self>
                 <span>Data Mempelai Pria</span>
                 <hr>
                 <div class="mb-3">
