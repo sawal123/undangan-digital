@@ -40,8 +40,8 @@ use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
 Route::get('/', Home::class)->name('home');
 Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 
-Route::get('/preview-file/{filename}', [FilePreviewController::class, 'show'])
-    ->name('preview-file');
+// Route::get('/preview-file/{filename}', [FilePreviewController::class, 'show'])
+//     ->name('preview-file');
 
 Route::post('/auth-api', [ApiAuthController::class, 'login']);
 

@@ -26,5 +26,8 @@ class AppServiceProvider extends ServiceProvider
             $halaman = session('halaman', 'Default Title');
             $view->with('halaman', $halaman);
         });
+
+
     }
+   
 }

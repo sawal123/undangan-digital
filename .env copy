@@ -2,7 +2,7 @@ APP_NAME=WayaeNikah
 APP_ENV=production
 APP_KEY=base64:S5/YqCkLv9RDFBHt0bzKNoSDps0/EsXXLj74FPTcy+o=
 APP_DEBUG=true
-APP_URL=https://wayaenikah.com/
+APP_URL=https://wayaenikah.com
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null
