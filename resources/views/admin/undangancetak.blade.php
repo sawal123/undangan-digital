@@ -1,4 +1,4 @@
 <x-app-layout>
-    <livewire:admin.undangancetak />
+    <livewire:admin.cetak />
  </x-app-layout>
  

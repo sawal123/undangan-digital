@@ -5,7 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\Admin\UndanganCetak as AdminUndanganCetak;
 use Livewire\Component;
 
-class UndanganCetak extends Component
+class Cetak extends Component
 {
     public $undangan;
     public $isModalOpen = false;
