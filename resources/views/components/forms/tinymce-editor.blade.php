@@ -1,3 +1,3 @@
 <div>
-    <textarea id="myeditorinstance">Hello, World!</textarea>
+    <textarea id="tinymce">Hello, World!</textarea>
 </div>

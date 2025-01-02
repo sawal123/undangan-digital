@@ -11,7 +11,7 @@
     <meta name="website" content="https://wayaenikah.com" />
     <meta name="Version" content="v1.0.0" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    
+   
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
@@ -36,7 +36,7 @@
     <!-- Scripts -->
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <link rel="stylesheet" href="{{asset('build/assets/app-CczSUIEg.css')}}">
-
+    <x-head.tinymce-config/>
     @vite([])
 </head>
 
@@ -65,8 +65,9 @@
     <script src="{{ asset('assetDashboard/js/jquery.js') }}"></script>
     <!-- javascript -->
     <!-- JAVASCRIPT -->
+    
     <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
-    <x-head.tinymce-config/>
+
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>
@@ -121,6 +122,7 @@
         </script>
     @endif
 
+   
     @if (request()->routeIs('admin.theme.index'))
         <script>
             var urlAddTheme = "{{ route('admin.theme.store') }}"
