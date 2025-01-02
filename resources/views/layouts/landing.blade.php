@@ -2,7 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta http-equiv="Content-Security-Policy" content="style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;">
+    <meta http-equiv="Content-Security-Policy"
+        content="style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;">
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,6 +18,11 @@
     <meta name="twitter:title" content="Wayae Nikah">
     <meta name="twitter:image" content="{{ asset('logo/logo.svg') }}">
 
+    <meta name="description" content="Wayae Login dan buat undangan kamu" />
+    <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
+    <meta name="author" content="Wayae Nikah" />
+    <meta name="website" content="https://wayaenikah.com" />
+    <meta name="Version" content="v1.0.0" />
     <title>Wayae Nikah</title>
 
     <!-- Fonts -->
@@ -31,10 +37,11 @@
     <link href="{{ asset('assets/libs/@mdi/font/css/materialdesignicons.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/@iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('assets/libs/tiny-slider/tiny-slider.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/style.min.css') }}" id="color-opt" class="theme-opt" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/style.min.css') }}" id="color-opt" class="theme-opt" rel="stylesheet"
+        type="text/css">
     <!-- Scripts -->
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <link rel="stylesheet" href="{{asset('build/assets/app-CczSUIEg.css')}}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
     @vite([])
     @livewireStyles
 </head>
@@ -52,7 +59,7 @@
 
 
 
-        <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
+        <script src="{{ asset('build/assets/app-I5mmpHKZ.js') }}"></script>
         <!-- Javascript -->
         <!-- JAVASCRIPT -->
         <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

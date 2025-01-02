@@ -5,9 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="author" content="Shreethemes" />
-    <meta name="email" content="support@shreethemes.in" />
-    <meta name="website" content="https://shreethemes.in" />
+    <meta name="description" content="Wayae Login dan buat undangan kamu" />
+    <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
+    <meta name="author" content="Wayae Nikah" />
+    <meta name="website" content="https://wayaenikah.com" />
+    <meta name="Version" content="v1.0.0" />
     {{-- @php
         $nonce = bin2hex(random_bytes(16));
     @endphp

@@ -5,12 +5,11 @@
     <meta charset="utf-8" />
     <title>Wayae Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Premium Bootstrap 5 Landing Page Template" />
-    <meta name="keywords" content="Saas, Software, multi-uses, HTML, Clean, Modern" />
-    <meta name="author" content="Shreethemes" />
-    <meta name="email" content="support@shreethemes.in" />
-    <meta name="website" content="https://shreethemes.in" />
-    <meta name="Version" content="v4.8.0" />
+    <meta name="description" content="Wayae Login dan buat undangan kamu" />
+    <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
+    <meta name="author" content="Wayae Nikah" />
+    <meta name="website" content="https://wayaenikah.com" />
+    <meta name="Version" content="v1.0.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 

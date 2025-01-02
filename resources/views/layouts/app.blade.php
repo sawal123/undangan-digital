@@ -5,10 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="author" content="Shreethemes" />
-    <meta name="email" content="support@shreethemes.in" />
-    <meta name="website" content="https://shreethemes.in" />
+    <meta name="description" content="Wayae Login dan buat undangan kamu" />
+    <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
+    <meta name="author" content="Wayae Nikah" />
+    <meta name="website" content="https://wayaenikah.com" />
+    <meta name="Version" content="v1.0.0" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
@@ -63,7 +66,7 @@
     <!-- javascript -->
     <!-- JAVASCRIPT -->
     <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
-
+    <x-head.tinymce-config/>
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>
