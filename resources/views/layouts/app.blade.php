@@ -11,7 +11,7 @@
     <meta name="website" content="https://wayaenikah.com" />
     <meta name="Version" content="v1.0.0" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-   
+
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
@@ -32,11 +32,24 @@
     <link href="{{ asset('assetDashboard/css/st.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
     <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
 
-    
+
     <!-- Scripts -->
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <link rel="stylesheet" href="{{asset('build/assets/app-CczSUIEg.css')}}">
-    <x-head.tinymce-config/>
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
+
+    {{-- <script src="https://cdn.tiny.cloud/1/8ajhj6553pjvtqe51q18yw99liopcb5d99ogcqnsrfj29i3y/tinymce/7/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
+    <script>
+        document.addEventListener('initialize-tinymce', function() {
+            tinymce.init({
+                selector: '#textarea', // Atau sesuai dengan ID atau class yang Anda gunakan
+                menubar: false,
+                plugins: 'lists link image',
+                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist',
+            });
+        });
+    </script> --}}
     @vite([])
 </head>
 
@@ -65,8 +78,8 @@
     <script src="{{ asset('assetDashboard/js/jquery.js') }}"></script>
     <!-- javascript -->
     <!-- JAVASCRIPT -->
-    
-    <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
+
+    <script src="{{ asset('build/assets/app-I5mmpHKZ.js') }}"></script>
 
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
@@ -82,7 +95,7 @@
 
     @if (request()->routeIs('admin.setting'))
         <script src="{{ asset('assetDashboard/main/setting/deleteCategory.js') }}"></script>
-        <script src="{{asset('assetDashboard/main/setting/deleteGiftPay.js')}}"></script>
+        <script src="{{ asset('assetDashboard/main/setting/deleteGiftPay.js') }}"></script>
     @endif
 
 
@@ -122,7 +135,7 @@
         </script>
     @endif
 
-   
+
     @if (request()->routeIs('admin.theme.index'))
         <script>
             var urlAddTheme = "{{ route('admin.theme.store') }}"
@@ -134,6 +147,42 @@
         <script src="{{ asset('assetDashboard/main/theme/thumbnailChanges.js') }}"></script>
         <script src="{{ asset('assetDashboard/main/theme/modalThumbnail.js') }}"></script>
         <script src="{{ asset('assetDashboard/main/theme/updateTheme.js') }}"></script>
+    @endif
+
+    @if (request()->routeIs('admin.cetak'))
+        {{-- <x-head.tinymce-config /> --}}
+        <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+        {{-- <script src="{{asset('vendor/ckeditor.js')}}"></script> --}}
+        <script>
+            document.addEventListener('livewire:init', function() {
+                Livewire.on('modalOpened', () => {
+                    setTimeout(() => {
+                        const editorElement = document.querySelector('#ckeditor');
+                        if (editorElement) {
+                            ClassicEditor.create(editorElement, {
+                                    toolbar: ['bold', 'italic', 'link', 'undo', 'redo', 'heading']
+                                })
+                                .then(editor => {
+                                    editor.model.document.on('change:data', () => {
+                                        console.log(editor.getData());
+                                        var content = editor.getData();
+                                        Livewire.dispatch('updateDeskripsi', {
+                                            content: content
+                                        });
+                                    });
+                                    console.log('CKEditor berhasil diinisialisasi.');
+                                })
+                                .catch(error => {
+                                    console.error('Ada kesalahan dalam inisialisasi CKEditor:',
+                                        error);
+                                });
+                        } else {
+                            console.error('Elemen #ckeditor tidak ditemukan');
+                        }
+                    }, 100); 
+                });
+            });
+        </script>
     @endif
 
 

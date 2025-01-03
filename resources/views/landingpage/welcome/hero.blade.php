@@ -7,8 +7,9 @@
                     <h4 class="display-4 fw-bold text-dark mb-4">Undangan Online<br>Pesan 1 Bisa dikirim Kesemua Orang</h4>
                     <p class="para-desc mx-auto text-muted mb-0">Lebih Hemat, Lebih Praktis, Lebih Simple dengan segala Kelebihan lainnya!</p>
                 
-                    <div class="mt-4">
-                        <a href="https://api.whatsapp.com/send?phone=6282274677715&text=Halo+Saya+Ingin+Pesan+Undangan+online" target="_blank" class="btn btn-primary"><i class="uil uil-whatsapp"></i> Boleh Tanya Tanya Dulu</a>
+                    <div class="mt-4 ">
+                        <a href="https://api.whatsapp.com/send?phone=6282274677715&text=Halo+Saya+Ingin+Pesan+Undangan+online" target="_blank" class=" my-1 btn btn-primary"><i class="uil uil-whatsapp"></i> Boleh Tanya Tanya Dulu</a>
+                        <a href="/cetak" wire:navigate class="btn btn-soft-danger border-info border-1 my-1">Cetak Undangan Fisik</a>
                     </div>
                 </div>
             </div><!--end col-->

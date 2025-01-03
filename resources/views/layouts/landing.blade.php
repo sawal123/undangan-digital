@@ -2,48 +2,34 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta http-equiv="Content-Security-Policy"
-        content="style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;">
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Wayae Nikah" />
-    <meta name="twitter:image" content="{{ asset('logo/logo.svg') }}">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
-
-    <!-- WhatsApp Meta Tags -->
+    <meta name="twitter:image" content="{{ asset('logo/logo.svg') }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Wayae Nikah">
-    <meta name="twitter:image" content="{{ asset('logo/logo.svg') }}">
-
     <meta name="description" content="Wayae Login dan buat undangan kamu" />
     <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
     <meta name="author" content="Wayae Nikah" />
-    <meta name="website" content="https://wayaenikah.com" />
     <meta name="Version" content="v1.0.0" />
+
     <title>Wayae Nikah</title>
 
-    <!-- Fonts -->
-    {{-- <link rel="preconnect" href="https://fonts.bunny.net"> --}}
-    {{-- <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
-    <link href="{{ asset('assets/css/bootstrap.min.css') }}" id="bootstrap-style" class="theme-opt" rel="stylesheet"
-        type="text/css">
-    {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
-
-
-    <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
+    <!-- Fonts & Styles -->
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/@mdi/font/css/materialdesignicons.min.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/libs/@iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('assets/libs/tiny-slider/tiny-slider.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/style.min.css') }}" id="color-opt" class="theme-opt" rel="stylesheet"
-        type="text/css">
-    <!-- Scripts -->
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+
+    <link href="{{ asset('assets/css/style.min.css') }}" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
     <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
-    @vite([])
+
     @livewireStyles
+    @vite([])
 </head>
 
 <body class="antialiased">
@@ -53,24 +39,17 @@
 
         <main>
             {{ $slot }}
-            @livewireScripts
         </main>
-        {{-- @include('landingpage.part.footer') --}}
 
 
-
+        @livewireScripts
         <script src="{{ asset('build/assets/app-I5mmpHKZ.js') }}"></script>
-        <!-- Javascript -->
-        <!-- JAVASCRIPT -->
         <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-        <!-- SLIDER -->
         <script src="{{ asset('assets/libs/tiny-slider/min/tiny-slider.js') }}"></script>
-        <!-- Main Js -->
         <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
         <script src="{{ asset('assets/js/plugins.init.js') }}"></script>
-        <!--Note: All init js like tiny slider, counter, countdown, maintenance, lightbox, gallery, swiper slider, aos animation etc.-->
         <script src="{{ asset('assets/js/app.js') }}"></script>
-        <!--Note: All important javascript like page loader, menu, sticky menu, menu-toggler, one page menu etc. -->
+      
 </body>
 
 </html>

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('harga');
             $table->string('promo');
             $table->string('favorite');
-            $table->string('deskripsi');
-            $table->string('gambar');
+            $table->text('deskripsi');
+            $table->text('gambar');
             $table->timestamps();
         });
     }

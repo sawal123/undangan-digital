@@ -2,6 +2,7 @@
 
 use App\Models\Category;
 use App\Livewire\Page\Home;
+use App\Livewire\Page\Cetak;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TemaController;
 use App\Http\Controllers\ThemeController;
@@ -38,7 +39,9 @@ use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
 */
 // Landing Page
 Route::get('/', Home::class)->name('home');
+Route::get('/cetak', Cetak::class)->name('cetak');
 Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
+// Route::get('/cetak', [ExploreController::class, 'explore'])->name('explore');
 
 // Route::get('/preview-file/{filename}', [FilePreviewController::class, 'show'])
 //     ->name('preview-file');
