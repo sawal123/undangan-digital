@@ -5,12 +5,9 @@
             style="transform: rotate(90deg); background-color: #9e0050;"><i class="fa-solid fa-music"></i>
             Music
         </button>
-        {{-- <button type="button" class="btn text-white" data-bs-toggle="modal" data-bs-target="#qrcodeModal"
-            style="transform: rotate(90deg); background-color: #9e0050;"><i class="fa-solid fa-qrcode"></i>
-            QR Code
-        </button> --}}
     </div>
 @endif
+
 
 
 <!-- Modal untuk Music -->

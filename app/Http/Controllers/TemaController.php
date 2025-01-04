@@ -60,7 +60,7 @@ class TemaController extends Controller
             'Nov' => 'November',
             'Dec' => 'Desember',
         ];
-        $gallery = Galery::all();
+        $gallery = Galery::where('data_id', $data->id);
         foreach ($gallery as $ga) {
             if ($ga->video) {
                 $video[] = $ga->video;
@@ -79,6 +79,7 @@ class TemaController extends Controller
             session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
             return redirect()->back();
         } else {
+            // dd($data->sound->isActive);
             return view($data->theme->path, [
                 'data' => $data,
                 'hari' => $hari,

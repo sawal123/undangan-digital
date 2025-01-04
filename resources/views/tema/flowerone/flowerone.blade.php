@@ -101,7 +101,7 @@
     <!-- Tombol vertikal di pojok kanan -->
 
     @include('tema.flowerone.settingbar')
-
+    {{-- {{ $data->sound->isActive }} sdadsasdsdsd --}}
     <!-- Tombol vertikal di pojok kanan -->
 
     <!-- RSVP Modal -->
