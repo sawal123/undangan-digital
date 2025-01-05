@@ -153,6 +153,41 @@
 
     <div class="card border border-info my-2">
         <div class="card-body">
+            @if (session()->has('messageQoute'))
+                <div class="alert alert-info mt-2">
+                    {{ session('messageQoute') }}
+                </div>
+            @endif
+            <h5>Qoute</h5>
+            <form wire:submit='aksiQoute'>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="basic-url" class="form-label">Title</label>
+                            <input type="text" class="form-control" wire:model='tit'>
+                        </div>
+                        <div class="mb-3">
+                            <label for="basic-url" class="form-label">Isi Qoute</label>
+                            <textarea name="" id="" class="form-control" cols="30" rows="5" wire:model='qoute'
+                                placeholder="Isi Qoute"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="basic-url" class="form-label">Subtitle</label>
+                            <input type="text" class="form-control" wire:model='subtitle'>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary btn-sm">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border border-info my-2">
+        <div class="card-body">
             @if (session()->has('teksPenutup'))
                 <div class="alert alert-info mt-2">
                     {{ session('teksPenutup') }}

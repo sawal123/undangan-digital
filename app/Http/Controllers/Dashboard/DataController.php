@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Data;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\KelolaUndangan\Qoute;
 use App\Models\TeksUndangan;
 use App\Models\teksWhatsApp;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,15 @@ class DataController extends Controller
             Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
             {{link}} 
             Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
+        ]);
+        Qoute::create([
+            'qoute' => "
+            وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
+
+Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu merasa tenang dan tentram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir.
+
+Ar Rum: 21
+            "
         ]);
 
         return redirect()->route('dashboard.index');

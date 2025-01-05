@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Kelola;
 
 use App\Models\Data;
+use App\Models\KelolaUndangan\Qoute;
 use Livewire\Component;
 use App\Models\teksPenutup;
 use App\Models\TeksUndangan;
@@ -29,6 +30,9 @@ class Setting extends Component
     public $turut;
     public $gambar; // File yang diupload
     public $pesanWa = '';
+    public $tit;
+    public $qoute;
+    public $subtitle;
 
     public $thumbnail;
     public function mount()
@@ -37,6 +41,7 @@ class Setting extends Component
         $teksU = TeksUndangan::where('data_id', $this->dataId)->first();
         $pesan = teksWhatsApp::where('data_id', $this->dataId)->first();
         $turut = teksPenutup::where('data_id', $this->dataId)->first();
+        $qoute = Qoute::where('data_id', $this->dataId)->first();
         // $this->dataId = $dataId;
         $this->loadThumbnail();
         if ($turut) {
@@ -49,10 +54,23 @@ class Setting extends Component
             $this->acara = $teksU->acara;
             $this->penutup = $teksU->penutup;
         }
+        $this->tit = $qoute->title;
+        $this->qoute = $qoute->qoute;
+        $this->subtitle = $qoute->subtitle;
         $this->title = $data->title;
         $this->slug = $data->slug;
 
         // dd($this->title);
+    }
+
+    public function aksiQoute(){
+        $qoute = Qoute::where('data_id', $this->dataId)->first();
+        $qoute->update([
+            'title' => $this->tit,
+            'qoute' => $this->qoute,
+            'subtitle' => $this->subtitle
+        ]);
+        session()->flash('messageQoute', 'Qoute Berhasil Di update');
     }
 
     public function update($id)

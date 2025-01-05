@@ -22,7 +22,7 @@
                 </div>
                 <!-- Input field for messages -->
                 <div class="input-message mb-4">
-                    <textarea id="messageInput" class="form-control custom-input-bg" rows="5" name="ucapan"
+                    <textarea id="messageInput" class="form-control custom-input-bg" rows="5" name="ucapan" required
                         placeholder="Tulis Ucapan dan Doa"></textarea>
                     @error('ucapan')
                         <div class="text-red-500">{{ $message }}</div>

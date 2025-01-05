@@ -1,4 +1,43 @@
 <div>
+    <div class="d-flex justify-content-end">
+        <!-- Button to trigger the Offcanvas -->
+        <button class="btn btn-secondary mb-5 w-100" wire:click="toggle">Jenis Undangan</button>
+
+        <!-- Offcanvas itself -->
+        <div class="offcanvas pe-2 offcanvas-end {{ $isOpen ? 'show' : '' }}" tabindex="-1" id="offcanvasRight"
+            aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header d-flex justify-content-between">
+                <h5 id="offcanvasRightLabel">Jenis Undangan</h5>
+                <button type="button" class="btn btn-light" data-bs-dismiss="offcanvas" aria-label="Close"
+                    wire:click="toggle">Close</button>
+            </div>
+            <div class="offcanvas-body">
+                <form wire:submit.prevent='createJenis'>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" wire:model='jenisUndangan'
+                            aria-describedby="emailHelp">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-100">Simpan</button>
+                </form>
+
+                <ul class="list-group mt-5">
+                    @foreach ($jenisUn as $item)
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                {{ $item->jenis }}
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-primary"
+                                        wire:click='editJenis({{ $item->id }})'>Edit</button>
+                                    <button class="btn btn-sm btn-danger"
+                                        wire:click='delJenis({{ $item->id }})'>Del</button>
+                                </div>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-body">
             @if (session()->has('message'))
@@ -6,29 +45,36 @@
                     <i class="mdi mdi-check-circle"></i> {{ session('message') }}
                 </div>
             @endif
-            <div class="d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary" wire:click='openModal'>Tambah Undangan</button>
-                <div class="form-input">
+
+            <div class="d-flex gap-2 flex-column flex-lg-row w-100 justify-content-between align-items-center">
+                <!-- Input -->
+                <div class="form-input w-40">
                     <input type="text" wire:model.live="search"
-                        class="form-control my-2 border border-danger responsive-input">
+                        class="form-control my-2 border border-danger responsive-input w-100"
+                        placeholder="Cari Undangan">
                 </div>
+                <!-- Button -->
+                <button class="btn btn-primary mb-2 mb-lg-0" wire:click='openModal'>Tambah</button>
             </div>
-            <div class="table-responsive"></div>
-            <table class="table ">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nama</th>
-                        <th scope="col">Gambar</th>
-                        <th scope="col">Jenis</th>
-                        <th scope="col">Stok</th>
-                        <th scope="col">Terjual</th>
-                        <th scope="col">Harga</th>
-                        <th scope="col">Promo</th>
-                        <th scope="col">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
+
+
+
+            <div class="table-responsive">
+                <table class="table ">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Gambar</th>
+                            <th scope="col">Jenis</th>
+                            <th scope="col">Stok</th>
+                            <th scope="col">Terjual</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col">Promo</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @foreach ($undanganData as $index => $item)
                             <tr>
                                 <th scope="row">{{ $index + 1 }}</th>
@@ -60,8 +106,9 @@
                                 </td>
                             </tr>
                         @endforeach
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
             @if ($isModalOpen)
                 <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1" role="dialog"
@@ -89,9 +136,11 @@
                                                 <select class="form-select" aria-label="Jeni Undangan"
                                                     wire:model='jenis'>
                                                     <option selected>Open this select Jenis</option>
-                                                    <option value="Maliq">Maliq</option>
-                                                    <option value="Invinity">Invinity</option>
-                                                    <option value="Erba">Erba</option>
+                                                    @foreach ($jenisUn as $item)
+                                                        <option value="{{ $item->jenis }}">{{ $item->jenis }}
+                                                        </option>
+                                                    @endforeach
+
                                                 </select>
                                             </div>
                                         </div>

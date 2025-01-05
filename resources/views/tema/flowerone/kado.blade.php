@@ -11,7 +11,7 @@
         <div class="bank-info" data-aos="fade-up" data-aos-duration="1000">
             <div>
                 <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" class="object-fit-cover img-thumbnail"
-                    alt="QRIS Bank BCA" style="width: auto%; height: 50px; " />
+                    alt="Qris" style="width: auto%; height: 50px; " />
             </div>
             <p style="font-size: 20px; font-weight: 800;">{{ $kado->giftPay->nama_pay }}
             </p>

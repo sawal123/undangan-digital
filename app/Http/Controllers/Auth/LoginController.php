@@ -37,7 +37,7 @@ class LoginController extends Controller
       }
       if (auth()->user()->hasRole('User')) {
          if (Data::find(Auth::user()->id)) {
-            return redirect()->route('dashboard.undangan.kelola');
+            return redirect()->route('dashboard.undangan.kelola.index');
          } else {
             return redirect()->route('dashboard.setup');
          }

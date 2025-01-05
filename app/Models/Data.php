@@ -10,6 +10,7 @@ use App\Models\KelolaUndangan\Galery;
 use App\Models\KelolaUndangan\ImgKisahCinta;
 use App\Models\KelolaUndangan\Kado;
 use App\Models\KelolaUndangan\KisahCinta;
+use App\Models\KelolaUndangan\Qoute;
 use App\Models\KelolaUndangan\Sound;
 use App\Models\KelolaUndangan\Streaming;
 use App\Models\KelolaUndangan\Tamu;
@@ -90,6 +91,9 @@ class Data extends Model
     }
     public function thumbnailWas(){
         return $this->hasOne(ThumbnailWa::class);
+    }
+    public function qoute(){
+        return $this->hasOne(Qoute::class);
     }
     
 }

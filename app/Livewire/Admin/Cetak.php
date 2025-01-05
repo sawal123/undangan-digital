@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Admin\JenisUdangan;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
@@ -32,7 +33,50 @@ class Cetak extends Component
     public $undanganData = []; // Menyimpan hasil pencarian
     public $search = ''; // Menyimpan nilai pencarian
 
-   
+
+
+
+
+
+    public $isOpen = false;
+
+    public function toggle()
+    {
+        $this->isOpen = !$this->isOpen;
+    }
+
+    public $jenisUndangan;
+    public $idJenis;
+    public function delJenis($id)
+    {
+        $jenis = JenisUdangan::find($id)->delete();
+        $this->mount();
+    }
+    public function editJenis($id)
+    {
+        $jenis = JenisUdangan::find($id);
+        $this->jenisUndangan = $jenis->jenis;
+        $this->idJenis = $jenis->id;
+    }
+    public function createJenis()
+    {
+        $jen = JenisUdangan::find($this->idJenis);
+        if ($jen) {
+            $jen->update([
+                'jenis' => $this->jenisUndangan
+            ]);
+        } else {
+            $jenis = JenisUdangan::create([
+                'jenis' => $this->jenisUndangan
+            ]);
+        }
+
+
+        $this->jenisUndangan = '';
+        $this->idJenis = '';
+        $this->mount();
+        // session()->flash('message', 'Undangan berhasil diperbarui!');
+    }
 
     // protected $listeners = ['updateDeskripsi'];
     public function resetInputFields()
@@ -242,8 +286,10 @@ class Cetak extends Component
         $this->reset(['deskripsi']);
         // $this->dispatch('syncTinyMCE');
     }
+    public $jenisUn;
     public function mount()
     {
+        $this->jenisUn = JenisUdangan::all();
         $this->thumbnails;
         $this->thumbnails =   $this->combinedThumbnails;
         // $this->deskripsi = $deskripsi ?? 'default'; 
