@@ -53,8 +53,8 @@
                                 </div>
 
                                 <div class="thumbnail-container">
-                                    @foreach ($gambar as $image)
-                                        <div class="thumbnail">
+                                    @foreach ($yes as $index => $image)
+                                        <div class="thumbnail" wire:key="thumbnail-{{ $image }}">
                                             <img src="{{ asset('storage/' . $image) }}" alt="Thumbnail"
                                                 class="img-thumbnail cursor-pointer"
                                                 wire:click="updateMainImage('{{ $image }}')">

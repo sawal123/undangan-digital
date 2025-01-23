@@ -9,12 +9,12 @@ class Cetak extends Component
 {
     public $isOpenModal = false;
     public $mainImage;
-    public $gambar;
+    public $gambar =[];
     public $undang;
 
     public $isExpanded = false; // Properti untuk mengontrol tampilan teks
     public $deskripsi;
-    public $yes;
+    public $yes =[];
     public function toggleDescription($id)
     {
         $s = UndanganCetak::find($id);
@@ -33,11 +33,14 @@ class Cetak extends Component
     }
     public function openModal($id)
     {
+        // $this->gambar =[];
         $this->undang = UndanganCetak::find($id);
-        $this->gambar = json_decode($this->undang->gambar);
+        $this->yes = json_decode($this->undang->gambar);
         $this->deskripsi = $this->undang->deskripsi;
-        $this->mainImage = $this->gambar[0];
+        $this->mainImage = $this->yes[0];
         $this->isOpenModal = true;
+        // dd($this->gambar);
+        // \Log::info('Gambar di openModal:', $this->gambar);
     }
     public function updateMainImage($image)
     {

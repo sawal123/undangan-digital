@@ -11,17 +11,11 @@ openCover.addEventListener('click', function () {
 
     if (!isPlaying) {
         videoFrame.src = "https://www.youtube.com/embed/VDbVXpJWA-k?si=HTH9oH1X5uoS-SUu&amp;autoplay=1";
-        
     }
-
     setTimeout(function () {
         // Hide the cover with fade-out effect
         cover.classList.remove('d-block');
         cover.classList.add('d-none', 'fade-out');
-        
-        // // Show the index with fade-in effect
-        // index.classList.add('d-block', 'fade-in');
-        // index.classList.remove('d-none');
     }, 500);
 }); 
 
@@ -36,6 +30,5 @@ toggleButton.addEventListener('click', function () {
         toggleButton.innerHTML = '<i class="fa-solid fa-play"></i>'; 
     }
     
-
     isPlaying = !isPlaying;
 });

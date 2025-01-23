@@ -26,6 +26,7 @@ use App\Http\Controllers\Dashboard\KelolaUndangan\AcaraController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\Pay\PayController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\PengantinController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
+use App\Livewire\Page\UndanganWeb;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +40,9 @@ use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
 */
 // Landing Page
 Route::get('/', Home::class)->name('home');
-Route::get('/cetak', Cetak::class)->name('cetak');
+Route::get('/undangan/cetak', Cetak::class)->name('cetak');
+Route::get('/undangan/web', UndanganWeb::class)->name('web');
+Route::get('/undangan/animasi', UndanganWeb::class)->name('animasi');
 Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 // Route::get('/cetak', [ExploreController::class, 'explore'])->name('explore');
 
@@ -110,6 +113,7 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::get('/harga', [viewAdminController::class, 'harga'])->name('harga');
     Route::get('/animation', [viewAdminController::class, 'animation'])->name('animation');
     Route::get('/cetak', [viewAdminController::class, 'undangancetak'])->name('cetak');
+    Route::get('/demo/{demo}', [TemaController::class, 'temademo'])->name('temademo');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 

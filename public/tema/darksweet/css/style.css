@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'Italiana';
+    src: url('/src/assets/font/Italiana/Italiana-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Reem Kufi';
+    src: url('/src/assets/font/Reem_Kufi/ReemKufi-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/src/assets/font/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+}

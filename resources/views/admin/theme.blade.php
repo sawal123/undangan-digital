@@ -47,7 +47,8 @@
                                         {{ $theme->path }}
                                     </td>
                                     <td>
-                                        {{ $theme->demo }}
+                                        {{-- {{ $theme->demo }} --}}
+                                        <a href="{{ route('admin.temademo',  $theme->demo ) }}" class="">{{ $theme->demo }}</a>
                                     </td>
                                     <td class="text-end p-3 ">
                                         <div class="d-flex justify-content-end gap-2">

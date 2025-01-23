@@ -97,7 +97,11 @@
                     <div class="tiny-slide"><img src="assets/images/shop/product/single-6.jpg" class="img-fluid rounded" alt=""></div>
                 </div>
             </div><!--end col--> --}}
+            {{-- <pre>{{ var_export($yes, true) }}</pre> --}}
             @if ($isOpenModal)
+            @php
+                // dd($gambar)
+            @endphp
                 @include('landingpage.cetak.modalDetail')
             @endif
         </section>

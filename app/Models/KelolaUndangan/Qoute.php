@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Qoute extends Model
 {
     use HasFactory;
-    protected $fillable = ['data_id', 'qoute'];
+    protected $fillable = ['data_id', 'title', 'qoute', 'subtitle'];
     public function data(){
         return $this->belongsTo(Data::class);
     }

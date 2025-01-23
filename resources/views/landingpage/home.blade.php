@@ -17,7 +17,7 @@
         <!-- End -->
     
         <!-- Start -->
-        <section class="section" style="background: url('assets/images/nft/bg.jpg') top center;">
+        <section class="section" style="background: url('{{asset("assets/images/nft/bg.jpg")}}') top center;">
             @include('landingpage.welcome.start2')
         </section>
         <!-- End -->

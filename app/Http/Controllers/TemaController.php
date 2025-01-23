@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Data;
+use App\Models\KelolaUndangan\Acara;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Validate;
@@ -20,22 +21,27 @@ class TemaController extends Controller
     }
     public function index($slug)
     {
-        dd('tes');
+        // dd('tes');
         $tema = Data::where('slug', $slug)->first();
         return $tema;
     }
-    public function demo($demo, $id)
+    public function demo($demo, $id=null)
     {
         error_reporting(0);
         $tema = Crypt::decryptString($demo);
         $id = Crypt::decryptString($id);
         return view($tema);
     }
+    public function temademo($demo){
+        return view($demo);
+    }
     public function visit($slug, $tamu = null)
     {
         error_reporting(0);
 
         $data = Data::where('slug', $slug)->first();
+        $acara = $acara = isset($data->acara[1]) ? $data->acara[1] : $data->acara[0];
+
         $ta = $data->tamu()->where('kode', $tamu)->first();
         $hari = [
             'Sunday' => 'Minggu',
@@ -61,16 +67,19 @@ class TemaController extends Controller
             'Dec' => 'Desember',
         ];
         $gallery = Galery::where('data_id', $data->id);
-        foreach ($gallery as $ga) {
+        // dd($data->galery);
+        foreach ($data->galery as $ga) {
             if ($ga->video) {
                 $video[] = $ga->video;
             }
         }
-        foreach ($gallery as $po) {
+        foreach ($data->galery as $po) {
             if ($po->poto) {
                 $poto[] = $po->poto;
             }
         }
+        // dd($poto);
+        
 
         $ucapan = Ucapan::where('data_id', $data->id)->get();
 
@@ -88,7 +97,8 @@ class TemaController extends Controller
                 'video' => $video,
                 'poto' => $poto,
                 'kode' => $tamu,
-                'ucapan' => $ucapan
+                'ucapan' => $ucapan,
+                'acara' => $acara
             ]);
         }
     }

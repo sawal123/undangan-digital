@@ -30,13 +30,14 @@ class Setting extends Component
     public $turut;
     public $gambar; // File yang diupload
     public $pesanWa = '';
-    public $tit;
-    public $qoute;
-    public $subtitle;
+    public $tit = '';
+    public $qoute = '';
+    public $subtitle = '';
 
     public $thumbnail;
     public function mount()
     {
+        error_reporting(0);
         $data = Data::find($this->dataId);
         $teksU = TeksUndangan::where('data_id', $this->dataId)->first();
         $pesan = teksWhatsApp::where('data_id', $this->dataId)->first();
@@ -63,13 +64,24 @@ class Setting extends Component
         // dd($this->title);
     }
 
-    public function aksiQoute(){
+    public function aksiQoute()
+    {
         $qoute = Qoute::where('data_id', $this->dataId)->first();
-        $qoute->update([
-            'title' => $this->tit,
-            'qoute' => $this->qoute,
-            'subtitle' => $this->subtitle
-        ]);
+        if ($qoute) {
+            $qoute->update([
+                'title' => $this->tit,
+                'qoute' => $this->qoute,
+                'subtitle' => $this->subtitle
+            ]);
+        } else {
+            Qoute::create([
+                'data_id' => $this->dataId,
+                'title' => $this->tit,
+                'qoute' => $this->qoute,
+                'subtitle' => $this->subtitle
+            ]);
+        }
+
         session()->flash('messageQoute', 'Qoute Berhasil Di update');
     }
 
@@ -108,7 +120,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
     public function loadThumbnail()
     {
         $this->thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
-        $this->gambar= null;
+        $this->gambar = null;
     }
 
     public function delThumbnail()

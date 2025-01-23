@@ -83,8 +83,6 @@
 
                 <button type="submit" class="btn text-white mb-3">Kirim Ucapan</button>
             </form>
-
-
         @endif
         <!-- Messages List -->
         @if ($data->FiturUcapan->viewIsActive)
@@ -113,9 +111,6 @@
                                     <p class="bg-light p-2 rounded border" style="margin: 0px">Balasan :
                                         {{ $item->balas }}</p>
                                 @endif
-
-
-
                             </div>
                         </div>
                     </div>
