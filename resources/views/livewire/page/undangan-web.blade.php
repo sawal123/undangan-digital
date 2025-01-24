@@ -92,8 +92,6 @@
                                         </div>
                                     </div>
                                     <div class="content p-3">
-                                        {{-- <h5 class="mb-0">Yellow bg
-                                        with Books</h5> --}}
                                         <h6 class="text-muted tag mb-0">{{ $item->nama }}</h6>
                                     </div>
                                 </div>

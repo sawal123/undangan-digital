@@ -7,7 +7,8 @@
             object-fit: cover;
             display: block;
         }
-        .cursor{
+
+        .cursor {
             cursor: pointer;
         }
     </style>
@@ -20,11 +21,16 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="section-title">
-                                    <h2 class="fw-bold text-black mb-4">Cetak Undangan Untuk Hari Special Kamu <br> Dan Dapatkan Gratis Undangan Digital</h2>
-                                    <p class="para-desc text-black mb-0">Rayakan momen spesialmu dengan undangan yang elegan dan memukau. Cetak undangan fisik untuk acara pernikahan, ulang tahun, atau acara penting lainnya, dan nikmati keuntungan undangan digital gratis yang dapat diakses dengan mudah oleh tamu undanganmu.
+                                    <h2 class="fw-bold text-black mb-4">Cetak Undangan Untuk Hari Special Kamu <br> Dan
+                                        Dapatkan Gratis Undangan Digital</h2>
+                                    <p class="para-desc text-black mb-0">Rayakan momen spesialmu dengan undangan yang
+                                        elegan dan memukau. Cetak undangan fisik untuk acara pernikahan, ulang tahun,
+                                        atau acara penting lainnya, dan nikmati keuntungan undangan digital gratis yang
+                                        dapat diakses dengan mudah oleh tamu undanganmu.
                                     </p>
                                     <div class="mt-4">
-                                        <a href="https://wa.me/6282274677715?text=Saya+Ingin+Tanya+Tentang+Undangan" class="btn btn-primary">Tanya Tanya Dulu</a>
+                                        <a href="https://wa.me/6282274677715?text=Saya+Ingin+Tanya+Tentang+Undangan"
+                                            class="btn btn-primary">Tanya Tanya Dulu</a>
                                     </div>
                                 </div>
                             </div><!--end col-->
@@ -39,12 +45,17 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h5 class="mb-0">Most Viewed Products</h5>
+                        {{-- <h5 class="mb-0">Most Viewed Products</h5> --}}
+                        <small class="text-sm text-danger fst-italic">Cari Berdasarkan Nama, Harga, Jenis</small>
+
+                        <input type="search" class="form-control" placeholder="Cari Undangan Kamu.."
+                            wire:model.live="search">
+                            {{-- {{$search}} --}}
                     </div><!--end col-->
                 </div><!--end row-->
                 <div class="row">
                     @foreach ($undangan as $index => $item)
-                        <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2 mb-4">
+                        <div class="col-lg-3 col-md-6 col-6 mt-4 pt-2 mb-4">
                             <div class="card shop-list border-1 border  position-relative ">
                                 <ul class="label list-unstyled mb-0">
                                     <li><a href="javascript:void(0)"
@@ -52,9 +63,9 @@
                                     </li>
                                     <li>
                                 </ul>
-                              
+
                                 <div class="shop-image position-relative overflow-hidden rounded shadow cursor"
-                                    wire:click='openModal({{ $item->id }})' >
+                                    wire:click='openModal({{ $item->id }})'>
 
                                     @php
                                         // Mendecode gambar dari database
@@ -68,11 +79,11 @@
                                     @endif
 
                                 </div>
-                                <div class="card-body content pt-4 p-2">
+                                <div class="card-body content pt-2 p-2">
                                     <div class="text-dark product-name h6">{{ $item->nama }}</div>
 
-                                    <div class="d-flex justify-content-between mt-1">
-                                        <h6 class="text-dark small fst-italic mb-0 mt-1">
+                                    <div class="d-flex flex-column flex-md-row flex-row justify-content-between ">
+                                        <h6 class="text-dark small  mb-0 mt-0">
                                             Rp{{ number_format($item->promo > 0 ? $item->promo : $item->harga, 0, ',', '.') }}
                                             @if ($item->promo > 0)
                                                 <del
@@ -86,22 +97,21 @@
                             </div>
                         </div><!--end col-->
                     @endforeach
+                    <!-- Tombol Load More -->
+                    @if (count($undangan) >= $perPage)
+                        <div class="text-center mt-4">
+                            <button class="btn btn-secondary" wire:click="loadMore" wire:loading.attr="disabled">
+                                <span wire:loading.remove>Load More</span>
+                                <span wire:loading>Loading...</span>
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
-            {{-- <div class="col-lg-5">
-                <div class="tiny-single-item">
-                    <div class="tiny-slide"><img src="assets/images/shop/product/single-2.jpg" class="img-fluid rounded" alt=""></div>
-                    <div class="tiny-slide"><img src="assets/images/shop/product/single-3.jpg" class="img-fluid rounded" alt=""></div>
-                    <div class="tiny-slide"><img src="assets/images/shop/product/single-4.jpg" class="img-fluid rounded" alt=""></div>
-                    <div class="tiny-slide"><img src="assets/images/shop/product/single-5.jpg" class="img-fluid rounded" alt=""></div>
-                    <div class="tiny-slide"><img src="assets/images/shop/product/single-6.jpg" class="img-fluid rounded" alt=""></div>
-                </div>
-            </div><!--end col--> --}}
-            {{-- <pre>{{ var_export($yes, true) }}</pre> --}}
             @if ($isOpenModal)
-            @php
-                // dd($gambar)
-            @endphp
+                @php
+                    // dd($gambar)
+                @endphp
                 @include('landingpage.cetak.modalDetail')
             @endif
         </section>

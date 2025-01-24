@@ -26,6 +26,7 @@ use App\Http\Controllers\Dashboard\KelolaUndangan\AcaraController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\Pay\PayController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\PengantinController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
+use App\Livewire\Page\UndanganAnimasi;
 use App\Livewire\Page\UndanganWeb;
 
 /*
@@ -42,7 +43,7 @@ use App\Livewire\Page\UndanganWeb;
 Route::get('/', Home::class)->name('home');
 Route::get('/undangan/cetak', Cetak::class)->name('cetak');
 Route::get('/undangan/web', UndanganWeb::class)->name('web');
-Route::get('/undangan/animasi', UndanganWeb::class)->name('animasi');
+Route::get('/undangan/animasi', UndanganAnimasi::class)->name('animasi');
 Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 // Route::get('/cetak', [ExploreController::class, 'explore'])->name('explore');
 

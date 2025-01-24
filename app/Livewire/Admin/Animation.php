@@ -31,8 +31,22 @@ class Animation extends Component
         $this->delModalOpen = false;
     }
 
+    public function conversi()
+    {
+        if (strpos($this->link, 'youtube.com/shorts/') !== false) {
+            $parts = explode('shorts/', $this->link);
+            $videoId = end($parts);
+            $this->link = "https://www.youtube.com/embed/" . $videoId;
+        } elseif (strpos($this->link, 'watch?v=') !== false) {
+            $parts = explode('v=', $this->link);
+            $videoId = end($parts);
+            $this->link = "https://www.youtube.com/embed/" . $videoId;
+        }
+    }
+
     public function saveAnimation()
     {
+        $this->conversi();
         // dd($this->nama);
         $imagePath = is_object($this->thumbnail) ? $this->thumbnail->store('animation', 'public') : null;
         $animasi = AdminAnimation::create([
@@ -72,6 +86,7 @@ class Animation extends Component
     }
     public function updateAnimasi()
     {
+        $this->conversi();
         $a  = AdminAnimation::find($this->UpAnimasi->id);
         // dd($this->thumbnail);
         if ($this->thumbnail) {
