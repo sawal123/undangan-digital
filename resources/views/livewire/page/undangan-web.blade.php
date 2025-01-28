@@ -103,6 +103,9 @@
 
             </div>
         </section><!--end section-->
+        <section class="section mt-5" style="background: url('{{asset("assets/images/nft/bg.jpg")}}') top center;">
+            @include('landingpage.welcome.start2')
+        </section>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const lightboxModal = document.getElementById('lightbox-modal');

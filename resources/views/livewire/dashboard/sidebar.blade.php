@@ -1,7 +1,7 @@
 <nav id="sidebar" class="sidebar-wrapper sidebar-dark">
     <div class="sidebar-content" data-simplebar style="height: calc(100% - 60px);">
         <div class="sidebar-brand">
-            <a href="index.html">
+            <a href="/">
                 <img src="{{ asset('logo/logo.svg') }}" height="50" class="logo-light-mode"
                     alt="">
                 <img src="{{ asset('logo/logo.svg') }}" height="50" class="logo-dark-mode"
@@ -13,9 +13,6 @@
         </div>
 
         <ul class="sidebar-menu">
-            {{-- <x-admin.menu :link="route('dashboard.dashboard')" :icon="'ti ti-home'" :active="request()->routeIs('dashboard.dashboard')">
-                {{ __('Dashboard') }}
-            </x-admin.menu> --}}
             <x-admin.menu :link="route('dashboard.index')" :icon="'ti ti-mail'" :active="request()->routeIs('dashboard.index')">
                 {{ __('Undangan') }}
             </x-admin.menu>

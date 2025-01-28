@@ -8,7 +8,7 @@
     <div class="modal-body">
         <div class="mb-3 ">
             <small class="form-label">Bank / E-wallet <span class="text-danger">*</span></small>
-            <select class="js-example-basic-single  w-100" wire:model='giftId' id="giftId" style="width: 100%">
+            <select class="js-example-basic-single form-control  w-100" wire:model='giftId' id="giftId" style="width: 100%">
                 <option value="1">Choose</option>
                 @foreach ($giftPay as $index => $gift)
                     <option value="{{ $gift->id }}">{{ $gift->nama_pay }}</option>

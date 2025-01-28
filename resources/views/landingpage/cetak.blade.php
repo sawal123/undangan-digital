@@ -13,37 +13,12 @@
         }
     </style>
     <x-landing-layout>
-        <section class="section">
-            <!-- Start CTA -->
-            <div class="container-fluid mt-100 mt-5">
-                <div class="rounded py-5" style="background: url('assets/images/shop/cta.jpg') fixed;">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="section-title">
-                                    <h2 class="fw-bold text-black mb-4">Cetak Undangan Untuk Hari Special Kamu <br> Dan
-                                        Dapatkan Gratis Undangan Digital</h2>
-                                    <p class="para-desc text-black mb-0">Rayakan momen spesialmu dengan undangan yang
-                                        elegan dan memukau. Cetak undangan fisik untuk acara pernikahan, ulang tahun,
-                                        atau acara penting lainnya, dan nikmati keuntungan undangan digital gratis yang
-                                        dapat diakses dengan mudah oleh tamu undanganmu.
-                                    </p>
-                                    <div class="mt-4">
-                                        <a href="https://wa.me/6282274677715?text=Saya+Ingin+Tanya+Tentang+Undangan"
-                                            class="btn btn-primary">Tanya Tanya Dulu</a>
-                                    </div>
-                                </div>
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!--end container-->
-                </div>
-            </div><!--end container-->
-        </section>
+      
 
 
         <section id="section">
             <div class="container">
-                <div class="row">
+                <div class="row mt-100">
                     <div class="col-12">
                         {{-- <h5 class="mb-0">Most Viewed Products</h5> --}}
                         <small class="text-sm text-danger fst-italic">Cari Berdasarkan Nama, Harga, Jenis</small>
@@ -115,7 +90,7 @@
                 @include('landingpage.cetak.modalDetail')
             @endif
         </section>
-        <section class="section" style="background: url('assets/images/nft/bg.jpg') top center;">
+        <section class="section mt-5" style="background: url('{{asset("assets/images/nft/bg.jpg")}}') top center;">
             @include('landingpage.welcome.start2')
         </section>
     </x-landing-layout>

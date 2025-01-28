@@ -41,14 +41,11 @@ class Cetak extends Component
     }
     public function openModal($id)
     {
-        // $this->gambar =[];
         $this->undang = UndanganCetak::find($id);
         $this->yes = json_decode($this->undang->gambar);
         $this->deskripsi = $this->undang->deskripsi;
         $this->mainImage = $this->yes[0];
         $this->isOpenModal = true;
-        // dd($this->gambar);
-        // \Log::info('Gambar di openModal:', $this->gambar);
     }
     public function updateMainImage($image)
     {
@@ -57,20 +54,13 @@ class Cetak extends Component
     public $undangan;
     public function updateData()
     {
-
-        // $this->undangan = UndanganCetak::query()
-        //     ->when($this->search, function ($query) {
-        //         $query->where('nama', 'like', '%' . $this->search . '%')
-        //             ->orWhere('jenis', 'like', '%' . $this->search . '%');
-        //     })
-        //     ->limit($this->perPage)
-        //     ->get();
         $this->undangan = UndanganCetak::where('nama', 'like', '%' . $this->search . '%')
-        ->orWhere('jenis', 'like', '%' . $this->search . '%')
-        ->limit($this->perPage)
-        ->get();
-        if($this->search != ''){
-            dd($this->undangan);
+            ->orWhere('jenis', 'like', '%' . $this->search . '%')
+            ->orWhere('harga', 'like', '%' . $this->search . '%')
+            ->limit($this->perPage)
+            ->get();
+        if ($this->search != '') {
+            // dd($this->undangan);
         }
     }
     public function loadMore()
@@ -81,15 +71,13 @@ class Cetak extends Component
     public function mount()
     {
         $this->updateData();
-        // $this->undangan = UndanganCetak::all();
-        // $this->undangan = UndanganCetak::limit($this->perPage)->get(); // Ambil data awal
     }
     public function render()
     {
         $this->undangan = UndanganCetak::where('nama', 'like', '%' . $this->search . '%')
-        ->orWhere('jenis', 'like', '%' . $this->search . '%')
-        ->limit($this->perPage)
-        ->get();
+            ->orWhere('jenis', 'like', '%' . $this->search . '%')
+            ->limit($this->perPage)
+            ->get();
         error_reporting(0);
         $this->dispatch('slider');
 

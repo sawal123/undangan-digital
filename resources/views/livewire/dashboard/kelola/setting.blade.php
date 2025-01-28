@@ -62,7 +62,7 @@
                 @endif
             </div>
             <div class="text-lg-end">
-                <p>Gambar ini akan muncul ketika kamu mengirimi pesan melalui whatsapp</p>
+                <p>Gambar ini akan muncul di cover undnagan atau ketika kamu mengirimi pesan melalui whatsapp</p>
                 <form wire:submit.prevent='thumbnailWa'>
                     <input type="file" class="form-control" wire:model='gambar'>
                     <button class="btn btn-sm btn-primary mt-2 ">Upload Gambar</button>

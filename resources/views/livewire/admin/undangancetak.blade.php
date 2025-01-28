@@ -75,9 +75,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($undanganData as $index => $item)
+                        @foreach ($u as $index => $item)
                             <tr>
-                                <th scope="row">{{ $index + 1 }}</th>
+                                <th scope="row">{{ ($u->currentPage() - 1) * $u->perPage() + $index + 1 }}</th>
                                 <td>{{ $item->nama }}</td>
                                 <td>
                                     @php
@@ -108,6 +108,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-4">
+                    {{ $u->links(data: ['scrollTo' => false]) }}
+                </div>
             </div>
 
             @if ($isModalOpen)

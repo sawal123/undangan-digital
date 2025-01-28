@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Admin\JenisUdangan;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use App\Models\Admin\JenisUdangan;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Admin\UndanganCetak as AdminUndanganCetak;
 
@@ -33,7 +34,9 @@ class Cetak extends Component
     public $undanganData = []; // Menyimpan hasil pencarian
     public $search = ''; // Menyimpan nilai pencarian
 
+    use WithPagination;
 
+    public $perPage = 10;
 
 
 
@@ -292,24 +295,24 @@ class Cetak extends Component
         $this->jenisUn = JenisUdangan::all();
         $this->thumbnails;
         $this->thumbnails =   $this->combinedThumbnails;
-        // $this->deskripsi = $deskripsi ?? 'default'; 
-        $this->undanganData  = AdminUndanganCetak::all();
+        // $this->undanganData  = AdminUndanganCetak::limit(5)->get();
     }
     public function render()
     {
-        // Jika pencarian kosong, tampilkan semua data
-        if ($this->search === '') {
-            $this->undanganData = AdminUndanganCetak::all();
-        } else {
-            // Pencarian berdasarkan beberapa kolom
-            $this->undanganData = AdminUndanganCetak::where('nama', 'like', '%' . $this->search . '%')
+        $query = AdminUndanganCetak::query();
+        
+        if (!empty($this->search)) {
+            $query->where('nama', 'like', '%' . $this->search . '%')
                 ->orWhere('jenis', 'like', '%' . $this->search . '%')
                 ->orWhere('stok', 'like', '%' . $this->search . '%')
                 ->orWhere('terjual', 'like', '%' . $this->search . '%')
-                ->orWhere('harga', 'like', '%' . $this->search . '%')
-                ->get();
+                ->orWhere('harga', 'like', '%' . $this->search . '%');
         }
-
-        return view('livewire.admin.undangancetak');
+        $undanganData = $query->paginate($this->perPage);
+        // dd($undanganData);
+        // Kirim data langsung ke view
+        return view('livewire.admin.undangancetak', [
+            'u' => $undanganData,
+        ]);
     }
 }

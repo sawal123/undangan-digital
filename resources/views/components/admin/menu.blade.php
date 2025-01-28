@@ -7,7 +7,7 @@ $classes = ($active ?? false)
 @endphp
 
 <li class="{{ $classes }}">
-    <a href="{{ $link }}" wire:navigate
+    <a href="{{ $link }}" 
      >
      <i class="{{$icon}} me-2"></i>
         {{ $slot }}
