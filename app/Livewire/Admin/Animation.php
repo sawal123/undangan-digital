@@ -106,7 +106,7 @@ class Animation extends Component
     public $select = [];
     public function mount()
     {
-        $this->select = ['3D', 'Islamic', 'General', 'Cute Floral', 'Simple', 'Majestic', 'Veiled', 'Garden', 'Baper Floral', 'Bloom', 'Bucin', 'Adat', 'Khitan'];
+        $this->select = ['3D', 'Islamic', 'General', 'Cute Floral', 'Simple', 'Majestic', 'Veiled', 'Garden', 'Baper Floral', 'Bloom', 'Bucin', 'Adat', 'Khitan', 'Anak-Anak', 'Idul Fitri'];
         $this->animation = AdminAnimation::all();
     }
     public function render()
