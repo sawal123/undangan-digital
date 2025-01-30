@@ -19,7 +19,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Nama</th>
                         <th scope="col">Link</th>
-                        <th scope="col">Thumbnail</th>
+                        <th scope="col">Category</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -30,7 +30,7 @@
                             <td>{{ $item->nama }}</td>
                             <td>{{ $item->link }}</td>
                             <td>
-                                <img src="{{ asset('storage/' . $item->thumbnail) }}" alt="" width="40">
+                                {{ $item->thumbnail }}
                             </td>
                             <td>
                                 <button class="btn btn-primary btn-sm"
@@ -68,8 +68,13 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label>Thumbnail (Optional)</label>
-                                        <input type="file" class="form-control" wire:model="thumbnail">
+                                        <label>Category</label>
+                                        <select class="form-select" aria-label="Default select example" wire:model='thumbnail'>
+                                            <option value="" selected disabled>Open this select menu</option>
+                                            @foreach ($select as $item)
+                                                <option value="{{ $item }}">{{ $item }}</option>
+                                            @endforeach
+                                        </select>
                                         @error('thumbanail')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

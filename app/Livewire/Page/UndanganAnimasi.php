@@ -8,8 +8,16 @@ use Livewire\Component;
 class UndanganAnimasi extends Component
 {
     public $animasi;
-    public function mount(){
+    public $select = [];
+    public function search($item){
+        $this->animasi = Animation::where('thumbnail', 'like', '%' . $item . '%')->get();
+        // ->orWhere('jenis', 'like', '%' . $this->search . '%')
+    }
+    public function mount()
+    {
         $this->animasi = Animation::all();
+
+        $this->select = ['3D', 'Islamic', 'General', 'Cute Floral', 'Simple', 'Majestic', 'Veiled', 'Garden', 'Baper Floral', 'Bloom', 'Bucin', 'Adat', 'Khitan'];
     }
     public function render()
     {

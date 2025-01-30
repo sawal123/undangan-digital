@@ -76,6 +76,7 @@ class Cetak extends Component
     {
         $this->undangan = UndanganCetak::where('nama', 'like', '%' . $this->search . '%')
             ->orWhere('jenis', 'like', '%' . $this->search . '%')
+            ->orWhere('harga', 'like', '%' . $this->search . '%')
             ->limit($this->perPage)
             ->get();
         error_reporting(0);

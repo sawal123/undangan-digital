@@ -18,8 +18,14 @@ class Animation extends Component
 
     public $nama;
     public $link;
-    public $thumbnail;
+    public $thumbnail="";
     public $judul;
+
+    public function fieldReset(){
+        $this->nama = "";
+        $this->link = "";
+        $this->thumbnail ="";
+    }
     public function openModal()
     {
         $this->judul = "Tambah";
@@ -29,6 +35,7 @@ class Animation extends Component
     {
         $this->isModalOpen = false;
         $this->delModalOpen = false;
+        $this->fieldReset();
     }
 
     public function conversi()
@@ -47,12 +54,10 @@ class Animation extends Component
     public function saveAnimation()
     {
         $this->conversi();
-        // dd($this->nama);
-        $imagePath = is_object($this->thumbnail) ? $this->thumbnail->store('animation', 'public') : null;
         $animasi = AdminAnimation::create([
             'nama' => $this->nama,
             'link' => $this->link,
-            'thumbnail' => $imagePath
+            'thumbnail' => $this->thumbnail
         ]);
         session()->flash('message', 'Undangan Animasi Telah Tersimpan.');
         $this->mount();
@@ -81,36 +86,27 @@ class Animation extends Component
 
         $this->nama = $this->UpAnimasi->nama;
         $this->link = $this->UpAnimasi->link;
-        // $this->thumbnail = $this->UpAnimasi->thumbnail;
+        $this->thumbnail = $this->UpAnimasi->thumbnail;
         $this->isModalOpen = true;
     }
     public function updateAnimasi()
     {
         $this->conversi();
         $a  = AdminAnimation::find($this->UpAnimasi->id);
-        // dd($this->thumbnail);
-        if ($this->thumbnail) {
-            Storage::delete('public/' . $a->thumbnail);  // Hapus gambar lama
-            $imagePath = is_object($this->thumbnail) ? $this->thumbnail->store('animation', 'public') : null;
-            $a->update([
-                'nama' => $this->nama,
-                'link' => $this->link,
-                'thumbnail' =>   $imagePath
-            ]);
-        } else {
-            $a->update([
-                'nama' => $this->nama,
-                'link' => $this->link,
-            ]);
-        }
-
+        $a->update([
+            'nama' => $this->nama,
+            'link' => $this->link,
+            'thumbnail' =>   $this->thumbnail
+        ]);
         session()->flash('message', 'Undangan Animasi Telah Diupdate.');
         $this->mount();
         $this->closeModal();
+        
     }
-
+    public $select = [];
     public function mount()
     {
+        $this->select = ['3D', 'Islamic', 'General', 'Cute Floral', 'Simple', 'Majestic', 'Veiled', 'Garden', 'Baper Floral', 'Bloom', 'Bucin', 'Adat', 'Khitan'];
         $this->animation = AdminAnimation::all();
     }
     public function render()
