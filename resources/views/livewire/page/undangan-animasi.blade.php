@@ -19,7 +19,8 @@
                 <p>Pilih Tema Undangan Animasi</p>
                 <div class="d-flex gap-2 overflow-auto">
                     @foreach ($select as $item)
-                        <button class="badge p-2 bg-soft-primary" wire:click='search("{{$item}}")'>{{$item}}</button>
+                        <button class="badge p-2 bg-soft-primary"
+                            wire:click='search("{{ $item }}")'>{{ $item }}</button>
                     @endforeach
                 </div>
                 <div class="row mt-5">
@@ -37,17 +38,25 @@
                                     </div>
                                     <div class=" p-2">
                                         <h6 class="text-muted tag mb-0">{{ $item->nama }}</h6>
-                                        <div class="badge bg-soft-primary">{{$item->thumbnail}}</div>
+                                        <div class="badge bg-soft-primary">{{ $item->thumbnail }}</div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div><!--end col-->
-                        @empty
+                    @empty
                         <p class="text-start">Tidak Ada Data</p>
                     @endforelse
 
                 </div>
+                @if (count($animasi) >= $perPage)
+                    <div class="text-center mt-4">
+                        <button class="btn btn-secondary" wire:click="loadMore()" wire:loading.attr="disabled">
+                            <span wire:loading.remove>Load More</span>
+                            <span wire:loading>Loading...</span>
+                        </button>
+                    </div>
+                @endif
 
             </div>
         </section><!--end section-->
