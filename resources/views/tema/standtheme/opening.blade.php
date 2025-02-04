@@ -2,7 +2,7 @@
 <div class="opening mt-20 h-auto w-full bg-[#F7F4EF] ">
     <div class="flex flex-col justify-center ">
         <div class="justify-center flex">
-            <img src="assets/img/bismillah.png" data-aos="fade-up" data-aos-duration="3000" class=" " alt="">
+            <img src="{{asset('tema/standtheme/assets/img/bismillah.png')}}" data-aos="fade-up" data-aos-duration="3000" class=" " alt="">
         </div>
         <div class="text-center max-w-2xl  p-8 text-[12px] md:text-lg text-[#755f4B]">
             <h1 class="text-2xl font-bold mb-4" data-aos="fade-up" data-aos-duration="3000">Walimatul 'Urs</h1>

@@ -43,6 +43,7 @@ use App\Livewire\Page\UndanganWeb;
 Route::get('/', Home::class)->name('home');
 Route::get('/undangan/cetak', Cetak::class)->name('cetak');
 Route::get('/undangan/web', UndanganWeb::class)->name('web');
+Route::get('/demo/{demo}', [TemaController::class, 'temademo']);
 Route::get('/undangan/animasi', UndanganAnimasi::class)->name('animasi');
 Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 // Route::get('/cetak', [ExploreController::class, 'explore'])->name('explore');

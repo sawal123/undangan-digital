@@ -91,8 +91,10 @@
                                             <img id="lightbox-image" src="" alt="Lightbox Image">
                                         </div>
                                     </div>
-                                    <div class="content p-3">
-                                        <h6 class="text-muted tag mb-0">{{ $item->nama }}</h6>
+                                    <div class="border p-3">
+                                        <a href="{{url('demo/'.$item->demo)}}">
+                                            <h6 class="text-muted tag mb-0">{{ $item->nama }}</h6>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
