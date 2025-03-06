@@ -109,7 +109,7 @@
             @include('landingpage.welcome.start2')
         </section>
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener("livewire:navigated", () => {
                 const lightboxModal = document.getElementById('lightbox-modal');
                 const lightboxImage = document.getElementById('lightbox-image');
                 const lightboxClose = document.getElementById('lightbox-close');
