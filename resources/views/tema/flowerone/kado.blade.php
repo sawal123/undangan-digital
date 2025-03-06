@@ -18,17 +18,17 @@
             <p>Nama Akun/Rekening <br> <span>{{ $kado->namaPay }}</span></p>
             <p class="" style="margin: 0px">
                 Nomor Akun/Rekening <br>
-                <span id="nomor-rekening">{{ $kado->nomorPay }}</span>
+                <span class="nomor-rekening">{{ $kado->nomorPay }}</span>
             </p>
-            <button class="btn btn-sm btn-info" onclick="salinTeks()">Salin</button>
+            <button class="btn btn-sm btn-info" onclick="salinTeks(this)">Salin</button>
             <script>
-                function salinTeks() {
-                    // Ambil elemen teks
-                    const teks = document.getElementById('nomor-rekening').textContent;
+                function salinTeks(button) {
+                    // Ambil elemen teks dalam kartu yang sesuai dengan tombol yang diklik
+                    const nomorRekening = button.closest('.relative').querySelector('.nomor-rekening').textContent;
 
                     // Salin teks ke clipboard
-                    navigator.clipboard.writeText(teks).then(() => {
-                        alert('Nomor rekening berhasil disalin!');
+                    navigator.clipboard.writeText(nomorRekening).then(() => {
+                        alert('Nomor rekening berhasil disalin: ' + nomorRekening);
                     }).catch(err => {
                         alert('Gagal menyalin teks: ' + err);
                     });
@@ -38,7 +38,7 @@
         @if ($kado->qris)
             <!-- Bank Details -->
             <div class="bank-details d-flex flex-column align-items-center" data-aos="fade-up" data-aos-duration="1000">
-                <p><strong>Transfer Pakai QRIS Bank BCA:</strong></p>
+                <p><strong>Kasih Hadiah Pakai QRIS</strong></p>
                 <div class="bank-card mb-3 text-center">
                     <img src="{{asset('storage/'. $kado->qris)}}" class="object-fit-cover img-thumbnail" alt="QRIS Bank BCA"
                         style="max-width: 75%; min-width: 50%;" />

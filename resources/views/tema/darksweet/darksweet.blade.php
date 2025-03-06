@@ -24,28 +24,7 @@
  @include('tema.darksweet.content')
   <!-- content -->
 <!-- Modal Qr -->
-<div id="modal" class="fixed invisible inset-0 bg-black bg-opacity-50 flex  justify-center items-center z-50">
-  <div class="bg-white rounded-lg w-80 p-6 shadow-lg relative">
 
-    <h2 class="text-lg font-bold text-center mb-4">QRCode Buku Tamu</h2>
-    <p class="text-center text-sm mb-4">The Wedding of Justins & Sisca</p>
-    <p class="text-center text-sm mb-6">Tunjukkan QRCode di bawah ini ke panitia penyelenggara</p>
-    <div class="flex justify-center mb-6">
-
-      <img src="img/qr-1.jpg" alt="QR Code" class="w-40 h-40">
-    </div>
-    <div class="flex justify-center mb-4">
-      <button id="downloadBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-        Download
-      </button>
-    </div>
-    <div class="flex justify-center">
-      <button id="closeModal" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
-        Close
-      </button>
-    </div>
-  </div>
-</div>
 
 
  <!-- Modal Image -->

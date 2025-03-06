@@ -1,14 +1,61 @@
 @font-face {
-    font-family: 'Italiana';
-    src: url('/src/assets/font/Italiana/Italiana-Regular.ttf') format('truetype');
+    font-family: "Italiana";
+    src: url("/src/assets/font/Italiana/Italiana-Regular.ttf")
+        format("truetype");
 }
 
 @font-face {
-    font-family: 'Reem Kufi';
-    src: url('/src/assets/font/Reem_Kufi/ReemKufi-VariableFont_wght.ttf') format('truetype');
+    font-family: "Reem Kufi";
+    src: url("/src/assets/font/Reem_Kufi/ReemKufi-VariableFont_wght.ttf")
+        format("truetype");
 }
 
 @font-face {
-    font-family: 'Montserrat';
-    src: url('/src/assets/font/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+    font-family: "Montserrat";
+    src: url("/src/assets/font/Montserrat/Montserrat-Italic-VariableFont_wght.ttf")
+        format("truetype");
+}
+
+/* Grid Gallery */
+.gallery-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 kolom di HP */
+    gap: 10px;
+    max-width: 1000px;
+    margin: auto;
+    padding: 10px;
+}
+
+.gallery-item {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .gallery-container {
+        grid-template-columns: repeat(3, 1fr); /* 3 kolom di tablet */
+    }
+    .video-container iframe {
+        height: 450px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .gallery-container {
+        grid-template-columns: repeat(4, 1fr); /* 4 kolom di laptop */
+    }
+    .video-container iframe {
+        height: 500px;
+    }
 }

@@ -1,6 +1,6 @@
 <div id="cover" class="z-50 bg-white flex inset-0 justify-center items-center min-w-screen min-h-screen fixed ">
     <!-- Background Image -->
-    <img src="{{ asset('tema/darksweet/img/illustration.jpg') }}"
+    <img src="{{ asset('storage/'. $thumbnailWa->thumbnail) }}"
         class="absolute w-full md:w-1/3 h-full object-cover object-center z-0" alt="" />
     <div class="absolute inset-0 bg-black opacity-75 mx-auto w-full md:w-1/3"></div>
     <!-- Content Container -->
@@ -16,7 +16,7 @@
 
         <!-- Image Section -->
         <div class="p-2 bg-white shadow-md rounded-lg">
-            <img src="{{ asset('tema/darksweet/img/illustration.jpg') }}"
+            <img src="{{ asset('storage/'. $thumbnailWa->thumbnail) }}"
                 class="w-[175px] h-[300px] object-cover rounded-lg" alt="Wedding Illustration" />
         </div>
 

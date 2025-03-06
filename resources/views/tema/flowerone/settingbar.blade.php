@@ -43,38 +43,3 @@
     </div>
 </div>
 
-
-<!-- Modal untuk QR Code -->
-{{-- <div class="modal fade" id="qrcodeModal" tabindex="-1" aria-labelledby="qrcodeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content rounded-3 shadow-lg">
-                <div class="modal-header text-white">
-                    <h1 class="modal-title fs-5" id="qrcodeModalLabel">QR Code Check-In</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="w-100 py-3 border border-info rounded-3 text-success text-center">
-                        <p class="fs-6"><strong>Kamu Sudah Check In</strong></p>
-                        <button type="button" class="btn btn-success text-white h-25"
-                            style="">
-                            <small>Tampilkan QR Check-In</small>
-                        </button>
-                    </div>
-
-                    <div class="w-100 text-center my-4">
-                        <p class="fs-5">Gunakan QR untuk Check-In</p>
-                        <img src="img/qr-1.jpg" alt="QR Code" class="img-fluid rounded ">
-                    </div>
-
-                    <div class="w-100 text-center">
-                        <h5 class="text-primary">Melisa</h5>
-                        <p class="text-muted">ID: 2345234</p>
-                    </div>
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        style="background-color: #9e0050;">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}

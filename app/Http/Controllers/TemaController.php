@@ -12,6 +12,7 @@ use App\Models\KelolaUndangan\Galery;
 use App\Models\KelolaUndangan\Ucapan;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\KelolaUndangan\FiturUcapan;
+use App\Models\KelolaUndangan\ThumbnailWa;
 
 class TemaController extends Controller
 {
@@ -25,14 +26,15 @@ class TemaController extends Controller
         $tema = Data::where('slug', $slug)->first();
         return $tema;
     }
-    public function demo($demo, $id=null)
+    public function demo($demo, $id = null)
     {
         error_reporting(0);
         $tema = Crypt::decryptString($demo);
         $id = Crypt::decryptString($id);
         return view($tema);
     }
-    public function temademo($demo){
+    public function temademo($demo)
+    {
         return view($demo);
     }
     public function visit($slug, $tamu = null)
@@ -42,6 +44,9 @@ class TemaController extends Controller
         $data = Data::where('slug', $slug)->first();
         $acara = $acara = isset($data->acara[1]) ? $data->acara[1] : $data->acara[0];
 
+        // dd($data->acara);
+        $thumbnailWa = ThumbnailWa::where('data_id', $data->id)->first();
+        // dd($thumbnailWa);
         $ta = $data->tamu()->where('kode', $tamu)->first();
         $hari = [
             'Sunday' => 'Minggu',
@@ -79,11 +84,11 @@ class TemaController extends Controller
             }
         }
         // dd($poto);
-        
+
 
         $ucapan = Ucapan::where('data_id', $data->id)->get();
 
-
+        // dd($poto);
         if ($data->theme_id === null) {
             session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
             return redirect()->back();
@@ -98,7 +103,8 @@ class TemaController extends Controller
                 'poto' => $poto,
                 'kode' => $tamu,
                 'ucapan' => $ucapan,
-                'acara' => $acara
+                'acara' => $acara,
+                'thumbnailWa' => $thumbnailWa,
             ]);
         }
     }
