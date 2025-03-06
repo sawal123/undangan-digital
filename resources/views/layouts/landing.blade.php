@@ -27,6 +27,7 @@
     <link href="{{ asset('assets/css/style.min.css') }}" rel="stylesheet" type="text/css">
     <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
     <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/dist/css/lightbox.css') }}">
 
     @livewireStyles
     @vite([])
@@ -43,13 +44,16 @@
 
 
         @livewireScripts
+        <script src="{{asset('assets/js/jquery.js')}}"></script>
         <script src="{{ asset('build/assets/app-I5mmpHKZ.js') }}"></script>
         <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('assets/libs/tiny-slider/min/tiny-slider.js') }}"></script>
         <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
         <script src="{{ asset('assets/js/plugins.init.js') }}"></script>
+        <script src="{{ asset('assets/libs/dist/js/lightbox.js') }}"></script>
         <script src="{{ asset('assets/js/app.js') }}"></script>
-      
+        
+
 </body>
 
 </html>
