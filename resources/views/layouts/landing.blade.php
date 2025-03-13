@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="{{ asset('assets/libs/dist/css/lightbox.css') }}">
 
     @livewireStyles
-    @vite([])
+    {{-- @vite([]) --}}
 </head>
 
 <body class="antialiased">

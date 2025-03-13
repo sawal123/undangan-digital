@@ -31,9 +31,9 @@
     <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
 
 
-    @vite([''])
+    {{-- @vite(['']) --}}
     <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
-    @vite([])
+    {{-- @vite([]) --}}
 </head>
 
 <body class="font-sans antialiased">

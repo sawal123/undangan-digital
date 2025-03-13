@@ -43,7 +43,7 @@
    
     
 
-    @vite([])
+    {{-- @vite([]) --}}
     @livewireStyles
 </head>
 
