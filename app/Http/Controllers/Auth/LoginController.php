@@ -21,7 +21,7 @@ class LoginController extends Controller
    {
       $nonce = bin2hex(random_bytes(16));
       if (!Auth::user()) {
-         return view('page.auth.login',['nonce'=>$nonce]);
+         return view('page.auth.login', ['nonce' => $nonce]);
       } else {
          return redirect()->to('/');
       }
@@ -29,21 +29,26 @@ class LoginController extends Controller
 
    public function login(LoginRequest $request): RedirectResponse
    {
-      $request->authenticate();
+
+      if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+         return back()->with('error', 'Email atau password salah.');
+      }
+
       $request->session()->regenerate();
 
       if (auth()->user()->hasRole('Owner')) {
          return redirect()->to('/admin');
       }
+
       if (auth()->user()->hasRole('User')) {
-         if (Data::find(Auth::user()->id)) {
+         if (Data::where('id', Auth::user()->id)->exists()) {
             return redirect()->route('dashboard.undangan.kelola.index');
          } else {
             return redirect()->route('dashboard.setup');
          }
       }
-      // Default redirect jika bukan Owner
-      // return redirect()->intended(RouteServiceProvider::HOME);
+
+      return redirect()->route('home');
    }
 
 

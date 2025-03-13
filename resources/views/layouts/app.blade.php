@@ -19,9 +19,7 @@
 
 
     <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
-    <!-- Css -->
-    {{-- <link href="{{ asset('assetDashboard/libs/simplebar/simplebar.min.css') }}" rel="stylesheet"> --}}
-    <!-- Bootstrap Css -->
+
     <link href="{{ asset('assetDashboard/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
     <link href="{{ asset('assetDashboard/libs/@mdi/font/css/materialdesignicons.min.css') }}" rel="stylesheet"
@@ -33,23 +31,8 @@
     <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
 
 
-    <!-- Scripts -->
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    @vite([''])
     <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
-
-    {{-- <script src="https://cdn.tiny.cloud/1/8ajhj6553pjvtqe51q18yw99liopcb5d99ogcqnsrfj29i3y/tinymce/7/tinymce.min.js"
-        referrerpolicy="origin"></script>
-
-    <script>
-        document.addEventListener('initialize-tinymce', function() {
-            tinymce.init({
-                selector: '#textarea', // Atau sesuai dengan ID atau class yang Anda gunakan
-                menubar: false,
-                plugins: 'lists link image',
-                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist',
-            });
-        });
-    </script> --}}
     @vite([])
 </head>
 

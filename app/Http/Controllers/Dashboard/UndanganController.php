@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Data;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
 class UndanganController extends Controller
@@ -14,6 +15,7 @@ class UndanganController extends Controller
      */
     public function index()
     {
+        // dd(Auth::user()->data);
         return view('user.undangan');
     }
 

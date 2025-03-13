@@ -1,16 +1,16 @@
 <x-dashboard-layout>
 
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col">
             <div class="card shadow-sm">
                 <div class="card-body d-flex flex-column flex-lg-row justify-content-between align-items-center">
                     <small>Buat Undangan Kamu</small>
-                    <button class="btn btn-danger"><i class="mdi mdi-plus-box"></i> Buat Undangan</button>
+                    <button class="btn btn-danger" wire:click='add'><i class="mdi mdi-plus-box"></i> Buat Undangan</button>
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <hr>
 
     <div class="row">

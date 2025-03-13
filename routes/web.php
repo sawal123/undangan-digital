@@ -94,7 +94,7 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::get('/demo/{demo}/{id}', [TemaController::class, 'demo'])->name('demo');
     Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
 
-    
+
     Route::get('/midtrans/finish', [MidtransController::class, 'finishRedirect']);
     Route::get('/midtrans/unfinished', [MidtransController::class, 'unfinishRedirect']);
     Route::get('/midtrans/failed', [MidtransController::class, 'errorRedirect']);
@@ -103,7 +103,7 @@ Route::post('/midtrans/callback', [MidtransController::class, 'notificationHandl
 
 // Role Admin
 Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->group(function () {
-    Route::view('/', 'admin.admin')->name('admin');
+    Route::get('/',  [viewAdminController::class, 'admin'])->name('admin');
     Route::resource('theme', ThemeController::class);
     Route::get('/setting', [CategoryController::class, 'index'])->name('setting');
     Route::resource('categories', CategoryController::class)->except('index');
@@ -113,6 +113,10 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::resource('giftpay', GiftPayController::class)->except('index');
     Route::get('/pay-setting/', [viewAdminController::class, 'index'])->name('pay.setting');
     Route::get('/harga', [viewAdminController::class, 'harga'])->name('harga');
+    Route::get('/transaksi', [viewAdminController::class, 'transaksi'])->name('transaksi');
+    Route::get('/user', [viewAdminController::class, 'user'])->name('user');
+
+
     Route::get('/animation', [viewAdminController::class, 'animation'])->name('animation');
     Route::get('/cetak', [viewAdminController::class, 'undangancetak'])->name('cetak');
     Route::get('/demo/{demo}', [TemaController::class, 'temademo'])->name('temademo');

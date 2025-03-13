@@ -72,7 +72,6 @@ class TemaController extends Controller
             'Dec' => 'Desember',
         ];
         $gallery = Galery::where('data_id', $data->id);
-        // dd($data->galery);
         foreach ($data->galery as $ga) {
             if ($ga->video) {
                 $video[] = $ga->video;
@@ -83,12 +82,8 @@ class TemaController extends Controller
                 $poto[] = $po->poto;
             }
         }
-        // dd($poto);
-
 
         $ucapan = Ucapan::where('data_id', $data->id)->get();
-
-        // dd($poto);
         if ($data->theme_id === null) {
             session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
             return redirect()->back();

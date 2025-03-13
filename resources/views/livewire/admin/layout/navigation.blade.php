@@ -31,6 +31,12 @@
             <x-admin.menu :link="route('admin.harga')" :icon="'mdi mdi-cash-multiple'" :active="request()->routeIs('admin.harga')">
                 {{ __('Harga') }}
             </x-admin.menu>
+            <x-admin.menu :link="route('admin.transaksi')" :icon="'mdi mdi-cube-send'" :active="request()->routeIs('admin.transaksi')">
+                {{ __('Transaksi') }}
+            </x-admin.menu>
+            <x-admin.menu :link="route('admin.user')" :icon="'mdi mdi-account'" :active="request()->routeIs('admin.user')">
+                {{ __('User') }}
+            </x-admin.menu>
             <x-admin.menu :link="route('admin.setting')" :icon="'mdi mdi-cog'" :active="request()->routeIs('admin.setting')">
                 {{ __('Setting') }}
             </x-admin.menu>
