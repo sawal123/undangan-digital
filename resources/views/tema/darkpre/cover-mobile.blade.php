@@ -26,11 +26,11 @@
     style="background-image: url(' {{ asset('storage/' . $thumbnailWa->thumbnail) }}'); background-size: cover; background-position: center;">
     <div class="w-full flex justify-center items-center flex-col">
         <h3 class="text-center font-semibold text-2xl pt-10" data-aos="fade-down" data-aos-easing="linear"
-            data-aos-duration="1500">The Wedding Of</h3>
+            data-aos-duration="1500">{{$data->setting->acara ?? 'The Wedding'}}</h3>
         <h2 class="mt-8 text-center text-[50px] font-light font-corinthia" data-aos="fade-up"
             data-aos-anchor-placement="top-bottom">
-            {{ $data->wanita->nama_panggilan }} <span class="font-poppins text-[25px]">&</span>
-            {{ $data->pria->nama_panggilan }}
+            {{ $data->pria->nama_panggilan }}<span class="font-poppins text-[25px]">&</span>
+            {{ $data->wanita->nama_panggilan }}
         </h2>
         <p class="text-center text-[20px]" data-aos="fade-up" data-aos-anchor-placement="bottom-bottom">
             {{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }}

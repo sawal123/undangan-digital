@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('data_id');
+            $table->string('acara');
+            $table->string('subacara');
             $table->foreign('data_id')->references('id')->on('data')->onDelete('cascade');
             $table->timestamps();
         });

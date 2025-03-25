@@ -10,6 +10,7 @@ use App\Models\TeksUndangan;
 use App\Models\teksWhatsApp;
 use Illuminate\Support\Facades\Storage;
 use App\Models\KelolaUndangan\ThumbnailWa;
+use App\Models\Setting as ModelsSetting;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class Setting extends Component
@@ -34,11 +35,34 @@ class Setting extends Component
     public $qoute = '';
     public $subtitle = '';
 
+    public $titleAcara;
+
     public $thumbnail;
+
+
+    public function titleA($id)
+    {
+        $setting = ModelsSetting::where('data_id', $id)->first();
+        if ($setting) {
+            $setting->update([
+                'acara' => $this->titleAcara,
+                'subacara' => '',
+            ]);
+        } else {
+            ModelsSetting::create([
+                'data_id'=>$id,
+                'acara' => $this->titleAcara,
+                'subacara' => '',
+            ]);
+        }
+        session()->flash('title', 'Title Berhasil Di update');
+    }
+
     public function mount()
     {
         error_reporting(0);
         $data = Data::find($this->dataId);
+        $set = ModelsSetting::where('data_id', $this->dataId)->first();
         $teksU = TeksUndangan::where('data_id', $this->dataId)->first();
         $pesan = teksWhatsApp::where('data_id', $this->dataId)->first();
         $turut = teksPenutup::where('data_id', $this->dataId)->first();
@@ -56,6 +80,7 @@ class Setting extends Component
             $this->penutup = $teksU->penutup;
         }
         $this->tit = $qoute->title;
+        $this->titleAcara = $set->acara;
         $this->qoute = $qoute->qoute;
         $this->subtitle = $qoute->subtitle;
         $this->title = $data->title;

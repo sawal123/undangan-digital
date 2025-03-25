@@ -5,7 +5,7 @@
     </div>
     <div data-aos="zoom-in" data-aos-duration="1500" class="text-center d-flex flex-column align-items-center">
         <div class="text-center mt-2">
-            <h4 class="header-text">The Wedding Off</h4>
+            <h4 class="header-text">{{$data->setting->acara ?? 'The Wedding'}}</h4>
             <p class="main-text" style="font-size: 50px; font-family: Great Vibes, cursive;">
                 {{ $data ? $data->wanita->nama_panggilan : 'Ajeng' }} &
                 {{ $data ? $data->pria->nama_panggilan : 'Teddy' }}</p>

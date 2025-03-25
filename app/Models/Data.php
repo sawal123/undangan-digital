@@ -95,5 +95,8 @@ class Data extends Model
     public function qoute(){
         return $this->hasOne(Qoute::class);
     }
+    public function setting(){
+        return $this->hasOne(Setting::class);
+    }
     
 }

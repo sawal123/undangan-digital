@@ -3,7 +3,7 @@
 style="background-image: url('{{ asset('storage/' . $thumbnailWa->thumbnail) }}'); background-size: cover; background-position: center;">
 
 <div class="w-full ">
-  <h3 class="text-center font-normal text-2xl pt-10 ">The Wedding Of</h3>
+  <h3 class="text-center font-normal text-2xl pt-10 ">{{$data->setting->acara ?? 'The Wedding'}}</h3>
   <h2 class="mt-5 text-center text-[40px] font-light font-corinthia">{{ $data->wanita->nama_panggilan }} <span
       class="font-poppins text-[25px]">&</span> {{ $data->pria->nama_panggilan }}</h2>
   <p class="text-center text-[20px]">{{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }}

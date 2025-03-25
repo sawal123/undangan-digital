@@ -8,6 +8,19 @@
                     {{ session('title') }}
                 </div>
             @endif
+            <form wire:submit.prevent='titleA({{$dataId}})' class="mb-3">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="basic-url" class="form-label">Title Acara</label>
+                            <input type="text" class="form-control" wire:model='titleAcara'>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary btn-sm" {{ $button ? '' : 'disabled' }}>Update</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
             <form wire:submit='update({{ $dataId }})'>
                 <div class="row">
                     <div class="col-12 col-lg-6">

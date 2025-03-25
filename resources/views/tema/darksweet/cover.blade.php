@@ -7,10 +7,9 @@
     <div class="relative z-10 w-full sm:w-1/3 flex flex-col justify-center items-center space-y-8 text-center">
         <!-- Title Section -->
         <div class="text-white font-italiana">
-            <p class="text-sm uppercase tracking-wide font-semibold">Happy Wedding</p>
+            <p class="text-sm uppercase tracking-wide font-semibold">{{$data->setting->acara ?? 'The Wedding'}}</p>
             <h1 class="text-3xl font-bold">
-                {{ $data->wanita->nama_panggilan }} &
-                {{ $data->pria->nama_panggilan }}
+                {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}
             </h1>
         </div>
 
