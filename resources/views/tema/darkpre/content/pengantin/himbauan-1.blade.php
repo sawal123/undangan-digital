@@ -48,6 +48,11 @@
 
     <!-- Tanggal -->
     <div class="text-center text-lg text-orange-200 pt-8" id="countdown">
+        <div>
+            {{ date('d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))) }},
+            {{ \Carbon\Carbon::parse($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))->translatedFormat('l') }}
+            {{ \Carbon\Carbon::parse($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))->translatedFormat('F Y') }}
+        </div>
         <?php // Ambil waktu acara dalam format Unix Timestamp
         $eventTimestamp = strtotime($data->acara[0]->date); ?>
     </div>
@@ -56,12 +61,9 @@
     <div class="text-center pt-8 ">
         <a id="googleCalendarBtn" target="_blank">
             <button class="rounded-full w-auto border border-orange-200 p-2"><i
-                class="fa-solid fa-calendar-days mr-2"></i>Simpan acara ke
-            kalender</button>
+                    class="fa-solid fa-calendar-days mr-2"></i>Simpan acara ke
+                kalender</button>
         </a>
     </div>
 
 </div>
-
-
-

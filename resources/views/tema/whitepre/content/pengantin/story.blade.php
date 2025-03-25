@@ -6,7 +6,7 @@
 </style>
 <div class="w-full bg-orange-50 text-pink-800 font-poppins section overflow-x-hidden"
     style="background-image: url('img/bunga.png'); background-position: center; background-size: contain; background-repeat: round;">
-    @if ($data->kisah)
+    @if ($data->kisah->isNotEmpty())
         <h2 class="text-center text-[50px]  font-great_vibes z-50  font-semibold mb-6 py-8 ">Story</h2>
     @endif
     <div class="swiper swiperStory mt-8 ">

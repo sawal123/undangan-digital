@@ -43,7 +43,11 @@
 
     <!-- Tanggal -->
     <div class="text-center text-[12px] text-pink-800 " id="countdown" data-aos="zoom-in" data-aos-duration="2500">
-        Rabu, 2 April 2025
+        <div>
+            {{ date('d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))) }},
+            {{ \Carbon\Carbon::parse($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))->translatedFormat('l') }}
+            {{ \Carbon\Carbon::parse($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))->translatedFormat('F Y') }}
+        </div>
     </div>
 
     <!-- button -->
@@ -73,7 +77,9 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
-        let eventDate = new Date("{{ $data ? date('Y-m-d', strtotime($data->acara[0]->date)) : '2024-10-10' }}")
+        let eventDate = new Date(
+                "{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}"
+                )
             .getTime();
 
         // Update countdown setiap detik
