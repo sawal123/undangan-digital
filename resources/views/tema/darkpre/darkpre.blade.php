@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{ asset('tema/darkpre/src/css/style.css') }}">
     <link rel="stylesheet" href=" {{ asset('tema/darkpre/src/css/gallery.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/fontawesome-free/css/all.css') }}">
-    <link rel="stylesheet" href="{{ asset('tema/undangan2/assets/swiper/swiper-bundle.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/swiper/swiper-bundle.min.css') }}">
     <script src="{{ asset('tema/darkpre/assets/swiper/swiper-bundle.min.js') }}"></script>
 </head>
 
@@ -69,6 +69,56 @@
     <!-- audio -->
     <script src="{{ asset('tema/darkpre/src/js/audio.js') }}"></script>
     {{-- <script src="{{ asset('tema/darkpre/src/js/setDate.js') }}"></script> --}}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
+            let eventDate = new Date(
+                "{{ $data ? date('Y-m-d', strtotime($data->acara[0]->date)) : '2024-10-10' }}").getTime();
+
+            // Update countdown setiap detik
+            let countdown = setInterval(function() {
+                let now = new Date().getTime();
+                let distance = eventDate - now;
+
+                // Perhitungan waktu
+                let hari = Math.floor(distance / (1000 * 60 * 60 * 24));
+                let jam = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let menit = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                let detik = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Tampilkan hasil di elemen dengan id yang sesuai
+                document.getElementById("days").innerText = hari.toString().padStart(2, '0');
+                document.getElementById("hours").innerText = jam.toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = menit.toString().padStart(2, '0');
+                document.getElementById("seconds").innerText = detik.toString().padStart(2, '0');
+
+                // Jika waktu habis
+                if (distance < 0) {
+                    clearInterval(countdown);
+                    document.getElementById("days").innerText = "00";
+                    document.getElementById("hours").innerText = "00";
+                    document.getElementById("minutes").innerText = "00";
+                    document.getElementById("seconds").innerText = "00";
+                }
+            }, 1000);
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let eventTitle = "Pernikahan Kami";
+            let eventDateStart = "{{ date('Ymd', strtotime($acara->date)) }}T100000Z"; // Sesuaikan jam UTC
+
+            let eventDetails = "Jangan lewatkan momen spesial kami!";
+            let eventLocation = "{{ $acara->alamat }}";
+
+            let googleCalendarUrl =
+                `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${eventDateStart}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}&sf=true&output=xml`;
+
+            document.getElementById("googleCalendarBtn").href = googleCalendarUrl;
+        });
+    </script>
 </body>
 
 </html>

@@ -82,6 +82,7 @@ class TemaController extends Controller
                 $poto[] = $po->poto;
             }
         }
+        // dd($data->kisah);
 
         $ucapan = Ucapan::where('data_id', $data->id)->get();
         if ($data->theme_id === null) {
