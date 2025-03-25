@@ -2,12 +2,15 @@
     <h1 class="text-white text-center text-3xl font-bold font-italiana">Gallery</h1>
 
     <!-- Video -->
-    <div class="aspect-video w-full text-center flex justify-center mt-4 mb-4 py-4 bg-black" data-aos="zoom-in-up"
-        data-aos-duration="3000">
-        <iframe class="w-full h-full" src="{{ $video[0] }}" title="YouTube video player" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
+    @if (!empty($video[0]))
+        <div class="aspect-video w-full text-center flex justify-center mt-4 mb-4 py-4 bg-black" data-aos="zoom-in-up"
+            data-aos-duration="3000">
+            <iframe class="w-full h-full" src="{{ $video[0] }}" title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    @endif
+
 
     <!-- Gallery -->
     <div class="gallery-container" data-aos="fade-up" data-aos-duration="3000">
@@ -20,6 +23,6 @@
         @endforeach
     </div>
     <p class="text-sm text-center break-words text-white mt-5" data-aos="fade-up" data-aos-duration="3000">
-        {{$data->teksUndangan->penutup}}
-     </p>
+        {{ $data->teksUndangan->penutup }}
+    </p>
 </div>

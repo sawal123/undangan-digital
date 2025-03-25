@@ -67,7 +67,7 @@
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
-                    let eventDate = new Date("{{ $data ? date('Y-m-d', strtotime($data->acara[0]->date)) : '2024-10-10' }}").getTime();
+                    let eventDate = new Date("{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}").getTime();
 
                     // Update countdown setiap detik
                     let countdown = setInterval(function() {

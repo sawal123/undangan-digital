@@ -1,11 +1,11 @@
+@if ($data->kisah->isNotEmpty())
 <div class="mt-5 w-full h-[950px] flex flex-col relative mx-0 px-0 bg-zinc-800 shadow-inner shadow-black">
     <!-- Header Our Story -->
-    @if ($data->kisah)
         <div class="text-center w-full py-16 font-italiana" data-aos="fade-up" data-aos-duration="3000">
             <h1 class="text-4xl font-bold text-white mb-2">Our Story</h1>
             <p class="text-lg text-white">Momen indah kita berdua</p>
         </div>
-    @endif
+ 
 
 
     <!-- Konten -->
@@ -33,3 +33,4 @@
     <!-- Gradient Background -->
     <div class="absolute w-full bottom-0 h-32 bg-gradient-to-t from-black to-transparent z-0"></div>
 </div>
+@endif
