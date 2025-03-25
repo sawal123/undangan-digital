@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta property="og:title" content="{{ $data->title }}" />
-    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
 
@@ -15,7 +17,7 @@
     <meta name="twitter:title" content="{{ $data->title }}">
     <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
     <title>{{ $data->title }}</title>
-
+  wire:
     <!--  css -->
     <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/aos/dist/aos.css') }}">
     <link href="{{ asset('tema/darkpre/src/css/output.css') }}" rel="stylesheet">
