@@ -10,7 +10,8 @@
                 {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }}
                 {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }}</div>
             <div>pukul {{ $item->jam_start }} - {{ $item->jam_end }} {{ $item->zona_waktu }}</div>
-            <div>{{ $item->alamat }} {{ $item->vanue }}</div>
+            <div>{{ $item->alamat }}</div>
+            <div>{{ $item->vanue }}</div>
         </div>
 
         <!-- button -->

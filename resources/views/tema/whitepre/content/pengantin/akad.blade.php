@@ -1,5 +1,7 @@
 <div class="bg-orange-50 relative pt-10 pb-16 text-pink-800  font-poppins section" id="date">
+    <p class="text-center my-5">{{ $data->teksUndangan->pembuka }}</p>
     <!-- Judul -->
+    
     <h2 class="text-center text-[40px] z-50 relative font-semibold mb-6  font-great_vibes">
         Acara Akan Diselenggarakan
     </h2>

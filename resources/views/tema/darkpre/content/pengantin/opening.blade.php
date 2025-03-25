@@ -1,6 +1,6 @@
 <div class="bg-neutral-950 relative font-corinthia">
     <!-- card 1 -->
-    <p class="text-center text-[12px] font-semibold font-poppins">{{ $data->teksUndangan->pembuka }}</p>
+    <p class="text-center text-[12px] font-semibold font-poppins mb-5">{{ $data->teksUndangan->pembuka }}</p>
     <div class="  justify-center">
 
         <div class="flex flex-row pl-12 items-center justify-start space-x-4 font-poppins">
@@ -21,7 +21,7 @@
 
     <!-- card 2 -->
     <div class=" justify-center pt-10">
-        <div class="flex flex-row pr-12 items-center justify-end space-x-4">
+        <div class="flex flex-row pr-12 px-2 items-center justify-end space-x-4">
             <div class="text-orange-200 font-poppins">
                 <h2 class="text-[50px]  font-light font-corinthia text-orange-200 ">
                     {{ $data->pria->nama_lengkap }} </h2>

@@ -1,7 +1,7 @@
-@foreach ($data->acara as $item)
-    <div class="bg-neutral-950 relative text-orange-200 pb-10 font-poppins">
-
-        <div class="flex flex-col items-center justify-center w-full space-y-6 text-sm">
+<div class="bg-neutral-950 relative text-orange-200 pb-10 font-poppins">
+    <p class="text-center text-[12px] font-semibold font-poppins mb-5">{{ $data->teksUndangan->pembuka }}</p>
+    @foreach ($data->acara as $item)
+        <div class="flex flex-col items-center justify-center w-full space-y-6 mt-5 text-sm">
             <!-- Judul Acara -->
             <h2 class=" text-[50px] font-light font-corinthia  z-50 text-center">
                 {{ $item->nama_acara }}
@@ -18,12 +18,15 @@
                     pukul {{ $item->jam_start }} - {{ $item->jam_end }} {{ $item->zona_waktu }}
                 </div>
                 <div>
-                    {{ $item->alamat }} {{ $item->vanue }}
+                    {{ $item->alamat }}
+                </div>
+                <div>
+                    {{ $item->vanue }}
                 </div>
             </div>
 
             <!-- Tombol Lihat Lokasi -->
-            <div class="text-center pt-8 ">
+            <div class="text-center pt-8 mb-5">
                 <a href="{{ $item->maps }}"
                     class="rounded-full border border-orange-200 px-4  py-2 flex items-center justify-center space-x-2 hover:bg-orange-200 hover:text-white transition">
                     <i class="fa-solid fa-map-location-dot mr-2"></i>
@@ -31,28 +34,18 @@
                 </a>
             </div>
         </div>
-
-       
-
-    </div>
-@endforeach
+    @endforeach
+</div>
 <div class="bg-neutral-950 relative text-orange-200 pb-10 font-poppins">
-    <p class="text-center w-full pt-14 pb-14 font-light lg:text-sm text-[11px]">Merupakan suatu
-        kehormatan
-        dan
-        kebahagiaan bagi
-        kami <br> apabila,
-        Saudara
-        / i. berkenan hadir untuk memberikan do'a <br> restunya kami ucapkan terimakasih.
+    <p class="text-center w-full pt-14 pb-14 font-light lg:text-sm text-[11px]">{{ $data->teksUndangan->penutup }}
     </p>
-     {{-- Turut Mengundang --}}
-        {{-- @if ($data->teksPenutup->mengundang)
-    <div
-        class="flex flex-col lg:absolute lg:inset-x-0 lg:-bottom-14 justify-center items-center space-y-3 pt-10 text-sm">
-        <p class="text-xl font-semibold">Turut Mengundang:</p>
-        <p>{!! nl2br(e($data->teksPenutup->mengundang)) !!}</p>
-    
-    </div>
-    @endif --}}
-        {{-- Turut Mengundang --}}
+
+    @if ($data->teksPenutup->mengundang)
+        <div
+            class="flex flex-col lg:absolute lg:inset-x-0 lg:-bottom-14 justify-center items-center space-y-3 pt-10 text-sm">
+            <p class="text-xl font-semibold">Turut Mengundang:</p>
+            <p>{!! nl2br(e($data->teksPenutup->mengundang)) !!}</p>
+
+        </div>
+    @endif
 </div>
