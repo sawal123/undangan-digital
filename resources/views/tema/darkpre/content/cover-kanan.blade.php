@@ -4,8 +4,8 @@ style="background-image: url('{{ asset('storage/' . $thumbnailWa->thumbnail) }}'
 
 <div class="w-full ">
   <h3 class="text-center font-normal text-2xl pt-10 ">{{$data->setting->acara ?? 'The Wedding'}}</h3>
-  <h2 class="mt-5 text-center text-[40px] font-light font-corinthia">{{ $data->wanita->nama_panggilan }} <span
-      class="font-poppins text-[25px]">&</span> {{ $data->pria->nama_panggilan }}</h2>
+  <h2 class="mt-5 text-center text-[40px] font-light font-corinthia">{{ $data->pria->nama_panggilan }} <span
+      class="font-poppins text-[25px]">&</span> {{ $data->wanita->nama_panggilan }}</h2>
   <p class="text-center text-[20px]">{{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }}
     {{ $data ? date('m', strtotime($data->acara[0]->date)) : '10' }}
     {{ $data ? date('Y', strtotime($data->acara[0]->date)) : '2024' }}</p>

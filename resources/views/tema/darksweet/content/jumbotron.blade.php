@@ -21,8 +21,8 @@
             <p class="text-center text-white font-italiana" data-aos="zoom-in-up"
             data-aos-duration="2000">Invitation From</p>
             <h1 class="text-white text-3xl font-bold text-center font-italiana" data-aos="zoom-in-up"
-                data-aos-duration="3000">{{ $data->wanita->nama_panggilan }} &
-                {{ $data->pria->nama_panggilan }}</h1>
+                data-aos-duration="3000">{{ $data->pria->nama_panggilan }} &
+                {{ $data->wanita->nama_panggilan }}</h1>
         </div>
         @include('tema.darksweet.content.countdown')
     </div>
