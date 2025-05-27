@@ -83,7 +83,7 @@
                                     <option value="EXPIRED">EXPIRED</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label>Type Transaksi</label>
                            
                                 <select class="form-select" aria-label="Default select example"
@@ -96,7 +96,7 @@
                                 @error('typeTrans')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
-                            </div>
+                            </div> --}}
                         </form>
                     </div>
                     <div class="modal-footer">
