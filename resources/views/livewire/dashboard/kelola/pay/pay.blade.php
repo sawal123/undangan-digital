@@ -30,9 +30,13 @@
                         border: 1px black solid !important
                     }
                 </style>
-                <h4 class="mb-3 mt-4 pt-4 border-top">Payment</h4>
-                @include('livewire.dashboard.kelola.pay.gateway')
-                
+                <div class="card rounded shadow p-4 border-0">
+                    <h4 class="mb-3 ">Payment Otomatis</h4>
+                    @include('livewire.dashboard.kelola.pay.gateway')
+                    <hr>
+                    <h4 class="mb-3 ">Payment Manual</h4>
+                    @include('livewire.dashboard.kelola.pay.gatewayManual')
+                </div>
             </div>
         </div><!--end col-->
     </div><!--end row-->

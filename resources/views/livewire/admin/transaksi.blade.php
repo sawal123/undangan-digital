@@ -48,7 +48,7 @@
                     <td>{{ $item->kode }}</td>
                     <td>{{ $item->gross_amount }}</td>
                     <td><span class="badge text-bg-secondary">{{ $item->payment_status }}</span></td>
-                    <td>{{ $item->payment_type }}</td>
+                    <td>{{ $item->payment->bank ?? '-' }}</td>
                     <td>
                         <button class="btn btn-primary btn-sm"
                             wire:click='editTransaksi({{ $item->id }})'>Edit</button>
@@ -85,8 +85,14 @@
                             </div>
                             <div class="form-group">
                                 <label>Type Transaksi</label>
-                                <input type="text" class="form-control" wire:model="typeTrans"
-                                    placeholder="Masukkan Type">
+                           
+                                <select class="form-select" aria-label="Default select example"
+                                   wire:model="typeTrans">
+                                    <option selected>Type Nominal</option>
+                                    <option value="transfer">Transfer</option>
+                                    <option value="tunai">Tunai</option>
+
+                                </select>
                                 @error('typeTrans')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror

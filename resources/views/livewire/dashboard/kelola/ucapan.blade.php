@@ -95,7 +95,7 @@
 
                     </div>
                     <div class="my-3">
-                        {{ $ucapan->links(data: ['scrollTo' => false]) }}
+                        {{-- {{ $ucapan->links(data: ['scrollTo' => false]) }} --}}
                     </div>
                 </div>
             </div>

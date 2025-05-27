@@ -55,7 +55,7 @@ class RegisterController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect()->to('/');
+            return redirect()->to('/dashboard/setup');
         } catch (ValidationException $e) {
             // Kembalikan pesan error validasi unik untuk email
             return redirect()->back()->with('message', 'Email tersebut sudah terdaftar, gunakan email yang lain.');

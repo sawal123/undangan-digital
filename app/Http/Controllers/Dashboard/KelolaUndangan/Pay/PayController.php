@@ -31,4 +31,16 @@ class PayController extends Controller
         }
        
     }
+
+     public function tunai($id)
+    {
+        if($this->getData($id)){
+            return view('user.kelola.pay.finishTunai', [
+                'data' => $this->getData($id),
+            ]);
+        }else{
+            return abort('403');
+        }
+       
+    }
 }

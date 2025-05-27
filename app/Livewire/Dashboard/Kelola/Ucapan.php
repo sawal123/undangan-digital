@@ -83,8 +83,8 @@ class Ucapan extends Component
     public function render()
     {
         $ucapan = empty($this->query)
-            ? KelolaUndanganUcapan::paginate(5)
-            : KelolaUndanganUcapan::with('tamu')  // Memuat relasi tamu
+            ? KelolaUndanganUcapan::where('data_id', $this->dataId)->paginate(5)
+            : KelolaUndanganUcapan::with('tamu')->where('data_id', $this->dataId) // Memuat relasi tamu
             ->when($this->query, function ($query) {
                 $query->where(function ($query) {   // Membungkus kondisi pencarian
                     $query->where('ucapan', 'LIKE', '%' . $this->query . '%')

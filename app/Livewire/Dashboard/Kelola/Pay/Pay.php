@@ -2,15 +2,16 @@
 
 namespace App\Livewire\Dashboard\Kelola\Pay;
 
-use App\Models\Admin\Harga;
 use Midtrans\Snap;
 use Midtrans\Config;
 use Livewire\Component;
+use App\Models\Admin\Harga;
+use App\Models\Admin\Promo;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\Admin\PaySetting;
-use App\Models\Admin\Promo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class Pay extends Component
 {
@@ -29,16 +30,21 @@ class Pay extends Component
     public $fee;
     public $channel;
 
+    public $manual;
+    public $paymentGateway;
+
 
     public function ifee($id)
     {
-        $fe = PaySetting::find($id);
-        if ($fe->category === "ewallet") {
-            $this->total = $this->harga + ($this->harga * $fe->fee / 100);
-            $this->fee = $this->harga * $fe->fee / 100;
-        }else{
-            $this->fee =  $fe->fee;
-            $this->total  = $this->harga + $fe->fee;
+        $this->paymentGateway = PaySetting::find($id);
+        $this->manual = $this->paymentGateway->category;
+        // dd($this->manual);
+        if ($this->paymentGateway->category === "ewallet") {
+            $this->total = $this->harga + ($this->harga * $this->paymentGateway->fee / 100);
+            $this->fee = $this->harga * $this->paymentGateway->fee / 100;
+        } else {
+            $this->fee =  $this->paymentGateway->fee;
+            $this->total  = $this->harga + $this->paymentGateway->fee;
         }
     }
     public function redeem()
@@ -61,6 +67,22 @@ class Pay extends Component
         $selectedDataId = $this->dataId;
         // dd($selectedDataId);
 
+        if ($this->manual === 'manual') {
+            $transactions = Transaction::create([
+                'invoice' => 'INV-' . Str::random(8),
+                'user_id' => Auth::user()->id,
+                'data_id' => $selectedDataId,
+                'link_snap' => '',
+                'kode' => $this->codee ? $this->codee->kode : '',
+                'price' => $this->harga,
+                'promo' => $this->promo,
+                'gross_amount' => $this->total == 0 ? $this->harga : $this->total,
+                'payment_status' => 'PENDING',
+                'payment_type' => $this->paymentGateway->id,
+            ]);
+            return redirect('/dashboard/finishtunai/' . Crypt::encryptString($selectedDataId));
+        }
+
         // create Transaction 
         $transactions = Transaction::create([
             'invoice' => 'INV-' . Str::random(8),
@@ -72,7 +94,7 @@ class Pay extends Component
             'promo' => $this->promo,
             'gross_amount' => $this->total == 0 ? $this->harga : $this->total,
             'payment_status' => 'PENDING',
-            'payment_type' => '',
+            'payment_type' => $this->paymentGateway->id,
         ]);
 
         Config::$serverKey = config('midtrans.serverKey');

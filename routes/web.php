@@ -98,6 +98,8 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::get('/midtrans/finish', [MidtransController::class, 'finishRedirect']);
     Route::get('/midtrans/unfinished', [MidtransController::class, 'unfinishRedirect']);
     Route::get('/midtrans/failed', [MidtransController::class, 'errorRedirect']);
+
+    Route::get('/finishtunai/{id}', [PayController::class, 'tunai'])->name('tunai');
 });
 Route::post('/midtrans/callback', [MidtransController::class, 'notificationHandler']);
 

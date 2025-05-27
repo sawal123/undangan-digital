@@ -13,7 +13,7 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="basic-url" class="form-label">Title Acara</label>
-                            <input type="text" class="form-control" wire:model='titleAcara'>
+                            <input type="text" class="form-control" wire:model='titleAcara' placeholder="Undangan / Ngunduh Mantu Dll">
                         </div>
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-primary btn-sm" {{ $button ? '' : 'disabled' }}>Update</button>
@@ -75,7 +75,7 @@
                 @endif
             </div>
             <div class="text-lg-end">
-                <p>Gambar ini akan muncul di cover undnagan atau ketika kamu mengirimi pesan melalui whatsapp</p>
+                <p>Gambar ini akan muncul di cover undangan atau ketika kamu mengirimi pesan melalui whatsapp</p>
                 <form wire:submit.prevent='thumbnailWa'>
                     <input type="file" class="form-control" wire:model='gambar'>
                     <button class="btn btn-sm btn-primary mt-2 ">Upload Gambar</button>

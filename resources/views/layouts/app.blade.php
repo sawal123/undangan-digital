@@ -162,13 +162,16 @@
                         } else {
                             console.error('Elemen #ckeditor tidak ditemukan');
                         }
-                    }, 100); 
+                    }, 100);
                 });
             });
         </script>
     @endif
 
-
+    <script>
+        var urlForm = "{{ route('admin.categories.store') }}"
+    </script>
+    <script src="{{ asset('assetDashboard/main/setting/ajax-category.js') }}"></script>
 </body>
 
 </html>

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Admin\PaySetting;
 use App\Models\Data;
+use App\Models\GiftPay;
 use Livewire\Component;
 use App\Models\Transaction;
 
@@ -19,11 +21,11 @@ class Transaksi extends Component
     {
         $this->isModalOpenTrans = false;
         $this->modalDelete = false;
-
     }
     public function mount()
     {
         $this->transaksi = Transaction::all();
+        // $payment = PaySetting::where('id', $this->transaksi->payment_type)->first();
     }
 
     public function editTransaksi($id)
@@ -44,7 +46,11 @@ class Transaksi extends Component
             'payment_type' => $this->typeTrans,
         ]);
         $data = Data::find($transaksi->data_id);
-        $data->isActive = 1;
+        if ($this->statusTrans === 'SUCCESS') {
+            $data->isActive = 1;
+        } else {
+            $data->isActive = 0;
+        }
         $data->save();
         $this->closeModal(); // Tutup modal setelah penyimpanan
         session()->flash('message', 'Transaksi berhasil diUpdate!');

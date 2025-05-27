@@ -7,7 +7,7 @@
                 <button type="button" class="btn btn-icon btn-close" data-bs-dismiss="modal"
                     id="close-modal"><i class="uil uil-times fs-4 text-dark"></i></button>
             </div>
-            <form id="dataCategory{{$category->id}}"  enctype="multipart/form-data">
+            <form id="dataCategory{{$category->id}}" action="{{route('admin.categories.update', $category->id)}}" method="post"  enctype="multipart/form-data">
                 @csrf
                 @method('PUT') 
                 <div class="modal-body">

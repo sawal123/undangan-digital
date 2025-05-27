@@ -66,6 +66,9 @@ class Data extends Model
     public function kado(){
         return $this->hasMany(Kado::class);
     }
+    public function transaction(){
+        return $this->hasMany(Transaction::class);
+    }
     public function fiturKado(){
         return $this->hasOne(FiturKado::class);
     }

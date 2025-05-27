@@ -45,6 +45,7 @@ class CategoryController extends Controller
             'category' => 'required|string|max:255',
             'icon' => 'required|image|mimes:png,jpg,jpeg,svg'
         ]);
+        // dd($request->category);
         DB::beginTransaction();
         try {
         
@@ -107,7 +108,8 @@ class CategoryController extends Controller
             $category->category = $validated['category'];
             $category->save();
 
-            return response()->json(['success' => true, 'message' => 'Category updated successfully']);
+            return redirect()->back()->with(['success' => true, 'message' => 'Category updated successfully']);
+            // return response()->json(['success' => true, 'message' => 'Category updated successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

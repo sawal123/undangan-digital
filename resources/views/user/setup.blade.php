@@ -16,13 +16,14 @@
                             <div class="form-floating mb-2">
                                 <input type="text" class="form-control" id="title" name="title"
                                     placeholder="Harry & Nia">
-                                <label for="title">Title Undangan</label>
+                                <label for="title">Nama Yang Ingin Ditampilkan</label>
+                                <span class="" style="font-size: 12px">Contoh : <strong>Hendra & Heni</strong></span>
                             </div>
 
                             <div class="mb-3">
                                 <label for="basic-url" class="form-label">Your vanity URL</label>
                                 <div class="input-group ">
-                                    <span class="input-group-text" id="basic-addon3">https://wayaenikah.com/</span>
+                                    <span class="input-group-text" id="basic-addon3">{{url('/')}}u/</span>
                                     <input type="text" class="form-control" id="basic-url" name="slug"
                                         aria-describedby="basic-addon3 basic-addon4" placeholder="harrydannia">
                                 </div>
