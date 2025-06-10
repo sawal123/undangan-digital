@@ -2,9 +2,9 @@
     {{-- AKAD --}}
     @foreach ($data->acara as $item)
         <div class="border my-2 py-2 rounded-lg ">
-            <h2 class="items-center text-center text-2xl italic uppercase my-7 text-[#755f4B]" data-aos="fade-up"
+            <p class="items-center text-center text-4xl title italic  my-7 text-[#755f4B]" data-aos="fade-up"
                 data-aos-duration="1500">
-                {{ $item->nama_acara }}</h2>
+                {{ $item->nama_acara }}</p>
             <div class="grid grid-cols-3 gap-4 items-center mx-12 md:mx-28 text-[12px] md:text-lg" data-aos="fade-up">
                 <!-- Kolom 1 -->
                 <div class="flex flex-col items-center border-t border-gray-400">
@@ -37,8 +37,16 @@
             <div class="mt-8">
                 <p class="text-center  text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">
                     {{ $item->alamat }}</p>
-                <p class="text-center  text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">{{ $item->vanue }}</p>
+                <p class="text-center  text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">{{ $item->vanue }}
+                </p>
             </div>
+            <div class="flex justify-center mt-2">
+                <a href="{{ $item->maps }}" class=" px-4 py-2 bg-[#755f4B] text-white rounded-lg hover:bg-gray-500"
+                    data-aos="fade-up" data-aos-duration="1800">
+                    Lihat Lokasi
+                </a>
+            </div>
+
         </div>
     @endforeach
 

@@ -1,10 +1,9 @@
 @if ($data->FiturUcapan->isActive)
     <div class="comment mt-10 pb-10 text-[12px] md:text-base bg-[#D7CEBE] justify-center flex flex-col items-center">
 
-        <h2 class="text-center text-xl md:text-2xl pt-10 text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">
-            BERIKAN
-            UCAPAN
-        </h2>
+        <p class="text-center text-4xl title pt-10 text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">
+            Berikan Ucapan
+        </p>
 
         <div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 mx-4 mt-10"
             data-aos="fade-up" data-aos-duration="1500">
@@ -14,18 +13,18 @@
                     <input type="hidden" name="dataId" value="{{ $data->id }}">
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Nama</label>
-                        <input type="text" name="nama" value="{{ $tamu }}"
+                        <input type="text" name="nama" value="{{ $tamu }}" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    "
                             placeholder="Masukkan nama kamu" value="{{ $tamu }}" />
                     </div>
                     <div>
                         <label for="ucapan" class="block mb-2 text-sm font-medium text-gray-900 ">Masukan
                             ucapanmu</label>
-                        <textarea type="text" name="ucapan" id="ucapan" placeholder="Berikan ucapan terbaik kamu"
+                        <textarea type="text" name="ucapan" id="ucapan" placeholder="Berikan ucapan terbaik kamu" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                         </textarea>
                     </div>
-                    <select name="status" id="countries"
+                    <select name="status" id="countries" required
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected disabled>Konfirmasi Kehadiran</option>
                         <option value="Datang Dong">Datang Dong</option>
@@ -73,21 +72,27 @@
 
         </div>
 
-        <div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 mx-4 mt-10 text-[12px] md:text-base mb-5"
+        <div class="w-full max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow-lg mx-4 mt-10 text-xs md:text-sm mb-2"
             data-aos="fade-up" data-aos-duration="1500">
             @foreach ($ucapan as $item)
-                <ul class="border-b border-black">
-                    <li class="font-semibold">{{ $item->tamu->nama }}</li>
-                    <li class="mb-2">{{ $item->ucapan }}</li>
+                <div class="bg-gray-50 p-4 rounded-lg ">
+                    <ul class="border-b border-gray-300 pb-2 ">
+                        <li class="text-base font-semibold text-[#2d3748]">
+                            {{ $item->tamu->nama }}
+                            <span
+                                class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">{{ $item->status }}</span>
+                        </li>
+                        <li class="text-sm text-[#4a5568]">{{ $item->ucapan }}</li>
+                    </ul>
                     @if ($item->balas)
-                        <ol>
-                            <li class="italic">Balasan :
-                                {{ $item->balas }}</li>
-                        </ol>
+                        <div class="mt-2 p-4 bg-gray-100 rounded-md">
+                            <p class="italic text-[#2b6cb0] text-sm">Balasan:</p>
+                            <p class="text-[#4a5568] text-sm">{{ $item->balas }}</p>
+                        </div>
                     @endif
-                </ul>
+                </div>
             @endforeach
-
         </div>
+
     </div>
 @endif

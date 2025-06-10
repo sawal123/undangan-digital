@@ -23,7 +23,6 @@ function pauseVideo() {
   toggleButton.innerHTML = '<i class="fa-solid fa-play"></i>';
   isPlaying = false;
 }
-
 // Toggle Button for Play/Pause
 toggleButton.addEventListener('click', function () {
   if (isPlaying) {
@@ -32,7 +31,6 @@ toggleButton.addEventListener('click', function () {
     playVideo();
   }
 });
-
 // Open Cover Button: Hide cover and play video
 openCoverButton.addEventListener('click', function () {
   // Hide the cover

@@ -19,6 +19,8 @@
     <title>{{ $data->title }}</title>
     <link href="{{ asset('tema/standtheme/output.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('tema/standtheme/assets/aos/dist/aos.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
 </head>
 
 <body class="bg-white ">
@@ -45,7 +47,7 @@
         <!-- end himbauan 1 -->
 
         <!-- denah -->
-        @include('tema.standtheme.denah')
+        {{-- @include('tema.standtheme.denah') --}}
         <!-- end denah -->
 
         <!-- himbauan 2 -->
@@ -65,41 +67,40 @@
         <!-- end ucapan-->
 
         <div class="footer bg-[#755F4B] pb-10 ">
-            <p class="text-center text-white pt-10">© Nikah 2025</p>
-           
+            <p class="text-center text-white pt-10">© Wayae Nikah 2025</p>
         </div>
 
     </div>
 
     <!-- Music -->
     @include('tema.standtheme.music')
-   {{-- end music --}}
-   <script>
-    const buka = document.getElementById('bukaModal');
-    const tutup = document.getElementById('tutupModal');
-    const mod = document.getElementById('mod');
+    {{-- end music --}}
+    <script>
+        const buka = document.getElementById('bukaModal');
+        const tutup = document.getElementById('tutupModal');
+        const mod = document.getElementById('mod');
 
-    buka.addEventListener('click', () => {
-        mod.classList.remove('hidden');
-    });
+        buka.addEventListener('click', () => {
+            mod.classList.remove('hidden');
+        });
 
-    tutup.addEventListener('click', () => {
-        mod.classList.add('hidden');
-    });
-
-    // Close modal when clicking outside
-    mod.addEventListener('click', (e) => {
-        if (e.target === mod) {
+        tutup.addEventListener('click', () => {
             mod.classList.add('hidden');
-        }
-    });
-</script>
+        });
 
-<script src="{{ asset('tema/standtheme/assets/aos/dist/aos.js') }}"></script>
-<script>
-    AOS.init();
-</script>
-<script src="{{ asset('tema/standtheme/js/modal.js') }}"></script>
+        // Close modal when clicking outside
+        mod.addEventListener('click', (e) => {
+            if (e.target === mod) {
+                mod.classList.add('hidden');
+            }
+        });
+    </script>
+
+    <script src="{{ asset('tema/standtheme/assets/aos/dist/aos.js') }}"></script>
+    <script>
+        AOS.init();
+    </script>
+    <script src="{{ asset('tema/standtheme/js/modal.js') }}"></script>
 
 </body>
 

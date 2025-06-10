@@ -1,20 +1,19 @@
 <div class="album mt-10">
-    <h2 class="text-lg md:text-2xl font-semibold uppercase text-center mb-10 text-[#755f4B]" data-aos="fade-up"
-        data-aos-duration="1500">
-        Album Wedding</h2>
-    <div class="space-y-4">
-        <div class="grid grid-cols-2 gap-4 mx-4" data-aos="fade-up" data-aos-duration="1500">
-            @foreach ($poto as $po)
-                <div class="grid grid-cols-2 gap-4 mx-4" data-aos="fade-up" data-aos-duration="1500">
-                    <img src="{{ asset('storage/' . $po) }}" class="w-auto object-cover object-center" />
-                </div>
-            @endforeach
-            @foreach ($video as $po)
-                <div class="grid grid-cols-2 gap-4 mx-4" data-aos="fade-up" data-aos-duration="1500">
-                    <img src="{{ asset('storage/' . $po) }}" class="w-auto object-cover object-center" />
-                </div>
-            @endforeach
-        </div>
+     <p class="text-4xl title text-center mb-10 text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">
+        Album Wedding
+    </p>
 
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-4" data-aos="fade-up" data-aos-duration="1500">
+        @foreach ($poto as $po)
+            <div class="relative overflow-hidden rounded-lg shadow-lg">
+                <img src="{{ asset('storage/' . $po) }}" class="w-full h-full object-cover object-center transform transition duration-500 hover:scale-105" />
+            </div>
+        @endforeach
+        @foreach ($video as $po)
+            <div class="relative overflow-hidden rounded-lg shadow-lg">
+                <img src="{{ asset('storage/' . $po) }}" class="w-full h-full object-cover object-center transform transition duration-500 hover:scale-105" />
+            </div>
+        @endforeach
     </div>
+
 </div>

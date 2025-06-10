@@ -1,6 +1,5 @@
 <div class="cover h-full  w-full  mx-auto ">
           
-
     <div class="w-full h-[500px] relative flex bg-no-repeat bg-cover bg-center"
         style="background-image: url('{{ asset("storage/" . $data->thumbnailWas->thumbnail) }}');">
 

@@ -5,9 +5,9 @@
     <!-- Hitung Mundur -->
     <div class="mt-8">
         <!-- Judul -->
-        <h2 class="text-center text-xl font-semibold  md:text-2xl uppercase mb-8 text-[#755f4B]" data-aos="fade-up"
+        <p class="text-center  font-semibold   text-4xl title mb-8 text-[#755f4B]" data-aos="fade-up"
             data-aos-duration="1500">
-            Hitung Mundur</h2>
+            Hitung Mundur</p>
         <?php
         // Ambil waktu acara dalam format Unix Timestamp
         $eventTimestamp = strtotime($data->acara[0]->date);
