@@ -122,8 +122,8 @@ class Tamu extends Component
     public function render()
     {
         $tamu = empty($this->query)
-            ? KelolaUndanganTamu::orderBy('id', 'desc')->paginate(5)
-            : KelolaUndanganTamu::where('nama', 'LIKE', '%' . $this->query . '%')
+            ? KelolaUndanganTamu::orderBy('id', 'desc')->where('data_id', $this->dataId)->paginate(5)
+            : KelolaUndanganTamu::where('nama', 'LIKE', '%' . $this->query . '%')->where('data_id', $this->dataId)
             ->orWhere('kode', 'LIKE', '%' . $this->query . '%')
             ->orWhere('nomor', 'LIKE', '%' . $this->query . '%')
             ->orderBy('id', 'desc')->paginate(5);
