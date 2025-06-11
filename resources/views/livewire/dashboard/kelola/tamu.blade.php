@@ -1,7 +1,7 @@
 <div>
-    <a href="/dashboard/kelola/{{ Crypt::encryptString($dataId) }}" class="btn btn-secondary btn-sm"  ><i
-        class="mdi mdi-arrow-left-bold"></i>
-    Kembali</a>
+    <a href="/dashboard/kelola/{{ Crypt::encryptString($dataId) }}" class="btn btn-secondary btn-sm"><i
+            class="mdi mdi-arrow-left-bold"></i>
+        Kembali</a>
 
     <div class="alert alert-info mt-2 d-flex align-items-center gap-3">
         <i class="mdi mdi-security fs-1"></i>
@@ -23,9 +23,10 @@
                         class="d-sm-flex flex-sm-column d-lg-flex flex-lg-row justify-content-between gap-5 align-items-center">
                         <x-input-live type="text" label="" class="mb-1 " danger="" wire="query"
                             place="Cari Tamu" error="query" message="$message" />
-                        <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#AddTamu"><i class="mdi mdi-plus"></i> Tambah
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddTamu"><i
+                                class="mdi mdi-plus"></i> Tambah
                             Tamu</button>
-                            @include('user.kelola.tamu.addTamu')
+                        @include('user.kelola.tamu.addTamu')
 
                     </div>
                     <div class="table-responsive">
@@ -56,7 +57,8 @@
                                         <td><small>{{ $item->kode }}</small></td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <button class="btn btn-sm btn-light border-info" data-bs-toggle="modal" data-bs-target="#shareTamu"
+                                                <button class="btn btn-sm btn-light border-info" data-bs-toggle="modal"
+                                                    data-bs-target="#shareTamu"
                                                     wire:click="shareTamu({{ $item->id }})">
                                                     <i class="mdi mdi-share-variant"></i>
                                                 </button>
@@ -71,10 +73,11 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-dark">
                                                         <li><a class="dropdown-item"
-                                                                href="{{ url('/') . '/' . $item->data->slug . '/' . $item->kode }}">Lihat
+                                                                href="{{ url('/') . '/u/' . $item->data->slug . '/' . $item->kode }}">Lihat
                                                                 Undangan</a>
                                                         </li>
-                                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#EditTamu"
+                                                        <li><button class="dropdown-item" data-bs-toggle="modal"
+                                                                data-bs-target="#EditTamu"
                                                                 wire:click='EditTamu({{ $item->id }})'>Edit</button>
                                                         </li>
                                                         <li><button class="dropdown-item"
@@ -114,12 +117,12 @@
             <div class="d-flex gap-2">Kode: {{ $invite ? $invite[1] : 'Tidak tersedia' }}</div>
             <hr>
             <label for="">Link undangan</label>
-            <input wire:model="slug" id="slugInput" type="url" class="form-control form-control-solid form-control-sm">
-<button id="copyButton" class="btn btn-danger btn-sm w-100 mt-2" onclick="copyToClipboard()">Copy Link</button>
-            
+            <input wire:model="slug" id="slugInput" type="url"
+                class="form-control form-control-solid form-control-sm">
+            <button id="copyButton" class="btn btn-danger btn-sm w-100 mt-2" onclick="copyToClipboard()">Copy
+                Link</button>
+
         </div>
     </x-modal-slot>
-
-    
 
 </div>

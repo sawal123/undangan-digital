@@ -74,7 +74,7 @@ class Tamu extends Component
         if ($this->undang) {
             $this->invite = [$this->undang->nama, $this->undang->kode];
         }
-        $this->slug = url('/') . '/' . $this->undang->data->slug . '/' . $this->undang->kode;
+        $this->slug = url('/u') . '/' . $this->undang->data->slug . '/' . $this->undang->kode;
     }
     public function EditTamu($id)
     {
