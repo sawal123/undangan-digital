@@ -8,7 +8,7 @@
         atau melalui pengiriman fisik.</p>
 
     @foreach ($data->kado as $kado)
-        <div class="bank-info" data-aos="fade-up" data-aos-duration="1000">
+        <div class="bank-info mt-2" data-aos="fade-up" data-aos-duration="1000">
             <div>
                 <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" class="object-fit-cover img-thumbnail"
                     alt="Qris" style="width: auto%; height: 50px; " />
@@ -21,11 +21,12 @@
                 <span class="nomor-rekening">{{ $kado->nomorPay }}</span>
             </p>
             <button class="btn btn-sm btn-info" onclick="salinTeks(this)">Salin</button>
+            <hr>
             <script>
                 function salinTeks(button) {
                     // Ambil elemen teks dalam kartu yang sesuai dengan tombol yang diklik
-                    const nomorRekening = button.closest('.relative').querySelector('.nomor-rekening').textContent;
-
+                    console.log(button)
+                    const nomorRekening = button.closest('.bank-info').querySelector('.nomor-rekening').textContent;
                     // Salin teks ke clipboard
                     navigator.clipboard.writeText(nomorRekening).then(() => {
                         alert('Nomor rekening berhasil disalin: ' + nomorRekening);

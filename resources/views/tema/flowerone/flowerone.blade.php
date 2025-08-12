@@ -185,8 +185,8 @@
                         <div class="jumbotron text-center position-relative text-black z-3">
                             <h4>The Wedding Off</h4>
                             <p class="name-relationship countdown">
-                                {{ $data ? $data->wanita->nama_panggilan : 'Ajeng' }} &
-                                {{ $data ? $data->pria->nama_panggilan : 'Teddy' }}
+                                {{ $data ? $data->pria->nama_panggilan : 'Teddy' }} &
+                                {{ $data ? $data->wanita->nama_panggilan : 'Ajeng' }}
                             </p>
                             {{-- <p class="date countdown">Minggu <br> 10 • 11 • 2024</p> --}}
                             @include('tema.flowerone.flower.countdown')
@@ -265,9 +265,12 @@
                                         class="p-1 rounded-2 text-center text-white text-decoration-none">
                                         <i class="fa-solid fa-calendar-check mr-2"></i>Simpan Tanggal
                                     </a>
-                                    <a href="{{ $item->maps }}"
+                                    @if($item->maps)
+                                     <a href="{{ $item->maps }}"
                                         class="p-1  rounded-2 text-white text-decoration-none "><i
                                             class="fa-solid fa-map-location-dot mr-2"></i>Navigasi Map</a>
+                                    @endif
+                                   
                                 </div>
                             </div>
                         @empty

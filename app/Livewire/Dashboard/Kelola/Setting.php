@@ -50,7 +50,7 @@ class Setting extends Component
             ]);
         } else {
             ModelsSetting::create([
-                'data_id'=>$id,
+                'data_id' => $id,
                 'acara' => $this->titleAcara,
                 'subacara' => '',
             ]);

@@ -17,7 +17,6 @@
     <meta name="twitter:title" content="{{ $data->title }}">
     <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
     <title>{{ $data->title }}</title>
-  wire:
     <!--  css -->
     <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/aos/dist/aos.css') }}">
     <link href="{{ asset('tema/darkpre/src/css/output.css') }}" rel="stylesheet">
