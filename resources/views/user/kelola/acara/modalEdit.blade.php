@@ -38,8 +38,8 @@
         </div>
 
         <div class="mb-3">
-            <select class="form-select" aria-label="Default select example" wire:model='zona'>
-                <option selected>Zona Waktu</option>
+            <select required class="form-select" aria-label="Default select example" wire:model='zona'>
+                <option value="">--Zona Waktu--</option>
                 <option value="WIB">WIB</option>
                 <option value="WITA">WITA</option>
                 <option value="WIT">WIT</option>

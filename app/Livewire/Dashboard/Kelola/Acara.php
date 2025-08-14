@@ -30,16 +30,14 @@ class Acara extends Component
         'alamat' => 'required|string|max:255',
         'date' => 'required|string|max:255',
         'start' => 'required|string|max:255',
-        'zona' => 'required|string|max:255',
+        'zona' => 'string|max:255',
         'maps' => 'string|max:255',
     ];
     protected $messages = [
-        'zona.required' => 'Zona Waktu Belum Diisi',
         'acara.required' => 'Nama Acara wajib diisi!',
         'vanue.required' => 'Nama Vanue wajib diisi!',
         'vanue.required' => 'Nama Vanue wajib diisi!',
-        'zona.required' => 'Nama Vanue wajib diisi!',
-        // Tambah pesan lain sesuai kebutuhan
+        // 'zona.required' => 'Nama Vanue wajib diisi!',
     ];
 
 
@@ -88,8 +86,8 @@ class Acara extends Component
     }
     public function save()
     {
+        // $this->close();
         $this->validate();
-
         if ($this->selectedAcaraId) {
             // Update jika ada `selectedAcaraId`
             $acara = KelolaUndanganAcara::find($this->selectedAcaraId);
@@ -122,6 +120,7 @@ class Acara extends Component
             session()->flash('message', 'Data acara berhasil disimpan.');
             $this->dispatch('close-modal');
         }
+        
         // session()->flash('message', 'Data Acara Berhasil Disimpan.');
         $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
     }

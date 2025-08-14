@@ -1,18 +1,18 @@
 <x-modal id="AddAcara" title="Tambah Acara" wire="save" textButton="Simpan">
     <div class="modal-body">
-        <x-form-input type="text" label="Nama Acara" danger="*" wire="acara" place="Acara Kamu :" error="acara"
-            message="$message" />
-        <x-form-input type="text" label="Nama Lokasi/Gedung/Venue" danger="*" wire="vanue"
+        <x-form-input type="text" required="required" label="Nama Acara" danger="*" wire="acara"
+            place="Acara Kamu :" error="acara" message="$message" />
+        <x-form-input type="text" required="required" label="Nama Lokasi/Gedung/Venue" danger="*" wire="vanue"
             place="Kediaman Mempelai Pria" error="vanue" message="$message" />
-        <x-form-input type="text" label="Alamat" danger="*" wire="alamat" place="Jl. Kemayoran, Jakarta"
-            error="alamat" message="$message" />
-        <x-form-input type="date" label="Tanggal Acara" danger="*" wire="date" error="date"
-            message="$message" />
+        <x-form-input type="text" label="Alamat" required="required" danger="*" wire="alamat"
+            place="Jl. Kemayoran, Jakarta" error="alamat" message="$message" />
+        <x-form-input type="date" label="Tanggal Acara" required="required" danger="*" wire="date"
+            error="date" message="$message" />
         <div class="mb-3 row">
             <div class="col">
                 <label class="form-label" for="start">Jam Mulai <span class="text-danger">*</span></label>
                 <div class="form-icon position-relative">
-                    <input id="start" name="start" wire:model="start" type="time"
+                    <input id="start" name="start" wire:model="start" required type="time"
                         class="form-control form-control-solid form-control-sm ">
                 </div>
                 @error('start')
@@ -38,15 +38,13 @@
         </div>
 
         <div class="mb-3">
-            <select class="form-select" aria-label="Default select example" wire:model='zona'>
-                <option selected>Zona Waktu</option>
+            <select required class="form-select" aria-label="Default select example" wire:model='zona'>
+                <option value="">--Zona Waktu--</option>
                 <option value="WIB">WIB</option>
                 <option value="WITA">WITA</option>
                 <option value="WIT">WIT</option>
             </select>
-            @error('zona')
-                <small class="text-danger">{{ $message }}</small>
-            @enderror
+          
         </div>
         <x-form-input type="url" label="Link Navigasi Map (Opsional)" place="https://www.google.com/maps"
             wire="maps" error="maps" message="$message" />
