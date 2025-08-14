@@ -16,7 +16,6 @@
                         class="mdi mdi-close"></i> Tutup</button>
                     <button type="submit" class="btn btn-primary" wire:loading.attr="disabled"><i class="mdi mdi-check-bold"></i> {{$textButton}}</button>
                 </div>
-
             </form>
         </div>
     </div>

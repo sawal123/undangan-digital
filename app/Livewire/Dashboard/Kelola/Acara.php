@@ -14,6 +14,7 @@ class Acara extends Component
     public $date;
     public $start;
     public $end;
+    public $selesai;
     public $zona;
     public $maps = '';
 
@@ -29,9 +30,16 @@ class Acara extends Component
         'alamat' => 'required|string|max:255',
         'date' => 'required|string|max:255',
         'start' => 'required|string|max:255',
-        'end' => 'required|string|max:255',
         'zona' => 'required|string|max:255',
         'maps' => 'string|max:255',
+    ];
+    protected $messages = [
+        'zona.required' => 'Zona Waktu Belum Diisi',
+        'acara.required' => 'Nama Acara wajib diisi!',
+        'vanue.required' => 'Nama Vanue wajib diisi!',
+        'vanue.required' => 'Nama Vanue wajib diisi!',
+        'zona.required' => 'Nama Vanue wajib diisi!',
+        // Tambah pesan lain sesuai kebutuhan
     ];
 
 
@@ -47,6 +55,7 @@ class Acara extends Component
         $this->date = $acara->date;
         $this->start = $acara->jam_start;
         $this->end = $acara->jam_end;
+        $this->selesai = $acara->jam_end == 'Selesai' ? true : false;
         $this->zona = $acara->zona_waktu;
         $this->maps = $acara->maps;
         $this->dispatch('openEditModal');
@@ -81,7 +90,6 @@ class Acara extends Component
     {
         $this->validate();
 
-
         if ($this->selectedAcaraId) {
             // Update jika ada `selectedAcaraId`
             $acara = KelolaUndanganAcara::find($this->selectedAcaraId);
@@ -91,7 +99,7 @@ class Acara extends Component
                 'alamat' => $this->alamat,
                 'date' => $this->date,
                 'jam_start' => $this->start,
-                'jam_end' => $this->end,
+                'jam_end' => $this->selesai == 1 || $this->end == '' ? 'Selesai' : $this->end,
                 'zona_waktu' => $this->zona,
                 'maps' => $this->maps,
             ]);
@@ -106,7 +114,7 @@ class Acara extends Component
                 'alamat' => $this->alamat,
                 'date' => $this->date,
                 'jam_start' => $this->start,
-                'jam_end' => $this->end,
+                'jam_end' =>  $this->selesai == 1 || $this->end == '' ? 'Selesai' : $this->end,
                 'zona_waktu' => $this->zona,
                 'maps' => $this->maps,
             ]);
@@ -132,6 +140,7 @@ class Acara extends Component
         $this->date = '';
         $this->start = '';
         $this->end = '';
+        $this->selesai = false;
         $this->zona = '';
         $this->maps = '';
         $this->selectedAcaraId = null;

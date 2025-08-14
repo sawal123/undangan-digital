@@ -12,7 +12,7 @@
             <div class="col">
                 <label class="form-label" for="start">Jam Mulai <span class="text-danger">*</span></label>
                 <div class="form-icon position-relative">
-                    <input  name="start" wire:model="start" type="time"
+                    <input name="start" wire:model="start" type="time"
                         class="form-control form-control-solid form-control-sm ">
                 </div>
                 @error('start')
@@ -24,6 +24,12 @@
                 <div class="form-icon position-relative">
                     <input name="end" wire:model="end" type="time"
                         class="form-control form-control-solid form-control-sm">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" wire:model="selesai" id="checkDefault">
+                        <label class="form-check-label" for="checkDefault">
+                            s/d Selesai
+                        </label>
+                    </div>
                 </div>
                 @error('end')
                     <small class="text-danger">{{ $message }}</small>
@@ -42,4 +48,4 @@
         <x-form-input type="url" label="Link Navigasi Map (Opsional)" place="https://www.google.com/maps"
             wire="maps" error="maps" message="$message" />
     </div>
-</x-modal-dash>
+    </x-modal-dash>

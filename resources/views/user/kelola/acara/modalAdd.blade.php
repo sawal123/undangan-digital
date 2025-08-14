@@ -24,6 +24,12 @@
                 <div class="form-icon position-relative">
                     <input id="end" name="end" wire:model="end" type="time"
                         class="form-control form-control-solid form-control-sm">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" wire:model="selesai" id="checkDefault">
+                        <label class="form-check-label" for="checkDefault">
+                            s/d Selesai
+                        </label>
+                    </div>
                 </div>
                 @error('end')
                     <small class="text-danger">{{ $message }}</small>
@@ -38,8 +44,11 @@
                 <option value="WITA">WITA</option>
                 <option value="WIT">WIT</option>
             </select>
+            @error('zona')
+                <small class="text-danger">{{ $message }}</small>
+            @enderror
         </div>
         <x-form-input type="url" label="Link Navigasi Map (Opsional)" place="https://www.google.com/maps"
             wire="maps" error="maps" message="$message" />
     </div>
-</x-modal-dash>
+    </x-modal-dash>
