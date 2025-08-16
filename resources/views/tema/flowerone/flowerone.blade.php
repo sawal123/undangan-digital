@@ -258,8 +258,12 @@
                                 <p class="date">
                                     {{ \Carbon\Carbon::parse($item->date)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
                                 </p>
-                                <p class="time">{{ $item->jam_start }} s/d {{ $item->jam_end }}
-                                    {{ $item->zona_waktu }}</p>
+                                @php
+                                    $zonaWaktuStart = $item->jam_end == 'Selesai' ? $item->zona_waktu : '';
+                                    $zonaWaktuEnd = $item->jam_end != 'Selesai' ? $item->zona_waktu : '';
+                                @endphp
+                                <p class="time"> {{ $item->jam_start }} {{ $zonaWaktuStart }} s/d
+                                    {{ $item->jam_end }} {{ $zonaWaktuEnd }}</p>
                                 <p class="location">{{ $item->vanue }}<br>{{ $item->alamat }}</p>
                                 <div class="d-flex flex-row justify-content-center gap-2">
                                     <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Acara+Penting&dates={{ date('Ymd', strtotime($item->date)) }}T090000Z/{{ date('Ymd', strtotime($item->date)) }}T120000Z&details=Jangan+lewatkan+acara+ini&location={{ $item->alamat }}"
