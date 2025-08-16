@@ -255,7 +255,9 @@
                         @forelse ($data->acara as $item)
                             <div class="event-card" data-aos="fade-up" data-aos-duration="1000">
                                 <h3>{{ $item->nama_acara }}</h3>
-                                <p class="date">{{ $item->date }}</p>
+                                <p class="date">
+                                    {{ \Carbon\Carbon::parse($item->date)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+                                </p>
                                 <p class="time">{{ $item->jam_start }} s/d {{ $item->jam_end }}
                                     {{ $item->zona_waktu }}</p>
                                 <p class="location">{{ $item->vanue }}<br>{{ $item->alamat }}</p>
@@ -265,12 +267,12 @@
                                         class="p-1 rounded-2 text-center text-white text-decoration-none">
                                         <i class="fa-solid fa-calendar-check mr-2"></i>Simpan Tanggal
                                     </a>
-                                    @if($item->maps)
-                                     <a href="{{ $item->maps }}"
-                                        class="p-1  rounded-2 text-white text-decoration-none "><i
-                                            class="fa-solid fa-map-location-dot mr-2"></i>Navigasi Map</a>
+                                    @if ($item->maps)
+                                        <a href="{{ $item->maps }}"
+                                            class="p-1  rounded-2 text-white text-decoration-none "><i
+                                                class="fa-solid fa-map-location-dot mr-2"></i>Navigasi Map</a>
                                     @endif
-                                   
+
                                 </div>
                             </div>
                         @empty
