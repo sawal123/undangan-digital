@@ -85,6 +85,7 @@ class TemaController extends Controller
         // dd($data->acara);
 
         $ucapan = Ucapan::where('data_id', $data->id)->get();
+        // dd($ucapan);
         if ($data->theme_id === null) {
             session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
             return redirect()->back();

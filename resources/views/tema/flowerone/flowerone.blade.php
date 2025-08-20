@@ -422,15 +422,7 @@
                             <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid">
                         </div>
                     @endif
-
                     <p class="text-center" data-aos="fade-up" data-aos-duration="1000"> {!! $data->teksUndangan->penutup !!}</p>
-
-
-
-
-
-
-
                 </div>
             </div>
             <!-- MAIN -->

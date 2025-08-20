@@ -95,7 +95,7 @@
             <div data-bs-smooth-scroll="true" class="scrollspy-example bg-body-tertiary p-3 rounded-2" tabindex="0">
                 @foreach ($ucapan as $item)
                     <div class="messages-list">
-                        <div class="card message-item mb-3" data-aos="fade-up" data-aos-duration="1000">
+                        <div class="card message-item mb-3" >
                             <div class="card-body">
                                 <div class="d-flex gap-2">
                                     <strong>{{ $item->tamu->nama }}</strong>
