@@ -23,7 +23,11 @@
   <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/aos/dist/aos.css') }}">
   <link rel="stylesheet" href="{{ asset('tema/darksweet/css/style.css') }}">
 
-
+<style>
+    .text-shadow{
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+</style>
 </head>
 
 <body class="bg-neutral-300 text-slate-900 relative">

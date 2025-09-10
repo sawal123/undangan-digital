@@ -10,8 +10,7 @@
 
 <div class="bg-stone-500 rounded-lg flex flex-col items-center my-2 justify-center mx-6 relative w-auto py-5 mt-6">
     <p class="text-center text-white" data-aos="fade-up" data-aos-duration="1500">
-        Tanpa mengurangi rasa hormat, untuk melengkapi kebahagiaan pengantin, Anda dapat memberikan tanda
-        kasih dengan transfer ke rekening/emoney berikut :
+        Tanpa mengurangi rasa hormat, bagi yang berkenan memberikan tanda kasih, dapat disampaikan melalui rekening/emoney berikut:
     </p>
     <hr class="my-4" />
     
@@ -34,7 +33,7 @@
 
             <!-- Tombol Salin -->
             <div class="flex justify-center mt-6">
-                <button id="copyButton" onclick="copyToClipboard()" class="p-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="copyButton" onclick="copyToClipboard()" class="p-3 py-2 bg-[#755f4B] text-white rounded-lg hover:bg-[#382a1d] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     Salin Nomor Rekening
                 </button>
             </div>

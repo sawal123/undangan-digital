@@ -1051,7 +1051,7 @@
       </iframe>
     </div>
 
-    
+
   </div>
   <!-- content -->
 <!-- Modal Qr -->

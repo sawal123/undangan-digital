@@ -1,6 +1,6 @@
-<p class="date countdown text-center font-bold text-white" data-date="{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}" data-aos="zoom-in-up"
+<p class="text-shadow date countdown text-center font-bold text-white" data-date="{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}" data-aos="zoom-in-up"
     data-aos-duration="2000">
-    <span class="text-lg">{{ $data ? $hari[date('l', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? '')))] : 'Minggu' }}</span><br>
+    <span class="text-lg text-shadow">{{ $data ? $hari[date('l', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? '')))] : 'Minggu' }}</span><br>
     <span class="text-2xl font-extrabold">{{ $data ? date('d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '10' }}</span>
     <span class="text-xl">•</span>
     <span class="text-2xl font-extrabold">{{ $data ? date('m', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '10' }}</span>

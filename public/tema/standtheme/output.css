@@ -108,7 +108,7 @@
 
 
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Capriola&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&display=swap');
 .title {
   font-family: "Dancing Script", cursive;
   font-optical-sizing: auto;
@@ -163,7 +163,7 @@ html,
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: 'Capriola', 'Epunda Slab', ui-sans-serif, system-ui, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
   font-feature-settings: normal;
   /* 5 */

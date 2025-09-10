@@ -18,9 +18,9 @@
 
         <!-- Bottom Title -->
         <div class="">
-            <p class="text-center text-white font-italiana" data-aos="zoom-in-up"
+            <p class=" text-shadow text-center text-white font-italiana" data-aos="zoom-in-up"
             data-aos-duration="2000">Invitation From</p>
-            <h1 class="text-white text-3xl font-bold text-center font-italiana" data-aos="zoom-in-up"
+            <h1 class=" text-shadow text-white text-3xl font-bold text-center font-italiana" data-aos="zoom-in-up"
                 data-aos-duration="3000">{{ $data->pria->nama_panggilan }} &
                 {{ $data->wanita->nama_panggilan }}</h1>
         </div>

@@ -40,12 +40,15 @@
                 <p class="text-center  text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">{{ $item->vanue }}
                 </p>
             </div>
-            <div class="flex justify-center mt-2">
-                <a href="{{ $item->maps }}" class=" px-4 py-2 bg-[#755f4B] text-white rounded-lg hover:bg-gray-500"
-                    data-aos="fade-up" data-aos-duration="1800">
-                    Lihat Lokasi
-                </a>
-            </div>
+            @if ($item->maps)
+                <div class="flex justify-center mt-2">
+                    <a href="{{ $item->maps }}"
+                        class=" px-4 py-2 bg-[#755f4B] text-white rounded-lg hover:bg-gray-500" data-aos="fade-up"
+                        data-aos-duration="1800">
+                        Lihat Lokasi
+                    </a>
+                </div>
+            @endif
 
         </div>
     @endforeach

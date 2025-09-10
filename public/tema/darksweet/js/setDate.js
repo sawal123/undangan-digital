@@ -9,7 +9,7 @@ function startCountdown() {
         if (difference < 0) {
             clearInterval(interval);
             document.getElementById("countdown").innerHTML =
-                "<p class='text-red-600 font-bold text-lg'>Acara telah berlangsung</p>";
+                "<p class='text-white bg-gray-900 px-2 py-1 rounded-md text-lg'>Acara Telah Berlangsung</p>";
             return;
         }
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));

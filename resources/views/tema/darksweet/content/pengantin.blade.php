@@ -111,6 +111,29 @@
         <div id="absen">
             @include('tema.darksweet.content.pengantin.ucapan')
         </div>
+
+        <div class="w-full h-[750px] flex flex-col justify-center items-center bg-cover bg-center bg-local relative"
+            id="bottom" style="background-image: url('{{ asset('storage/' . $thumbnailWa->thumbnail) }}');">
+            <div class="absolute bg-black opacity-50 inset-0 w-full h-full z-0"></div>
+            <div class="flex flex-col justify-center items-center p-2 bg-white shadow-md z-10">
+                <div class="aspect-[5/7] w-44 h-auto">
+                    <img src="{{ asset('storage/' . $thumbnailWa->thumbnail) }}" alt=""
+                        class="object-cover w-full h-full">
+                </div>
+            </div>
+            <div class="w-full mx-auto mt-5 z-10">
+                <h1 class="text-white text-center text-3xl font-bold font-italiana" data-aos="fade-down"
+                    data-aos-duration="3000">{{ $data->wanita->nama_panggilan }} &
+                    {{ $data->pria->nama_panggilan }}
+                </h1>
+            </div>
+            <div class="w-full mx-auto mt-5 z-10">
+                <p class="text-white text-center text-lg font-semibold font-italiana" data-aos="fade-up"
+                    data-aos-duration="3000">Terima
+                    Kasih</p>
+            </div>
+            <div class="absolute w-full bottom-0 h-48 bg-gradient-to-t from-black to-transparent"></div>
+        </div>
         <div class="w-full h-[500px] bg-black"></div>
     </div>
 </div>

@@ -1,10 +1,8 @@
 @if ($data->FiturUcapan->isActive)
     <div class="comment mt-10 pb-10 text-[12px] md:text-base bg-[#D7CEBE] justify-center flex flex-col items-center">
-
         <p class="text-center text-4xl title pt-10 text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">
             Berikan Ucapan
         </p>
-
         <div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 mx-4 mt-10"
             data-aos="fade-up" data-aos-duration="1500">
             @if ($data->FiturUcapan->publicIsActive)
@@ -76,11 +74,11 @@
             data-aos="fade-up" data-aos-duration="1500">
             @foreach ($ucapan as $item)
                 <div class="bg-gray-50 p-4 rounded-lg ">
-                    <ul class="border-b border-gray-300 pb-2 ">
-                        <li class="text-base font-semibold text-[#2d3748]">
+                    <ul class="space-y-1">
+                        <li class="text-base flex justify-between font-semibold text-[#2d3748]">
                             {{ $item->tamu->nama }}
                             <span
-                                class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">{{ $item->status }}</span>
+                                class="inline-block bg-blue-100 text-blue-800 text-xs  px-2 py-1 rounded-full">{{ $item->status }}</span>
                         </li>
                         <li class="text-sm text-[#4a5568]">{{ $item->ucapan }}</li>
                     </ul>
@@ -91,6 +89,7 @@
                         </div>
                     @endif
                 </div>
+                <hr class="my-4 border-t border-gray-300">
             @endforeach
         </div>
 
