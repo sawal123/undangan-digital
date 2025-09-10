@@ -12,7 +12,7 @@
 
         {{-- form --}}
         @if ($publicIsActive || (!$publicIsActive && $kode))
-            <form  wire:submit.prevent="save">
+            <form wire:submit.prevent="save">
                 <input type="hidden" wire:model="dataId">
                 <input type="hidden" wire:model="kode">
 
@@ -66,7 +66,9 @@
                             <div class="card-body">
                                 <div class="d-flex gap-2">
                                     <strong>{{ $item->tamu->nama }}</strong>
-                                    <h6><span class="badge text-bg-secondary">{{ $item->status }}</span></h6>
+                                    <h6><span
+                                            class="badge text-bg-secondary">{{ ucwords(str_replace('_', ' ', $item->status)) }}</span>
+                                    </h6>
                                 </div>
                                 <p class="card-text" style="color: #9e0050; margin: 0px">
                                     <small>{{ date('l', strtotime($item->created_at)) }},

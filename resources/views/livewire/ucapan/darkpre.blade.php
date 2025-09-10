@@ -22,8 +22,14 @@
                                 </span>
                             </div>
                         </li>
-                        <li class="text-[12px] ">{{ date('l', strtotime($item->created_at)) }},
-                            {{ date('d m Y', strtotime($item->created_at)) }}</li>
+                        <li class="text-[12px] ">
+                            <p class="card-text" style="color: #9e0050; margin: 0px">
+                                <small>
+                                    {{ $item->created_at->diffForHumans() }}
+                                    {{-- ({{ $item->created_at->format('l, d M Y') }}) --}}
+                                </small>
+                            </p>
+                        </li>
                         <li class="mt-2 text-[12px] italic">{{ $item->ucapan }}</li>
                         @if ($item->balas)
                             <ol>

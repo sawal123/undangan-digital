@@ -46,7 +46,8 @@ class Ucapan extends Component
         $this->kode = $kode;
         $this->nama = $tamu; // isi default kalau ada
         $this->theme = Str::afterLast($data->theme->demo, '.'); // hasil: flowerone
-         $this->status = 'Datang Dong';
+        $this->status = 'Datang Dong';
+        // dd($data);
     }
 
     public function save()
@@ -94,8 +95,10 @@ class Ucapan extends Component
     public function render()
     {
 
-        $u = KelolaUndanganUcapan::where('data_id', $this->dataId)->get();
-        return view('livewire.ucapan.'.$this->theme, [
+        $u = KelolaUndanganUcapan::where('data_id', $this->dataId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('livewire.ucapan.' . $this->theme, [
             'listUcapan' => $u,
 
         ]);
