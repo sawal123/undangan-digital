@@ -40,6 +40,10 @@ class DataController extends Controller
             'slug' => 'required|string|max:255',
         ]);
 
+        if (Data::where('slug', $validasi['slug'])->exists()) {
+            return redirect()->back()->with('error', 'Slug sudah digunakan, Cari slug lain!')->withInput();
+        }
+
         $data = Data::create([
             'user_id' => Auth::user()->id,
             'theme_id' => null,
@@ -55,20 +59,20 @@ class DataController extends Controller
         ]);
         teksWhatsApp::create([
             'data_id' => $data->id,
-            'pesan' => "Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami 
+            'pesan' => "Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami
             *{{nama_mempelai1}} & {{nama_mempelai2}}*
             Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
-            {{link}} 
+            {{link}}
             Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
         ]);
         Qoute::create([
-            'data_id'=>$data->id,
-            'title'=> " وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
+            'data_id' => $data->id,
+            'title' => " وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
 ",
             'qoute' => "
 Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu merasa tenang dan tentram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir.
             ",
-            'subtitle'=> "Ar Rum: 21"
+            'subtitle' => "Ar Rum: 21"
         ]);
 
         return redirect()->route('dashboard.index');

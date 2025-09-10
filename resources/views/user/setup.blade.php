@@ -11,7 +11,7 @@
                             @csrf
                             {{-- <a href="index.html"><img src="assets/images/logo-icon.png"
                                     class="avatar avatar-small mb-4 d-block mx-auto" alt=""></a> --}}
-                            <h5 class="mb-3 text-center">Isi Data Dengan Benar Untuk Menlajutkan Undanga Kamu!</h5>
+                            <h5 class="mb-3 text-center">Isi Data Dengan Benar Untuk Menlajutkan Undangan Kamu!</h5>
 
                             <div class="form-floating mb-2">
                                 <input type="text" class="form-control" id="title" name="title"
@@ -23,12 +23,12 @@
                             <div class="mb-3">
                                 <label for="basic-url" class="form-label">Your vanity URL</label>
                                 <div class="input-group ">
-                                    <span class="input-group-text" id="basic-addon3">{{url('/')}}u/</span>
+                                    <span class="input-group-text" id="basic-addon3">{{url('/')}}/u/</span>
                                     <input type="text" class="form-control" id="basic-url" name="slug"
                                         aria-describedby="basic-addon3 basic-addon4" placeholder="harrydannia">
                                 </div>
                                 <div id="nameValidationMessage" class="form-text"></div>
-                                
+
 
                             </div>
 

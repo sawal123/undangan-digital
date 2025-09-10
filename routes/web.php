@@ -70,7 +70,7 @@ Route::post('u/savedoa', [TemaController::class, 'saveDoa'])->name('savedoa');
 // Role User
 Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
-    // Route::view('/', 'user.dashboard')->name('dashboard');
+    Route::get('/add-undangan/{id}', [SetupController::class, 'add'])->name('add');
     Route::resource('data', DataController::class);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::resource('/', UndanganController::class);

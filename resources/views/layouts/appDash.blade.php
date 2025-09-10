@@ -1,3 +1,4 @@
+@props(['nonce'=>''])
 {{-- <!DOCTYPE html> --}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -30,18 +31,18 @@
         type="text/css">
     <link href="{{ asset('assetDashboard/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assetDashboard/libs/@iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('assetDashboard/tagify/tagify.css')}}" rel="stylesheet">
+    <link href="{{ asset('assetDashboard/tagify/tagify.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assetDashboard/userJs/css/dashboard.css') }}">
-   
+
     <!-- Style Css-->
     <link href="{{ asset('assetDashboard/css/st.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
     @if (request()->routeIs('dashboard.undangan.kado'))
         <link href="{{ asset('assetDashboard/libs/select2/dist/css/select2.css') }}" rel="stylesheet" />
     @endif
 
-    <link rel="stylesheet" href="{{asset('build/assets/app-CczSUIEg.css')}}">
-   
-    
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
+
+
 
     {{-- @vite([]) --}}
     @livewireStyles
@@ -79,20 +80,26 @@
     <script src="{{ asset('assetDashboard/js/jquery.js') }}"></script>
     <!-- javascript -->
     <!-- JAVASCRIPT -->
-    <script src="{{asset('build/assets/app-I5mmpHKZ.js')}}"></script>
+    <script src="{{ asset('build/assets/app-I5mmpHKZ.js') }}"></script>
 
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>
 
 
-    <script src="{{asset('assetDashboard/libs/sweetalert/sweetAlert.js')}}"></script>
+    {{-- <script src="{{asset('assetDashboard/libs/sweetalert/sweetAlert.js')}}"></script> --}}
 
     <script src="{{ asset('assetDashboard/js/plugins.init.js') }}"></script>
     <script src="{{ asset('assetDashboard/js/app.js') }}"></script>
 
     @if (request()->routeIs('dashboard.undangan.kelola'))
         <script src="{{ asset('assetDashboard/userJs/dashboard/copyLink.js') }}"></script>
+    @endif
+    <script nonce="{{ $nonce }}">
+        var checkNameUrl = "{{ url('/check-name') }}"
+    </script>
+    @if (request()->routeIs('dashboard.add'))
+        <script src="{{ asset('assetDashboard/userJs/setup/checkName.js') }}"></script>
     @endif
 
 
@@ -118,17 +125,7 @@
     @endif
 
 
-    <script>
-       
-        // const removeBackdrop = () => {
-        //     const backdrop = document.querySelector(".modal-backdrop");
-        //     if (backdrop) {
-        //         backdrop.remove();
-        //     }
-        //     document.body.classList.remove("modal-open"); // Menghilangkan class `modal-open` dari body
-        //     document.body.style.overflow = "auto";
-        // };
-    </script>
+
     @livewireScripts
 
 

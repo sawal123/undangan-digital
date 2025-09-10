@@ -40,71 +40,80 @@ class TemaController extends Controller
     public function visit($slug, $tamu = null)
     {
         error_reporting(0);
+        try {
+            $data = Data::where('slug', $slug)->firstOrFail();
 
-        $data = Data::where('slug', $slug)->first();
-        $acara = $acara = isset($data->acara[1]) ? $data->acara[1] : $data->acara[0];
+            // Pilih acara, default ke index 0 kalau index 1 nggak ada
+            $acara = $data->acara[1] ?? $data->acara[0] ?? null;
 
-        // dd($data->acara);
-        $thumbnailWa = ThumbnailWa::where('data_id', $data->id)->first();
-        // dd($thumbnailWa);
-        $ta = $data->tamu()->where('kode', $tamu)->first();
-        $hari = [
-            'Sunday' => 'Minggu',
-            'Monday' => 'Senin',
-            'Tuesday' => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday' => 'Kamis',
-            'Friday' => 'Jumat',
-            'Saturday' => 'Sabtu',
-        ];
-        $bulan = [
-            'Jan' => 'Januari',
-            'Feb' => 'Februari',
-            'Mar' => 'Maret',
-            'Apr' => 'April',
-            'May' => 'Mei',
-            'Jun' => 'Juni',
-            'Jul' => 'Juli',
-            'Aug' => 'Agustus',
-            'Sep' => 'September',
-            'Oct' => 'Oktober',
-            'Nov' => 'November',
-            'Dec' => 'Desember',
-        ];
-        $gallery = Galery::where('data_id', $data->id);
-        foreach ($data->galery as $ga) {
-            if ($ga->video) {
-                $video[] = $ga->video;
+            // Ambil thumbnail WhatsApp
+            $thumbnailWa = ThumbnailWa::where('data_id', $data->id)->first();
+
+            // Cari tamu berdasarkan kode
+            $ta = $data->tamu()->where('kode', $tamu)->first();
+
+            // Mapping hari & bulan
+            $hari = [
+                'Sunday'    => 'Minggu',
+                'Monday'    => 'Senin',
+                'Tuesday'   => 'Selasa',
+                'Wednesday' => 'Rabu',
+                'Thursday'  => 'Kamis',
+                'Friday'    => 'Jumat',
+                'Saturday'  => 'Sabtu',
+            ];
+
+            $bulan = [
+                'Jan' => 'Januari',
+                'Feb' => 'Februari',
+                'Mar' => 'Maret',
+                'Apr' => 'April',
+                'May' => 'Mei',
+                'Jun' => 'Juni',
+                'Jul' => 'Juli',
+                'Aug' => 'Agustus',
+                'Sep' => 'September',
+                'Oct' => 'Oktober',
+                'Nov' => 'November',
+                'Dec' => 'Desember',
+            ];
+
+            // Ambil galeri
+            $video = $data->galery->pluck('video')->filter()->toArray();
+            $poto  = $data->galery->pluck('poto')->filter()->toArray();
+
+            // Ambil ucapan
+            $ucapan = Ucapan::where('data_id', $data->id)->get();
+
+            // Validasi theme
+            if (is_null($data->theme_id) || !$data->theme) {
+                session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
+                return redirect()->back();
             }
-        }
-        foreach ($data->galery as $po) {
-            if ($po->poto) {
-                $poto[] = $po->poto;
-            }
-        }
-        // dd($data->acara);
 
-        $ucapan = Ucapan::where('data_id', $data->id)->get();
-        // dd($ucapan);
-        if ($data->theme_id === null) {
-            session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
-            return redirect()->back();
-        } else {
-            // dd($data->sound->isActive);
             return view($data->theme->path, [
-                'data' => $data,
-                'hari' => $hari,
-                'bulan' => $bulan,
-                'tamu' => $ta ? $ta->nama : $tamu,
-                'video' => $video,
-                'poto' => $poto,
-                'kode' => $tamu,
-                'ucapan' => $ucapan,
-                'acara' => $acara,
+                'data'        => $data,
+                'hari'        => $hari,
+                'bulan'       => $bulan,
+                'tamu'        => $ta->nama ?? $tamu,
+                'video'       => $video,
+                'poto'        => $poto,
+                'kode'        => $tamu,
+                'ucapan'      => $ucapan,
+                'acara'       => $acara,
                 'thumbnailWa' => $thumbnailWa,
             ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Kalau slug tidak ditemukan
+            return abort(404, 'Undangan tidak ditemukan.');
+        } catch (\Exception $e) {
+            // Catch all error lain
+            \Log::error('Error saat visit undangan: ' . $e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan, silakan coba lagi.');
+            return redirect()->back();
         }
     }
+
     public function saveDoa(Request $request)
     {
         $va = $request->validate([

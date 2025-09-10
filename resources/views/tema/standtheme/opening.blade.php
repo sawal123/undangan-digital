@@ -31,7 +31,7 @@ title mb-2 font-bold " data-aos="fade-up" data-aos-duration="1500">
             </p>
 
 
-            <a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{ $title }}&dates={{ $start }}/{{ $end }}&details={{ $details }}&location={{ $location }}"
+            <a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{ $data->title }}&dates{{ $data->acara[0]->date }}&location={{ $data->acara[0]->alamat }}"
                 target="_blank"
                 class="inline-block px-4 py-2 bg-[#755f4B] text-white rounded hover:bg-[#68523e] transition"
                 data-aos="fade-up" data-aos-delay="200">

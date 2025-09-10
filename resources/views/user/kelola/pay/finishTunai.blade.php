@@ -1,7 +1,5 @@
 <x-dashboard-layout>
-    <a href="/dashboard/kelola/{{ Crypt::encryptString($data->id) }}/tema" class="btn btn-secondary btn-sm"><i
-            class="mdi mdi-arrow-left-bold"></i>
-        Kembali</a>
+
     {{-- <livewire:dashboard.kelola.pay.pay :data-id="$data->id" /> --}}
     <div class="row my-5 justify-content-center">
         <div class="col-12 col-md-4 my-2">
