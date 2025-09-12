@@ -48,8 +48,8 @@
 
                         <!-- Logo -->
                         <div class="absolute top-4 right-4 flex items-center h-8 w-20">
-                            <div class="relative w-full aspect-w-16 aspect-h-9">
-                                <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" style="height: 50px"
+                            <div class="relative w-full">
+                                <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" style="height: 20px"
                                     alt="" class="absolute inset-0 object-cover object-center">
                             </div>
                         </div>
