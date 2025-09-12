@@ -35,21 +35,25 @@
 
 
                     <!-- Detail Acara -->
-                    <div class="mt-4 pl-4 text-white p-4 rounded-lg flex justify-around">
-                        <p class="text-[12px] font-semibold " data-aos="fade-up" data-aos-duration="3000">{{ $item->vanue }}</p>
+                    <div class="mt-4 pl-4 text-white p-4 rounded-lg ">
+                        <p class="text-[12px] font-semibold " data-aos="fade-up" data-aos-duration="3000">
+                            {{ $item->vanue }}</p>
 
                         <p class="text-[12px] whitespace-nowrap" data-aos="fade-up" data-aos-duration="3000"><i
                                 class="fa-solid fa-location-dot mr-2"></i>{{ $item->alamat }}</p>
                     </div>
 
                     <!-- Tombol -->
-                    <div class="mt-4 flex justify-center  bg-white w-full absolute bottom-0 p-3">
-                        <a href="{{$item->maps}}"
-                            class="text-sm font-bold  text-center underline hover:text-blue-800 w-full font-montserrat"
-                            data-aos="fade-up" data-aos-duration="3000"><i class="fa-solid fa-location-dot mr-2"></i>Map
-                            Lokasi
-                            Acara</a>
-                    </div>
+                    @if ($item->maps != null)
+                        <div class="mt-4 flex justify-center  bg-white w-full absolute bottom-0 p-3">
+                            <a href="{{ $item->maps }}"
+                                class="text-sm font-bold  text-center underline hover:text-blue-800 w-full font-montserrat"
+                                data-aos="fade-up" data-aos-duration="3000"><i
+                                    class="fa-solid fa-location-dot mr-2"></i>Map
+                                Lokasi
+                                Acara</a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
