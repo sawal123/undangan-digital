@@ -2,14 +2,20 @@
     <!-- Background Image -->
     <!-- Swiper -->
     <div class="absolute inset-0 swiper mySwiper h-full w-full">
-        <div class="swiper-wrapper w-full h-full">
-            <div class="swiper-slide bg-local bg-cover bg-center object-contain brightness-50 contrast-100"
-                style="background-image: url('{{ asset('storage/' . $poto[0]) }}');"></div>
-            <div class="swiper-slide bg-local bg-cover bg-origin-content bg-center object-cover brightness-50 contrast-100 "
-                style="background-image: url('{{ asset('storage/' . $poto[1]) }}');"></div>
+        @if ($poto == null)
             <div class="swiper-slide bg-local bg-cover bg-center object-cover brightness-50 contrast-100 "
-                style="background-image: url('{{ asset('storage/' . $poto[2]) }}');"></div>
-        </div>
+                style="background-image: url('{{ asset('storage/' . $thumbnailWa->thumbnail) }}');"></div>
+        @else
+            <div class="swiper-wrapper w-full h-full">
+                <div class="swiper-slide bg-local bg-cover bg-center object-contain brightness-50 contrast-100"
+                    style="background-image: url('{{ asset('storage/' . $poto[0]) }}');"></div>
+                <div class="swiper-slide bg-local bg-cover bg-origin-content bg-center object-cover brightness-50 contrast-100 "
+                    style="background-image: url('{{ asset('storage/' . $poto[1]) }}');"></div>
+                <div class="swiper-slide bg-local bg-cover bg-center object-cover brightness-50 contrast-100 "
+                    style="background-image: url('{{ asset('storage/' . $poto[2]) }}');"></div>
+            </div>
+        @endif
+
     </div>
 
     <!-- Content -->
@@ -18,9 +24,9 @@
 
         <!-- Bottom Title -->
         <div class="">
-            <p class=" text-shadow text-center text-white font-italiana" data-aos="zoom-in-up"
-            data-aos-duration="2000">Invitation From</p>
-            <h1 class=" text-shadow text-white text-3xl font-bold text-center font-italiana" data-aos="zoom-in-up"
+            <p class=" text-shadow text-center text-white " data-aos="zoom-in-up" data-aos-duration="2000">
+                Invitation From</p>
+            <h1 class=" text-shadow text-white text-4xl font-bold text-center " data-aos="zoom-in-up"
                 data-aos-duration="3000">{{ $data->pria->nama_panggilan }} &
                 {{ $data->wanita->nama_panggilan }}</h1>
         </div>

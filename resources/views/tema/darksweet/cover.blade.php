@@ -23,7 +23,7 @@
         <div class="p-4 text-center text-white ">
             <p class="text-sm">Kepada</p>
             <h2 class="text-lg font-bold font-italiana">{{$tamu}}</h2>
-            <p class="text-sm mt-2 font-reemkufi">Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i
+            <p class="text-sm mt-2 ">Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i
                 untuk
                 Hadir di
                 Acara Kami.</p>

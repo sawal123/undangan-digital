@@ -5,7 +5,7 @@
         <div class="relative bg-transparent  overflow-hidden w-full h-full flex flex-row items-start justify-center">
             <div class="absolute bg-black bg-opacity-80 inset-0 w-full h-full z-0 pointer-events-none "></div>
 
-            <div class="basis-10/12 p-6 space-y-12  text-white flex flex-col justify-center z-10 font-reemkufi">
+            <div class="basis-10/12 p-6 space-y-12  text-white flex flex-col justify-center z-10 ">
                 <h1 class="text-2xl font-bold" data-aos="fade-up" data-aos-duration="3000">Menghitung Hari</h1>
                 <p class="text-[14px]" data-aos="fade-up" data-aos-duration="3000">
                     {{ $data->qoute->title }}
@@ -103,10 +103,10 @@
                 class="bottom-0 right-0 absolute bg-transparent w-0 h-0 border-b-[260px] border-l-[560px] border-l-transparent rounded-none z-20">
             </div>
 
-            <div class="w-40 h-[218px] bottom-9 overflow-hidden bg-white mx-auto absolute z-30" data-aos="fade-up"
+            <div class="w-40 h-[218px] bottom-9 overflow-hidden rounded-lg bg-white mx-auto absolute z-30" data-aos="fade-up"
                 data-aos-duration="3000">
                 <img src="{{ asset('storage/'. $thumbnailWa->thumbnail) }}  "
-                    class="aspect-[2/3] object-cover object-center  w-full h-full" alt="">
+                    class="aspect-[2/3] object-cover object-center   w-full h-full" alt="">
             </div>
             <div class="flex flex-row justify-center w-full bg-transparent absolute bottom-0 z-20 ">
                 <div

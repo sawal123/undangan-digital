@@ -1,10 +1,10 @@
 <div class="w-full mt-5 flex flex-col justify-center items-center px-3 ">
-    <h1 class="text-3xl font-bold font-italiana">Save The Date Acara</h1>
-    <p>{{ $data->teksUndangan->acara }}</p>
+    <h1 class="text-3xl font-bold ">Save The Date Acara</h1>
+    <p class="text-center">{{ $data->teksUndangan->acara }}</p>
 
     <!-- CARD 1 -->
     @foreach ($data->acara as $item)
-        <div class="relative w-full h-[300px] bg-white mt-4 font-reemkufi">
+        <div class="relative w-full h-[300px] bg-white mt-2 mb-2 font-reemkufi">
             <div class=" bg-center bg-fixed rounded-xl bg-origin-content overflow-hidden shadow-lg h-full w-full bg-cover "
                 style="background-image: url('{{ asset('tema/darksweet/img/download (4).jpg') }}');">
                 <!-- Overlay Transparan -->
@@ -37,10 +37,10 @@
                     <!-- Detail Acara -->
                     <div class="mt-4 pl-4 text-white p-4 rounded-lg flex justify-around">
                         <p class="text-[12px] font-semibold " data-aos="fade-up" data-aos-duration="3000">{{ $item->vanue }}</p>
-                        
+
                         <p class="text-[12px] whitespace-nowrap" data-aos="fade-up" data-aos-duration="3000"><i
                                 class="fa-solid fa-location-dot mr-2"></i>{{ $item->alamat }}</p>
-                    </div>  
+                    </div>
 
                     <!-- Tombol -->
                     <div class="mt-4 flex justify-center  bg-white w-full absolute bottom-0 p-3">

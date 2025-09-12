@@ -17,12 +17,17 @@
         <a href="#savethedate" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
             <i class="fa-solid fa-calendar-check text-lg md:text-2xl"></i>
         </a>
-        <a href="#story" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-            <i class="fa-solid fa-history text-lg md:text-2xl"></i>
-        </a>
-        <a href="#gallery" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-            <i class="fa-solid fa-images text-lg md:text-2xl"></i>
-        </a>
+        @if ($data->kisah->isNotEmpty())
+            <a href="#story" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
+                <i class="fa-solid fa-history text-lg md:text-2xl"></i>
+            </a>
+        @endif
+
+        @if ($poto != null)
+            <a href="#gallery" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
+                <i class="fa-solid fa-images text-lg md:text-2xl"></i>
+            </a>
+        @endif
         <a href="#hadiah" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
             <i class="fa-solid fa-gift text-lg md:text-2xl"></i>
         </a>
@@ -30,7 +35,7 @@
             <i class="fa-solid fa-comment text-lg md:text-2xl"></i>
         </a>
 
-        
+
         <button type="button" id="toggleButton"
             class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
             <i class="fa-solid fa-music text-lg md:text-2xl"></i>
@@ -41,7 +46,8 @@
 
 <!-- Youtube -->
 <div class="hidden fixed z-0 bottom-0">
-    <iframe id="videoFrame" width="0" height="0" src="@if($data->sound->isActive ){{ $data->sound->sound }}?start={{ $data->sound->start }}@endif&enablejsapi=1"
+    <iframe id="videoFrame" width="0" height="0"
+        src="@if ($data->sound->isActive) {{ $data->sound->sound }}?start={{ $data->sound->start }} @endif&enablejsapi=1"
         frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
     </iframe>
 </div>

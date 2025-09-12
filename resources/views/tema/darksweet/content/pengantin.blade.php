@@ -30,7 +30,7 @@
         <!--  GIFT  -->
         <div class="w-full flex flex-col justify-center items-center pt-5 bg-zinc-800 px-3" id="hadiah">
 
-            <h1 class="text-white text-center text-3xl font-bold font-italiana" data-aos="fade-up"
+            <h1 class="text-white text-center text-3xl font-bold " data-aos="fade-up"
                 data-aos-duration="3000">Titip Hadiah
             </h1>
 
@@ -122,13 +122,13 @@
                 </div>
             </div>
             <div class="w-full mx-auto mt-5 z-10">
-                <h1 class="text-white text-center text-3xl font-bold font-italiana" data-aos="fade-down"
+                <h1 class="text-white text-center text-3xl font-bold " data-aos="fade-down"
                     data-aos-duration="3000">{{ $data->wanita->nama_panggilan }} &
                     {{ $data->pria->nama_panggilan }}
                 </h1>
             </div>
             <div class="w-full mx-auto mt-5 z-10">
-                <p class="text-white text-center text-lg font-semibold font-italiana" data-aos="fade-up"
+                <p class="text-white text-center text-lg font-semibold " data-aos="fade-up"
                     data-aos-duration="3000">Terima
                     Kasih</p>
             </div>
