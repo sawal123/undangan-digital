@@ -1,6 +1,6 @@
-<div class="bg-neutral-950 relative pt-10 pb-16 text-orange-200  font-poppins">
+<div class="bg-neutral-950 relative pt-10 pb-16 text-orange-200  ">
     <!-- Judul -->
-    <h2 class="text-center text-[50px] z-50 relative font-light mb-6 font-corinthia">
+    <h2 class="text-center  z-50 relative font-light mb-6 ">
         Acara Akan <br> Diselenggarakan
     </h2>
     <!-- Gambar Hiasan Kiri -->

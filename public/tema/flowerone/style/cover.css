@@ -31,13 +31,13 @@
 .main-text {
     font-size: 14px;
     font-family: 'Philosopher', sans-serif;
-    color: #333;
+    color: #9e0050;
 }
 
 .header-text {
     font-size: 14px;
     font-weight: bold;
-    color: #6c757d;
+    color: #9e0050;
 }
 
 /* Fade-in animation */
@@ -54,6 +54,7 @@
 
 .index.fade-in {
     animation: fadeIn 1s ease-in-out forwards;
+    
 }
 
 /* Responsive styles */

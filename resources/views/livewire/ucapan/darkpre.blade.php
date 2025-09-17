@@ -1,6 +1,6 @@
 <div>
     <div class="w-full  bg-neutral-950 text-orange-200 relative z-50 ">
-        <h2 class="text-center text-[50px] font-light pb-6 py-8 font-corinthia">Ucapan & Doa</h2>
+        <h1 class="text-center  font-light pb-6 py-8 ">Ucapan & Doa</h1>
         <div class="flex justify-center left-0  absolute  z-10">
             <img src="{{ asset('tema/darkpre/src/img/bunga.png') }}" alt="Hiasan Bunga" class="w-20 lg:w-32 ">
         </div>
@@ -11,7 +11,7 @@
         </div>
 
         @if ($publicIsActive)
-            <div class="p-6 h-[300px] rounded-lg shadow-lg space-y-5 overflow-y-auto z-50 relative font-poppins">
+            <div class="p-6 h-[300px] rounded-lg shadow-lg space-y-5 overflow-y-auto z-50 relative ">
                 @foreach ($listUcapan as $item)
                     <ul class=" p-4 rounded-md   h-auto  shadow-md shadow-slate-200 bg-neutral-950">
                         <li class="text-[14px] font-semibold">
@@ -44,7 +44,7 @@
     </div>
 
     <div class="w-full bg-neutral-950 text-orange-200 p-6 shadow-lg relative  section" id="wishes">
-        <h4 class="text-2xl font-semibold mb-4 relative z-50 font-corinthia">Kirim Ucapan</h4>
+        <h4 class="text-2xl font-semibold mb-4 relative z-50 ">Kirim Ucapan</h4>
 
         @if ($success)
             <div class="mt-2 p-3 mx-3 bg-slate-950 border-orange-200 border text-white rounded-lg">

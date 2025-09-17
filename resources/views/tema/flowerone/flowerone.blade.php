@@ -44,42 +44,40 @@
     <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')">
     <!-- Custom Style Index-->
     <style>
-        @font-face {
-            font-family: 'Dancing Scriptt';
-            src: url('{{ asset('tema/flowerone/assets/fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf') }}') format('truetype');
-            font-weight: 100 900;
+        @if ($data->dataFont)
+            @import url('{{ $data->dataFont->titleFont->link }}');
+            @import url('{{ $data->dataFont->subFont->link }}');
+
+        @else
+            @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Capriola&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&display=swap');
+        @endif
+
+
+        h1 {
+            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Dancing Script' }}", system-ui;
+            font-weight: <weight>;
             font-style: normal;
+            font-size: {{ $data->dataFont->s_title }}px;
+            color: #9e0050;
+        }
+
+        h3 {
+            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Dancing Script' }}", system-ui;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            color: #9e0050
         }
 
 
-        @font-face {
-            font-family: 'Great Vibes';
-            src: url('{{ asset('tema/flowerone/assets/fonts/Great_Vibes/GreatVibes-Regular.ttf') }}') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'Philosopher';
-            src: url('{{ asset('tema/flowerone/assets/fonts/Philosopher/Philosopher-Regular.ttf') }}') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
 
         body {
             background-color: #FFD3E9;
             /* background: linear-gradient(135deg, #f8cdda 0%, #1d2b64 100%); */
-            font-family: 'Philosopher';
-            color: #333;
+            font-family: "{{ $data->dataFont->subFont->nama ?? 'Capriola' }}" !important;
         }
 
-        h3 {
-            font-size: 30px;
-            font-weight: 700;
-            font-family: "Great Vibes", cursive;
-            color: #9e0050;
-            margin-bottom: 30px;
-        }
 
         .container {
             margin-top: 1rem;
@@ -144,7 +142,11 @@
             <div class="d-flex justify-content-center w-100 gap-2">
                 <a class="nav-link icon-container home" href="#home"><i class="fa-regular fa-file-lines"></i></a>
                 <a class="nav-link icon-container detail" href="#detail"><i class="fa-regular fa-heart"></i></a>
-                <a class="nav-link icon-container gallery" href="#gallery"><i class="fa-regular fa-images"></i></a>
+                <a class="nav-link icon-container acara" href="#acara"><i class="fa-regular fa-note-sticky"></i></a>
+                @if ($poto)
+                    <a class="nav-link icon-container gallery" href="#gallery"><i
+                            class="fa-regular fa-images"></i></a>
+                @endif
                 <a class="nav-link icon-container reservation" href="#reservation"><i
                         class="fa-solid fa-gifts"></i></a>
                 <a class="nav-link icon-container message" href="#message"><i
@@ -183,11 +185,11 @@
                     <!-- Jumbotron -->
                     <section>
                         <div class="jumbotron text-center position-relative text-black z-3">
-                            <h4>The Wedding Off</h4>
-                            <p class="name-relationship countdown">
+                            <p>{{ $data->setting->acara ?? 'The Wedding' }}</p>
+                            <h1 class="countdown">
                                 {{ $data ? $data->pria->nama_panggilan : 'Teddy' }} &
                                 {{ $data ? $data->wanita->nama_panggilan : 'Ajeng' }}
-                            </p>
+                            </h1>
                             {{-- <p class="date countdown">Minggu <br> 10 • 11 • 2024</p> --}}
                             @include('tema.flowerone.flower.countdown')
 
@@ -196,7 +198,7 @@
 
                         <!-- Invitation -->
                         <div class="invitation position-relative z-3">
-                            <h4 class="invitation-title">Kepada:</h4>
+                            <p class="invitation-title">Kepada:</p>
                             <p class="invitation-subtitle">Yth. Bapak/Ibu/Saudara/i</p>
                             <p class="invitation-name">{{ $tamu }}</p>
                         </div>
@@ -229,7 +231,6 @@
                     <!-- Relationship Detail Section -->
                     <section class="relationship-section text-center">
                         <div class="relationship-text" data-aos="fade-up" data-aos-duration="1000">
-                            {{-- <h5 class="bismillah">بسم الله الرحمن الرحيم</h5> --}}
                             <p>{!! nl2br(e($data->teksUndangan->pembuka)) !!}</p>
                         </div>
 
@@ -240,14 +241,14 @@
                     </section>
 
                     <!-- Flower Divider -->
-                    <div class="flower-divider text-center">
+                    <div class="flower-divider text-center" id="acara">
                         <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid"
                             data-aos="fade-up" data-aos-duration="1000">
                     </div>
 
                     <!-- Acara -->
                     <section class="event-section text-center">
-                        <h2 data-aos="fade-up" data-aos-duration="1000">Acara</h2>
+                        <h3 data-aos="fade-up" data-aos-duration="1000">Acara</h3>
                         <p data-aos="fade-up" data-aos-duration="1000">{!! nl2br(e($data->teksUndangan->acara)) !!}</p>
 
                         <!-- Akad Nikah Section -->
@@ -304,8 +305,10 @@
 
 
 
+
+
                         @if ($data->streaming)
-                            @include('user.kelola.streaming')
+                            @include('tema.flowerone.streaming')
                         @endif
 
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta property="og:title" content="{{ $data->title }}" />
     <meta property="og:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
     <meta property="og:image:width" content="1200">
@@ -20,7 +20,29 @@
     <link href="{{ asset('tema/standtheme/output.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('tema/standtheme/assets/aos/dist/aos.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @if ($data->dataFont)
+            @import url('{{ $data->dataFont->titleFont->link }}');
+            @import url('{{ $data->dataFont->subFont->link }}');
 
+        @else
+            @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Capriola&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&display=swap');
+        @endif
+
+
+        .title {
+            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Dancing Script' }}", system-ui;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-size: {{ $data->dataFont->s_title }}px !important
+        }
+
+        html {
+            font-family: "{{ $data->dataFont->subFont->nama ?? 'Capriola' }}";
+        }
+    </style>
 </head>
 
 <body class="bg-white ">

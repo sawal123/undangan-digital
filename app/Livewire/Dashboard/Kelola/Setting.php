@@ -3,6 +3,8 @@
 namespace App\Livewire\Dashboard\Kelola;
 
 use App\Models\Data;
+use App\Models\DataFonts;
+use App\Models\Fonts;
 use App\Models\KelolaUndangan\Qoute;
 use Livewire\Component;
 use App\Models\teksPenutup;
@@ -22,6 +24,7 @@ class Setting extends Component
     public $pesan;
     public $button = false;
 
+    public $fontTitle, $fontPara, $sizeTitle = 32, $sizePara = 16;
 
     public $pembuka = '';
     public $acara = '';
@@ -67,6 +70,11 @@ class Setting extends Component
         $pesan = teksWhatsApp::where('data_id', $this->dataId)->first();
         $turut = teksPenutup::where('data_id', $this->dataId)->first();
         $qoute = Qoute::where('data_id', $this->dataId)->first();
+
+        $this->fontTitle = $data->dataFont->titleFont->id;
+        $this->fontPara = $data->dataFont->subFont->id;
+        $this->sizeTitle = $data->dataFont->s_title;
+        // dd($data->dataFont);
         // $this->dataId = $dataId;
         $this->loadThumbnail();
         if ($turut) {
@@ -133,10 +141,10 @@ class Setting extends Component
             teksWhatsApp::create([
                 'data_id' => $this->dataId,
                 'pesan' => "
-               Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami 
+               Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami
 {{nama_mempelai1}} & {{nama_mempelai2}}
 Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
-{{link }} 
+{{link }}
 Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
             ]);
             session()->flash('teksWA', 'Teks WhatsApp Berhasil Dibuat.');
@@ -239,8 +247,37 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
         }
     }
 
+    public function updateFont($id)
+    {
+        $data = Data::find($id);
+        if ($data->dataFont) {
+            $font = $data->dataFont->update([
+                'f_title' => $this->fontTitle,
+                'f_sub' => $this->fontPara,
+                's_title' => $this->sizeTitle,
+                's_sub' => $this->sizePara,
+            ]);
+        } else {
+            $font = DataFonts::create([
+                'data_id' => $id,
+                'f_title' => $this->fontTitle,
+                'f_sub' => $this->fontPara,
+                's_title' => $this->sizeTitle,
+                's_sub' => $this->sizePara,
+            ]);
+        }
+        session()->flash('font', 'Font Berhasil Diubah');
+    }
     public function render()
     {
+        $selectedFont = null;
+        if ($this->fontTitle) {
+            $selectedFont = Fonts::firstWhere('id', $this->fontTitle);
+        }
+        $selectedPara = null;
+        if ($this->fontPara) {
+            $selectedPara = Fonts::firstWhere('id', $this->fontPara);
+        }
         $this->thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
         if (!$this->thumbnail) {
             $this->thumbnail = null;
@@ -258,6 +295,14 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
             $this->pesan = "Slug " . $this->slug . " Bisa digunakan!";
             $this->button = true;
         }
-        return view('livewire.dashboard.kelola.setting');
+        $fonts = Fonts::where('is_active', 1)->get();
+        return view(
+            'livewire.dashboard.kelola.setting',
+            [
+                'fonts' => $fonts,
+                'selectedFont' => $selectedFont,
+                'selectedPara' => $selectedPara,
+            ]
+        );
     }
 }

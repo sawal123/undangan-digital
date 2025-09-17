@@ -4,8 +4,7 @@
     <p class="gift-info" data-aos="fade-up" data-aos-duration="1000">Berikut adalah
         informasi
         untuk mengirimkan kado atau hadiah secara
-        online
-        atau melalui pengiriman fisik.</p>
+        online.</p>
 
     @foreach ($data->kado as $kado)
         <div class="bank-info mt-2" data-aos="fade-up" data-aos-duration="1000">

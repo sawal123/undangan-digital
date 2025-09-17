@@ -5,13 +5,13 @@
     <!-- End cover-kiri -->
 
     <!-- Kutipan Al-Qur'an -->
-    <div class="bg-neutral-950 w-full p-10 ">
+    <div class="bg-neutral-950 w-full p-2 ">
 
-        <div class="border border-orange-200 border-dashed text-orange-200 font-poppins italic">
-           <p class="text-center font-semibold p-10 space-y-3 lg:text-lg text-[13px]">{{ $data->qoute->title }}</p>
+        <div class="border border-orange-200 rounded-lg border-dashed text-orange-200 p-2 italic">
+            <p class="text-center font-semibold p-10 space-y-3 lg:text-lg text-[13px]">{{ $data->qoute->title }}</p>
             <p class="text-center font-semibold  space-y-3 lg:text-lg text-[13px]">"{{ $data->qoute->qoute }}" <br>
                 <br>
-                <span>{{ $data->qoute->subtitle }}</span>
+                <span class="italic">{{ $data->qoute->subtitle }}</span>
             </p>
         </div>
     </div>
@@ -81,11 +81,13 @@
                     <i class="fa-solid fa-map-location-dot"></i>
                     <span class="ml-2 hidden">location</span>
                 </a>
-                <a class="nav-link  gallery flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#gallery">
-                    <i class="fa-regular fa-images"></i>
-                    <span class="ml-2 hidden">gallery</span>
-                </a>
+                @if ($poto)
+                    <a class="nav-link  gallery flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
+                        href="#gallery">
+                        <i class="fa-regular fa-images"></i>
+                        <span class="ml-2 hidden">gallery</span>
+                    </a>
+                @endif
                 <a class="nav-link  wishes flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
                     href="#wishes">
                     <i class="fa-regular fa-note-sticky"></i>

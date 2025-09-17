@@ -79,8 +79,8 @@
 .relationship-photo h3 {
   font-size: 22px;
   font-weight: 700;
-  font-family: "Great Vibes", cursive;
-  color: #333;
+  /* font-family: "Great Vibes", cursive; */
+  /* color: #333; */
   margin-top: 10px;
 }
 

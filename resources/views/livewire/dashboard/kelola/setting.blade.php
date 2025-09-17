@@ -8,50 +8,95 @@
                     {{ session('title') }}
                 </div>
             @endif
-            <form wire:submit.prevent='titleA({{$dataId}})' class="mb-3">
+            @include('livewire.dashboard.kelola.setting.title')
+        </div>
+    </div>
+    <div class="card border border-info my-2">
+        @if (session()->has('font'))
+            <div class="alert alert-info mt-2 mx-2">
+                {{ session('font') }}
+            </div>
+        @endif
+        <div class="card-body">
+            <form wire:submit='updateFont({{ $dataId }})'>
+                @foreach ($fonts as $item)
+                    <link href="{{ $item->link }}" rel="stylesheet">
+                @endforeach
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-lg-6 mb-3">
                         <div class="mb-3">
-                            <label for="basic-url" class="form-label">Title Acara</label>
-                            <input type="text" class="form-control" wire:model='titleAcara' placeholder="Undangan / Ngunduh Mantu Dll">
+                            <div class="mb-3">
+                                <label class="form-label">Font Title <span class="text-danger">*</span></label>
+                                <div class="form-icon position-relative">
+                                    <select class="form-select" wire:model.live='fontTitle'
+                                        aria-label="Default select example">
+                                        <option value="" selected disabled>Pilih Font</option>
+                                        @foreach ($fonts as $item)
+                                            <option value="{{ $item->id }}"
+                                                style="font-family: '{{ $item->nama }}', sans-serif;">
+                                                {{ $item->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Size Font</label>
+                                <div class="form-icon position-relative">
+                                    <select class="form-select" wire:model.live='sizeTitle'
+                                        aria-label="Default select example">
+                                        @for ($i = 10; $i < 50; $i++)
+                                            <option value="{{ $i }}">
+                                                {{ $i }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary btn-sm" {{ $button ? '' : 'disabled' }}>Update</button>
-                        </div>
+                        @if ($selectedFont)
+                            <span class="mt-4"
+                                style="font-family: '{{ $selectedFont->nama }}', sans-serif; font-size: {{ $sizeTitle }}px;">
+                                {{ $title }}
+                            </span>
+                        @else
+                            <span class="mt-4">{{ $title }}</span>
+                        @endif
                     </div>
-                </div>
-            </form>
-            <form wire:submit='update({{ $dataId }})'>
-                <div class="row">
                     <div class="col-12 col-lg-6">
                         <div class="mb-3">
-                            <label class="form-label">Title Undangan <span class="text-danger">*</span></label>
+                            <label class="form-label">Font paragraf <span class="text-danger">*</span></label>
                             <div class="form-icon position-relative">
-                                <input id="panggilan" name="panggilan" type="text" wire:model='title'
-                                    class="form-control" placeholder="Nama Panggilan :">
+                                <select class="form-select" wire:model.live='fontPara'
+                                    aria-label="Default select example">
+                                    <option selected disabled value="">Pilih Font</option>
+                                    @foreach ($fonts as $item)
+                                        <option value="{{ $item->id }}"
+                                            style="font-family: '{{ $item->nama }}', sans-serif;">
+                                            {{ $item->nama }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            @error('panggilan')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
                         </div>
+                        @if ($selectedPara)
+                            <span class="mt-4"
+                                style="font-family: '{{ $selectedPara->nama }}', sans-serif; font-size: 16px;">
+                                Style Font ini akan muncul di paragrap
+                            </span>
+                        @else
+                            <span class="mt-4">Style Font ini akan muncul di paragrap</span>
+                        @endif
                     </div>
-                    <div class="col-12 col-lg-6">
-                        <div class="mb-3">
-                            <label for="basic-url" class="form-label">Your vanity URL</label>
-                            <div class="input-group ">
-                                <span class="input-group-text" id="basic-addon3">{{ url('/u') }}/</span>
-                                <input type="text" class="form-control" id="basic-url" wire:model.live='slug'
-                                    aria-describedby="basic-addon3 basic-addon4">
-                            </div>
-                            <div class="form-text text-danger">{{ $pesan }}</div>
-                        </div>
-                    </div>
+
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-primary btn-sm" {{ $button ? '' : 'disabled' }}>Update</button>
                     </div>
                 </div>
             </form>
         </div>
+
     </div>
     <div class="card border border-info my-2">
         @if (session()->has('thumbnailWa'))
@@ -59,29 +104,7 @@
                 {{ session('thumbnailWa') }}
             </div>
         @endif
-        <div class="card-body d-flex flex-column flex-lg-row gap-3">
-
-            <div class="d-flex flex-column">
-                @if ($thumbnail)
-                    <img class="img-thumbnail rounded float-start object-fit-cover" style="height: 200px; width: auto"
-                        src="{{ $gambar ? $gambar->temporaryUrl() : asset('storage/' . $thumbnail->thumbnail) }}"
-                        alt="Thumbnail">
-                    <button class="btn btn-sm btn-danger mt-2" wire:click="delThumbnail">Hapus Gambar</button>
-                @else
-                    <img class="img-thumbnail rounded float-start object-fit-cover" style="height: 200px; width: auto"
-                        src="{{ $gambar ? $gambar->temporaryUrl() : 'https://i.pinimg.com/564x/8d/ff/49/8dff49985d0d8afa53751d9ba8907aed.jpg' }}"
-                        alt="Default Image">
-                    <button class="btn btn-sm btn-danger mt-2" wire:click="delThumbnail" disabled>Hapus Gambar</button>
-                @endif
-            </div>
-            <div class="text-lg-end">
-                <p>Gambar ini akan muncul di cover undangan atau ketika kamu mengirimi pesan melalui whatsapp</p>
-                <form wire:submit.prevent='thumbnailWa'>
-                    <input type="file" class="form-control" wire:model='gambar'>
-                    <button class="btn btn-sm btn-primary mt-2 ">Upload Gambar</button>
-                </form>
-            </div>
-        </div>
+        @include('livewire.dashboard.kelola.setting.thumbnail')
     </div>
 
     <div class="card border border-info my-2">
@@ -92,31 +115,7 @@
                 </div>
             @endif
             <h5>Teks Undangan</h5>
-            <form wire:submit='TeksUndangan'>
-                <div class="row">
-                    <div class="col-12 col-lg-4">
-                        <div class="mb-3">
-                            <label for="basic-url" class="form-label">Teks Pembukaan</label>
-                            <textarea name="" id="" class="form-control" cols="30" rows="2" wire:model='pembuka'></textarea>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-4">
-                        <div class="mb-3">
-                            <label for="basic-url" class="form-label">Teks Acara</label>
-                            <textarea name="" id="" class="form-control" cols="30" rows="2" wire:model='acara'></textarea>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-4">
-                        <div class="mb-3">
-                            <label for="basic-url" class="form-label">Teks Penutup</label>
-                            <textarea name="" id="" class="form-control" cols="30" rows="2" wire:model='penutup'></textarea>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-primary btn-sm">Update</button>
-                    </div>
-                </div>
-            </form>
+            @include('livewire.dashboard.kelola.setting.teksUndangan')
         </div>
     </div>
     <div class="card border border-info my-2">

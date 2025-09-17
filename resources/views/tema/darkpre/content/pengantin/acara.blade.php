@@ -1,11 +1,13 @@
-<div class="bg-neutral-950 relative text-orange-200 pb-10 font-poppins">
-    <p class="text-center text-[12px] font-semibold font-poppins mb-5">{{ $data->teksUndangan->pembuka }}</p>
+<div class="bg-neutral-950 relative text-orange-200 px-2 pb-10 ">
+    <p class="text-center  font-semibold  mb-5">{{ $data->teksUndangan->pembuka }}</p>
     @foreach ($data->acara as $item)
-        <div class="flex flex-col items-center justify-center w-full space-y-6 mt-5 text-sm">
+        <div class="flex flex-col items-center border
+ border-orange-200
+rounded-lg border-dashed p-4 justify-center w-full space-y-6 mt-5 text-sm">
             <!-- Judul Acara -->
-            <h2 class=" text-[50px] font-light font-corinthia  z-50 text-center">
+            <h1 class="  font-light   z-50 text-center">
                 {{ $item->nama_acara }}
-            </h2>
+            </h1>
 
             <!-- Detail Acara -->
             <div class="flex flex-col items-center justify-center w-full space-y-3 font-normal pt-8 pb-8">
@@ -36,8 +38,8 @@
         </div>
     @endforeach
 </div>
-<div class="bg-neutral-950 relative text-orange-200 pb-10 font-poppins">
-    <p class="text-center w-full pt-14 pb-14 font-light lg:text-sm text-[11px]">{{ $data->teksUndangan->penutup }}
+<div class="bg-neutral-950 relative text-orange-200 pb-10 ">
+    <p class="text-center w-full pt-14 pb-14 font-light lg:text-sm ">{{ $data->teksUndangan->penutup }}
     </p>
 
     @if ($data->teksPenutup->mengundang)

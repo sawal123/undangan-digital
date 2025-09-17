@@ -90,6 +90,7 @@ class TemaController extends Controller
                 session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
                 return redirect()->back();
             }
+            // dd($data->dataFont);
 
             return view($data->theme->path, [
                 'data'        => $data,

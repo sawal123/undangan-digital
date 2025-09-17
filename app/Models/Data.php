@@ -24,82 +24,107 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Data extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable =['user_id', 'theme_id','title', 'slug'];
-
-    public function user(){
+    protected $fillable = ['user_id', 'theme_id', 'title', 'slug'];
+    public function dataFont()
+    {
+        return $this->hasOne(DataFonts::class);
+    }
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function theme(){
+    public function theme()
+    {
         return $this->belongsTo(Theme::class);
     }
 
-    public function pria(){
+    public function pria()
+    {
         return $this->hasOne(Pria::class);
     }
-    public function wanita(){
+    public function wanita()
+    {
         return $this->hasOne(Wanita::class);
     }
 
-    public function acara(){
+    public function acara()
+    {
         return $this->hasMany(Acara::class);
     }
-    public function galery(){
+    public function galery()
+    {
         return $this->hasMany(Galery::class);
     }
 
-    public function sound(){
+    public function sound()
+    {
         return $this->hasOne(Sound::class);
     }
-    
-    public function tamu(){
+
+    public function tamu()
+    {
         return $this->hasMany(Tamu::class, 'data_id');
     }
-    public function ucapan(){
+    public function ucapan()
+    {
         return $this->hasMany(Ucapan::class);
     }
-    public function FiturUcapan(){
+    public function FiturUcapan()
+    {
         return $this->hasOne(FiturUcapan::class);
     }
-    public function streaming(){
+    public function streaming()
+    {
         return $this->hasOne(Streaming::class);
     }
-    public function kado(){
+    public function kado()
+    {
         return $this->hasMany(Kado::class);
     }
-    public function transaction(){
+    public function transaction()
+    {
         return $this->hasMany(Transaction::class);
     }
-    public function fiturKado(){
+    public function fiturKado()
+    {
         return $this->hasOne(FiturKado::class);
     }
 
-    public function imageKisah(){
+    public function imageKisah()
+    {
         return $this->hasMany(ImgKisahCinta::class);
     }
-    public function kisah(){
+    public function kisah()
+    {
         return $this->hasMany(KisahCinta::class);
     }
 
-    public function teksUndangan(){
+    public function teksUndangan()
+    {
         return $this->hasOne(TeksUndangan::class);
     }
-    public function coverUndangan(){
+    public function coverUndangan()
+    {
         return $this->hasOne(coverUndangan::class);
     }
-     public function teksWhatsApp(){
+    public function teksWhatsApp()
+    {
         return $this->hasOne(teksWhatsApp::class);
     }
-    public function teksPenutup(){
+    public function teksPenutup()
+    {
         return $this->hasOne(teksPenutup::class);
     }
-    public function thumbnailWas(){
+    public function thumbnailWas()
+    {
         return $this->hasOne(ThumbnailWa::class);
     }
-    public function qoute(){
+    public function qoute()
+    {
         return $this->hasOne(Qoute::class);
     }
-    public function setting(){
+    public function setting()
+    {
         return $this->hasOne(Setting::class);
     }
-    
 }

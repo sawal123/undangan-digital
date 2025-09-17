@@ -12,8 +12,8 @@
 <div id="mod" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
         <iframe id="videoFrame" width="100%" height="315" src=""
-            data-video-url="@if ($data->sound->isActive) {{ $data->sound->sound }} @endif"
-            data-video-start="@if ($data->sound->isActive) {{ $data->sound->start }} @endif"
+            data-video-url="@if ($data->sound->isActive){{ $data->sound->sound }}@endif"
+            data-video-start="@if ($data->sound->isActive){{ $data->sound->start }}@endif"
             title="YouTube video player" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

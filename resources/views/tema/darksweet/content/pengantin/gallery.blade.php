@@ -1,6 +1,6 @@
 @if ($poto)
     <div class=" pt-5 bg-red-800 h-auto" id="gallery">
-        <h1 class="text-white text-center text-3xl font-bold font-italiana">Gallery</h1>
+        <h1 class="text-white text-center text-3xl font-bold ">Gallery</h1>
 
         <!-- Video -->
         @if (!empty($video[0]))

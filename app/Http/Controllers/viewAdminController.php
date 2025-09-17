@@ -34,9 +34,12 @@ class viewAdminController extends Controller
         $title = "Undangan Animation";
         return view('admin.animation');
     }
-
     public function undangancetak(){
         $title = "Undangan Animation";
         return view('admin.undangancetak');
+    }
+    public function fonts(){
+        $title = "Fonts";
+        return view('admin.fonts');
     }
 }

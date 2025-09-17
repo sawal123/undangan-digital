@@ -25,6 +25,45 @@
     <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/fontawesome-free/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/swiper/swiper-bundle.min.css') }}">
     <script src="{{ asset('tema/darkpre/assets/swiper/swiper-bundle.min.js') }}"></script>
+
+
+    <style>
+        @if ($data->dataFont)
+            @import url('{{ $data->dataFont->titleFont->link }}');
+            @import url('{{ $data->dataFont->subFont->link }}');
+
+        @else
+            @import url('https://fonts.googleapis.com/css2?family=Capriola&family=Oleo+Script+Swash+Caps:wght@400;700&display=swap');
+        @endif
+
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Oleo Script Swash Caps' }}", system-ui;
+            font-weight: 700;
+            font-style: normal;
+            font-size: {{ $data->dataFont->s_title }}px !important
+        }
+
+        html,
+        p,
+        span,
+        a,
+        li,
+        div,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "{{ $data->dataFont->subFont->nama ?? 'Capriola' }}", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+
 </head>
 
 <body class="relative">
@@ -75,7 +114,8 @@
         document.addEventListener("DOMContentLoaded", function() {
             // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
             let eventDate = new Date(
-                "{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? $data->acara[0]->date ?? '')) : '2024-10-10' }}").getTime();
+                "{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}"
+                ).getTime();
 
             // Update countdown setiap detik
             let countdown = setInterval(function() {

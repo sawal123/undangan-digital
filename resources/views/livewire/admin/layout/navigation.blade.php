@@ -19,6 +19,9 @@
             <x-admin.menu :link="route('admin.theme.index')" :icon="'mdi mdi-svg'" :active="request()->routeIs('admin.theme.index')">
                 {{ __('Theme') }}
             </x-admin.menu>
+            <x-admin.menu :link="route('admin.fonts')" :icon="'mdi mdi-svg'" :active="request()->routeIs('admin.fonts')">
+                {{ __('Fonts') }}
+            </x-admin.menu>
             <x-admin.menu :link="route('admin.animation')" :icon="'mdi mdi-google-nearby'" :active="request()->routeIs('admin.animation')">
                 {{ __('Undangan Animasi') }}
             </x-admin.menu>
@@ -40,7 +43,7 @@
             <x-admin.menu :link="route('admin.setting')" :icon="'mdi mdi-cog'" :active="request()->routeIs('admin.setting')">
                 {{ __('Setting') }}
             </x-admin.menu>
-           
+
             <x-admin.menu :link="route('admin.pay.setting')" :icon="'mdi mdi-cog'" :active="request()->routeIs('admin.pay.setting')">
                 {{ __('Gift Pay Setting') }}
             </x-admin.menu>

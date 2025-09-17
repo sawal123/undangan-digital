@@ -1,4 +1,4 @@
-<div class="quote-text">
+<div class="">
     <p class="arabic-quote" data-aos="fade-up" data-aos-duration="900">
         {{$data->qoute->title}}
     </p>

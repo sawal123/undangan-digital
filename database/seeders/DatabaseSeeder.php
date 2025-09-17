@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             Music::class,
             GiftPaysSeeder::class,
+            FontsSeeder::class
             // TamuSeeder::class
             // DiskonSeeder::class
         ]);

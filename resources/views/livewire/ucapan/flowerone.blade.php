@@ -1,6 +1,6 @@
 <div>
     <section class="message-section mt-5 mx-3" id="form-section">
-        <h5 class="text-center" data-aos="fade-up" data-aos-duration="1000">Ucapan & Doa</h5>
+        <h3 class="text-center" data-aos="fade-up" data-aos-duration="1000">Ucapan & Doa</h3>
 
         {{-- alert sukses/error --}}
         @if ($success)

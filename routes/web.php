@@ -120,6 +120,7 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
 
 
     Route::get('/animation', [viewAdminController::class, 'animation'])->name('animation');
+    Route::get('/fonts', [viewAdminController::class, 'fonts'])->name('fonts');
     Route::get('/cetak', [viewAdminController::class, 'undangancetak'])->name('cetak');
     Route::get('/demo/{demo}', [TemaController::class, 'temademo'])->name('temademo');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Data;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\DataFonts;
+use App\Models\Fonts;
 use App\Models\KelolaUndangan\Qoute;
 use App\Models\TeksUndangan;
 use App\Models\teksWhatsApp;
@@ -50,6 +52,7 @@ class DataController extends Controller
             'title' => $validasi['title'],
             'slug' => $validasi['slug']
         ]);
+        
 
         TeksUndangan::create([
             'data_id' => $data->id,
