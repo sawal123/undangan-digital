@@ -2,8 +2,8 @@
     <!-- opening  -->
     <div class="z-50 w-full h-full brightness-50 contrast-100	saturate-100"
       style="background-image: url('{{ asset('storage/'. $thumbnailWa->thumbnail) }}'); background-size: cover; background-position: center;"></div>
-    <h2 class="absolute bottom-12 left-14 text-[50px] text-white  font-great_vibes hidden lg:block">{{ $data->wanita->nama_panggilan }} <span
-        class="font-poppins text-[25px]" > & </span> {{ $data->pria->nama_panggilan }}</h2>
+    <h1 class="absolute bottom-12 left-14 text-[50px] text-white  font-great_vibes hidden lg:block">{{ $data->wanita->nama_panggilan }} <span
+        class=" text-[25px]" > & </span> {{ $data->pria->nama_panggilan }}</h1>
 
     <!-- music -->
     @include('tema.whitepre.content.music')

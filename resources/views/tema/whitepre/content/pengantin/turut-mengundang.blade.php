@@ -1,6 +1,6 @@
 <div class="w-full text-center text-pink-800 bg-orange-50"
     style="background-image: url('{{ asset('tema/whitepre/src/img/bunga.png') }}' ); background-position: center; background-size: contain;">
-    <div class="text-center w-full pt-14 pb-10 font-light lg:text-sm text-[11px]">
+    <div class="text-center w-full pt-14 pb-10 font-light lg:text-sm ">
       {{$data->teksUndangan->penutup}}
     </div>
     @if ($data->teksPenutup->mengundang)

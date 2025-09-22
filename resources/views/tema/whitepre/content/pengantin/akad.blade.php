@@ -1,36 +1,33 @@
-<div class="bg-orange-50 relative pt-10 pb-16 text-pink-800  font-poppins section" id="date">
-    <p class="text-center my-5">{{ $data->teksUndangan->pembuka }}</p>
+<div class="bg-orange-50 relative pt-10 pb-16 text-pink-800  section" id="date">
+    <p class="text-center my-5 p-2">{{ $data->teksUndangan->pembuka }}</p>
     <!-- Judul -->
-    
-    <h2 class="text-center text-[40px] z-50 relative font-semibold mb-6  font-great_vibes">
-        Acara Akan Diselenggarakan
-    </h2>
-    <!-- Gambar Hiasan Kiri -->
 
+    <h1 class="text-center text-[40px] z-50 relative font-semibold mb-6 ">
+        Acara Akan Diselenggarakan
+    </h1>
+    <!-- Gambar Hiasan Kiri -->
     <div class="left-0 absolute top-10 inset-x-0 z-10">
         <img src="{{ asset('tema/darkpre/src/img/bunga.png') }}" alt="Hiasan Bunga" class="w-20 lg:w-24  object-center">
     </div>
-
     <!-- Hari -->
     <div class="text-center z-50 mt-4 relative ">
-        <div class="text-[70px] font-bold" id="days">26</div>
+        <div style="font-size: 70px" class=" font-bold" id="days">26</div>
         <div class="text-[30px] font-semibold">HARI</div>
     </div>
     <!-- Timer -->
-    <div class="flex relative justify-center text-center z-50 items-center mt-10 space-x-4">
+    <div class="flex gap-2 flex-wrap justify-center text-center z-50 items-center mt-10 ">
         <!-- Hours -->
         <div class="flex flex-col items-center" data-aos="zoom-in-right" data-aos-duration="2000">
             <h2 class="text-[20px] font-bold" id="hours">21</h2>
-            <span class="text-[15px] font-semibold uppercase">Hours</span>
+            <p class="text-[12px] font-semibold uppercase">Hours</p>
         </div>
-
         <!-- Divider -->
         <div class="h-16 w-px bg-pink-800"></div>
 
         <!-- Minutes -->
         <div class="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="2000">
             <h2 class="text-[20px]  font-bold" id="minutes">50</h2>
-            <span class=" text-[15px] font-semibold uppercase">Minutes</span>
+            <p class=" text-[12px] font-semibold uppercase">Minutes</p>
         </div>
 
         <!-- Divider -->
@@ -39,7 +36,7 @@
         <!-- Seconds -->
         <div class="flex flex-col items-center" data-aos="zoom-in-left" data-aos-duration="2000">
             <h2 class="text-[20px]  font-bold" id="seconds">5</h2>
-            <span class=" text-[15px] font-semibold uppercase">Seconds</span>
+            <p class=" text-[12px] font-semibold uppercase">Seconds</p>
         </div>
     </div>
 
@@ -81,7 +78,7 @@
         // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
         let eventDate = new Date(
                 "{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}"
-                )
+            )
             .getTime();
 
         // Update countdown setiap detik

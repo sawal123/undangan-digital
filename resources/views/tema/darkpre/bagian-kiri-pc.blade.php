@@ -1,9 +1,9 @@
 <div class=" lg:w-3/5 md:h-screen lg:fixed z-50">
     <div class="z-50 w-full h-full brightness-50 contrast-100	saturate-100"
         style="background-image: url('{{ asset('storage/'. $thumbnailWa->thumbnail) }}'); background-size: cover; background-position: center;">
-    </div>   
-    <h2 class="hidden lg:block absolute bottom-12 left-14 text-[50px] text-white font-corinthia">{{ $data->wanita->nama_panggilan }} <span
-        class="font-poppins text-[25px]"> & </span> {{ $data->pria->nama_panggilan }}</h2>
+    </div>
+    <h1 class="hidden lg:block absolute bottom-12 left-14 text-[50px] text-white ">{{ $data->wanita->nama_panggilan }} <span
+        class=" text-[25px]"> & </span> {{ $data->pria->nama_panggilan }}</h1>
     <!-- music -->
     @include('tema.darkpre.content.music')
     <!-- music -->

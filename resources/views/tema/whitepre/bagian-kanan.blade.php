@@ -49,7 +49,7 @@
 
     <!-- ucapan -->
     @include('tema.whitepre.content.pengantin.ucapan')
-    
+
     <!-- end ucapan -->
 
     <div class="text-center text-pink-800 text-[10px] bg-orange-50  pt-6 lg:pt-12
@@ -59,6 +59,6 @@
 
     <!-- Navbar mobile -->
     @include('tema.whitepre.content.navbar-mobile')
-    
+
     <!-- Navbar -->
 </div>

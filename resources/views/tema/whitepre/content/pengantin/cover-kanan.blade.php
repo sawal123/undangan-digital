@@ -1,12 +1,12 @@
-<div class="h-full w-full font-poppins  relative">
+<div class="h-full w-full   relative">
     <div class="w-full h-full z-30 brightness-75"
       style="background-image: url('{{ asset('storage/' . $thumbnailWa->thumbnail) }}'); background-size: cover; background-position: center;"></div>
 
     <div class="w-full z-50 absolute top-3">
-      <h3 class="text-center font-normal text-2xl pt-10 ">{{$data->setting->acara ?? 'The Wedding'}}</h3>
-      <h2 class="mt-5 text-center text-[40px] font-light  font-great_vibes">{{ $data->pria->nama_panggilan }} <span
-          class="font-poppins text-[25px]">&</span> {{ $data->wanita->nama_panggilan }}</h2>
-      <p class="text-center text-[20px]">{{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }}
+      <h3 class="text-center font-normal text-2xl pt-10 text-shadow">{{$data->setting->acara ?? 'The Wedding'}}</h3>
+      <h1 class="mt-5 text-center text-[40px] font-light text-shadow">{{ $data->pria->nama_panggilan }} <span
+          class=" text-[25px]">&</span> {{ $data->wanita->nama_panggilan }}</h1>
+      <p class="text-center text-[20px] text-shadow">{{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }}
         {{ $data ? date('m', strtotime($data->acara[0]->date)) : '10' }}
         {{ $data ? date('Y', strtotime($data->acara[0]->date)) : '2024' }}</p>
     </div>
