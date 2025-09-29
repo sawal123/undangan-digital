@@ -17,8 +17,8 @@
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta property="og:image" content="https://i.pinimg.com/736x/eb/92/b1/eb92b152fd8139771463967c76080a4f.jpg">
-    <meta property="og:image:secure_url" content="https://i.pinimg.com/736x/eb/92/b1/eb92b152fd8139771463967c76080a4f.jpg">
+    <meta property="og:image" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image:secure_url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
     <meta property="og:image:width" content="664">
     <meta property="og:image:height" content="664">
