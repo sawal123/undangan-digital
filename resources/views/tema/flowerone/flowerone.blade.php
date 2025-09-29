@@ -12,7 +12,7 @@
         Carbon::setLocale('id');
         $tanggalAcara = Carbon::parse($data->acara[0]->date)->translatedFormat('l, j F Y');
     @endphp
-    
+
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
@@ -25,7 +25,7 @@
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
-    
+
 
     <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
         <meta itemprop="url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
@@ -263,55 +263,61 @@
 
                         <!-- Akad Nikah Section -->
 
-                        @forelse ($data->acara as $item)
+                        @foreach ($data->acara as $item)
                             <div class="event-card" data-aos="fade-up" data-aos-duration="1000">
                                 <h3>{{ $item->nama_acara }}</h3>
+
+                                {{-- Tanggal Acara --}}
                                 <p class="date">
                                     {{ \Carbon\Carbon::parse($item->date)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
                                 </p>
-                                @php
-                                    $zonaWaktuStart = $item->jam_end == 'Selesai' ? $item->zona_waktu : '';
-                                    $zonaWaktuEnd = $item->jam_end != 'Selesai' ? $item->zona_waktu : '';
-                                @endphp
-                                <p class="time"> {{ $item->jam_start }} {{ $zonaWaktuStart }} s/d
-                                    {{ $item->jam_end }} {{ $zonaWaktuEnd }}</p>
+
+                                {{-- Waktu Acara --}}
+                                <p class="time">
+                                    @if ($item->jam_end === 'Selesai')
+                                        {{ $item->jam_start }} {{ $item->zona_waktu }} s/d Selesai
+                                    @else
+                                        {{ $item->jam_start }} {{ $item->zona_waktu }} s/d {{ $item->jam_end }}
+                                        {{ $item->zona_waktu }}
+                                    @endif
+                                </p>
+
+                                {{-- Lokasi --}}
                                 <p class="location">{{ $item->vanue }}<br>{{ $item->alamat }}</p>
+
+                                {{-- Aksi --}}
                                 <div class="d-flex flex-row justify-content-center gap-2">
-                                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Acara+Penting&dates={{ date('Ymd', strtotime($item->date)) }}T090000Z/{{ date('Ymd', strtotime($item->date)) }}T120000Z&details=Jangan+lewatkan+acara+ini&location={{ $item->alamat }}"
+                                    @php
+                                        // Format Google Calendar
+                                        $startDateTime = \Carbon\Carbon::parse(
+                                            $item->date . ' ' . $item->jam_start,
+                                        )->format('Ymd\THis\Z');
+                                        $endDateTime =
+                                            $item->jam_end === 'Selesai'
+                                                ? \Carbon\Carbon::parse($item->date . ' ' . $item->jam_start)
+                                                    ->addHours(2)
+                                                    ->format('Ymd\THis\Z') // default +2 jam
+                                                : \Carbon\Carbon::parse($item->date . ' ' . $item->jam_end)->format(
+                                                    'Ymd\THis\Z',
+                                                );
+                                    @endphp
+
+                                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ urlencode($item->nama_acara) }}&dates={{ $startDateTime }}/{{ $endDateTime }}&details={{ urlencode('Jangan lewatkan acara ini') }}&location={{ urlencode($item->alamat) }}"
                                         target="_blank"
                                         class="p-1 rounded-2 text-center text-white text-decoration-none">
                                         <i class="fa-solid fa-calendar-check mr-2"></i>Simpan Tanggal
                                     </a>
+
                                     @if ($item->maps)
-                                        <a href="{{ $item->maps }}"
-                                            class="p-1  rounded-2 text-white text-decoration-none "><i
-                                                class="fa-solid fa-map-location-dot mr-2"></i>Navigasi Map</a>
+                                        <a href="{{ $item->maps }}" target="_blank"
+                                            class="p-1 rounded-2 text-white text-decoration-none">
+                                            <i class="fa-solid fa-map-location-dot mr-2"></i>Navigasi Map
+                                        </a>
                                     @endif
-
                                 </div>
                             </div>
-                        @empty
-                            <!-- Separator -->
-                            <div class="separator" data-aos="fade-up" data-aos-duration="1000">&</div> --}}
+                        @endforeach
 
-                            <!-- Resepsi Section -->
-                            <div class="event-card" data-aos="fade-up" data-aos-duration="1000">
-                                <h3>Resepsi</h3>
-                                <p class="date">Minggu, 01 Desember 2024</p>
-                                <p class="time">11:00 - 14:00 WIB</p>
-                                <p class="location">Hotel X-More<br>Hotel eL Royale, Jl. Merdeka No.2, Braga, Kec.
-                                    Sumur
-                                    Bandung,<br> Kota Bandung, Jawa Barat 40111</p>
-                                <div class="d-flex flex-row justify-content-center gap-2">
-                                    <a href="#"
-                                        class=" p-1 rounded-2 text-center text-white text-decoration-none">
-                                        <i class="fa-solid fa-calendar-check mr-2"></i>Simpan Tanggal
-                                    </a>
-                                    <a href="#" class="p-1  rounded-2 text-white text-decoration-none "><i
-                                            class="fa-solid fa-map-location-dot mr-2"></i>Navigasi Map</a>
-                                </div>
-                            </div>
-                        @endforelse
 
 
 
