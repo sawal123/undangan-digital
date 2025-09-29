@@ -414,24 +414,25 @@
 
 
 
-                    @if($data->teksPenutup->mengundang)
+                    @if ($data->teksPenutup->mengundang)
                         <!-- Flower Divider -->
                         <div class="flower-divider text-center mt-5" data-aos="fade-up" data-aos-duration="1000">
                             <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid">
                         </div>
-                        <div class="my-3 text-center" data-aos="fade-up" data-aos-duration="1000">
+                        <div class="my-3 text-center" data-aos="fade-up " data-aos-duration="1000">
                             <h3>Turut Mengundang</h3>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">{!! nl2br(e($data->teksPenutup->mengundang)) !!}</li>
                             </ul>
+
                         </div>
                         <div class="flower-divider text-center mt-5" data-aos="fade-up" data-aos-duration="1000">
                             <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid">
                         </div>
                     @endif
-                    <p class="text-center" data-aos="fade-up" data-aos-duration="1000">{!! $data->teksUndangan->penutup !!}</p>
+                    <p class="text-center" data-aos="fade-up" data-aos-duration="1000"> {!! $data->teksUndangan->penutup !!}</p>
                 </div>
-       
+            </div>
 
             <footer class="footer mt-5 text-center mb-5">
                 <p style="margin: 0px">{{ $data->wanita->nama_panggilan }} & {{ $data->pria->nama_panggilan }} </p>
