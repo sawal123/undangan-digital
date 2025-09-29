@@ -36,7 +36,6 @@ class Tamu extends Component
         $data = Data::find($this->undang->data_id);
         if ($this->undang) {
             $namaTamu = $this->undang->nama; // Nama tamu dari database
-
             // Membuat teks undangan
             $pesan = teksWhatsApp::where('data_id', $this->undang->data_id)->first()->pesan;
 
@@ -56,6 +55,8 @@ class Tamu extends Component
             
 
             // Mengonversi teks pesan ke URL encoded
+            $this->undang->nomor = preg_replace('/^08/', '628', $this->undang->nomor);
+
             $pesanEncoded = urlencode($pesanFinal);
             $whatsappUrl = "https://wa.me/{$this->undang->nomor}/?text={$pesanEncoded}";
 

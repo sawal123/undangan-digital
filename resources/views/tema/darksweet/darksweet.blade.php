@@ -5,10 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    @php
+        use Carbon\Carbon;
+        Carbon::setLocale('id');
+        $tanggalAcara = Carbon::parse($data->acara[0]->date)->translatedFormat('l, j F Y');
+    @endphp
+    <title>{{ $data->setting->acara }} {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}</title>
+    <meta name="robots" content="noindex, nofollow">
     <meta property="og:title" content="{{ $data->title }}" />
     <meta property="og:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+    <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
+    <meta property="og:image:width" content="664">
+    <meta property="og:image:height" content="664">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
 
@@ -16,7 +25,10 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $data->title }}">
     <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <!--  -->
+    <meta name="twitter:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}.">
+
+
+
     <link href="{{ asset('tema/darksweet/css/output.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/fontawesome-free/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/swiper/swiper-bundle.min.css') }}">
@@ -35,6 +47,7 @@
         .text-shadow {
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
+
         h1 {
             font-family: "{{ $data->dataFont->titleFont->nama ?? 'Oleo Script Swash Caps' }}", system-ui;
             font-weight: 700;
