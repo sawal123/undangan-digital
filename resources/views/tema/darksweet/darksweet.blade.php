@@ -14,6 +14,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:title" content="{{ $data->title }}" />
     <meta property="og:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image:secure_url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
     <meta property="og:image:width" content="664">
     <meta property="og:image:height" content="664">
