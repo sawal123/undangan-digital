@@ -23,10 +23,8 @@
             <hr>
             <script>
                 function salinTeks(button) {
-                    // Ambil elemen teks dalam kartu yang sesuai dengan tombol yang diklik
                     console.log(button)
                     const nomorRekening = button.closest('.bank-info').querySelector('.nomor-rekening').textContent;
-                    // Salin teks ke clipboard
                     navigator.clipboard.writeText(nomorRekening).then(() => {
                         alert('Nomor rekening berhasil disalin: ' + nomorRekening);
                     }).catch(err => {

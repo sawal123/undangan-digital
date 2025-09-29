@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="scroll-smooth">
+<html lang="id" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
@@ -10,10 +10,10 @@
         Carbon::setLocale('id');
         $tanggalAcara = Carbon::parse($data->acara[0]->date)->translatedFormat('l, j F Y');
     @endphp
-    <title>{{ $data->setting->acara }} {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}</title>
     <meta name="robots" content="noindex, nofollow">
+    <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
-    <meta property="og:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
     <meta property="og:image:secure_url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
     <meta property="og:image:width" content="664">
@@ -21,13 +21,7 @@
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
-
-    <!-- WhatsApp Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $data->title }}">
-    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <meta name="twitter:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}.">
-
+    <title>{{ $data->setting->acara }} {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}</title>
 
 
     <link href="{{ asset('tema/darksweet/css/output.css') }}" rel="stylesheet">
@@ -76,18 +70,11 @@
 
 <body class="bg-neutral-300 text-slate-900 relative">
 
-    <!-- Cover Section -->
     @include('tema.darksweet.cover')
-    <!-- End of Cover Section -->
 
-    <!-- content -->
     @include('tema.darksweet.content')
-    <!-- content -->
-    <!-- Modal Qr -->
 
 
-
-    <!-- Modal Image -->
     <div id="imageModal"
         class="fixed invisible inset-0 z-50  bg-black bg-opacity-75 flex items-center justify-center transition-all duration-300 ease-in-out">
         <div class="relative">
@@ -99,15 +86,12 @@
             </button>
         </div>
     </div>
-    <!-- datePick -->
     <script src="{{ asset('tema/darksweet/js/setDate.js') }}"></script>
 
-    <!-- aos -->
     <script src="{{ asset('tema/darksweet/assets/aos/dist/aos.js') }}"></script>
     <script>
         AOS.init();
     </script>
-    <!-- swiper -->
     <script src="{{ asset('tema/darksweet/assets/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('tema/darksweet/js/swiper.js') }}"></script>
 

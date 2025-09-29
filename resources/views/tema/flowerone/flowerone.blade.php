@@ -5,32 +5,37 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <!-- Open Graph Meta Tags -->
+    {{-- <!-- Open Graph Meta Tags --> --}}
+    @php
+        use Carbon\Carbon;
+        Carbon::setLocale('id');
+        $tanggalAcara = Carbon::parse($data->acara[0]->date)->translatedFormat('l, j F Y');
+    @endphp
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
-    <meta property="og:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+    <meta property="og:image" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image:secure_url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
+    <meta property="og:image:width" content="664">
+    <meta property="og:image:height" content="664">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
+    <title>{{ $data->setting->acara }} {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}</title>
 
-    <!-- WhatsApp Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $data->title }}">
-    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <title>{{ $data->title }}</title>
-
-    <!-- Link to Bootstrap CSS -->
+    {{-- <!-- Link to Bootstrap CSS --> --}}
     <link rel="stylesheet" href="{{ asset('tema/flowerone/assets/bootstrap/css/bootstrap.min.css') }}">
-    <!-- Start Google Fonts -->
-    <!-- ICONS -->
+    {{-- <!-- Start Google Fonts --> --}}
+    {{-- <!-- ICONS --> --}}
     <link rel="stylesheet" href="{{ asset('tema/flowerone/assets/fontawesome-free/css/all.min.css') }}">
-    <!-- START Swiper css -->
+    {{-- <!-- START Swiper css --> --}}
     <link rel="stylesheet" href="{{ asset('tema/flowerone/assets/swiper/swiper-bundle.min.css') }}">
-    <!-- End Swiper css -->
-    <!-- AOS -->
+    {{-- <!-- End Swiper css --> --}}
+    {{-- <!-- AOS --> --}}
     <link rel="stylesheet" href="{{ asset('tema/flowerone/assets/aos/dist/aos.css') }}">
 
-    <!-- CSS -->
+    {{-- <!-- CSS --> --}}
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/cover.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/modal.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/jumbotron.css') }}">
@@ -41,8 +46,8 @@
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/reservasi.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/message.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/ending-section.css') }}">
-    <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')">
-    <!-- Custom Style Index-->
+    {{-- <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')"> --}}
+    {{-- <!-- Custom Style Index--> --}}
     <style>
         @if ($data->dataFont)
             @import url('{{ $data->dataFont->titleFont->link }}');
@@ -93,18 +98,18 @@
 </head>
 
 <body class="position-relative ">
-    <!-- COVER -->
+    /* <!-- COVER --> */
     @include('tema.flowerone.cover')
-    <!-- COVER -->
+    /* <!-- COVER --> */
 
-    <!-- Modal -->
-    <!-- Tombol vertikal di pojok kanan -->
+    /* <!-- Modal --> */
+    /* <!-- Tombol vertikal di pojok kanan --> */
 
     @include('tema.flowerone.settingbar')
     {{-- {{ $data->sound->isActive }} sdadsasdsdsd --}}
-    <!-- Tombol vertikal di pojok kanan -->
+    /* <!-- Tombol vertikal di pojok kanan --> */
 
-    <!-- RSVP Modal -->
+    /* <!-- RSVP Modal --> */
     <div class="modal fade" id="modalRSV1" tabindex="-1" aria-labelledby="modalRSVLabel1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-4 shadow-lg">
@@ -134,9 +139,9 @@
             </div>
         </div>
     </div>
-    <!-- Modal -->
+    /* <!-- Modal --> */
 
-    <!-- Navbar -->
+    /* <!-- Navbar --> */
     <nav class="navbar fixed-bottom mx-5 bg-white rounded-top-2 shadow-lg" id="navbar">
         <div class="container-fluid pt-2">
             <div class="d-flex justify-content-center w-100 gap-2">
@@ -154,22 +159,22 @@
             </div>
         </div>
     </nav>
-    <!-- Navbar -->
+    /* <!-- Navbar --> */
 
-    <!-- CONTENT -->
+    /* <!-- CONTENT --> */
     <div class="container position-relative z-2" id="index">
         <div class="row d-flex justify-content-center">
-            <!-- MAIN  -->
+            /* <!-- MAIN  --> */
             <div class="col-12 col-md-6 d-flex justify-content-center">
                 <div class="rounded-card w-100 position-relative">
 
-                    <!-- Background Image -->
+                    /* <!-- Background Image --> */
                     <div class="w-100 position-absolute" style="z-index: 1; top: 0; left: 0;  overflow: hidden;">
                         <img src="{{ asset('tema/flowerone/img/abstract.png') }}"
                             class="object-fit-cover w-100 h-100" alt="">
                     </div>
 
-                    <!-- Image Section -->
+                    /* <!-- Image Section --> */
                     <div class="row text-center mb-4 image-container mx-0 position-relative z-3" id="home">
                         <div class="col-6 col-sm-6">
                             <img src="{{ asset('tema/flowerone/img/flower-top.png') }}" alt="Flower"
@@ -182,7 +187,7 @@
                     </div>
 
 
-                    <!-- Jumbotron -->
+                    /* <!-- Jumbotron --> */
                     <section>
                         <div class="jumbotron text-center position-relative text-black z-3">
                             <p>{{ $data->setting->acara ?? 'The Wedding' }}</p>
@@ -196,7 +201,7 @@
 
                         </div>
 
-                        <!-- Invitation -->
+                        /* <!-- Invitation --> */
                         <div class="invitation position-relative z-3">
                             <p class="invitation-title">Kepada:</p>
                             <p class="invitation-subtitle">Yth. Bapak/Ibu/Saudara/i</p>
@@ -204,14 +209,14 @@
                         </div>
                     </section>
 
-                    <!-- Flower Pembatas -->
+                    /* <!-- Flower Pembatas --> */
                     <div class="text-center pt-5 position-relative z-3" data-aos="fade-up" data-aos-duration="1000">
                         <img src="{{ asset('tema/flowerone/img/flower-top.png') }}" alt=""
                             class="img-fluid">
                     </div>
 
                     <section>
-                        <!-- Quotation Section -->
+                        /* <!-- Quotation Section --> */
                         <div class="quote-section text-center">
                             <div>
                                 <h1 data-aos="fade-up" data-aos-duration="1000"><i
@@ -222,13 +227,13 @@
                         </div>
                     </section>
 
-                    <!-- Divider -->
+                    /* <!-- Divider --> */
                     <div class="flower-divider text-center pt-3" id="detail">
                         <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid"
                             data-aos="fade-up" data-aos-duration="1000">
                     </div>
 
-                    <!-- Relationship Detail Section -->
+                    /* <!-- Relationship Detail Section --> */
                     <section class="relationship-section text-center">
                         <div class="relationship-text" data-aos="fade-up" data-aos-duration="1000">
                             <p>{!! nl2br(e($data->teksUndangan->pembuka)) !!}</p>
@@ -240,18 +245,18 @@
                         </div>
                     </section>
 
-                    <!-- Flower Divider -->
+                    /* <!-- Flower Divider --> */
                     <div class="flower-divider text-center" id="acara">
                         <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid"
                             data-aos="fade-up" data-aos-duration="1000">
                     </div>
 
-                    <!-- Acara -->
+                    /* <!-- Acara --> */
                     <section class="event-section text-center">
                         <h3 data-aos="fade-up" data-aos-duration="1000">Acara</h3>
                         <p data-aos="fade-up" data-aos-duration="1000">{!! nl2br(e($data->teksUndangan->acara)) !!}</p>
 
-                        <!-- Akad Nikah Section -->
+                        /* <!-- Akad Nikah Section --> */
 
                         @forelse ($data->acara as $item)
                             <div class="event-card" data-aos="fade-up" data-aos-duration="1000">
@@ -281,10 +286,10 @@
                                 </div>
                             </div>
                         @empty
-                            <!-- Separator -->
+                            /* <!-- Separator --> */
                             <div class="separator" data-aos="fade-up" data-aos-duration="1000">&</div> --}}
 
-                            <!-- Resepsi Section -->
+                            /* <!-- Resepsi Section --> */
                             <div class="event-card" data-aos="fade-up" data-aos-duration="1000">
                                 <h3>Resepsi</h3>
                                 <p class="date">Minggu, 01 Desember 2024</p>
@@ -315,11 +320,11 @@
                     </section>
 
 
-                    <!--Start Timeline Pertemuan-->
+                    /* <!--Start Timeline Pertemuan--> */
                     <section>
 
                         @foreach ($data->kisah as $kisah)
-                            <!-- Flower Divider -->
+                            /* <!-- Flower Divider --> */
                             <div class="flower-divider text-center">
                                 <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid"
                                     data-aos="fade-up" data-aos-duration="1000">
@@ -356,16 +361,16 @@
                         @endforeach
 
                     </section>
-                    <!--END Timeline Pertemuan-->
+                    /* <!--END Timeline Pertemuan--> */
 
-                    <!-- Flower Divider -->
+                    /* <!-- Flower Divider --> */
 
                     @if ($poto || $video)
                         <div class="flower-divider text-center" id="gallery">
                             <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid"
                                 data-aos="fade-up" data-aos-duration="1000">
                         </div>
-                        <!--START Gallery -->
+                        /* <!--START Gallery --> */
                         <section class="gallery-section w-100 text-center mt-3">
 
                             <h3 data-aos="fade-up" data-aos-duration="1000">Gallery</h3>
@@ -379,66 +384,67 @@
                                 </div>
                             @endif
 
-                            <!-- Slider main container -->
+                            /* <!-- Slider main container --> */
                             @if ($data)
                                 @include('tema.flowerone.gallery')
                             @endif
 
                         </section>
-                        <!-- END Gallery -->
+                        /* <!-- END Gallery --> */
                     @endif
-                    <!-- Flower Divider -->
+                    /* <!-- Flower Divider --> */
                     <div class="flower-divider text-center w-100" id="reservation">
                         <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid"
                             data-aos="fade-up" data-aos-duration="1000">
                     </div>
 
-                    <!-- START Reservation -->
+                    /* <!-- START Reservation --> */
 
                     <section class="rsvp-gift-section text-center mt-5">
                         @if ($data->fiturKado)
                             @include('tema.flowerone.kado')
                         @endif
                     </section>
-                    <!-- END Reservation -->
+                    /* <!-- END Reservation --> */
 
 
 
-                    <!-- START message -->
+                    /* <!-- START message --> */
                     @include('tema.flowerone.ucapan')
 
 
 
                     @if ($data->teksPenutup->mengundang)
-                        <!-- Flower Divider -->
+                        /* <!-- Flower Divider --> */
                         <div class="flower-divider text-center mt-5" data-aos="fade-up" data-aos-duration="1000">
                             <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid">
                         </div>
-                        <div class="my-3 text-center" data-aos="fade-up " data-aos-duration="1000">
+                        <div class="my-3 text-center" data-aos="fade-up" data-aos-duration="1000">
                             <h3>Turut Mengundang</h3>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">{!! nl2br(e($data->teksPenutup->mengundang)) !!}</li>
                             </ul>
-
                         </div>
                         <div class="flower-divider text-center mt-5" data-aos="fade-up" data-aos-duration="1000">
                             <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid">
                         </div>
                     @endif
-                    <p class="text-center" data-aos="fade-up" data-aos-duration="1000"> {!! $data->teksUndangan->penutup !!}</p>
+                    <p class="text-center" data-aos="fade-up" data-aos-duration="1000">{!! $data->teksUndangan->penutup !!}</p>
                 </div>
             </div>
-            <!-- MAIN -->
-            <!-- FOOTER -->
-            <footer class="footer mt-5 text-center mb-5">
-                <p style="margin: 0px">{{ $data->wanita->nama_panggilan }} & {{ $data->pria->nama_panggilan }} </p>
-                <p style="margin: 0px">Made with ❤ somewhere in the world</p>
-                <p style="margin-bottom: 5px">Powered by Wayae Nikah</p>
-            </footer>
-            <!-- FOOTER -->
         </div>
+
+
+        <footer class="footer mt-5 text-center mb-5">
+            <p style="margin: 0px">{{ $data->wanita->nama_panggilan }} & {{ $data->pria->nama_panggilan }}
+            </p>
+            <p style="margin: 0px">Made with ❤ somewhere in the world</p>
+            <p style="margin-bottom: 5px">Powered by Wayae Nikah</p>
+        </footer>
+        /* <!-- FOOTER --> */
     </div>
-    <!-- CONTENT -->
+    </div>
+    /* <!-- CONTENT --> */
     <script src="{{ asset('build/assets/app-I5mmpHKZ.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -453,16 +459,16 @@
         });
     </script>
 
-    <!-- Swiper -->
+    /* <!-- Swiper --> */
     <script src="{{ asset('tema/flowerone/assets/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('tema/flowerone/assets/swiper/swiper-element-bundle.min.js') }}"></script>
 
-    <!-- Bootstrap JS and Popper.js -->
+    /* <!-- Bootstrap JS and Popper.js --> */
     <script src="{{ asset('tema/flowerone/assets/@popperjs/core/dist/umd/popper.min.js') }}"></script>
     <script src="{{ asset('tema/flowerone/assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('tema/flowerone/assets/bootstrap/js/bootstrap.min.js') }}"></script>
 
-    <!-- AOS -->
+    /* <!-- AOS --> */
     <script src="{{ asset('tema/flowerone/assets/aos/dist/aos.js') }}"></script>
     <script>
         AOS.init();
