@@ -9,7 +9,7 @@
     <meta property="og:image:secure_url" content="{{ asset('assetDashboard/images/logo-icon.png') }}">
     <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
     <meta name="author" content="Wayae Nikah" />
-    <meta name="website" content="https://wayaenikah.com" />
+    <meta property="og:url" content="{{ url()->current() }}" />
     <meta name="Version" content="v1.0.0" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 

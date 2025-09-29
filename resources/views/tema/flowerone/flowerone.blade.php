@@ -17,14 +17,15 @@
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta property="og:image" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <meta property="og:image:secure_url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image" content="https://i.pinimg.com/736x/eb/92/b1/eb92b152fd8139771463967c76080a4f.jpg">
+    <meta property="og:image:secure_url" content="https://i.pinimg.com/736x/eb/92/b1/eb92b152fd8139771463967c76080a4f.jpg">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
     <meta property="og:image:width" content="664">
     <meta property="og:image:height" content="664">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
+    
 
     <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
         <meta itemprop="url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
@@ -51,8 +52,7 @@
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/reservasi.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/message.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/flowerone/style/ending-section.css') }}">
-    {{-- <link rel="stylesheet" href="asset('build/assets/app-CczSUIEg.css')"> --}}
-    <!-- Custom Style Index-->
+
     <style>
         @if ($data->dataFont)
             @import url('{{ $data->dataFont->titleFont->link }}');
