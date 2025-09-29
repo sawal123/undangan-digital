@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Wayae Login dan buat undangan kamu" />
+    <meta property="og:image:secure_url" content="{{ asset('assetDashboard/images/logo-icon.png') }}">
     <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
     <meta name="author" content="Wayae Nikah" />
     <meta name="website" content="https://wayaenikah.com" />

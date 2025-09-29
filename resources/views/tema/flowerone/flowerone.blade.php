@@ -6,14 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <!-- Open Graph Meta Tags -->
+    <title>{{ $data->setting->acara }} {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}</title>
     @php
         use Carbon\Carbon;
         Carbon::setLocale('id');
         $tanggalAcara = Carbon::parse($data->acara[0]->date)->translatedFormat('l, j F Y');
     @endphp
+    
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="og:image" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
     <meta property="og:image:secure_url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
@@ -22,7 +25,7 @@
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
-    <title>{{ $data->setting->acara }} {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}</title>
+
     <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
         <meta itemprop="url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
     </div>
