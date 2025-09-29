@@ -5,8 +5,3 @@
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
 
-<IfModule mod_headers.c>
-    <FilesMatch "\.(jpe?g|png|gif)$">
-        Header set Accept-Ranges "none"
-    </FilesMatch>
-</IfModule>
