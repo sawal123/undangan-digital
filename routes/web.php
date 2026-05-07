@@ -122,6 +122,16 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::get('/animation', [viewAdminController::class, 'animation'])->name('animation');
     Route::get('/fonts', [viewAdminController::class, 'fonts'])->name('fonts');
     Route::get('/cetak', [viewAdminController::class, 'undangancetak'])->name('cetak');
+    Route::get('/demo', \App\Livewire\AdminDemo\DashboardDemo::class)->name('demo');
+    Route::get('/demo/theme', \App\Livewire\AdminDemo\ThemeDemo::class)->name('demo.theme');
+    Route::get('/demo/fonts', \App\Livewire\AdminDemo\FontsDemo::class)->name('demo.fonts');
+    Route::get('/demo/animation', \App\Livewire\AdminDemo\AnimationDemo::class)->name('demo.animation');
+    Route::get('/demo/cetak', \App\Livewire\AdminDemo\CetakDemo::class)->name('demo.cetak');
+    Route::get('/demo/harga', \App\Livewire\AdminDemo\HargaDemo::class)->name('demo.harga');
+    Route::get('/demo/transaksi', \App\Livewire\AdminDemo\TransaksiDemo::class)->name('demo.transaksi');
+    Route::get('/demo/user', \App\Livewire\AdminDemo\UserDemo::class)->name('demo.user');
+    Route::get('/demo/setting', \App\Livewire\AdminDemo\CategoryDemo::class)->name('demo.setting');
+    Route::get('/demo/pay-setting', \App\Livewire\AdminDemo\PaySettingDemo::class)->name('demo.pay-setting');
     Route::get('/demo/{demo}', [TemaController::class, 'temademo'])->name('temademo');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
