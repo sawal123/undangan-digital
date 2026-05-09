@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola;
+namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Models\Data;
 use App\Models\DataFonts;
@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\KelolaUndangan\ThumbnailWa;
 use App\Models\Setting as ModelsSetting;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
+use Illuminate\Support\Facades\Crypt;
 
 class Setting extends Component
 {
@@ -61,40 +62,57 @@ class Setting extends Component
         session()->flash('title', 'Title Berhasil Di update');
     }
 
-    public function mount()
+    public function mount($id)
     {
-        error_reporting(0);
-        $data = Data::find($this->dataId);
+        $this->dataId = Crypt::decryptString($id);
+        $data = Data::with(['dataFont.titleFont', 'dataFont.subFont'])->find($this->dataId);
+        
+        if (!$data) {
+            return;
+        }
+
         $set = ModelsSetting::where('data_id', $this->dataId)->first();
         $teksU = TeksUndangan::where('data_id', $this->dataId)->first();
         $pesan = teksWhatsApp::where('data_id', $this->dataId)->first();
         $turut = teksPenutup::where('data_id', $this->dataId)->first();
         $qoute = Qoute::where('data_id', $this->dataId)->first();
 
-        $this->fontTitle = $data->dataFont->titleFont->id;
-        $this->fontPara = $data->dataFont->subFont->id;
-        $this->sizeTitle = $data->dataFont->s_title;
-        // dd($data->dataFont);
-        // $this->dataId = $dataId;
+        if ($data->dataFont) {
+            $this->fontTitle = $data->dataFont->f_title ?? null;
+            $this->fontPara = $data->dataFont->f_sub ?? null;
+            $this->sizeTitle = $data->dataFont->s_title ?? 32;
+            $this->sizePara = $data->dataFont->s_sub ?? 16;
+        }
+        
         $this->loadThumbnail();
+        
         if ($turut) {
             $this->hormatKami = $turut->hormat_kami;
             $this->turut = $turut->mengundang;
         }
+        
         if ($pesan) {
             $this->pesanWa = $pesan->pesan;
+        }
+        
+        if ($teksU) {
             $this->pembuka = $teksU->pembuka;
             $this->acara = $teksU->acara;
             $this->penutup = $teksU->penutup;
         }
-        $this->tit = $qoute->title;
-        $this->titleAcara = $set->acara;
-        $this->qoute = $qoute->qoute;
-        $this->subtitle = $qoute->subtitle;
+
+        if ($qoute) {
+            $this->tit = $qoute->title;
+            $this->qoute = $qoute->qoute;
+            $this->subtitle = $qoute->subtitle;
+        }
+
+        if ($set) {
+            $this->titleAcara = $set->acara;
+        }
+
         $this->title = $data->title;
         $this->slug = $data->slug;
-
-        // dd($this->title);
     }
 
     public function aksiQoute()
@@ -140,11 +158,10 @@ class Setting extends Component
         } else {
             teksWhatsApp::create([
                 'data_id' => $this->dataId,
-                'pesan' => "
-               Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami
+                'pesan' => "Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami
 {{nama_mempelai1}} & {{nama_mempelai2}}
 Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
-{{link }}
+{{link}}
 Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
             ]);
             session()->flash('teksWA', 'Teks WhatsApp Berhasil Dibuat.');
@@ -303,6 +320,8 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
                 'selectedFont' => $selectedFont,
                 'selectedPara' => $selectedPara,
             ]
-        );
+        )->layout('components.layouts.user-new', [
+            'headerTitle' => 'Pengaturan'
+        ]);
     }
 }

@@ -2,8 +2,15 @@
 
 namespace App\Livewire\AdminDemo;
 
+use App\Models\User;
+use App\Models\Data;
+use App\Models\Transaction;
+use App\Models\Admin\Animation;
+use App\Models\Admin\UndanganCetak;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardDemo extends Component
 {
@@ -13,6 +20,27 @@ class DashboardDemo extends Component
     
     public function render()
     {
+        // Fetch Counts
+        $totalUsers = User::count();
+        $totalDigital = Data::count();
+        $totalFisik = UndanganCetak::count();
+        $totalAnimasi = Animation::count();
+
+        // Fetch Sales Data (Last 30 Days)
+        $salesData = Transaction::where('payment_status', 'settlement')
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('SUM(gross_amount) as total_sales')
+            )
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        $chartLabels = $salesData->pluck('date')->map(fn($date) => Carbon::parse($date)->format('d M'))->toArray();
+        $chartValues = $salesData->pluck('total_sales')->toArray();
+
+        // Existing User Table Logic (Mocked for now as per previous version, but filtered)
         $allData = [
             ['id' => 1, 'name' => 'Andi Pratama', 'email' => 'andi@example.com', 'role' => 'Admin', 'status' => 'Aktif', 'date' => '2024-01-15'],
             ['id' => 2, 'name' => 'Budi Santoso', 'email' => 'budi@example.com', 'role' => 'Editor', 'status' => 'Aktif', 'date' => '2024-02-20'],
@@ -31,7 +59,17 @@ class DashboardDemo extends Component
 
         return view('livewire.admin-demo.dashboard-demo', [
             'users' => array_slice($filteredData, 0, 5),
-            'totalCount' => count($filteredData)
+            'totalCount' => count($filteredData),
+            'stats' => [
+                'users' => $totalUsers,
+                'digital' => $totalDigital,
+                'fisik' => $totalFisik,
+                'animasi' => $totalAnimasi,
+            ],
+            'chart' => [
+                'labels' => $chartLabels,
+                'values' => $chartValues,
+            ]
         ])->layout('components.layouts.admin-new');
     }
 }

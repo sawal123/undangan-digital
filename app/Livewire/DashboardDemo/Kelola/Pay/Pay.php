@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola\Pay;
+namespace App\Livewire\DashboardDemo\Kelola\Pay;
 
 use Midtrans\Snap;
 use Midtrans\Config;

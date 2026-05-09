@@ -73,24 +73,24 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
     Route::get('/add-undangan/{id}', [SetupController::class, 'add'])->name('add');
     Route::resource('data', DataController::class);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    Route::resource('/', UndanganController::class);
-    Route::resource('transaksi', Transaksi::class);
+    Route::get('/', \App\Livewire\DashboardDemo\Index::class)->name('index');
+    Route::get('/transaksi', \App\Livewire\Dashboard\Transaksi::class)->name('transaksi.index');
 
 
     // Kelola Undangan
-    Route::get('/kelola/{id}', [UndanganController::class, 'kelola'])->name('undangan.kelola');
-    Route::get('/kelola/{id}/pengantin', [ViewKelolaUndanganController::class, 'pengantin'])->name('undangan.pengantin');
-    Route::get('/kelola/{id}/acara', [ViewKelolaUndanganController::class, 'acara'])->name('undangan.acara');
-    Route::get('/kelola/{id}/galeri', [ViewKelolaUndanganController::class, 'galery'])->name('undangan.galery');
-    Route::get('/kelola/{id}/musik', [ViewKelolaUndanganController::class, 'sound'])->name('undangan.musik');
-    Route::get('/kelola/{id}/ucapan', [ViewKelolaUndanganController::class, 'ucapan'])->name('undangan.ucapan');
-    Route::get('/kelola/{id}/tamu', [ViewKelolaUndanganController::class, 'tamu'])->name('undangan.tamu');
-    Route::get('/kelola/{id}/streaming', [ViewKelolaUndanganController::class, 'streaming'])->name('undangan.streaming');
-    Route::get('/kelola/{id}/kado', [ViewKelolaUndanganController::class, 'kado'])->name('undangan.kado');
-    Route::get('/kelola/{id}/kisah-cinta', [ViewKelolaUndanganController::class, 'kisah'])->name('undangan.kisah');
-    Route::get('/kelola/{id}/setting', [ViewKelolaUndanganController::class, 'setting'])->name('undangan.setting');
-    Route::get('/kelola/{id}/buku-tamu', [ViewKelolaUndanganController::class, 'bukutamu'])->name('undangan.bukutamu');
-    Route::get('/kelola/{id}/tema', [ViewKelolaUndanganController::class, 'tema'])->name('undangan.tema');
+    Route::get('/kelola/{id}', \App\Livewire\DashboardDemo\Kelola\Index::class)->name('undangan.kelola');
+    Route::get('/kelola/{id}/pengantin', \App\Livewire\DashboardDemo\Kelola\Pengantin::class)->name('undangan.pengantin');
+    Route::get('/kelola/{id}/acara', \App\Livewire\DashboardDemo\Kelola\Acara::class)->name('undangan.acara');
+    Route::get('/kelola/{id}/galeri', \App\Livewire\DashboardDemo\Kelola\Galery::class)->name('undangan.galery');
+    Route::get('/kelola/{id}/musik', \App\Livewire\DashboardDemo\Kelola\Sound::class)->name('undangan.musik');
+    Route::get('/kelola/{id}/ucapan', \App\Livewire\DashboardDemo\Kelola\Ucapan::class)->name('undangan.ucapan');
+    Route::get('/kelola/{id}/tamu', \App\Livewire\DashboardDemo\Kelola\Tamu::class)->name('undangan.tamu');
+    Route::get('/kelola/{id}/streaming', \App\Livewire\DashboardDemo\Kelola\Streaming::class)->name('undangan.streaming');
+    Route::get('/kelola/{id}/kado', \App\Livewire\DashboardDemo\Kelola\Kado::class)->name('undangan.kado');
+    Route::get('/kelola/{id}/kisah-cinta', \App\Livewire\DashboardDemo\Kelola\Kisah::class)->name('undangan.kisah');
+    Route::get('/kelola/{id}/setting', \App\Livewire\DashboardDemo\Kelola\Setting::class)->name('undangan.setting');
+    Route::get('/kelola/{id}/buku-tamu', \App\Livewire\DashboardDemo\Kelola\BukuTamu::class)->name('undangan.bukutamu');
+    Route::get('/kelola/{id}/tema', \App\Livewire\DashboardDemo\Kelola\Tema::class)->name('undangan.tema');
     Route::get('/demo/{demo}/{id}', [TemaController::class, 'demo'])->name('demo');
     Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
 
@@ -115,7 +115,7 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::resource('giftpay', GiftPayController::class)->except('index');
     Route::get('/pay-setting/', [viewAdminController::class, 'index'])->name('pay.setting');
     Route::get('/harga', [viewAdminController::class, 'harga'])->name('harga');
-    Route::get('/transaksi', [viewAdminController::class, 'transaksi'])->name('transaksi');
+    Route::get('/transaksi', \App\Livewire\AdminDemo\TransaksiDemo::class)->name('transaksi');
     Route::get('/user', [viewAdminController::class, 'user'])->name('user');
 
 

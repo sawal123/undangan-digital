@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola;
+namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Models\KelolaUndangan\Streaming as KelolaUndanganStreaming;
 use Livewire\Component;
+use Illuminate\Support\Facades\Crypt;
 
 class Streaming extends Component
 {
@@ -29,8 +30,9 @@ class Streaming extends Component
         }
         // $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
     }
-    public function mount()
+    public function mount($id)
     {
+        $this->dataId = Crypt::decryptString($id);
         $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->value('isActive') ?? false;
         $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
         if($streaming){
@@ -61,6 +63,8 @@ class Streaming extends Component
     }
     public function render()
     {
-        return view('livewire.dashboard.kelola.streaming');
+        return view('livewire.dashboard.kelola.streaming')->layout('components.layouts.user-new', [
+            'headerTitle' => 'Kelola Streaming'
+        ]);
     }
 }

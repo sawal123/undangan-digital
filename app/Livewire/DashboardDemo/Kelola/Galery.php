@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola;
+namespace App\Livewire\DashboardDemo\Kelola;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
 // use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use App\Models\KelolaUndangan\Galery as KelolaUndanganGalery;
+use Illuminate\Support\Facades\Crypt;
 
 
 class Galery extends Component
@@ -27,13 +28,9 @@ class Galery extends Component
 
     public function close()
     {
-        $this->dispatch('close-modal');
+        $this->dispatch('close-modal', name: 'delete-modal');
         $this->poto = '';
         $this->video = '';
-    }
-    public function confirmDelete($id)
-    {
-        $this->deleteId = $id;
     }
 
     public function delete($id)
@@ -51,15 +48,13 @@ class Galery extends Component
             $data->update(['sort' => $index + 1]);
         }
         session()->flash('message', 'Data Galery Berhasil Dihapus.');
-        $this->dispatch('close-hapus');
     }
 
     public $preview = null ;
     public function pre($id){
         // dd($id);
         $this->preview = KelolaUndanganGalery::find($id);
-        // dd($this->preview);
-
+        $this->dispatch('open-modal', name: 'preview-modal');
     }
 
     public function convertUrl()
@@ -77,8 +72,9 @@ class Galery extends Component
         $this->url = 'https://www.youtube.com/embed/' . $videoId;
     }
 
-    public function mount()
+    public function mount($id)
     {
+        $this->dataId = Crypt::decryptString($id);
         $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
     }
 
@@ -111,11 +107,14 @@ class Galery extends Component
             }
             $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
 
-            $this->dispatch('closeAdd');
-            $this->dispatch('closeAddPoto');
+            $this->dispatch('close-modal', name: 'photo-modal');
+            $this->dispatch('close-modal', name: 'video-modal');
             session()->flash('message', 'Galery Telah Tersimpan.');
+            $this->poto = '';
+            $this->video = '';
         } else {
-            $this->dispatch('closeAdd');
+            $this->dispatch('close-modal', name: 'photo-modal');
+            $this->dispatch('close-modal', name: 'video-modal');
             session()->flash('message', 'Galery Anda Telah Mencapai Batas Maksimal.');
         }
     }
@@ -160,8 +159,8 @@ class Galery extends Component
     }
     public function render()
     {
-        return view('livewire.dashboard.kelola.galery'
-
-        );
+        return view('livewire.dashboard.kelola.galery')->layout('components.layouts.user-new', [
+            'headerTitle' => 'Kelola Galeri'
+        ]);
     }
 }

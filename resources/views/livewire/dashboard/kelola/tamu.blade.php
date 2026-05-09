@@ -1,128 +1,159 @@
-<div>
-    <a href="/dashboard/kelola/{{ Crypt::encryptString($dataId) }}" class="btn btn-secondary btn-sm"><i
-            class="mdi mdi-arrow-left-bold"></i>
-        Kembali</a>
-
-    <div class="alert alert-info mt-2 d-flex align-items-center gap-3">
-        <i class="mdi mdi-security fs-1"></i>
-        <div class="">
-            <p class="m-0 fw-bold">Nomor WhatsApp Tamu Kamu Akan Tetap Aman Disini.</p>
-            <small>Jika kamu ragu, harap tidak mengisi nomor whatsapp!</small>
+<div class="space-y-6" x-data="{ deleteId: null, deleteMethod: 'delete' }" @set-delete.window="deleteId = $event.detail.id; deleteMethod = $event.detail.method || 'delete'">
+    <!-- Header Section -->
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white">Daftar Tamu Undangan</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Kelola dan kirimkan undangan kepada tamu spesial Anda.</p>
         </div>
+        <button x-on:click="$wire.call('resetField'); $dispatch('open-modal', { name: 'tamu-modal' })" class="inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-all gap-2 shadow-sm shadow-indigo-200 dark:shadow-none">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Tamu
+        </button>
     </div>
+
     @if (session()->has('message'))
-        <div class="alert alert-success mt-2">
+        <div class="p-4 text-sm text-emerald-800 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center gap-3" role="alert">
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
             {{ session('message') }}
         </div>
     @endif
-    <div class="row mt-2">
-        <div class="col">
-            <div class="card border border-info">
-                <div class="card-body">
-                    <div
-                        class="d-sm-flex flex-sm-column d-lg-flex flex-lg-row justify-content-between gap-5 align-items-center">
-                        <x-input-live type="text" label="" class="mb-1 " danger="" wire="query"
-                            place="Cari Tamu" error="query" message="$message" />
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddTamu"><i
-                                class="mdi mdi-plus"></i> Tambah
-                            Tamu</button>
-                        @include('user.kelola.tamu.addTamu')
 
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table  caption-top">
-                            <caption>Data Tamu</caption>
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama</th>
-                                    <th>WhatsApp</th>
-                                    <th>Kode</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($tamu as $index=>$item)
-                                    <tr>
-                                        <th>{{ ($tamu->currentPage() - 1) * $tamu->perPage() + $index + 1 }}</th>
-                                        <td><small>{{ $item->nama }}</small></td>
-                                        <td><small>
-                                                @if ($item->nomor)
-                                                    {{ $item->nomor }}
-                                                @else
-                                                    <button class="btn btn-sm btn-secondary" disabled>Tidak
-                                                        Tersedia</button>
-                                                @endif
-                                            </small></td>
-                                        <td><small>{{ $item->kode }}</small></td>
-                                        <td>
-                                            <div class="d-flex gap-2">
-                                                <button class="btn btn-sm btn-light border-info" data-bs-toggle="modal"
-                                                    data-bs-target="#shareTamu"
-                                                    wire:click="shareTamu({{ $item->id }})">
-                                                    <i class="mdi mdi-share-variant"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-light border-info"
-                                                    wire:click="shareWA({{ $item->id }})">
-                                                    <i class="mdi mdi-whatsapp"></i>
-                                                </button>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-light border-info dropdown-toggle"
-                                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="mdi mdi-dots-vertical"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-dark">
-                                                        <li><a class="dropdown-item"
-                                                                href="{{ url('/') . '/u/' . $item->data->slug . '/' . $item->kode }}">Lihat
-                                                                Undangan</a>
-                                                        </li>
-                                                        <li><button class="dropdown-item" data-bs-toggle="modal"
-                                                                data-bs-target="#EditTamu"
-                                                                wire:click='EditTamu({{ $item->id }})'>Edit</button>
-                                                        </li>
-                                                        <li><button class="dropdown-item"
-                                                                wire:click="delete({{ $item->kode }})">Hapus</button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                        </td>
-                                    </tr>
-                                @empty
-                                    {{-- <small>Belum Ada Tamu Yang Diundang</small> --}}
-                                @endforelse
-
-                            </tbody>
-                        </table>
-                        @if ($tamu->isEmpty())
-                            <div class="text-center my-3">
-                                <small>Belum Ada Tamu Yang Diundang</small>
-                            </div>
-                        @endif
-                        <div class="my-3">
-                            {{ $tamu->links(data: ['scrollTo' => false]) }}
-                        </div>
-                    </div>
-
-                </div>
+    <!-- Search & Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="md:col-span-2 relative" wire:ignore.self>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" wire:model.live.debounce.500ms="query" placeholder="Cari berdasarkan nama, kode, atau nomor WhatsApp..." 
+                class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm">
+        </div>
+        <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-2xl p-3 flex items-center justify-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
+                <i data-lucide="users" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Total Tamu</p>
+                <p class="text-xl font-black text-slate-800 dark:text-white">{{ $tamu->total() }}</p>
             </div>
         </div>
     </div>
 
-    @include('user.kelola.tamu.editTamu')
-    <x-modal-slot id="shareTamu" title="Share Link" other="wire:ignore.self">
-        <div class="p-3">
-            <div class="d-flex gap-2">Nama: {{ $invite ? $invite[0] : 'Tidak tersedia' }}</div>
-            <div class="d-flex gap-2">Kode: {{ $invite ? $invite[1] : 'Tidak tersedia' }}</div>
-            <hr>
-            <label for="">Link undangan</label>
-            <input wire:model="slug" id="slugInput" type="url"
-                class="form-control form-control-solid form-control-sm">
-            <button id="copyButton" class="btn btn-danger btn-sm w-100 mt-2" onclick="copyToClipboard()">Copy
-                Link</button>
-
+    <!-- Tamu List (Table/Cards) -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
+                    <tr>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nama Tamu</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Kontak</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                    @forelse($tamu as $item)
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold text-xs">
+                                        {{ substr($item->nama, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800 dark:text-white">{{ $item->nama }}</p>
+                                        <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-tighter">Kode: {{ $item->kode }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md">
+                                    <i data-lucide="phone" class="w-3 h-3 text-emerald-500"></i>
+                                    {{ $item->nomor ?? '-' }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button wire:click="shareWA({{ $item->id }})" class="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors" title="Kirim via WhatsApp">
+                                        <i data-lucide="send" class="w-5 h-5"></i>
+                                    </button>
+                                    <button wire:click="shareTamu({{ $item->id }})" class="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors" title="Salin Link">
+                                        <i data-lucide="copy" class="w-5 h-5"></i>
+                                    </button>
+                                    <button wire:click="EditTamu({{ $item->id }})" class="p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-colors" title="Edit">
+                                        <i data-lucide="edit-3" class="w-5 h-5"></i>
+                                    </button>
+                                    <button x-on:click="$dispatch('set-delete', { id: '{{ $item->kode }}', method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors" title="Hapus">
+                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-20 text-center text-slate-500">
+                                <i data-lucide="user-x" class="w-12 h-12 mx-auto mb-4 opacity-20"></i>
+                                <p class="font-medium">Belum ada tamu undangan.</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-    </x-modal-slot>
+        @if($tamu->hasPages())
+            <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800">
+                {{ $tamu->links() }}
+            </div>
+        @endif
+    </div>
 
+    <!-- Modal Add/Edit Tamu -->
+    <x-ui.modal name="tamu-modal" :title="$idTamu ? 'Edit Tamu' : 'Tambah Tamu'" icon="user">
+        <form wire:submit="save" class="space-y-4">
+            <x-ui.input label="Nama Tamu" wire:model="nama" placeholder="Contoh: Calvin dan Partner" required />
+            <x-ui.input label="WhatsApp (Opsional)" type="number" wire:model="whatsapp" placeholder="Contoh: 08123456789" />
+
+            <div class="flex justify-end gap-2 mt-6">
+                <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'tamu-modal' })">Batal</x-ui.button>
+                <x-ui.button variant="primary" type="submit">Simpan</x-ui.button>
+            </div>
+        </form>
+    </x-ui.modal>
+
+    <!-- Share Link Modal -->
+    <x-ui.modal name="share-modal" title="Bagikan Link Undangan" icon="share-2">
+        <div class="space-y-4">
+            <div class="p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/50">
+                <p class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-1">Kepada:</p>
+                <p class="text-lg font-black text-slate-800 dark:text-white">{{ $invite[0] ?? '-' }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Link Undangan Khusus</label>
+                <div class="flex gap-2">
+                    <input type="text" value="{{ $slug }}" readonly 
+                        class="flex-1 px-4 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-mono outline-none">
+                    <button onclick="navigator.clipboard.writeText('{{ $slug }}'); alert('Link disalin!')" 
+                        class="px-4 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'share-modal' })">Tutup</x-ui.button>
+            </div>
+        </div>
+    </x-ui.modal>
+
+    <!-- Global Delete Confirmation Modal -->
+    <x-ui.modal name="delete-modal" title="Konfirmasi Hapus" icon="alert-triangle">
+        <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="flex justify-end gap-2 mt-6">
+            <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'delete-modal' })">Batal</x-ui.button>
+            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
+        </div>
+    </x-ui.modal>
 </div>
+
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        @this.on('open-new-tab', (event) => {
+            window.open(event.url, '_blank');
+        });
+    });
+</script>

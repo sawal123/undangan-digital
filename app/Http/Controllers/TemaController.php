@@ -29,90 +29,116 @@ class TemaController extends Controller
     public function demo($demo, $id = null)
     {
         error_reporting(0);
-        $tema = Crypt::decryptString($demo);
-        $id = Crypt::decryptString($id);
-        return view($tema);
+        try {
+            $temaPath = Crypt::decryptString($demo);
+            $dataId = Crypt::decryptString($id);
+            
+            $data = Data::with([
+                'pria', 'wanita', 'acara', 'galery', 'sound', 
+                'FiturUcapan', 'streaming', 'kado', 'imageKisah', 
+                'kisah', 'dataFont.titleFont', 'dataFont.subFont', 
+                'thumbnailWas', 'teksUndangan', 'coverUndangan'
+            ])->findOrFail($dataId);
+
+            $preparedData = $this->prepareInvitationData($data, 'Nama Tamu (Contoh)');
+            
+            return view($temaPath, $preparedData);
+        } catch (\Exception $e) {
+            \Log::error('Error saat demo tema: ' . $e->getMessage());
+            return abort(404, 'Tema atau data tidak ditemukan.');
+        }
     }
+
     public function temademo($demo)
     {
         return view($demo);
     }
+
     public function visit($slug, $tamu = null)
     {
         error_reporting(0);
         try {
-            $data = Data::where('slug', $slug)->firstOrFail();
-
-            // Pilih acara, default ke index 0 kalau index 1 nggak ada
-            $acara = $data->acara[1] ?? $data->acara[0] ?? null;
-
-            // Ambil thumbnail WhatsApp
-            $thumbnailWa = ThumbnailWa::where('data_id', $data->id)->first();
-
-            // Cari tamu berdasarkan kode
-            $ta = $data->tamu()->where('kode', $tamu)->first();
-
-            // Mapping hari & bulan
-            $hari = [
-                'Sunday'    => 'Minggu',
-                'Monday'    => 'Senin',
-                'Tuesday'   => 'Selasa',
-                'Wednesday' => 'Rabu',
-                'Thursday'  => 'Kamis',
-                'Friday'    => 'Jumat',
-                'Saturday'  => 'Sabtu',
-            ];
-
-            $bulan = [
-                'Jan' => 'Januari',
-                'Feb' => 'Februari',
-                'Mar' => 'Maret',
-                'Apr' => 'April',
-                'May' => 'Mei',
-                'Jun' => 'Juni',
-                'Jul' => 'Juli',
-                'Aug' => 'Agustus',
-                'Sep' => 'September',
-                'Oct' => 'Oktober',
-                'Nov' => 'November',
-                'Dec' => 'Desember',
-            ];
-
-            // Ambil galeri
-            $video = $data->galery->pluck('video')->filter()->toArray();
-            $poto  = $data->galery->pluck('poto')->filter()->toArray();
-
-            // Ambil ucapan
-            $ucapan = Ucapan::where('data_id', $data->id)->get();
+            $data = Data::with([
+                'theme', 'pria', 'wanita', 'acara', 'galery', 'sound', 
+                'FiturUcapan', 'streaming', 'kado', 'imageKisah', 
+                'kisah', 'dataFont.titleFont', 'dataFont.subFont', 
+                'thumbnailWas', 'teksUndangan', 'coverUndangan'
+            ])->where('slug', $slug)->firstOrFail();
 
             // Validasi theme
             if (is_null($data->theme_id) || !$data->theme) {
                 session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
                 return redirect()->back();
             }
-            // dd($data->dataFont);
 
-            return view($data->theme->path, [
-                'data'        => $data,
-                'hari'        => $hari,
-                'bulan'       => $bulan,
-                'tamu'        => $ta->nama ?? $tamu,
-                'video'       => $video,
-                'poto'        => $poto,
-                'kode'        => $tamu,
-                'ucapan'      => $ucapan,
-                'acara'       => $acara,
-                'thumbnailWa' => $thumbnailWa,
-            ]);
+            $preparedData = $this->prepareInvitationData($data, $tamu);
+
+            return view($data->theme->path, $preparedData);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            // Kalau slug tidak ditemukan
             return abort(404, 'Undangan tidak ditemukan.');
         } catch (\Exception $e) {
-            // Catch all error lain
             \Log::error('Error saat visit undangan: ' . $e->getMessage());
             session()->flash('error', 'Terjadi kesalahan, silakan coba lagi.');
             return redirect()->back();
         }
+    }
+
+    protected function prepareInvitationData($data, $tamu = null)
+    {
+        // Pilih acara, default ke index 0 kalau index 1 nggak ada
+        $acara = $data->acara[1] ?? $data->acara[0] ?? null;
+
+        // Ambil thumbnail WhatsApp
+        $thumbnailWa = $data->thumbnailWas;
+
+        // Cari tamu berdasarkan kode
+        $ta = $data->tamu()->where('kode', $tamu)->first();
+
+        // Mapping hari & bulan
+        $hari = [
+            'Sunday'    => 'Minggu',
+            'Monday'    => 'Senin',
+            'Tuesday'   => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday'  => 'Kamis',
+            'Friday'    => 'Jumat',
+            'Saturday'  => 'Sabtu',
+        ];
+
+        $bulan = [
+            'Jan' => 'Januari',
+            'Feb' => 'Februari',
+            'Mar' => 'Maret',
+            'Apr' => 'April',
+            'May' => 'Mei',
+            'Jun' => 'Juni',
+            'Jul' => 'Juli',
+            'Aug' => 'Agustus',
+            'Sep' => 'September',
+            'Oct' => 'Oktober',
+            'Nov' => 'November',
+            'Dec' => 'Desember',
+        ];
+
+        // Ambil galeri
+        $video = $data->galery->pluck('video')->filter()->toArray();
+        $poto  = $data->galery->pluck('poto')->filter()->toArray();
+
+        // Ambil ucapan
+        $ucapan = $data->ucapan;
+
+        return [
+            'data'        => $data,
+            'hari'        => $hari,
+            'bulan'       => $bulan,
+            'tamu'        => $ta->nama ?? $tamu,
+            'video'       => $video,
+            'poto'        => $poto,
+            'kode'        => $tamu,
+            'ucapan'      => $ucapan,
+            'acara'       => $acara,
+            'thumbnailWa' => $thumbnailWa,
+        ];
     }
 
     public function saveDoa(Request $request)

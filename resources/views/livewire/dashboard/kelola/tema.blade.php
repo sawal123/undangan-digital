@@ -1,68 +1,64 @@
-<div>
-    <a href="/dashboard/kelola/{{ Crypt::encryptString($dataId) }}" class="btn btn-secondary btn-sm"><i
-            class="mdi mdi-arrow-left-bold"></i>
-        Kembali</a>
-    @if ($data->isActive)
-        <div class="alert bg-soft-primary mt-2 d-flex justify-content-between align-items-center">
-            <p class="m-0 fw-bold">Kamu Sudah Menjadi Pelanggan Premium, Pilih Tema Sesuka mu!</p>
-        </div>
-        @if ($data->theme_id)
-            <div class="alert bg-soft-primary  d-flex justify-content-between align-items-center">
-                <p class="m-0 fw-bold">Lihat Theme Yang Kamu Pilih Dengan Data Kamu</p>
-                <a href="{{ route('visit', $data->slug) }}" class="btn btn-sm btn-danger"
-                   >Kunjungi Tema</a>
-            </div>
-        @endif
-    @else
-        <div class="alert alert-info mt-2 d-flex justify-content-between align-items-center">
-            <p class="m-0">Aktifkan Fitur Tema Agar Kamu Bisa Bebas Pilih Tema Sesuka Kamu</p>
-
-            <a href="{{ route('dashboard.pay', Crypt::encryptString($dataId)) }}" class="btn btn-sm btn-light"
-                wire:navigate>Aktifkan</a>
-
-        </div>
-    @endif
+<div class="space-y-6">
+    <!-- Header Section -->
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <h3 class="text-xl font-black text-slate-800 dark:text-white">Pilih Tema Undangan</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Pilih desain terbaik yang sesuai dengan konsep pernikahan Anda.</p>
+    </div>
 
     @if (session()->has('message'))
-        <div class="alert bg-soft-dark mt-2">
+        <div class="p-4 text-sm text-emerald-800 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center gap-3" role="alert">
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
             {{ session('message') }}
         </div>
     @endif
 
-    <div class="card border-info border mt-2">
-        <div class="card-body">
-            <div class="row">
-                @foreach ($tema as $item)
-                    <div class=" col-lg-2 col-md-6 mt-2 mx-1 border  rounded" style="padding: 0px !important">
-                        <div class="card blog blog-primary  overflow-hidden">
-                            <div class="position-relative">
-                                <img src="{{ asset('storage/' . $item->thumbnail) }}" class="card-img-top"
-                                    alt="...">
-                                <div class="overlay rounded-top"></div>
-                            </div>
-                            <div class="card-body content" style="padding: 15px">
-                                <a href="javascript:void(0)" class="card-title title text-dark">{{ $item->nama }}</a>
-                                <div class="post-meta d-flex justify-content-between mt-3 gap-2">
-                                    @if ($data->isActive)
-                                        @if ($data->theme_id == $item->id)
-                                            <button class="btn btn-sm btn-success w-100">TERPILIH</button>
-                                        @else
-                                            <button class="btn btn-sm btn-primary w-100"
-                                                wire:click='choose({{ $item->id }})'>Aktifkan</button>
-                                        @endif
-                                    @endif
-                                    <a href="{{ route('dashboard.demo', [
-                                        'demo' => Crypt::encryptString($item->demo),
-                                        'id' => Crypt::encryptString($item->id),
-                                    ]) }}"
-                                        class="btn btn-sm btn-secondary w-100">Demo</a>
-                                </div>
-                            </div>
+    <!-- Themes Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        @foreach ($tema as $item)
+            @php $isSelected = ($data->theme_id == $item->id); @endphp
+            <div class="group relative bg-white dark:bg-slate-900 rounded-3xl border {{ $isSelected ? 'border-indigo-600 ring-2 ring-indigo-500/20' : 'border-slate-200 dark:border-slate-800 shadow-sm' }} overflow-hidden hover:shadow-xl transition-all duration-300">
+                <!-- Selection Badge -->
+                @if($isSelected)
+                    <div class="absolute top-4 right-4 z-10 bg-indigo-600 text-white p-1.5 rounded-full shadow-lg">
+                        <i data-lucide="check" class="w-4 h-4"></i>
+                    </div>
+                @endif
 
+                <div class="aspect-[3/4] overflow-hidden relative bg-slate-100 dark:bg-slate-800">
+                    @if($item->thumbnail)
+                        <img src="{{ asset('storage/' . $item->thumbnail) }}" 
+                             onerror="this.src='https://placehold.co/600x800/6366f1/ffffff?text={{ urlencode($item->nama) }}'"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    @else
+                        <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center">
+                            <i data-lucide="image" class="w-12 h-12 text-slate-300 mb-4"></i>
+                            <span class="text-xs font-medium text-slate-400">Preview Tidak Tersedia</span>
                         </div>
-                    </div><!--end col-->
-                @endforeach
+                    @endif
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                        <div class="flex gap-2">
+                            <a href="{{ route('dashboard.demo', ['demo' => Crypt::encryptString($item->path), 'id' => Crypt::encryptString($data->id)]) }}" target="_blank"
+                                class="flex-1 py-2 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-xl hover:bg-white/40 transition-colors flex items-center justify-center gap-2">
+                                <i data-lucide="eye" class="w-4 h-4"></i> Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-5">
+                    <div class="flex items-center justify-between gap-2">
+                        <div>
+                            <h4 class="font-bold text-slate-800 dark:text-white">{{ $item->nama }}</h4>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{{ $item->category->category ?? 'Umum' }}</p>
+                        </div>
+                        <button wire:click="choose({{ $item->id }})" 
+                            class="px-4 py-2 {{ $isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-indigo-600 hover:text-white' }} text-xs font-bold rounded-xl transition-all">
+                            {{ $isSelected ? 'Terpilih' : 'Pilih' }}
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
+        @endforeach
     </div>
 </div>

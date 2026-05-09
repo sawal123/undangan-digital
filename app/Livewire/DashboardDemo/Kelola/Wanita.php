@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola;
+namespace App\Livewire\DashboardDemo\Kelola;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;

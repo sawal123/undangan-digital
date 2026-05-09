@@ -7,32 +7,51 @@
 
     <!-- Stat Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <x-ui.card icon="users" title="24,521" iconColor="indigo">
+        <x-ui.card icon="users" title="{{ number_format($stats['users']) }}" iconColor="indigo">
             <div class="flex items-center justify-between mt-auto">
                 <p class="text-sm text-slate-500 dark:text-slate-400">Total Pengguna</p>
-                <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-full">+12.5%</span>
+                <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-full">User Aktif</span>
             </div>
         </x-ui.card>
 
-        <x-ui.card icon="dollar-sign" title="Rp 142,5M" iconColor="emerald">
+        <x-ui.card icon="package" title="{{ number_format($stats['fisik']) }}" iconColor="emerald">
             <div class="flex items-center justify-between mt-auto">
-                <p class="text-sm text-slate-500 dark:text-slate-400">Total Pendapatan</p>
-                <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-full">+8.2%</span>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Undangan Fisik</p>
+                <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-full">Cetak</span>
             </div>
         </x-ui.card>
 
-        <x-ui.card icon="shopping-cart" title="1,842" iconColor="amber">
+        <x-ui.card icon="globe" title="{{ number_format($stats['digital']) }}" iconColor="amber">
             <div class="flex items-center justify-between mt-auto">
-                <p class="text-sm text-slate-500 dark:text-slate-400">Pesanan Aktif</p>
-                <span class="text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-1 rounded-full">-3.1%</span>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Undangan Digital</p>
+                <span class="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 rounded-full">Web</span>
             </div>
         </x-ui.card>
 
-        <x-ui.card icon="trending-up" title="3.24%" iconColor="rose">
+        <x-ui.card icon="video" title="{{ number_format($stats['animasi']) }}" iconColor="rose">
             <div class="flex items-center justify-between mt-auto">
-                <p class="text-sm text-slate-500 dark:text-slate-400">Tingkat Konversi</p>
-                <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-full">+5.7%</span>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Undangan Animasi</p>
+                <span class="text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-1 rounded-full">Video</span>
             </div>
+        </x-ui.card>
+    </div>
+
+    <!-- Sales Graph -->
+    <div class="grid grid-cols-1 gap-6 mb-6">
+        <x-ui.card padding="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Grafik Penjualan</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Trend pendapatan 30 hari terakhir</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-lg">
+                        <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                        Real-time
+                    </span>
+                </div>
+            </div>
+            <div id="salesChart" class="w-full h-80"></div>
         </x-ui.card>
     </div>
 
@@ -137,4 +156,90 @@
             <x-ui.button variant="danger">Ya, Hapus</x-ui.button>
         </div>
     </x-ui.modal>
+
+    <!-- ApexCharts Script -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        function initSalesChart() {
+            const chartEl = document.querySelector("#salesChart");
+            if (!chartEl) return;
+
+            const options = {
+                series: [{
+                    name: 'Penjualan',
+                    data: @json($chart['values'])
+                }],
+                chart: {
+                    type: 'area',
+                    height: 320,
+                    toolbar: { show: false },
+                    zoom: { enabled: false },
+                    fontFamily: 'Inter, sans-serif'
+                },
+                dataLabels: { enabled: false },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3,
+                    colors: ['#6366f1']
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05,
+                        stops: [20, 100, 100, 100]
+                    }
+                },
+                xaxis: {
+                    categories: @json($chart['labels']),
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    labels: {
+                        style: {
+                            colors: '#94a3b8',
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (val) {
+                            return "Rp " + val.toLocaleString('id-ID');
+                        },
+                        style: {
+                            colors: '#94a3b8',
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                grid: {
+                    borderColor: '#f1f5f9',
+                    strokeDashArray: 4,
+                    padding: { left: 10, right: 10, top: 0, bottom: 0 }
+                },
+                tooltip: {
+                    theme: 'light',
+                    x: { show: true },
+                    y: {
+                        formatter: function (val) {
+                            return "Rp " + val.toLocaleString('id-ID');
+                        }
+                    }
+                },
+                colors: ['#6366f1']
+            };
+
+            const chart = new ApexCharts(chartEl, options);
+            chart.render();
+        }
+
+        document.addEventListener('livewire:navigated', initSalesChart);
+        document.addEventListener('DOMContentLoaded', initSalesChart);
+        
+        // Initial call if already loaded
+        if (typeof ApexCharts !== 'undefined') {
+            initSalesChart();
+        }
+    </script>
 </div>

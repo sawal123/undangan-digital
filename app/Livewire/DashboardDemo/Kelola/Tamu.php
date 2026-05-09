@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola;
+namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Models\Data;
 use Livewire\Component;
@@ -9,6 +9,7 @@ use App\Models\teksWhatsApp;
 use Livewire\WithPagination;
 use App\Models\KelolaUndangan\Tamu as Tamus;
 use App\Models\KelolaUndangan\Tamu as KelolaUndanganTamu;
+use Illuminate\Support\Facades\Crypt;
 
 class Tamu extends Component
 {
@@ -22,10 +23,14 @@ class Tamu extends Component
     public $slug = "";
     public $invite = [];
     public $title = 'Add Tamu';
+
+    public function mount($id)
+    {
+        $this->dataId = Crypt::decryptString($id);
+    }
     public function close()
     {
-
-        $this->dispatch('closeDelModal');
+        $this->dispatch('close-modal', name: 'delete-modal');
     }
 
 
@@ -76,6 +81,7 @@ class Tamu extends Component
             $this->invite = [$this->undang->nama, $this->undang->kode];
         }
         $this->slug = url('/u') . '/' . $this->undang->data->slug . '/' . $this->undang->kode;
+        $this->dispatch('open-modal', name: 'share-modal');
     }
     public function EditTamu($id)
     {
@@ -85,7 +91,7 @@ class Tamu extends Component
         $this->nama = $this->undang->nama;
         $this->whatsapp = $this->undang->nomor;
 
-        // $this->dispatch('openModalEdit');
+        $this->dispatch('open-modal', name: 'tamu-modal');
         $this->title = "Edit Tamu";
     }
     public function save()
@@ -97,7 +103,7 @@ class Tamu extends Component
                 'nomor' => $this->whatsapp
             ]);
             session()->flash('message', 'Tamu Berhasil DiUpdate.');
-            $this->dispatch('closeEditTamu');
+            $this->dispatch('close-modal', name: 'tamu-modal');
         } else {
             $kode = rand(99, 9999);
             KelolaUndanganTamu::create([
@@ -108,7 +114,7 @@ class Tamu extends Component
                 'slug' => Str::slug($this->nama)
             ]);
             session()->flash('message', 'Tamu Berhasil Ditambahkan.');
-            $this->dispatch('closeAddTamu');
+            $this->dispatch('close-modal', name: 'tamu-modal');
         }
 
         KelolaUndanganTamu::where('data_id', $this->dataId)->get();
@@ -130,6 +136,8 @@ class Tamu extends Component
             ->orderBy('id', 'desc')->paginate(5);
         return view('livewire.dashboard.kelola.tamu', [
             'tamu' => $tamu
+        ])->layout('components.layouts.user-new', [
+            'headerTitle' => 'Kelola Tamu'
         ]);
     }
 }

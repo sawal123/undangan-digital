@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola;
+namespace App\Livewire\DashboardDemo\Kelola;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\KelolaUndangan\FiturUcapan;
 use App\Models\KelolaUndangan\Ucapan as KelolaUndanganUcapan;
+use Illuminate\Support\Facades\Crypt;
 
 class Ucapan extends Component
 {
@@ -23,12 +24,7 @@ class Ucapan extends Component
     public $deleteId;
     public function close()
     {
-        $this->dispatch('closeDelModal');
-    }
-    public function confirmDelete($id)
-    {
-        $this->deleteId = $id;
-        $this->dispatch('openDelModal');
+        $this->dispatch('close-modal', name: 'delete-modal');
     }
 
 
@@ -47,8 +43,9 @@ class Ucapan extends Component
         $ucapan = KelolaUndanganUcapan::where('id', $id)->first();
     }
 
-    public function mount()
+    public function mount($id)
     {
+        $this->dataId = Crypt::decryptString($id);
         $this->fitUcapan = FiturUcapan::where('data_id', $this->dataId)->first();
     }
     public function data($id)
@@ -71,14 +68,14 @@ class Ucapan extends Component
         $this->data($id);
     }
 
-    public function delete()
+    public function delete($id)
     {
-        // dd($id);
-        $delete = KelolaUndanganUcapan::find($this->deleteId);
-        $delete->delete();
-        $ucapan = KelolaUndanganUcapan::where('data_id', $delete->data_id)->get();
-        session()->flash('message', 'Ucapan & Doa ' . $delete->tamu->nama . ' Dihapus Permanen');
-        $this->dispatch('closeDelModal');  // Menutup modal setelah penghapusan
+        $delete = KelolaUndanganUcapan::find($id);
+        if ($delete) {
+            $delete->delete();
+            $ucapan = KelolaUndanganUcapan::where('data_id', $delete->data_id)->get();
+            session()->flash('message', 'Ucapan & Doa ' . $delete->tamu->nama . ' Dihapus Permanen');
+        }
     }
     public function render()
     {
@@ -97,6 +94,8 @@ class Ucapan extends Component
             })
             ->paginate(5);
 
-        return view('livewire.dashboard.kelola.ucapan', compact('ucapan'));
+        return view('livewire.dashboard.kelola.ucapan', compact('ucapan'))->layout('components.layouts.user-new', [
+            'headerTitle' => 'Kelola Ucapan'
+        ]);
     }
 }

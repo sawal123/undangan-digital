@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola;
+namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Models\GiftPay;
 use Livewire\Component;
@@ -8,6 +8,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use App\Models\KelolaUndangan\FiturKado;
 use App\Models\KelolaUndangan\Kado as KelolaUndanganKado;
+use Illuminate\Support\Facades\Crypt;
 
 class Kado extends Component
 {
@@ -27,12 +28,11 @@ class Kado extends Component
 
     public function close()
     {
-        $this->dispatch('closeAddKado');
-        $this->dispatch('closeEditModal');
+        $this->dispatch('close-modal', name: 'delete-modal');
     }
 
     public function AddKado(){
-        $this->dispatch('modalAddKado');
+        // Handled by UI
     }
 
     public function inputReset()
@@ -46,10 +46,12 @@ class Kado extends Component
         $kado = KelolaUndanganKado::find($id);
         $this->barcode = $kado->qris;
         $this->codeId = $id;
+        $this->dispatch('open-modal', name: 'preview-modal');
     }
 
-    public function mount()
+    public function mount($id)
     {
+        $this->dataId = Crypt::decryptString($id);
         $this->kado = KelolaUndanganKado::where('data_id', $this->dataId)->get();
         $this->fitur = FiturKado::where('data_id', $this->dataId)->first();
         $this->giftPay = GiftPay::all();
@@ -65,7 +67,7 @@ class Kado extends Component
             Storage::delete('public/' . $kado->qris);
         }
         $kado->delete();
-        $this->mount();
+        $this->kado = KelolaUndanganKado::where('data_id', $this->dataId)->get();
     }
     public function switch($id, $isChecked)
     {
@@ -100,12 +102,14 @@ class Kado extends Component
             'qris' =>  $imagePath
         ]);
         $this->inputReset();
-        $this->mount();
+        $this->kado = KelolaUndanganKado::where('data_id', $this->dataId)->get();
         session()->flash('message', 'Payment Kado Anda Berhasil Dibuat');
         $this->close();
     }
     public function render()
     {
-        return view('livewire.dashboard.kelola.kado');
+        return view('livewire.dashboard.kelola.kado')->layout('components.layouts.user-new', [
+            'headerTitle' => 'Kelola Kado'
+        ]);
     }
 }

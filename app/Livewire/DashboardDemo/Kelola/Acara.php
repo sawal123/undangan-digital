@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Kelola;
+namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Models\KelolaUndangan\Acara as KelolaUndanganAcara;
 use Livewire\Component;
@@ -56,32 +56,24 @@ class Acara extends Component
         $this->selesai = $acara->jam_end == 'Selesai' ? true : false;
         $this->zona = $acara->zona_waktu;
         $this->maps = $acara->maps;
-        $this->dispatch('openEditModal');
+        $this->dispatch('open-modal', name: 'acara-modal');
         // dd($acara);
     }
 
 
 
-    public function confirmDelete($id)
+    public function delete($id)
     {
-        $this->deleteId = $id;
-        $this->dispatch('openDeleteModal');
-        // $this->dispatch('open-delete-modal'); 
-    }
-
-
-    public function delete()
-    {
-        KelolaUndanganAcara::find($this->deleteId)->delete();
-        $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
-        session()->flash('message', 'Data Acara Berhasil Dihapus.');
-        $this->dispatch('close-hapus');
+        $acara = KelolaUndanganAcara::find($id);
+        if ($acara) {
+            $acara->delete();
+            $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
+            session()->flash('message', 'Data Acara Berhasil Dihapus.');
+        }
     }
     public function close()
     {
-        $this->dispatch('tutup-modal');
-        $this->dispatch('close-modal');
-        $this->dispatch('close-hapus');
+        $this->dispatch('close-modal', name: 'acara-modal');
         $this->resetInputFields();
     }
     public function save()
@@ -102,7 +94,7 @@ class Acara extends Component
                 'maps' => $this->maps,
             ]);
             session()->flash('message', 'Data acara berhasil diperbarui.');
-            $this->dispatch('tutup-modal');
+            $this->dispatch('close-modal', name: 'acara-modal');
         } else {
             // Create jika `selectedAcaraId` kosong
             KelolaUndanganAcara::create([
@@ -118,20 +110,20 @@ class Acara extends Component
             ]);
             $this->resetInputFields();
             session()->flash('message', 'Data acara berhasil disimpan.');
-            $this->dispatch('close-modal');
+            $this->dispatch('close-modal', name: 'acara-modal');
         }
         
         // session()->flash('message', 'Data Acara Berhasil Disimpan.');
         $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
     }
 
-    public function mount($dataId)
+    public function mount($id)
     {
-        $this->dataId = $dataId;
+        $this->dataId = \Illuminate\Support\Facades\Crypt::decryptString($id);
         $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
     }
 
-    private function resetInputFields()
+    public function resetInputFields()
     {
         $this->acara = '';
         $this->vanue = '';
@@ -149,6 +141,6 @@ class Acara extends Component
     {
         return view('livewire.dashboard.kelola.acara', [
             'dataAcara' => $this->dataAcara
-        ]);
+        ])->layout('components.layouts.user-new', ['headerTitle' => 'Kelola Acara']);
     }
 }
