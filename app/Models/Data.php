@@ -17,6 +17,7 @@ use App\Models\KelolaUndangan\Tamu;
 use App\Models\KelolaUndangan\ThumbnailWa;
 use App\Models\KelolaUndangan\Ucapan;
 use App\Models\KelolaUndangan\Wanita;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,7 +25,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Data extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['user_id', 'theme_id', 'title', 'slug'];
+    protected $fillable = ['user_id', 'theme_id', 'title', 'slug', 'uid', 'isActive'];
+
+    protected static function booted()
+    {
+        static::creating(function ($data) {
+            if (empty($data->uid)) {
+                $data->uid = static::generateUniqueUid();
+            }
+        });
+    }
+
+    public static function generateUniqueUid()
+    {
+        do {
+            $uid = Str::random(4);
+        } while (static::where('uid', $uid)->exists());
+
+        return $uid;
+    }
     public function dataFont()
     {
         return $this->hasOne(DataFonts::class);

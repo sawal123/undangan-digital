@@ -2,6 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Models\Data;
 use App\Models\KelolaUndangan\ImgKisahCinta;
 use App\Models\KelolaUndangan\KisahCinta;
 use Illuminate\Support\Facades\Crypt;
@@ -34,9 +35,13 @@ class Kisah extends Component
 
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
-        $this->kisahCInta = KisahCinta::where('data_id', $this->dataId)->get();
-        $this->image = ImgKisahCinta::where('data_id', $this->dataId)->first();
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
+        $this->loadKisah();
+    }
+
+    public function loadKisah()
+    {
+        $this->kisahCInta = KisahCinta::with('image')->where('data_id', $this->dataId)->get();
     }
 
     public function resetField()
@@ -73,7 +78,7 @@ class Kisah extends Component
         $k = KisahCinta::find($id);
         $k->delete();
         session()->flash('message', 'Kisah Cinta Telah Dihapus.');
-        $this->kisahCInta = KisahCinta::where('data_id', $this->dataId)->get();
+        $this->loadKisah();
     }
 
     public function updatedPhotos($value, $itemId)
@@ -106,8 +111,8 @@ class Kisah extends Component
                 'kisah_id' => $id,
                 'image' => $imagePath,
             ]);
-            $this->kisahCInta = KisahCinta::where('data_id', $this->dataId)->get();
-            $this->image = ImgKisahCinta::where('data_id', $this->dataId)->first();
+            $this->loadKisah();
+            $this->poto[$id] = null;
             session()->flash('message', 'Gambar Kisah Cinta Kamu Berhasil Dibuat.');
         } else {
             if ($img->image) {
@@ -116,8 +121,8 @@ class Kisah extends Component
             $img->update([
                 'image' => $imagePath,
             ]);
-            $this->kisahCInta = KisahCinta::where('data_id', $this->dataId)->get();
-            $this->image = ImgKisahCinta::where('data_id', $this->dataId)->first();
+            $this->loadKisah();
+            $this->poto[$id] = null;
             session()->flash('message', 'Gambar Kisah Cinta Kamu Berhasil Diupdate.');
         }
     }
@@ -141,7 +146,7 @@ class Kisah extends Component
             ]);
             session()->flash('message', 'Kisah Cinta Kamu Berhasil Dibuat.');
         }
-        $this->kisahCInta = KisahCinta::where('data_id', $this->dataId)->get();
+        $this->loadKisah();
         $this->close();
     }
 

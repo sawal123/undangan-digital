@@ -31,7 +31,7 @@ class TemaController extends Controller
         error_reporting(0);
         try {
             $temaPath = Crypt::decryptString($demo);
-            $dataId = Crypt::decryptString($id);
+            $dataId = Data::where('uid', $id)->firstOrFail()->id;
             
             $data = Data::with([
                 'pria', 'wanita', 'acara', 'galery', 'sound', 

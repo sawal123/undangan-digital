@@ -37,7 +37,7 @@
                     @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
                         <div class="flex gap-2">
-                            <a href="{{ route('dashboard.demo', ['demo' => Crypt::encryptString($item->path), 'id' => Crypt::encryptString($data->id)]) }}" target="_blank"
+                            <a href="{{ route('dashboard.demo', ['demo' => Crypt::encryptString($item->path), 'id' => $data->uid]) }}" target="_blank"
                                 class="flex-1 py-2 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-xl hover:bg-white/40 transition-colors flex items-center justify-center gap-2">
                                 <i data-lucide="eye" class="w-4 h-4"></i> Demo
                             </a>

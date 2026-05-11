@@ -14,7 +14,7 @@ class Tema extends Component
     public $data;
 
     public function mount($id){
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
         $this->loadData();
     }
     

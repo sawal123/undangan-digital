@@ -1,4 +1,5 @@
 <div>
+    @if ($isActive)
     <div class="w-full bg-orange-50 text-pink-800 relative z-50">
         <h1 class="text-center text-[50px] font-semibold pb-6 py-8">Ucapan & Doa</h1>
         <div class="flex justify-center left-0  absolute  z-10">
@@ -46,6 +47,7 @@
             <img src="{{ asset('tema/whitepre/src/img/bunga bawah.png') }}" alt="Hiasan Bunga" class="w-20 lg:w-32 ">
         </div>
 
+        @if ($publicIsActive || (!$publicIsActive && $kode))
         <form wire:submit.prevent="save" class="space-y-4 relative z-50">
             <!-- Input Nama -->
             <input type="text" wire:model="nama" placeholder="Nama Lengkap"
@@ -79,7 +81,9 @@
                 Kirim Sekarang
             </button>
         </form>
+        @endif
     </div>
+    @endif
 </div>
 
 

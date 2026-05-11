@@ -2,6 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Models\Data;
 use App\Models\KelolaUndangan\Streaming as KelolaUndanganStreaming;
 use Livewire\Component;
 use Illuminate\Support\Facades\Crypt;
@@ -32,7 +33,7 @@ class Streaming extends Component
     }
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
         $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->value('isActive') ?? false;
         $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
         if($streaming){

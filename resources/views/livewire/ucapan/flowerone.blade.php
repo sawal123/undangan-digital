@@ -1,4 +1,5 @@
 <div>
+    @if ($isActive)
     <section class="message-section mt-5 mx-3" id="form-section">
         <h3 class="text-center" data-aos="fade-up" data-aos-duration="1000">Ucapan & Doa</h3>
 
@@ -52,7 +53,7 @@
         @endif
 
         {{-- List Ucapan --}}
-        @if ($publicIsActive)
+        @if ($viewIsActive)
             <style>
                 .scrollspy-example {
                     max-height: 250px;
@@ -88,4 +89,5 @@
             </div>
         @endif
     </section>
+    @endif
 </div>

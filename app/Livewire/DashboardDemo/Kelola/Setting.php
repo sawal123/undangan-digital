@@ -64,7 +64,7 @@ class Setting extends Component
 
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
         $data = Data::with(['dataFont.titleFont', 'dataFont.subFont'])->find($this->dataId);
         
         if (!$data) {

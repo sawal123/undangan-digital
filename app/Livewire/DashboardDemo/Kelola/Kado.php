@@ -2,6 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Models\Data;
 use App\Models\GiftPay;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -51,7 +52,7 @@ class Kado extends Component
 
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
         $this->kado = KelolaUndanganKado::where('data_id', $this->dataId)->get();
         $this->fitur = FiturKado::where('data_id', $this->dataId)->first();
         $this->giftPay = GiftPay::all();

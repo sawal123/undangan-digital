@@ -1,4 +1,5 @@
 <div>
+    @if ($isActive)
     <div class="w-full pt-5 bg-zinc-800 h-auto" id="absen">
         <hr class="my-3" data-aos="fade-up" data-aos-duration="3000">
         <h1 class="text-white text-center text-3xl mb-3 font-bold" data-aos="fade-up" data-aos-duration="3000">
@@ -17,7 +18,7 @@
             </div>
         @endif
 
-        @if ($publicIsActive)
+        @if ($publicIsActive || (!$publicIsActive && $kode))
             <form wire:submit.prevent="save" class="mt-5 p-5 space-y-4">
                 <!-- Input Nama -->
                 <div class="space-y-2">
@@ -100,4 +101,6 @@
         </div>
     </div>
 
+    </div>
+    @endif
 </div>

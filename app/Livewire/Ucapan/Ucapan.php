@@ -17,6 +17,7 @@ class Ucapan extends Component
     public $status;
     public $publicIsActive;
     public $viewIsActive;
+    public $isActive;
     public $tamu;
 
     public $success = false;
@@ -40,8 +41,9 @@ class Ucapan extends Component
     public function mount($data, $tamu, $kode = null)
     {
         $this->dataId = $data->id;
-        $this->publicIsActive = $data->FiturUcapan->publicIsActive;
-        $this->viewIsActive = $data->FiturUcapan->isActive;
+        $this->publicIsActive = $data->FiturUcapan->publicIsActive ?? false;
+        $this->viewIsActive = $data->FiturUcapan->viewIsActive ?? false;
+        $this->isActive = $data->FiturUcapan->isActive ?? false;
         $this->tamu = $tamu;
         $this->kode = $kode;
         $this->nama = $tamu; // isi default kalau ada

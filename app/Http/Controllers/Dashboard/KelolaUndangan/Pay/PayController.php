@@ -12,12 +12,7 @@ class PayController extends Controller
 {
     protected function getData($id)
     {
-        try {
-            $decryptedId = Crypt::decryptString($id); // Dekripsi ID
-            return Data::findOrFail($decryptedId); // Cari data berdasarkan ID
-        } catch (DecryptException $e) {
-            return null; // Kembalikan null jika dekripsi gagal
-        }
+        return Data::where('uid', $id)->first();
     }
 
     public function index($id)

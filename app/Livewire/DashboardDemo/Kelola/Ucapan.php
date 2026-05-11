@@ -2,6 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Models\Data;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\KelolaUndangan\FiturUcapan;
@@ -45,7 +46,7 @@ class Ucapan extends Component
 
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
         $this->fitUcapan = FiturUcapan::where('data_id', $this->dataId)->first();
     }
     public function data($id)

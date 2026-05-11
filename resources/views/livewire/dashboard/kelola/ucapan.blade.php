@@ -11,14 +11,14 @@
                 <div class="flex items-center gap-3 pr-4 border-r border-slate-200 dark:border-slate-800">
                     <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Aktifkan Fitur:</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" wire:click="updateFiturUcapan('{{ $dataId }}', {{ $fitUcapan && $fitUcapan->isFitur ? 'false' : 'true' }}, 'isFitur')" class="sr-only peer" @checked($fitUcapan && $fitUcapan->isFitur)>
+                        <input type="checkbox" wire:click="updateFiturUcapan('{{ $dataId }}', {{ $fitUcapan && $fitUcapan->isActive ? 'false' : 'true' }}, 'isActive')" class="sr-only peer" @checked($fitUcapan && $fitUcapan->isActive)>
                         <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
                     </label>
                 </div>
                 <div class="flex items-center gap-3">
                     <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Tampilkan di Undangan:</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" wire:click="updateFiturUcapan('{{ $dataId }}', {{ $fitUcapan && $fitUcapan->isView ? 'false' : 'true' }}, 'isView')" class="sr-only peer" @checked($fitUcapan && $fitUcapan->isView)>
+                        <input type="checkbox" wire:click="updateFiturUcapan('{{ $dataId }}', {{ $fitUcapan && $fitUcapan->viewIsActive ? 'false' : 'true' }}, 'viewIsActive')" class="sr-only peer" @checked($fitUcapan && $fitUcapan->viewIsActive)>
                         <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
                     </label>
                 </div>

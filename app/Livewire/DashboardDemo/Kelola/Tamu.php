@@ -26,7 +26,7 @@ class Tamu extends Component
 
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
     }
     public function close()
     {

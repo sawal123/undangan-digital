@@ -5,13 +5,7 @@ use App\Livewire\Page\Home;
 use App\Livewire\Page\Cetak;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TemaController;
-use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\ExploreController;
-use App\Http\Controllers\GiftPayController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\Dashboard\Transaksi;
-use App\Http\Controllers\PriceListController;
-use App\Http\Controllers\viewAdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FilePreviewController;
 use App\Http\Controllers\Auth\ApiAuthController;
@@ -19,13 +13,8 @@ use App\Http\Controllers\Pay\MidtransController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Dashboard\DataController;
 use App\Http\Controllers\Dashboard\SetupController;
-use App\Http\Controllers\Landing\LandingController;
-use App\Http\Controllers\Dashboard\UndanganController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Dashboard\KelolaUndangan\AcaraController;
 use App\Http\Controllers\Dashboard\KelolaUndangan\Pay\PayController;
-use App\Http\Controllers\Dashboard\KelolaUndangan\PengantinController;
-use App\Http\Controllers\Dashboard\KelolaUndangan\ViewKelolaUndanganController;
 use App\Livewire\Page\UndanganAnimasi;
 use App\Livewire\Page\UndanganWeb;
 
@@ -105,33 +94,17 @@ Route::post('/midtrans/callback', [MidtransController::class, 'notificationHandl
 
 // Role Admin
 Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/',  [viewAdminController::class, 'admin'])->name('admin');
-    Route::resource('theme', ThemeController::class);
-    Route::get('/setting', [CategoryController::class, 'index'])->name('setting');
-    Route::resource('categories', CategoryController::class)->except('index');
-    Route::resource('price', PriceListController::class)->except('destroy', 'update');
-    Route::post('/price/update', [PriceListController::class, 'update'])->name('price.update');
-    Route::delete('/price/{id}', [PriceListController::class, 'destroy'])->name('price.destroy');
-    Route::resource('giftpay', GiftPayController::class)->except('index');
-    Route::get('/pay-setting/', [viewAdminController::class, 'index'])->name('pay.setting');
-    Route::get('/harga', [viewAdminController::class, 'harga'])->name('harga');
+    Route::get('/', \App\Livewire\AdminDemo\DashboardDemo::class)->name('admin');
+    Route::get('/theme', \App\Livewire\AdminDemo\ThemeDemo::class)->name('theme');
+    Route::get('/setting', \App\Livewire\AdminDemo\CategoryDemo::class)->name('setting');
+    Route::get('/price', \App\Livewire\AdminDemo\HargaDemo::class)->name('price');
+    Route::get('/harga', \App\Livewire\AdminDemo\HargaDemo::class)->name('harga');
+    Route::get('/pay-setting', \App\Livewire\AdminDemo\PaySettingDemo::class)->name('pay.setting');
     Route::get('/transaksi', \App\Livewire\AdminDemo\TransaksiDemo::class)->name('transaksi');
-    Route::get('/user', [viewAdminController::class, 'user'])->name('user');
-
-
-    Route::get('/animation', [viewAdminController::class, 'animation'])->name('animation');
-    Route::get('/fonts', [viewAdminController::class, 'fonts'])->name('fonts');
-    Route::get('/cetak', [viewAdminController::class, 'undangancetak'])->name('cetak');
-    Route::get('/demo', \App\Livewire\AdminDemo\DashboardDemo::class)->name('demo');
-    Route::get('/demo/theme', \App\Livewire\AdminDemo\ThemeDemo::class)->name('demo.theme');
-    Route::get('/demo/fonts', \App\Livewire\AdminDemo\FontsDemo::class)->name('demo.fonts');
-    Route::get('/demo/animation', \App\Livewire\AdminDemo\AnimationDemo::class)->name('demo.animation');
-    Route::get('/demo/cetak', \App\Livewire\AdminDemo\CetakDemo::class)->name('demo.cetak');
-    Route::get('/demo/harga', \App\Livewire\AdminDemo\HargaDemo::class)->name('demo.harga');
-    Route::get('/demo/transaksi', \App\Livewire\AdminDemo\TransaksiDemo::class)->name('demo.transaksi');
-    Route::get('/demo/user', \App\Livewire\AdminDemo\UserDemo::class)->name('demo.user');
-    Route::get('/demo/setting', \App\Livewire\AdminDemo\CategoryDemo::class)->name('demo.setting');
-    Route::get('/demo/pay-setting', \App\Livewire\AdminDemo\PaySettingDemo::class)->name('demo.pay-setting');
+    Route::get('/user', \App\Livewire\AdminDemo\UserDemo::class)->name('user');
+    Route::get('/animation', \App\Livewire\AdminDemo\AnimationDemo::class)->name('animation');
+    Route::get('/fonts', \App\Livewire\AdminDemo\FontsDemo::class)->name('fonts');
+    Route::get('/cetak', \App\Livewire\AdminDemo\CetakDemo::class)->name('cetak');
     Route::get('/demo/{demo}', [TemaController::class, 'temademo'])->name('temademo');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Models\Data;
 use App\Models\Music;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -64,7 +65,7 @@ class Sound extends Component
     }
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
         $this->sound = KelolaSound::where('data_id', $this->dataId)->first();
         if ($this->sound) {
             $this->detik = $this->sound->start;

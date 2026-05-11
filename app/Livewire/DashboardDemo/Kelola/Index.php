@@ -13,8 +13,8 @@ class Index extends Component
 
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
-        $this->data = Data::findOrFail($this->dataId);
+        $this->data = Data::where('uid', $id)->firstOrFail();
+        $this->dataId = $this->data->id;
     }
 
     public function render()

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Models\Data;
 use Livewire\Component;
 use Illuminate\Support\Facades\Crypt;
 
@@ -12,7 +13,7 @@ class BukuTamu extends Component
 
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
     }
 
     public function render()

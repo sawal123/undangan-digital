@@ -2,6 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Models\Data;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 // use Livewire\Features\SupportFileUploads\WithFileUploads;
@@ -74,7 +75,7 @@ class Galery extends Component
 
     public function mount($id)
     {
-        $this->dataId = Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
         $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
     }
 

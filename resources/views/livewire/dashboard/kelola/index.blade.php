@@ -55,7 +55,7 @@
     <!-- Modules Grid -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 lg:gap-6">
         @foreach ($modules as $module)
-            <a href="{{ url('/dashboard/kelola/' . Crypt::encryptString($data->id) . '/' . $module['url']) }}" wire:navigate
+            <a href="{{ url('/dashboard/kelola/' . $data->uid . '/' . $module['url']) }}" wire:navigate
                 class="group bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center gap-4">
                 <div class="w-14 h-14 rounded-2xl bg-slate-50 dark:bg-slate-900 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 flex items-center justify-center text-slate-600 dark:text-slate-400">
                     <i data-lucide="{{ $module['icon'] }}" class="w-7 h-7"></i>

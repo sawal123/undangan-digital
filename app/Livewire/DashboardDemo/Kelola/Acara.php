@@ -2,6 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Models\Data;
 use App\Models\KelolaUndangan\Acara as KelolaUndanganAcara;
 use Livewire\Component;
 
@@ -119,7 +120,7 @@ class Acara extends Component
 
     public function mount($id)
     {
-        $this->dataId = \Illuminate\Support\Facades\Crypt::decryptString($id);
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
         $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
     }
 

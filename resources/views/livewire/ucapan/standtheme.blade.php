@@ -1,4 +1,5 @@
 <div>
+    @if ($isActive)
     <div class="comment mt-10 pb-10 text-[12px] md:text-base bg-[#D7CEBE] flex flex-col items-center">
         <p class="text-center text-4xl title pt-10 text-[#755f4B]">
             Berikan Ucapan
@@ -71,7 +72,7 @@
                 </form>
             @endif
         </div>
-        @if ($publicIsActive)
+        @if ($viewIsActive)
             {{-- Daftar Ucapan --}}
             <div
                 class="w-full max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow-lg mx-4 mt-10 text-xs md:text-sm">
@@ -101,4 +102,6 @@
             </div>
         @endif
     </div>
+    </div>
+    @endif
 </div>
