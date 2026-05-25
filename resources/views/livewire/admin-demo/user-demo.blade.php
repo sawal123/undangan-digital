@@ -1,23 +1,29 @@
 <div x-data="{ deleteId: null, deleteMethod: 'delete' }" @set-delete.window="deleteId = $event.detail.id; deleteMethod = $event.detail.method || 'delete'">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Kelola User</h2>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Daftar pengguna yang terdaftar di sistem.</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Daftar pengguna beserta hak akses (role) yang terdaftar di sistem.</p>
     </div>
 
     @if (session()->has('message'))
-        <div class="mb-4 p-4 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-xl border border-emerald-200 dark:border-emerald-700">
-            {{ session('message') }}
+        <div class="mb-4 p-4 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-xl border border-emerald-200 dark:border-emerald-700 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0"></i>
+            <span class="text-sm font-medium">{{ session('message') }}</span>
         </div>
     @endif
 
     <x-ui.card padding="p-4" class="mb-6">
-        <div class="relative max-w-md">
-            <x-ui.input wire:model.live="search" placeholder="Cari nama, email, atau WA..." icon="search" />
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="relative flex-1 max-w-md">
+                <x-ui.input wire:model.live="search" placeholder="Cari nama, email, atau WA..." icon="search" />
+            </div>
+            <x-ui.button variant="primary" icon="user-plus" wire:click="create">
+                Tambah User
+            </x-ui.button>
         </div>
     </x-ui.card>
 
     <x-ui.table 
-        :headers="['No.', 'Nama', 'Email', 'WhatsApp', 'Aksi']"
+        :headers="['No.', 'Nama', 'Email', 'Role', 'WhatsApp', 'Aksi']"
         title="Daftar Pengguna"
         :count="$users->total()"
     >
@@ -28,24 +34,40 @@
                 </td>
                 <td class="px-5 py-3.5">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 ring-2 ring-indigo-200 dark:ring-indigo-800/50">
                             {{ strtoupper(substr($item->name, 0, 1)) }}
                         </div>
-                        <span class="font-medium text-slate-800 dark:text-slate-200">{{ $item->name }}</span>
+                        <span class="font-medium text-slate-800 dark:text-slate-200 truncate">{{ $item->name }}</span>
                     </div>
                 </td>
-                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 whitespace-nowrap text-sm">
                     {{ $item->email }}
                 </td>
-                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400">
+                <td class="px-5 py-3.5 whitespace-nowrap">
+                    @php
+                        $roleName = $item->getRoleNames()->first() ?? 'User';
+                    @endphp
+                    <span class="inline-block px-2.5 py-1 rounded-full text-xs font-medium
+                        @if(strtolower($roleName) === 'owner' || strtolower($roleName) === 'admin' || strtolower($roleName) === 'superadmin')
+                            bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400
+                        @elseif(strtolower($roleName) === 'reseller')
+                            bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400
+                        @else
+                            bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400
+                        @endif
+                    ">
+                        {{ ucfirst($roleName) }}
+                    </span>
+                </td>
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-sm">
                     {{ $item->phone ?? '-' }}
                 </td>
-                <td class="px-5 py-3.5 text-center">
+                <td class="px-5 py-3.5 text-center flex-shrink-0">
                     <div class="flex items-center justify-center gap-1">
-                        <button wire:click="edit({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors">
+                        <button wire:click="edit({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors" title="Edit User">
                             <i data-lucide="pencil" class="w-4 h-4"></i>
                         </button>
-                        <button x-on:click="$dispatch('set-delete', { id: {{ $item->id }}, method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors">
+                        <button x-on:click="$dispatch('set-delete', { id: {{ $item->id }}, method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors" title="Hapus User">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -58,22 +80,44 @@
         </x-slot>
     </x-ui.table>
 
-    <x-ui.modal name="user-modal" title="Update User" icon="user">
-        <form wire:submit="update" class="space-y-4">
-            <x-ui.input label="Nama" wire:model="name" />
-            <x-ui.input label="Email" wire:model="email" type="email" />
-            <x-ui.input label="WhatsApp" wire:model="phone" />
+    <x-ui.modal name="user-modal" title="{{ $isEdit ? 'Update User' : 'Tambah User Baru' }}" icon="{{ $isEdit ? 'user-check' : 'user-plus' }}">
+        <form wire:submit="store" class="space-y-4">
+            <div>
+                <x-ui.input label="Nama Lengkap" wire:model="name" icon="user" placeholder="Masukkan nama lengkap..." />
+                @error('name') <span class="text-xs text-rose-500 mt-1 block font-medium">{{ $message }}</span> @enderror
+            </div>
+            <div>
+                <x-ui.input label="Alamat Email" wire:model="email" type="email" icon="mail" placeholder="email@example.com" />
+                @error('email') <span class="text-xs text-rose-500 mt-1 block font-medium">{{ $message }}</span> @enderror
+            </div>
+            <div>
+                <x-ui.input label="Nomor WhatsApp" wire:model="phone" icon="phone" placeholder="08123456789" />
+                @error('phone') <span class="text-xs text-rose-500 mt-1 block font-medium">{{ $message }}</span> @enderror
+            </div>
+            <div>
+                <x-ui.select label="Role (Hak Akses)" wire:model="role" icon="shield">
+                    <option value="">-- Pilih Role --</option>
+                    @foreach($roles as $r)
+                        <option value="{{ $r->name }}">{{ ucfirst($r->name) }}</option>
+                    @endforeach
+                </x-ui.select>
+                @error('role') <span class="text-xs text-rose-500 mt-1 block font-medium">{{ $message }}</span> @enderror
+            </div>
+            <div>
+                <x-ui.input label="Password {{ $isEdit ? '(Opsional)' : '' }}" wire:model="password" type="password" icon="lock" placeholder="{{ $isEdit ? 'Kosongkan jika tidak ingin diubah' : 'Minimal 6 karakter' }}" />
+                @error('password') <span class="text-xs text-rose-500 mt-1 block font-medium">{{ $message }}</span> @enderror
+            </div>
             
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'user-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">Update User</x-ui.button>
+                <x-ui.button variant="primary" type="submit">{{ $isEdit ? 'Update Data' : 'Simpan User' }}</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
 
     <!-- Global Delete Confirmation Modal -->
     <x-ui.modal name="delete-modal" title="Konfirmasi Hapus" icon="alert-triangle">
-        <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
+        <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data pengguna ini? Tindakan ini tidak dapat dibatalkan.</p>
         <div class="flex justify-end gap-2 mt-6">
             <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'delete-modal' })">Batal</x-ui.button>
             <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>

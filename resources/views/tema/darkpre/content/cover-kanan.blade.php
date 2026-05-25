@@ -1,12 +1,15 @@
 <div class="h-full w-full   relative"
-    style="background-image: url('{{ asset('storage/' . $thumbnailWa->thumbnail) }}'); background-size: cover; background-position: center;">
+    style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? '')) }}'); background-size: cover; background-position: center;">
     <div class=" w-full text-shadow ">
-        <h3 class="text-center font-normal text-2xl pt-10 ">{{ $data->setting->acara ?? 'The Wedding' }}</h3>
-        <h1 style="" class="mt-5 text-center text-[40px] font-light ">{{ $data->pria->nama_panggilan }} <span
-                class=" text-[25px]">&</span> {{ $data->wanita->nama_panggilan }}</h1>
-        <p class="text-center text-[20px]">{{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }}
-            {{ $data ? date('m', strtotime($data->acara[0]->date)) : '10' }}
-            {{ $data ? date('Y', strtotime($data->acara[0]->date)) : '2024' }}</p>
+        <h3 class="text-center font-normal text-2xl pt-10 ">{{ $data->setting?->acara ?? 'The Wedding' }}</h3>
+        <h1 style="" class="mt-5 text-center text-[40px] font-light ">{{ $data->pria?->nama_panggilan ?? '' }} <span
+                class=" text-[25px]">&</span> {{ $data->wanita?->nama_panggilan ?? '' }}</h1>
+        @php
+            $firstAcaraDate = ($data->acara[0] ?? null)?->date;
+        @endphp
+        <p class="text-center text-[20px]">{{ $firstAcaraDate ? date('d', strtotime($firstAcaraDate)) : '10' }}
+            {{ $firstAcaraDate ? date('m', strtotime($firstAcaraDate)) : '10' }}
+            {{ $firstAcaraDate ? date('Y', strtotime($firstAcaraDate)) : '2024' }}</p>
     </div>
 
     <!-- svg -->

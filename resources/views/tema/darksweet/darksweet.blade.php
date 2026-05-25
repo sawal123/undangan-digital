@@ -8,20 +8,21 @@
     @php
         use Carbon\Carbon;
         Carbon::setLocale('id');
-        $tanggalAcara = Carbon::parse($data->acara[0]->date)->translatedFormat('l, j F Y');
+        $firstAcaraDate = ($data->acara[0] ?? null)?->date;
+        $tanggalAcara = $firstAcaraDate ? Carbon::parse($firstAcaraDate)->translatedFormat('l, j F Y') : '';
     @endphp
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
-    <meta property="og:image" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <meta property="og:image:secure_url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
+    <meta property="og:image:secure_url" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
     <meta property="og:image:width" content="664">
     <meta property="og:image:height" content="664">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
-    <title>{{ $data->setting->acara }} {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}</title>
+    <title>{{ $data->setting?->acara ?? 'The Wedding' }} {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}</title>
 
 
     <link href="{{ asset('tema/darksweet/css/output.css') }}" rel="stylesheet">
@@ -32,8 +33,8 @@
 
     <style>
         @if ($data->dataFont)
-            @import url('{{ $data->dataFont->titleFont->link }}');
-            @import url('{{ $data->dataFont->subFont->link }}');
+            @import url('{{ $data->dataFont->titleFont->link ?? '' }}');
+            @import url('{{ $data->dataFont->subFont->link ?? '' }}');
 
         @else
             @import url('https://fonts.googleapis.com/css2?family=Capriola&family=Oleo+Script+Swash+Caps:wght@400;700&display=swap');
@@ -44,10 +45,10 @@
         }
 
         h1 {
-            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Oleo Script Swash Caps' }}", system-ui;
+            font-family: "{{ $data->dataFont?->titleFont?->nama ?? 'Oleo Script Swash Caps' }}", system-ui;
             font-weight: 700;
             font-style: normal;
-            font-size: {{ $data->dataFont->s_title }}px !important
+            font-size: {{ $data->dataFont?->s_title ?? 40 }}px !important
         }
 
         html,
@@ -61,7 +62,7 @@
         h4,
         h5,
         h6 {
-            font-family: "{{ $data->dataFont->subFont->nama ?? 'Capriola' }}", sans-serif;
+            font-family: "{{ $data->dataFont?->subFont?->nama ?? 'Capriola' }}", sans-serif;
             font-weight: 400;
             font-style: normal;
         }

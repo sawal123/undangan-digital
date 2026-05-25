@@ -7,7 +7,6 @@ use App\Models\KelolaUndangan\ImgKisahCinta;
 use App\Models\KelolaUndangan\KisahCinta;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
-// use App\Models\KelolaUndangan\KisahCinta;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -31,6 +30,8 @@ class Kisah extends Component
 
     public $poto = [];
 
+    public $formImage;
+
     public $modal;
 
     public function mount($id)
@@ -49,6 +50,7 @@ class Kisah extends Component
         $this->idKisah = null;
         $this->judul = '';
         $this->cerita = '';
+        $this->formImage = null;
     }
 
     public function modalAddKisah()
@@ -63,6 +65,7 @@ class Kisah extends Component
         $kisah = KisahCinta::find($id);
         $this->judul = $kisah->title;
         $this->cerita = $kisah->deskripsi;
+        $this->formImage = null;
         $this->title = "Edit Kisah";
         $this->dispatch('open-modal', name: 'kisah-modal');
     }
@@ -76,14 +79,20 @@ class Kisah extends Component
     public function delete($id)
     {
         $k = KisahCinta::find($id);
-        $k->delete();
-        session()->flash('message', 'Kisah Cinta Telah Dihapus.');
-        $this->loadKisah();
+        if ($k) {
+            // Hapus gambar jika ada
+            $img = ImgKisahCinta::where('kisah_id', $id)->first();
+            if ($img && $img->image) {
+                Storage::delete('public/'.$img->image);
+            }
+            $k->delete();
+            session()->flash('message', 'Kisah Cinta Telah Dihapus.');
+            $this->loadKisah();
+        }
     }
 
     public function updatedPhotos($value, $itemId)
     {
-        // Tangani file yang diunggah untuk item tertentu
         $this->poto[$itemId] = $value;
     }
 
@@ -94,15 +103,12 @@ class Kisah extends Component
 
     public function saveImage($id)
     {
-        // dd($this->poto);
-        if (! $this->poto) {
+        if (! isset($this->poto[$id]) || ! $this->poto[$id]) {
             session()->flash('message', 'Upload Gambar Terlebih Dahulu!');
-
             return;
         }
-        $imagePath = $this->poto[$id]->store('kisah', 'public');  // Menyimpan gambar di folder 'kisah' pada storage 'public'
+        $imagePath = $this->poto[$id]->store('kisah', 'public');
 
-        // Mengambil data gambar dari database berdasarkan ID
         $img = ImgKisahCinta::where('kisah_id', $id)->first();
 
         if (! $img) {
@@ -116,7 +122,7 @@ class Kisah extends Component
             session()->flash('message', 'Gambar Kisah Cinta Kamu Berhasil Dibuat.');
         } else {
             if ($img->image) {
-                Storage::delete('public/'.$img->image);  // Hapus gambar lama
+                Storage::delete('public/'.$img->image);
             }
             $img->update([
                 'image' => $imagePath,
@@ -129,6 +135,7 @@ class Kisah extends Component
 
     public function save()
     {
+        $storyId = null;
         if ($this->idKisah) {
             $kisah = KisahCinta::find($this->idKisah);
             if ($kisah) {
@@ -136,16 +143,37 @@ class Kisah extends Component
                     'title' => $this->judul,
                     'deskripsi' => $this->cerita,
                 ]);
+                $storyId = $kisah->id;
                 session()->flash('message', 'Kisah Cinta Kamu Berhasil Diperbarui.');
             }
         } else {
-            KisahCinta::create([
+            $kisah = KisahCinta::create([
                 'data_id' => $this->dataId,
                 'title' => $this->judul,
                 'deskripsi' => $this->cerita,
             ]);
+            $storyId = $kisah->id;
             session()->flash('message', 'Kisah Cinta Kamu Berhasil Dibuat.');
         }
+
+        // Tangani upload gambar dari modal form
+        if ($storyId && $this->formImage) {
+            $imagePath = $this->formImage->store('kisah', 'public');
+            $img = ImgKisahCinta::where('kisah_id', $storyId)->first();
+            if ($img) {
+                if ($img->image) {
+                    Storage::delete('public/'.$img->image);
+                }
+                $img->update(['image' => $imagePath]);
+            } else {
+                ImgKisahCinta::create([
+                    'data_id' => $this->dataId,
+                    'kisah_id' => $storyId,
+                    'image' => $imagePath,
+                ]);
+            }
+        }
+
         $this->loadKisah();
         $this->close();
     }

@@ -1,5 +1,5 @@
 <div class="bg-neutral-950 relative text-orange-200 px-2 pb-10 ">
-    <p class="text-center  font-semibold  mb-5">{{ $data->teksUndangan->pembuka }}</p>
+    <p class="text-center  font-semibold  mb-5">{{ $data->teksUndangan?->pembuka ?? '' }}</p>
     @foreach ($data->acara as $item)
         <div class="flex flex-col items-center border
  border-orange-200
@@ -39,10 +39,10 @@ rounded-lg border-dashed p-4 justify-center w-full space-y-6 mt-5 text-sm">
     @endforeach
 </div>
 <div class="bg-neutral-950 relative text-orange-200 pb-10 ">
-    <p class="text-center w-full pt-14 pb-14 font-light lg:text-sm ">{{ $data->teksUndangan->penutup }}
+    <p class="text-center w-full pt-14 pb-14 font-light lg:text-sm ">{{ $data->teksUndangan?->penutup ?? '' }}
     </p>
 
-    @if ($data->teksPenutup->mengundang)
+    @if ($data->teksPenutup?->mengundang)
         <div
             class="flex flex-col lg:absolute lg:inset-x-0 lg:-bottom-14 justify-center items-center space-y-3 pt-10 text-sm">
             <p class="text-xl font-semibold">Turut Mengundang:</p>

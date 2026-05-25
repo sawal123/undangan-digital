@@ -83,6 +83,10 @@ class Setting extends Component
             $this->sizeTitle = $data->dataFont->s_title ?? 32;
             $this->sizePara = $data->dataFont->s_sub ?? 16;
         }
+
+        $defaultFontId = Fonts::where('is_active', 1)->value('id');
+        $this->fontTitle = $this->fontTitle ?: $defaultFontId;
+        $this->fontPara = $this->fontPara ?: $defaultFontId;
         
         $this->loadThumbnail();
         
@@ -102,9 +106,9 @@ class Setting extends Component
         }
 
         if ($qoute) {
-            $this->tit = $qoute->title;
-            $this->qoute = $qoute->qoute;
-            $this->subtitle = $qoute->subtitle;
+            $this->tit = $this->normalizeArabicText($qoute->title);
+            $this->qoute = $this->normalizeArabicText($qoute->qoute);
+            $this->subtitle = $this->normalizeArabicText($qoute->subtitle);
         }
 
         if ($set) {
@@ -117,6 +121,10 @@ class Setting extends Component
 
     public function aksiQoute()
     {
+        $this->tit = $this->normalizeArabicText($this->tit);
+        $this->qoute = $this->normalizeArabicText($this->qoute);
+        $this->subtitle = $this->normalizeArabicText($this->subtitle);
+
         $qoute = Qoute::where('data_id', $this->dataId)->first();
         if ($qoute) {
             $qoute->update([
@@ -134,6 +142,27 @@ class Setting extends Component
         }
 
         session()->flash('messageQoute', 'Qoute Berhasil Di update');
+    }
+
+    private function normalizeArabicText(?string $value): ?string
+    {
+        if ($value === null || $value === '' || !preg_match('/[ØÙÛ]/u', $value)) {
+            return $value;
+        }
+
+        foreach (['Windows-1252', 'ISO-8859-1'] as $encoding) {
+            $bytes = @iconv('UTF-8', $encoding . '//IGNORE', $value);
+            if ($bytes === false) {
+                continue;
+            }
+
+            $fixed = @iconv('UTF-8', 'UTF-8//IGNORE', $bytes);
+            if ($fixed !== false && preg_match('/\p{Arabic}/u', $fixed)) {
+                return $fixed;
+            }
+        }
+
+        return $value;
     }
 
     public function update($id)

@@ -23,6 +23,7 @@
         @forelse ($dataUndangan as $item)
             @php
                 $hasPending = collect($item->transaction)->contains('payment_status', 'PENDING');
+                $invitationUid = $item->uid;
             @endphp
             <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -52,13 +53,13 @@
                     <!-- Actions -->
                     <div class="flex flex-wrap items-center gap-2">
                         @if ($hasPending)
-                            <a href="{{ url('/dashboard/finishtunai/' . $item->uid) }}"
+                            <a href="{{ $invitationUid ? url('/dashboard/finishtunai/' . $invitationUid) : '#' }}"
                                 class="inline-flex items-center px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium rounded-xl border border-slate-200 dark:border-slate-800 cursor-not-allowed">
                                 <i data-lucide="clock" class="w-4 h-4 mr-2"></i> Sedang Diproses
                             </a>
                         @else
-                            @if (!$item->isActive)
-                                <a href="{{ route('dashboard.pay', $item->uid) }}" wire:navigate
+                            @if (!$item->isActive && $invitationUid)
+                                <a href="{{ route('dashboard.pay', $invitationUid) }}" wire:navigate
                                     class="inline-flex items-center px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-sm font-semibold rounded-xl border border-emerald-100 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
                                     <i data-lucide="zap" class="w-4 h-4 mr-2 text-emerald-500"></i> Aktifkan Premium
                                 </a>
@@ -70,10 +71,12 @@
                             <i data-lucide="external-link" class="w-4 h-4 mr-2"></i> Lihat
                         </a>
                         
-                        <a href="{{ route('dashboard.undangan.kelola', $item->uid) }}" wire:navigate
-                            class="inline-flex items-center px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-sm font-semibold rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">
-                            <i data-lucide="settings-2" class="w-4 h-4 mr-2"></i> Kelola
-                        </a>
+                        @if ($invitationUid)
+                            <a href="{{ route('dashboard.undangan.kelola', $invitationUid) }}" wire:navigate
+                                class="inline-flex items-center px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-sm font-semibold rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">
+                                <i data-lucide="settings-2" class="w-4 h-4 mr-2"></i> Kelola
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

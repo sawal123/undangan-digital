@@ -23,7 +23,8 @@
             </div>
             <div class="flex justify-end">
                 <button wire:click="update('{{ $dataId }}')" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan
+                    <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
+                    <span>Simpan Perubahan</span>
                 </button>
             </div>
         </div>
@@ -68,7 +69,13 @@
                         </div>
                     </div>
                     @error('gambar') <p class="text-xs text-rose-500">{{ $message }}</p> @enderror
-                    <button wire:click="thumbnailWa" class="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-all">Simpan Thumbnail</button>
+                    
+                    <div class="flex justify-end pt-2">
+                        <button wire:click="thumbnailWa" @if(!$gambar) disabled @endif class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-200 dark:shadow-none flex items-center gap-2">
+                            <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
+                            <span>Simpan Thumbnail</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -81,7 +88,8 @@
                 <p class="mt-2 text-[10px] text-slate-400">Gunakan tag: <span class="font-bold text-emerald-500">@{{tamu}}</span>, <span class="font-bold text-emerald-500">@{{nama_mempelai1}}</span>, <span class="font-bold text-emerald-500">@{{nama_mempelai2}}</span>, <span class="font-bold text-emerald-500">@{{link}}</span></p>
                 <div class="flex justify-end mt-4">
                     <button wire:click="teksWhatsApp" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-200 dark:shadow-none flex items-center gap-2">
-                        <i data-lucide="save" class="w-4 h-4"></i> Simpan Template
+                        <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
+                        <span>Simpan Template</span>
                     </button>
                 </div>
             </div>
@@ -89,7 +97,25 @@
     </div>
 
     <!-- Section: Typography -->
-    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+    <div
+        x-data="{
+            fonts: @js($fonts->mapWithKeys(fn($font) => [$font->id => ['nama' => $font->nama, 'link' => $font->link]])),
+            fontTitle: @entangle('fontTitle').live,
+            fontPara: @entangle('fontPara').live,
+            sizeTitle: @entangle('sizeTitle').live,
+            sizePara: @entangle('sizePara').live,
+            fontName(id) {
+                return this.fonts[id]?.nama || 'Inter';
+            },
+            fontStyle(id, size) {
+                return `font-family: '${this.fontName(id)}', sans-serif; font-size: ${size}px;`;
+            }
+        }"
+        class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        @foreach($fonts as $font)
+            <link href="{{ $font->link }}" rel="stylesheet">
+        @endforeach
+
         <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
                 <i data-lucide="type" class="w-6 h-6"></i>
@@ -101,48 +127,43 @@
                 <!-- Title Font -->
                 <div class="space-y-4">
                     <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Font Judul / Nama</label>
-                    <select wire:model="fontTitle" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all">
+                    <select x-model.number="fontTitle" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all">
                         @foreach($fonts as $f)
                             <option value="{{ $f->id }}">{{ $f->nama }}</option>
                         @endforeach
                     </select>
-                    @if($selectedFont)
-                        <div class="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700 text-center">
-                            <link href="https://fonts.googleapis.com/css2?family={{ str_replace(' ', '+', $selectedFont->nama) }}&display=swap" rel="stylesheet">
-                            <span style="font-family: '{{ $selectedFont->nama }}'; font-size: {{ $sizeTitle }}px;" class="text-slate-800 dark:text-white">Contoh Judul</span>
-                        </div>
-                        <input type="range" wire:model="sizeTitle" min="12" max="100" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
-                        <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            <span>Kecil</span>
-                            <span>Besar ({{ $sizeTitle }}px)</span>
-                        </div>
-                    @endif
+                    <div class="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700 text-center">
+                        <span x-bind:style="fontStyle(fontTitle, sizeTitle)" class="text-slate-800 dark:text-white transition-all">Contoh Judul</span>
+                    </div>
+                    <input type="range" x-model.number="sizeTitle" min="12" max="100" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                    <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        <span>Kecil</span>
+                        <span>Besar (<span x-text="sizeTitle"></span>px)</span>
+                    </div>
                 </div>
 
                 <!-- Body Font -->
                 <div class="space-y-4">
                     <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Font Konten / Isi</label>
-                    <select wire:model="fontPara" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all">
+                    <select x-model.number="fontPara" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all">
                         @foreach($fonts as $f)
                             <option value="{{ $f->id }}">{{ $f->nama }}</option>
                         @endforeach
                     </select>
-                    @if($selectedPara)
-                        <div class="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700 text-center">
-                            <link href="https://fonts.googleapis.com/css2?family={{ str_replace(' ', '+', $selectedPara->nama) }}&display=swap" rel="stylesheet">
-                            <span style="font-family: '{{ $selectedPara->nama }}'; font-size: {{ $sizePara }}px;" class="text-slate-800 dark:text-white">Ini adalah contoh teks isi atau paragraf undangan.</span>
-                        </div>
-                        <input type="range" wire:model="sizePara" min="8" max="32" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
-                        <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            <span>Kecil</span>
-                            <span>Besar ({{ $sizePara }}px)</span>
-                        </div>
-                    @endif
+                    <div class="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700 text-center">
+                        <span x-bind:style="fontStyle(fontPara, sizePara)" class="text-slate-800 dark:text-white transition-all">Ini adalah contoh teks isi atau paragraf undangan.</span>
+                    </div>
+                    <input type="range" x-model.number="sizePara" min="8" max="32" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                    <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        <span>Kecil</span>
+                        <span>Besar (<span x-text="sizePara"></span>px)</span>
+                    </div>
                 </div>
             </div>
             <div class="flex justify-end pt-4">
                 <button wire:click="updateFont('{{ $dataId }}')" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-amber-200 dark:shadow-none flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i> Terapkan Font
+                    <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
+                    <span>Terapkan Font</span>
                 </button>
             </div>
         </div>
@@ -150,6 +171,7 @@
 
     <!-- Section: Words & Quotes -->
     <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
         <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-600 dark:text-rose-400">
                 <i data-lucide="quote" class="w-6 h-6"></i>
@@ -159,19 +181,20 @@
         <div class="p-6 space-y-4">
             <div>
                 <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Judul / Sumber</label>
-                <input type="text" wire:model.defer="tit" placeholder="QS. Ar-Rum: 21" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all">
+                <input type="text" wire:model.defer="tit" dir="auto" placeholder="QS. Ar-Rum: 21" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all" style="font-family: 'Noto Naskh Arabic', 'Amiri', Inter, sans-serif; unicode-bidi: plaintext;">
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Isi Quote</label>
-                <textarea wire:model.defer="qoute" rows="4" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all"></textarea>
+                <textarea wire:model.defer="qoute" rows="4" dir="auto" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all" style="font-family: 'Noto Naskh Arabic', 'Amiri', Inter, sans-serif; line-height: 2; unicode-bidi: plaintext;"></textarea>
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Subtitle / Tambahan</label>
-                <input type="text" wire:model.defer="subtitle" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all">
+                <input type="text" wire:model.defer="subtitle" dir="auto" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all" style="font-family: 'Noto Naskh Arabic', 'Amiri', Inter, sans-serif; unicode-bidi: plaintext;">
             </div>
             <div class="flex justify-end pt-2">
                 <button wire:click="aksiQoute" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-rose-200 dark:shadow-none flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Quote
+                    <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
+                    <span>Simpan Quote</span>
                 </button>
             </div>
         </div>

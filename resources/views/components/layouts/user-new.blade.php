@@ -174,8 +174,9 @@
                             class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors">
                             <i data-lucide="menu" class="w-5 h-5"></i>
                         </button>
-                        @if(request()->is('dashboard/kelola/*/acara', 'dashboard/kelola/*/pengantin', 'dashboard/kelola/*/galeri', 'dashboard/kelola/*/musik', 'dashboard/kelola/*/ucapan', 'dashboard/kelola/*/tamu', 'dashboard/kelola/*/streaming', 'dashboard/kelola/*/kado', 'dashboard/kelola/*/kisah-cinta', 'dashboard/kelola/*/setting', 'dashboard/kelola/*/buku-tamu', 'dashboard/kelola/*/tema'))
-                            <a href="{{ route('dashboard.undangan.kelola', request()->route('id')) }}" wire:navigate
+                        @php($currentInvitationId = request()->route('id'))
+                        @if($currentInvitationId && request()->is('dashboard/kelola/*/acara', 'dashboard/kelola/*/pengantin', 'dashboard/kelola/*/galeri', 'dashboard/kelola/*/musik', 'dashboard/kelola/*/ucapan', 'dashboard/kelola/*/tamu', 'dashboard/kelola/*/streaming', 'dashboard/kelola/*/kado', 'dashboard/kelola/*/kisah-cinta', 'dashboard/kelola/*/setting', 'dashboard/kelola/*/buku-tamu', 'dashboard/kelola/*/tema'))
+                            <a href="{{ route('dashboard.undangan.kelola', $currentInvitationId) }}" wire:navigate
                                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all">
                                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
                                 <span class="hidden sm:inline">Kembali</span>

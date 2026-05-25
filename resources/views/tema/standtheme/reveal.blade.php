@@ -68,7 +68,7 @@
 
 <!-- Daftar Nama -->
 <!-- Judul Turut Mengundang -->
-@if ($data->teksPenutup->mengundang)
+@if ($data->teksPenutup?->mengundang)
     <div class="mt-8">
         <h3 class="text-center text-xl mb-5 text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">Turut Mengundang
         </h3>

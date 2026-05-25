@@ -6,19 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <!-- Open Graph Meta Tags -->
-    <title>{{ $data->setting->acara }} {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}</title>
+    <title>{{ $data->setting?->acara ?? 'The Wedding' }} {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}</title>
     @php
         use Carbon\Carbon;
         Carbon::setLocale('id');
-        $tanggalAcara = Carbon::parse($data->acara[0]->date)->translatedFormat('l, j F Y');
+        $tanggalAcara = ($acara ?? null)?->date ? Carbon::parse($acara->date)->translatedFormat('l, j F Y') : '';
     @endphp
 
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta property="og:image" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
-    <meta property="og:image:secure_url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
+    <meta property="og:image:secure_url" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
     <meta property="og:image:width" content="664">
     <meta property="og:image:height" content="664">
@@ -28,7 +28,7 @@
 
 
     <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-        <meta itemprop="url" content="{{ url('storage/' . $data->thumbnailWas->thumbnail) }}">
+        <meta itemprop="url" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     </div>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('tema/flowerone/assets/bootstrap/css/bootstrap.min.css') }}">
@@ -195,10 +195,10 @@
                     <!-- Jumbotron -->
                     <section>
                         <div class="jumbotron text-center position-relative text-black z-3">
-                            <p>{{ $data->setting->acara ?? 'The Wedding' }}</p>
+                            <p>{{ $data->setting?->acara ?? 'The Wedding' }}</p>
                             <h1 class="countdown">
-                                {{ $data ? $data->pria->nama_panggilan : 'Teddy' }} &
-                                {{ $data ? $data->wanita->nama_panggilan : 'Ajeng' }}
+                                {{ $data?->pria?->nama_panggilan ?? 'Teddy' }} &
+                                {{ $data?->wanita?->nama_panggilan ?? 'Ajeng' }}
                             </h1>
                             {{-- <p class="date countdown">Minggu <br> 10 • 11 • 2024</p> --}}
                             @include('tema.flowerone.flower.countdown')
@@ -425,7 +425,7 @@
 
 
 
-                    @if ($data->teksPenutup->mengundang)
+                    @if ($data->teksPenutup?->mengundang)
                         <!-- Flower Divider -->
                         <div class="flower-divider text-center mt-5" data-aos="fade-up" data-aos-duration="1000">
                             <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid">
@@ -441,7 +441,7 @@
                             <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid">
                         </div>
                     @endif
-                    <p class="text-center" data-aos="fade-up" data-aos-duration="1000"> {!! $data->teksUndangan->penutup !!}</p>
+                    <p class="text-center" data-aos="fade-up" data-aos-duration="1000"> {!! $data->teksUndangan?->penutup ?? '' !!}</p>
                 </div>
             </div>
 

@@ -105,6 +105,7 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::get('/animation', \App\Livewire\AdminDemo\AnimationDemo::class)->name('animation');
     Route::get('/fonts', \App\Livewire\AdminDemo\FontsDemo::class)->name('fonts');
     Route::get('/cetak', \App\Livewire\AdminDemo\CetakDemo::class)->name('cetak');
+    Route::get('/system-setting', \App\Livewire\AdminDemo\SystemSettingDemo::class)->name('system.setting');
     Route::get('/demo/{demo}', [TemaController::class, 'temademo'])->name('temademo');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

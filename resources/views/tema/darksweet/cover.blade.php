@@ -1,21 +1,21 @@
 <div id="cover" class="z-50 bg-white flex inset-0 justify-center items-center min-w-screen min-h-screen fixed ">
     <!-- Background Image -->
-    <img src="{{ asset('storage/'. $thumbnailWa->thumbnail) }}"
+    <img src="{{ asset('storage/'. ($thumbnailWa?->thumbnail ?? '')) }}"
         class="absolute w-full md:w-1/3 h-full object-cover object-center z-0" alt="" />
     <div class="absolute inset-0 bg-black opacity-75 mx-auto w-full md:w-1/3"></div>
     <!-- Content Container -->
     <div class="relative z-10 w-full sm:w-1/3 flex flex-col justify-center items-center space-y-8 text-center">
         <!-- Title Section -->
         <div class="text-white font-italiana">
-            <p class="text-sm uppercase tracking-wide font-semibold">{{$data->setting->acara ?? 'The Wedding'}}</p>
+            <p class="text-sm uppercase tracking-wide font-semibold">{{$data->setting?->acara ?? 'The Wedding'}}</p>
             <h1 class="text-3xl font-bold">
-                {{ $data->pria->nama_panggilan }} & {{ $data->wanita->nama_panggilan }}
+                {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}
             </h1>
         </div>
 
         <!-- Image Section -->
         <div class="p-2 bg-white shadow-md rounded-lg">
-            <img src="{{ asset('storage/'. $thumbnailWa->thumbnail) }}"
+            <img src="{{ asset('storage/'. ($thumbnailWa?->thumbnail ?? '')) }}"
                 class="w-[175px] h-[300px] object-cover rounded-lg" alt="Wedding Illustration" />
         </div>
 

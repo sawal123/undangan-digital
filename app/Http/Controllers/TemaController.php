@@ -3,42 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Data;
-use App\Models\KelolaUndangan\Acara;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Livewire\Attributes\Validate;
 use App\Models\KelolaUndangan\Tamu;
-use App\Models\KelolaUndangan\Galery;
 use App\Models\KelolaUndangan\Ucapan;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\KelolaUndangan\FiturUcapan;
-use App\Models\KelolaUndangan\ThumbnailWa;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TemaController extends Controller
 {
     protected function getData($id)
     {
-        return $tema = Crypt::decryptString($id);
+        return Crypt::decryptString($id);
     }
+
     public function index($slug)
     {
-        // dd('tes');
-        $tema = Data::where('slug', $slug)->first();
-        return $tema;
+        return Data::where('slug', $slug)->first();
     }
+
     public function demo($demo, $id = null)
     {
-        error_reporting(0);
         try {
             $temaPath = Crypt::decryptString($demo);
-            $dataId = Data::where('uid', $id)->firstOrFail()->id;
             
+            // Menggabungkan pencarian dan pemuatan relasi menjadi 1 kueri efisien
             $data = Data::with([
                 'pria', 'wanita', 'acara', 'galery', 'sound', 
-                'FiturUcapan', 'streaming', 'kado', 'imageKisah', 
-                'kisah', 'dataFont.titleFont', 'dataFont.subFont', 
-                'thumbnailWas', 'teksUndangan', 'coverUndangan'
-            ])->findOrFail($dataId);
+                'FiturUcapan', 'streaming', 'kado', 'fiturKado', 'imageKisah', 
+                'kisah.image', 'dataFont.titleFont', 'dataFont.subFont', 
+                'thumbnailWas', 'teksUndangan', 'coverUndangan',
+                'setting', 'qoute', 'teksPenutup'
+            ])->where('uid', $id)->firstOrFail();
 
             $preparedData = $this->prepareInvitationData($data, 'Nama Tamu (Contoh)');
             
@@ -56,13 +53,13 @@ class TemaController extends Controller
 
     public function visit($slug, $tamu = null)
     {
-        error_reporting(0);
         try {
             $data = Data::with([
                 'theme', 'pria', 'wanita', 'acara', 'galery', 'sound', 
-                'FiturUcapan', 'streaming', 'kado', 'imageKisah', 
-                'kisah', 'dataFont.titleFont', 'dataFont.subFont', 
-                'thumbnailWas', 'teksUndangan', 'coverUndangan'
+                'FiturUcapan', 'streaming', 'kado', 'fiturKado', 'imageKisah', 
+                'kisah.image', 'dataFont.titleFont', 'dataFont.subFont', 
+                'thumbnailWas', 'teksUndangan', 'coverUndangan',
+                'setting', 'qoute', 'teksPenutup'
             ])->where('slug', $slug)->firstOrFail();
 
             // Validasi theme
@@ -74,7 +71,7 @@ class TemaController extends Controller
             $preparedData = $this->prepareInvitationData($data, $tamu);
 
             return view($data->theme->path, $preparedData);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return abort(404, 'Undangan tidak ditemukan.');
         } catch (\Exception $e) {
             \Log::error('Error saat visit undangan: ' . $e->getMessage());
@@ -85,47 +82,30 @@ class TemaController extends Controller
 
     protected function prepareInvitationData($data, $tamu = null)
     {
-        // Pilih acara, default ke index 0 kalau index 1 nggak ada
-        $acara = $data->acara[1] ?? $data->acara[0] ?? null;
+        // Pengambilan koleksi acara yang lebih handal
+        $acara = $data->acara->get(1) ?? $data->acara->first();
 
-        // Ambil thumbnail WhatsApp
         $thumbnailWa = $data->thumbnailWas;
 
-        // Cari tamu berdasarkan kode
+        // Mencari tamu
         $ta = $data->tamu()->where('kode', $tamu)->first();
 
-        // Mapping hari & bulan
         $hari = [
-            'Sunday'    => 'Minggu',
-            'Monday'    => 'Senin',
-            'Tuesday'   => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday'  => 'Kamis',
-            'Friday'    => 'Jumat',
+            'Sunday'    => 'Minggu', 'Monday'    => 'Senin',
+            'Tuesday'   => 'Selasa', 'Wednesday' => 'Rabu',
+            'Thursday'  => 'Kamis',  'Friday'    => 'Jumat',
             'Saturday'  => 'Sabtu',
         ];
 
         $bulan = [
-            'Jan' => 'Januari',
-            'Feb' => 'Februari',
-            'Mar' => 'Maret',
-            'Apr' => 'April',
-            'May' => 'Mei',
-            'Jun' => 'Juni',
-            'Jul' => 'Juli',
-            'Aug' => 'Agustus',
-            'Sep' => 'September',
-            'Oct' => 'Oktober',
-            'Nov' => 'November',
-            'Dec' => 'Desember',
+            'Jan' => 'Januari', 'Feb' => 'Februari', 'Mar' => 'Maret',
+            'Apr' => 'April',   'May' => 'Mei',      'Jun' => 'Juni',
+            'Jul' => 'Juli',    'Aug' => 'Agustus',  'Sep' => 'September',
+            'Oct' => 'Oktober', 'Nov' => 'November', 'Dec' => 'Desember',
         ];
 
-        // Ambil galeri
         $video = $data->galery->pluck('video')->filter()->toArray();
         $poto  = $data->galery->pluck('poto')->filter()->toArray();
-
-        // Ambil ucapan
-        $ucapan = $data->ucapan;
 
         return [
             'data'        => $data,
@@ -135,7 +115,7 @@ class TemaController extends Controller
             'video'       => $video,
             'poto'        => $poto,
             'kode'        => $tamu,
-            'ucapan'      => $ucapan,
+            'ucapan'      => $data->ucapan,
             'acara'       => $acara,
             'thumbnailWa' => $thumbnailWa,
         ];
@@ -145,36 +125,44 @@ class TemaController extends Controller
     {
         $va = $request->validate([
             'dataId' => 'required',
-            'nama' => 'required|string|max:20',
+            'nama'   => 'required|string|max:20',
             'ucapan' => 'required|string|max:255',
             'status' => 'required|string|max:255'
         ], [
-            'nama.required' => 'Nama tidak boleh kosong.',
+            'nama.required'   => 'Nama tidak boleh kosong.',
             'ucapan.required' => 'Ucapan tidak boleh kosong.',
-            'ucapan.max' => 'Ucapan tidak boleh lebih dari 255 karakter.',
+            'ucapan.max'      => 'Ucapan tidak boleh lebih dari 255 karakter.',
             'status.required' => 'Pilih Kehadiran Kamu.',
         ]);
-        $tamu = null;
-        $addTamu = null;
+
+        // Cek fitur ucapan secara aman (null-safe)
         $fitur = FiturUcapan::where('data_id', $va['dataId'])->first();
-        $tamu = Tamu::where('kode', $request['kode'])->first();
-        if (!$tamu && !$fitur->publicIsActive) {
+        $isPublicActive = $fitur?->publicIsActive ?? false;
+
+        // Cek tamu dengan scope spesifik ke data_id undangan agar aman
+        $tamu = Tamu::where('data_id', $va['dataId'])
+                    ->where('kode', $request->input('kode'))
+                    ->first();
+
+        $addTamu = null;
+
+        if (!$tamu && !$isPublicActive) {
             session()->flash('message', 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.');
             return redirect()->back();
-        } elseif (!$tamu && $fitur->publicIsActive) {
-            $addTamu =  Tamu::create([
+        } elseif (!$tamu && $isPublicActive) {
+            $addTamu = Tamu::create([
                 'data_id' => $va['dataId'],
-                'kode' => 0,
-                'nama' => $va['nama'],
-                'slug' => Str::slug($va['nama'])
+                'kode'    => 0,
+                'nama'    => $va['nama'],
+                'slug'    => Str::slug($va['nama'])
             ]);
         }
 
-        $ucapan = Ucapan::create([
+        Ucapan::create([
             'data_id' => $va['dataId'],
             'tamu_id' => $tamu ? $tamu->id : $addTamu->id,
-            'ucapan' => $va['ucapan'],
-            'status' => $va['status']
+            'ucapan'  => $va['ucapan'],
+            'status'  => $va['status']
         ]);
 
         return redirect()->back()->with('message', 'Ucapan doa berhasil dikirim');

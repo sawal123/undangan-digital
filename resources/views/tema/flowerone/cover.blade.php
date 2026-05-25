@@ -5,25 +5,28 @@
     </div>
     <div data-aos="zoom-in" data-aos-duration="1500" class="text-center d-flex flex-column align-items-center">
         <div class="text-center mt-2">
-            <h4 class="header-text">{{ $data->setting->acara ?? 'The Wedding' }}</h4>
+            <h4 class="header-text">{{ $data->setting?->acara ?? 'The Wedding' }}</h4>
             <h1>
-                {{ $data ? $data->pria->nama_panggilan : 'Teddy' }} &
-                {{ $data ? $data->wanita->nama_panggilan : 'Ajeng' }}</h1>
+                {{ $data?->pria?->nama_panggilan ?? 'Teddy' }} &
+                {{ $data?->wanita?->nama_panggilan ?? 'Ajeng' }}</h1>
         </div>
+        @php
+            $firstAcaraDate = ($data->acara[0] ?? null)?->date;
+        @endphp
         <div class="row text-center d-flex justify-content-center align-items-center my-0" style="max-width: 500px;">
             <div class="col-4 text-end">
-                <p>{{ $data ? $hari[date('l', strtotime($data->acara[0]->date))] : 'Minggu' }}</p>
+                <p>{{ $firstAcaraDate ? ($hari[date('l', strtotime($firstAcaraDate))] ?? date('l', strtotime($firstAcaraDate))) : 'Minggu' }}</p>
             </div>
             <div class="col-4">
                 <p class="fs-1 fw-normal">| <small
-                        class="fs-6 fw-bold">{{ $data ? date('d', strtotime($data->acara[0]->date)) : '11' }}</small> |
+                        class="fs-6 fw-bold">{{ $firstAcaraDate ? date('d', strtotime($firstAcaraDate)) : '11' }}</small> |
                 </p>
             </div>
             <div class="col-4 text-start ">
-                <p>{{ $data ? $bulan[date('M', strtotime($data->acara[0]->date))] : 'November' }}</p>
+                <p>{{ $firstAcaraDate ? ($bulan[date('M', strtotime($firstAcaraDate))] ?? date('M', strtotime($firstAcaraDate))) : 'November' }}</p>
             </div>
             <div>
-                <p style="font-size: 30px;">{{ $data ? date('Y', strtotime($data->acara[0]->date)) : '2024' }}</p>
+                <p style="font-size: 30px;">{{ $firstAcaraDate ? date('Y', strtotime($firstAcaraDate)) : '2024' }}</p>
             </div>
         </div>
 

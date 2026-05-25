@@ -22,18 +22,21 @@
     }
 </style>
 <div id="cover-mobile" class="h-full w-full  fixed lg:hidden block z-50 text-white"
-    style="background-image: url(' {{ asset('storage/' . $thumbnailWa->thumbnail) }}'); background-size: cover; background-position: center;">
+    style="background-image: url(' {{ asset('storage/' . ($thumbnailWa?->thumbnail ?? '')) }}'); background-size: cover; background-position: center;">
     <div class="w-full text-shadow flex justify-center items-center flex-col">
         <h3 class="text-center font-semibold text-2xl pt-10" data-aos="fade-down" data-aos-easing="linear"
-            data-aos-duration="1500">{{ $data->setting->acara ?? 'The Wedding' }}</h3>
+            data-aos-duration="1500">{{ $data->setting?->acara ?? 'The Wedding' }}</h3>
         <h1 class="mt-8 text-center text-[50px] font-light " data-aos="fade-up" data-aos-anchor-placement="top-bottom">
-            {{ $data->pria->nama_panggilan }}<span class=" text-[25px]"> & </span>
-            {{ $data->wanita->nama_panggilan }}
+            {{ $data->pria?->nama_panggilan ?? '' }}<span class=" text-[25px]"> & </span>
+            {{ $data->wanita?->nama_panggilan ?? '' }}
         </h1>
+        @php
+            $firstAcaraDate = ($data->acara[0] ?? null)?->date;
+        @endphp
         <p class="text-center text-[20px]" data-aos="fade-up" data-aos-anchor-placement="bottom-bottom">
-            {{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }}
-            {{ $data ? date('m', strtotime($data->acara[0]->date)) : '10' }}
-            {{ $data ? date('Y', strtotime($data->acara[0]->date)) : '2024' }}
+            {{ $firstAcaraDate ? date('d', strtotime($firstAcaraDate)) : '10' }}
+            {{ $firstAcaraDate ? date('m', strtotime($firstAcaraDate)) : '10' }}
+            {{ $firstAcaraDate ? date('Y', strtotime($firstAcaraDate)) : '2024' }}
         </p>
 
         <p style="margin-top:150px" class="text-center text-[20px]" data-aos="fade-up"
