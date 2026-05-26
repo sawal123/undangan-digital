@@ -31,10 +31,10 @@ class TemaController extends Controller
             // Menggabungkan pencarian dan pemuatan relasi menjadi 1 kueri efisien
             $data = Data::with([
                 'pria', 'wanita', 'acara', 'galery', 'sound', 
-                'FiturUcapan', 'streaming', 'kado', 'fiturKado', 'imageKisah', 
+                'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah', 
                 'kisah.image', 'dataFont.titleFont', 'dataFont.subFont', 
                 'thumbnailWas', 'teksUndangan', 'coverUndangan',
-                'setting', 'qoute', 'teksPenutup'
+                'setting', 'qoute', 'teksPenutup', 'ucapan.tamu'
             ])->where('uid', $id)->firstOrFail();
 
             $preparedData = $this->prepareInvitationData($data, 'Nama Tamu (Contoh)');
@@ -56,10 +56,10 @@ class TemaController extends Controller
         try {
             $data = Data::with([
                 'theme', 'pria', 'wanita', 'acara', 'galery', 'sound', 
-                'FiturUcapan', 'streaming', 'kado', 'fiturKado', 'imageKisah', 
+                'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah', 
                 'kisah.image', 'dataFont.titleFont', 'dataFont.subFont', 
                 'thumbnailWas', 'teksUndangan', 'coverUndangan',
-                'setting', 'qoute', 'teksPenutup'
+                'setting', 'qoute', 'teksPenutup', 'ucapan.tamu'
             ])->where('slug', $slug)->firstOrFail();
 
             // Validasi theme
@@ -88,7 +88,7 @@ class TemaController extends Controller
         $thumbnailWa = $data->thumbnailWas;
 
         // Mencari tamu
-        $ta = $data->tamu()->where('kode', $tamu)->first();
+        $ta = $tamu ? $data->tamu()->where('kode', $tamu)->first() : null;
 
         $hari = [
             'Sunday'    => 'Minggu', 'Monday'    => 'Senin',
@@ -111,11 +111,11 @@ class TemaController extends Controller
             'data'        => $data,
             'hari'        => $hari,
             'bulan'       => $bulan,
-            'tamu'        => $ta->nama ?? $tamu,
+            'tamu'        => $ta->nama ?? $tamu ?? 'Tamu Undangan',
             'video'       => $video,
             'poto'        => $poto,
             'kode'        => $tamu,
-            'ucapan'      => $data->ucapan,
+            'ucapan'      => $data->ucapan()->with('tamu')->latest()->get(),
             'acara'       => $acara,
             'thumbnailWa' => $thumbnailWa,
         ];
@@ -147,8 +147,13 @@ class TemaController extends Controller
         $addTamu = null;
 
         if (!$tamu && !$isPublicActive) {
-            session()->flash('message', 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.');
-            return redirect()->back();
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.'
+                ], 403);
+            }
+
+            return redirect()->back()->with('error', 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.');
         } elseif (!$tamu && $isPublicActive) {
             $addTamu = Tamu::create([
                 'data_id' => $va['dataId'],
@@ -158,12 +163,24 @@ class TemaController extends Controller
             ]);
         }
 
-        Ucapan::create([
+        $doa = Ucapan::create([
             'data_id' => $va['dataId'],
             'tamu_id' => $tamu ? $tamu->id : $addTamu->id,
             'ucapan'  => $va['ucapan'],
             'status'  => $va['status']
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Ucapan doa berhasil dikirim',
+                'doa' => [
+                    'nama' => $tamu ? $tamu->nama : $addTamu->nama,
+                    'ucapan' => $doa->ucapan,
+                    'status' => $doa->status,
+                    'created_at' => $doa->created_at->diffForHumans(),
+                ],
+            ]);
+        }
 
         return redirect()->back()->with('message', 'Ucapan doa berhasil dikirim');
     }
