@@ -9,6 +9,8 @@ use App\Models\KelolaUndangan\FiturUcapan;
 use App\Models\KelolaUndangan\Galery;
 use App\Models\KelolaUndangan\ImgKisahCinta;
 use App\Models\KelolaUndangan\Kado;
+use App\Models\KelolaUndangan\BirthdayProfile;
+use App\Models\KelolaUndangan\EventDetail;
 use App\Models\KelolaUndangan\KisahCinta;
 use App\Models\KelolaUndangan\Qoute;
 use App\Models\KelolaUndangan\Sound;
@@ -25,7 +27,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Data extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['user_id', 'theme_id', 'title', 'slug', 'uid', 'isActive'];
+    protected $fillable = ['user_id', 'theme_id', 'event_type_id', 'title', 'slug', 'uid', 'isActive'];
+
+    public function canBeShared(): bool
+    {
+        return !is_null($this->isActive);
+    }
 
     protected static function booted()
     {
@@ -57,6 +64,11 @@ class Data extends Model
         return $this->belongsTo(Theme::class);
     }
 
+    public function eventType()
+    {
+        return $this->belongsTo(EventType::class);
+    }
+
     public function pria()
     {
         return $this->hasOne(Pria::class);
@@ -64,6 +76,16 @@ class Data extends Model
     public function wanita()
     {
         return $this->hasOne(Wanita::class);
+    }
+
+    public function birthdayProfile()
+    {
+        return $this->hasOne(BirthdayProfile::class);
+    }
+
+    public function eventDetail()
+    {
+        return $this->hasOne(EventDetail::class);
     }
 
     public function acara()

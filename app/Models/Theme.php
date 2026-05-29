@@ -10,10 +10,13 @@ class Theme extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['nama', 'category_id', 'path','demo', 'thumbnail'];
+    protected $fillable = ['nama', 'category_id', 'event_type_id', 'path','demo', 'thumbnail'];
 
     public function category(){
         return $this->belongsTo(Category::class);
+    }
+    public function eventType(){
+        return $this->belongsTo(EventType::class);
     }
     public function data(){
         return $this->hasOne(Data::class);

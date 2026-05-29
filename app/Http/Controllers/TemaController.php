@@ -30,7 +30,7 @@ class TemaController extends Controller
             
             // Menggabungkan pencarian dan pemuatan relasi menjadi 1 kueri efisien
             $data = Data::with([
-                'pria', 'wanita', 'acara', 'galery', 'sound', 
+                'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound', 
                 'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah', 
                 'kisah.image', 'dataFont.titleFont', 'dataFont.subFont', 
                 'thumbnailWas', 'teksUndangan', 'coverUndangan',
@@ -55,12 +55,16 @@ class TemaController extends Controller
     {
         try {
             $data = Data::with([
-                'theme', 'pria', 'wanita', 'acara', 'galery', 'sound', 
+                'theme', 'eventType', 'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound', 
                 'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah', 
                 'kisah.image', 'dataFont.titleFont', 'dataFont.subFont', 
                 'thumbnailWas', 'teksUndangan', 'coverUndangan',
                 'setting', 'qoute', 'teksPenutup', 'ucapan.tamu'
             ])->where('slug', $slug)->firstOrFail();
+
+            if (!$data->canBeShared()) {
+                return abort(403, 'Undangan belum aktif dan belum bisa dibagikan.');
+            }
 
             // Validasi theme
             if (is_null($data->theme_id) || !$data->theme) {
@@ -125,18 +129,24 @@ class TemaController extends Controller
     {
         $va = $request->validate([
             'dataId' => 'required',
-            'nama'   => 'required|string|max:20',
+            'nama'   => 'nullable|string|max:50',
             'ucapan' => 'required|string|max:255',
             'status' => 'required|string|max:255'
         ], [
-            'nama.required'   => 'Nama tidak boleh kosong.',
             'ucapan.required' => 'Ucapan tidak boleh kosong.',
             'ucapan.max'      => 'Ucapan tidak boleh lebih dari 255 karakter.',
             'status.required' => 'Pilih Kehadiran Kamu.',
         ]);
 
         // Cek fitur ucapan secara aman (null-safe)
-        $fitur = FiturUcapan::where('data_id', $va['dataId'])->first();
+        $fitur = FiturUcapan::firstOrCreate(
+            ['data_id' => $va['dataId']],
+            [
+                'isActive' => true,
+                'publicIsActive' => true,
+                'viewIsActive' => true,
+            ]
+        );
         $isPublicActive = $fitur?->publicIsActive ?? false;
 
         // Cek tamu dengan scope spesifik ke data_id undangan agar aman
@@ -155,6 +165,12 @@ class TemaController extends Controller
 
             return redirect()->back()->with('error', 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.');
         } elseif (!$tamu && $isPublicActive) {
+            if (empty($va['nama'])) {
+                return redirect()->back()->withErrors([
+                    'nama' => 'Nama tidak boleh kosong.',
+                ])->withInput();
+            }
+
             $addTamu = Tamu::create([
                 'data_id' => $va['dataId'],
                 'kode'    => 0,

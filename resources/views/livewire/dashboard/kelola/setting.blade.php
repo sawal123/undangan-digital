@@ -22,9 +22,9 @@
                 </div>
             </div>
             <div class="flex justify-end">
-                <button wire:click="update('{{ $dataId }}')" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center gap-2">
-                    <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
-                    <span>Simpan Perubahan</span>
+                <button wire:click="update('{{ $dataId }}')" wire:loading.attr="disabled" wire:target="update('{{ $dataId }}')" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                    <span wire:loading.remove wire:target="update('{{ $dataId }}')" class="inline-flex items-center gap-2"><span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span> Simpan Perubahan</span>
+                    <span wire:loading.flex wire:target="update('{{ $dataId }}')" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
                 </button>
             </div>
         </div>
@@ -71,9 +71,9 @@
                     @error('gambar') <p class="text-xs text-rose-500">{{ $message }}</p> @enderror
                     
                     <div class="flex justify-end pt-2">
-                        <button wire:click="thumbnailWa" @if(!$gambar) disabled @endif class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-200 dark:shadow-none flex items-center gap-2">
-                            <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
-                            <span>Simpan Thumbnail</span>
+                        <button wire:click="thumbnailWa" wire:loading.attr="disabled" wire:target="thumbnailWa" @if(!$gambar) disabled @endif class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-200 dark:shadow-none flex items-center gap-2">
+                            <span wire:loading.remove wire:target="thumbnailWa" class="inline-flex items-center gap-2"><span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span> Simpan Thumbnail</span>
+                            <span wire:loading.flex wire:target="thumbnailWa" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
                         </button>
                     </div>
                 </div>
@@ -87,9 +87,9 @@
                 <textarea wire:model.defer="pesanWa" rows="6" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-mono"></textarea>
                 <p class="mt-2 text-[10px] text-slate-400">Gunakan tag: <span class="font-bold text-emerald-500">@{{tamu}}</span>, <span class="font-bold text-emerald-500">@{{nama_mempelai1}}</span>, <span class="font-bold text-emerald-500">@{{nama_mempelai2}}</span>, <span class="font-bold text-emerald-500">@{{link}}</span></p>
                 <div class="flex justify-end mt-4">
-                    <button wire:click="teksWhatsApp" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-200 dark:shadow-none flex items-center gap-2">
-                        <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
-                        <span>Simpan Template</span>
+                    <button wire:click="teksWhatsApp" wire:loading.attr="disabled" wire:target="teksWhatsApp" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-200 dark:shadow-none flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                        <span wire:loading.remove wire:target="teksWhatsApp" class="inline-flex items-center gap-2"><span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span> Simpan Template</span>
+                        <span wire:loading.flex wire:target="teksWhatsApp" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
                     </button>
                 </div>
             </div>
@@ -161,9 +161,9 @@
                 </div>
             </div>
             <div class="flex justify-end pt-4">
-                <button wire:click="updateFont('{{ $dataId }}')" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-amber-200 dark:shadow-none flex items-center gap-2">
-                    <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
-                    <span>Terapkan Font</span>
+                <button wire:click="updateFont('{{ $dataId }}')" wire:loading.attr="disabled" wire:target="updateFont('{{ $dataId }}')" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-amber-200 dark:shadow-none flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                    <span wire:loading.remove wire:target="updateFont('{{ $dataId }}')" class="inline-flex items-center gap-2"><span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span> Terapkan Font</span>
+                    <span wire:loading.flex wire:target="updateFont('{{ $dataId }}')" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
                 </button>
             </div>
         </div>
@@ -192,9 +192,9 @@
                 <input type="text" wire:model.defer="subtitle" dir="auto" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all" style="font-family: 'Noto Naskh Arabic', 'Amiri', Inter, sans-serif; unicode-bidi: plaintext;">
             </div>
             <div class="flex justify-end pt-2">
-                <button wire:click="aksiQoute" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-rose-200 dark:shadow-none flex items-center gap-2">
-                    <span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span>
-                    <span>Simpan Quote</span>
+                <button wire:click="aksiQoute" wire:loading.attr="disabled" wire:target="aksiQoute" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-rose-200 dark:shadow-none flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                    <span wire:loading.remove wire:target="aksiQoute" class="inline-flex items-center gap-2"><span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span> Simpan Quote</span>
+                    <span wire:loading.flex wire:target="aksiQoute" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
                 </button>
             </div>
         </div>

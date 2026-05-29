@@ -24,6 +24,7 @@
             @php
                 $hasPending = collect($item->transaction)->contains('payment_status', 'PENDING');
                 $invitationUid = $item->uid;
+                $canShareInvitation = $item->canBeShared();
             @endphp
             <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -38,6 +39,9 @@
                                 <span class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                                     <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                                     {{ $item->created_at->format('d M Y') }}
+                                </span>
+                                <span class="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-wider">
+                                    {{ $item->eventType->name ?? 'Pernikahan' }}
                                 </span>
                                 @if($item->isActive)
                                     <span class="px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
@@ -66,10 +70,16 @@
                             @endif
                         @endif
 
-                        <a href="{{ url('/u/' . $item->slug) }}" target="_blank"
-                            class="inline-flex items-center px-4 py-2 bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-300 text-sm font-medium rounded-xl hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
-                            <i data-lucide="external-link" class="w-4 h-4 mr-2"></i> Lihat
-                        </a>
+                        @if ($canShareInvitation)
+                            <a href="{{ url('/u/' . $item->slug) }}" target="_blank"
+                                class="inline-flex items-center px-4 py-2 bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-300 text-sm font-medium rounded-xl hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
+                                <i data-lucide="external-link" class="w-4 h-4 mr-2"></i> Lihat
+                            </a>
+                        @else
+                            <span class="inline-flex items-center px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-400 text-sm font-medium rounded-xl cursor-not-allowed">
+                                <i data-lucide="lock" class="w-4 h-4 mr-2"></i> Belum Aktif
+                            </span>
+                        @endif
                         
                         @if ($invitationUid)
                             <a href="{{ route('dashboard.undangan.kelola', $invitationUid) }}" wire:navigate

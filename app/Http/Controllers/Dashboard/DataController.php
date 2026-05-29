@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Data;
+use App\Models\EventType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\DataFonts;
@@ -40,15 +41,70 @@ class DataController extends Controller
         $validasi = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255',
+            'event_type_id' => 'nullable|exists:event_types,id',
         ]);
 
         if (Data::where('slug', $validasi['slug'])->exists()) {
             return redirect()->back()->with('error', 'Slug sudah digunakan, Cari slug lain!')->withInput();
         }
 
+        $eventTypeId = $validasi['event_type_id'] ?? EventType::where('key', 'wedding')->value('id');
+        $eventType = EventType::find($eventTypeId);
+        $eventKey = $eventType?->key ?? 'wedding';
+
+        $defaultTexts = match ($eventKey) {
+            'birthday' => [
+                'pembuka' => "Dengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara ulang tahun kami",
+                'acara' => "Acara ulang tahun ini insyaAllah akan dilaksanakan pada:",
+                'penutup' => "Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa.",
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara ulang tahun kami.
+            Silahkan kunjungi link berikut untuk membuka undangan:
+            {{link}}
+            Atas kehadiran dan doanya, kami ucapkan terimakasih.",
+            ],
+            'engagement' => [
+                'pembuka' => "Dengan penuh rasa syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pertunangan kami",
+                'acara' => "Acara pertunangan ini insyaAllah akan dilaksanakan pada:",
+                'penutup' => "Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa.",
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pertunangan kami.
+            Silahkan kunjungi link berikut untuk membuka undangan:
+            {{link}}
+            Atas kehadiran dan doanya, kami ucapkan terimakasih.",
+            ],
+            'pengajian' => [
+                'pembuka' => "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pengajian kami",
+                'acara' => "Acara pengajian ini insyaAllah akan dilaksanakan pada:",
+                'penutup' => "Atas kehadiran dan doa Bapak/Ibu/Saudara/i, kami ucapkan terimakasih.",
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pengajian kami.
+            Silahkan kunjungi link berikut untuk membuka undangan:
+            {{link}}
+            Atas kehadiran dan doanya, kami ucapkan terimakasih.",
+            ],
+            'event' => [
+                'pembuka' => "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara kami",
+                'acara' => "Acara ini akan dilaksanakan pada:",
+                'penutup' => "Atas kehadiran Bapak/Ibu/Saudara/i, kami ucapkan terimakasih.",
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara kami.
+            Silahkan kunjungi link berikut untuk membuka undangan:
+            {{link}}
+            Atas kehadirannya, kami ucapkan terimakasih.",
+            ],
+            default => [
+                'pembuka' => "Kami mohon do'a & restunya atas pernikahan kami",
+                'acara' => "Kami bermaksud untuk mengundang saudara/(i) dalam acara pernikahan kami pada:",
+                'penutup' => "Atas kehadiran saudara/(i) & Do'a restunya, kami ucapkan terimakasih",
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami
+            *{{nama_mempelai1}} & {{nama_mempelai2}}*
+            Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
+            {{link}}
+            Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.",
+            ],
+        };
+
         $data = Data::create([
             'user_id' => Auth::user()->id,
             'theme_id' => null,
+            'event_type_id' => $eventTypeId,
             'title' => $validasi['title'],
             'slug' => $validasi['slug']
         ]);
@@ -56,17 +112,13 @@ class DataController extends Controller
 
         TeksUndangan::create([
             'data_id' => $data->id,
-            'pembuka' => "Kami mohon do'a & restunya atas pernikahan kami",
-            'acara' => "Kami bermaksud untuk mengundang saudara/(i) dalam acara pernikahan kami pada:",
-            'penutup' => "Atas kehadiran saudara/(i) & Do'a restunya, kami ucapkan terimakasih",
+            'pembuka' => $defaultTexts['pembuka'],
+            'acara' => $defaultTexts['acara'],
+            'penutup' => $defaultTexts['penutup'],
         ]);
         teksWhatsApp::create([
             'data_id' => $data->id,
-            'pesan' => "Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami
-            *{{nama_mempelai1}} & {{nama_mempelai2}}*
-            Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
-            {{link}}
-            Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
+            'pesan' => $defaultTexts['whatsapp']
         ]);
         Qoute::create([
             'data_id' => $data->id,

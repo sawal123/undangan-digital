@@ -4,6 +4,7 @@ namespace App\Livewire\AdminDemo;
 
 use App\Models\Theme;
 use App\Models\Category;
+use App\Models\EventType;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -14,22 +15,26 @@ class ThemeDemo extends Component
     use WithPagination, WithFileUploads;
 
     public $search = '';
-    public $nama, $category_id, $path, $demo, $thumbnail, $theme_id;
+    public $nama, $category_id, $event_type_id, $path, $demo, $thumbnail, $theme_id;
     public $isEdit = false;
 
     public function render()
     {
-        $themes = Theme::with('category')
+        $themes = Theme::with(['category', 'eventType'])
             ->where('nama', 'like', '%' . $this->search . '%')
             ->orWhereHas('category', function($query) {
                 $query->where('category', 'like', '%' . $this->search . '%');
+            })
+            ->orWhereHas('eventType', function($query) {
+                $query->where('name', 'like', '%' . $this->search . '%');
             })
             ->latest()
             ->paginate(10);
 
         return view('livewire.admin-demo.theme-demo', [
             'themes' => $themes,
-            'categories' => Category::all()
+            'categories' => Category::all(),
+            'eventTypes' => EventType::all(),
         ])->layout('components.layouts.admin-new');
     }
 
@@ -37,6 +42,7 @@ class ThemeDemo extends Component
     {
         $this->nama = '';
         $this->category_id = '';
+        $this->event_type_id = EventType::where('key', 'wedding')->value('id');
         $this->path = '';
         $this->demo = '';
         $this->thumbnail = null;
@@ -49,6 +55,7 @@ class ThemeDemo extends Component
         $this->validate([
             'nama' => 'required|string|max:255',
             'category_id' => 'required',
+            'event_type_id' => 'required|exists:event_types,id',
             'path' => 'required|string|max:255',
             'demo' => 'nullable|string|max:255',
             'thumbnail' => 'nullable|image|max:1024'
@@ -57,6 +64,7 @@ class ThemeDemo extends Component
         $data = [
             'nama' => $this->nama,
             'category_id' => $this->category_id,
+            'event_type_id' => $this->event_type_id,
             'path' => $this->path,
             'demo' => $this->demo,
         ];
@@ -78,6 +86,7 @@ class ThemeDemo extends Component
         $this->theme_id = $id;
         $this->nama = $theme->nama;
         $this->category_id = $theme->category_id;
+        $this->event_type_id = $theme->event_type_id;
         $this->path = $theme->path;
         $this->demo = $theme->demo;
         $this->isEdit = true;
@@ -90,6 +99,7 @@ class ThemeDemo extends Component
         $this->validate([
             'nama' => 'required|string|max:255',
             'category_id' => 'required',
+            'event_type_id' => 'required|exists:event_types,id',
             'path' => 'required|string|max:255',
             'demo' => 'nullable|string|max:255',
             'thumbnail' => 'nullable|image|max:1024'
@@ -100,6 +110,7 @@ class ThemeDemo extends Component
         $data = [
             'nama' => $this->nama,
             'category_id' => $this->category_id,
+            'event_type_id' => $this->event_type_id,
             'path' => $this->path,
             'demo' => $this->demo,
         ];

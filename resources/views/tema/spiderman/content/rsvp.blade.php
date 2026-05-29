@@ -1,6 +1,6 @@
 <div class="relative min-h-screen hidden" id="rspv">
     <!-- Top Section -->
-    @include('tema.ultah.top-section')
+    @include('tema.spiderman.top-section')
     <!-- End Top Section -->
 
     <!-- konten RSVP -->
@@ -8,7 +8,7 @@
 
       <div class="w-full flex justify-center items-center" data-aos="fade-down" data-aos-duration="2500"
         data-aos-easing="ease-in-sine">
-        <img src="{{ asset('storage/' . $data->pria->image) }}" alt="bayi"
+        <img src="{{ $birthdayPhoto ? asset('storage/' . $birthdayPhoto) : asset('tema/spiderman/src/img/bayi.webp') }}" alt="bayi"
           class="max-w-[200px] max-h-[200px] object-cover object-center rounded-full aspect-square animate-bounce ease-in-out duration-300 border-4 border-red-500">
       </div>
 
@@ -18,12 +18,13 @@
 
       <button type="button" onclick="toggleModalRspv()" data-aos="fade-up" data-aos-duration="2500"
         data-aos-easing="ease-in-sine"
-        class=" font-semibold w-auto border bg-[#FFC300] py-1 px-2 text-black text-[13px] rounded-full"></i>Kirim
-        Ucapan dan Kehadiran</a>
+        class="font-semibold w-auto border bg-[#FFC300] py-1 px-2 text-black text-[13px] rounded-full">
+        Kirim Ucapan dan Kehadiran
+      </button>
 
     </div>
 
     <!-- Bottom Section -->
-    @include('tema.ultah.bottom-section')
+    @include('tema.spiderman.bottom-section')
     <!-- End Bottom Section -->
   </div>

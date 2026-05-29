@@ -43,8 +43,9 @@
             </div>
 
             <div class="flex justify-end">
-                <button wire:click="save" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-2xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Link
+                <button wire:click="save" wire:loading.attr="disabled" wire:target="save" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-2xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                    <span wire:loading.remove wire:target="save" class="inline-flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Simpan Link</span>
+                    <span wire:loading.flex wire:target="save" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
                 </button>
             </div>
         </div>

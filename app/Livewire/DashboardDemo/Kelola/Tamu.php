@@ -23,10 +23,13 @@ class Tamu extends Component
     public $slug = "";
     public $invite = [];
     public $title = 'Add Tamu';
+    public bool $canShareInvitation = false;
 
     public function mount($id)
     {
-        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
+        $data = Data::where('uid', $id)->firstOrFail();
+        $this->dataId = $data->id;
+        $this->canShareInvitation = $data->canBeShared();
     }
     public function close()
     {
@@ -38,7 +41,18 @@ class Tamu extends Component
     public function shareWA($id)
     {
         $this->undang = Tamus::find($id);
+        if (!$this->undang) {
+            session()->flash('error', 'Data tamu tidak ditemukan.');
+            return;
+        }
+
         $data = Data::find($this->undang->data_id);
+
+        if (!$data?->canBeShared()) {
+            session()->flash('error', 'Undangan belum aktif, link belum bisa dibagikan.');
+            return;
+        }
+
         if ($this->undang) {
             $namaTamu = $this->undang->nama; // Nama tamu dari database
             // Membuat teks undangan
@@ -77,6 +91,12 @@ class Tamu extends Component
     public function shareTamu($id)
     {
         $this->undang = Tamus::find($id);
+
+        if (!$this->undang?->data?->canBeShared()) {
+            session()->flash('error', 'Undangan belum aktif, link belum bisa dibagikan.');
+            return;
+        }
+
         if ($this->undang) {
             $this->invite = [$this->undang->nama, $this->undang->kode];
         }
@@ -135,7 +155,8 @@ class Tamu extends Component
             ->orWhere('nomor', 'LIKE', '%' . $this->query . '%')
             ->orderBy('id', 'desc')->paginate(5);
         return view('livewire.dashboard.kelola.tamu', [
-            'tamu' => $tamu
+            'tamu' => $tamu,
+            'canShareInvitation' => $this->canShareInvitation,
         ])->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Tamu'
         ]);

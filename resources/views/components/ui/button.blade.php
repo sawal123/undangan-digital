@@ -3,6 +3,8 @@
     'size' => 'md',
     'type' => 'button',
     'icon' => null,
+    'loadingTarget' => null,
+    'loadingText' => 'Memproses...',
 ])
 
 @php
@@ -25,9 +27,25 @@
     $classes = $baseClasses . ' ' . ($variants[$variant] ?? $variants['primary']) . ' ' . ($sizes[$size] ?? $sizes['md']);
 @endphp
 
-<button type="{{ $type }}" {{ $attributes->merge(['class' => $classes]) }}>
-    @if($icon)
-        <i data-lucide="{{ $icon }}" class="w-4 h-4"></i>
+<button
+    type="{{ $type }}"
+    @if($loadingTarget) wire:loading.attr="disabled" wire:target="{{ $loadingTarget }}" @endif
+    {{ $attributes->merge(['class' => $classes . ' disabled:opacity-60 disabled:cursor-not-allowed']) }}>
+    @if($loadingTarget)
+        <span wire:loading.remove wire:target="{{ $loadingTarget }}" class="inline-flex items-center justify-center gap-2">
+            @if($icon)
+                <i data-lucide="{{ $icon }}" class="w-4 h-4"></i>
+            @endif
+            {{ $slot }}
+        </span>
+        <span wire:loading.flex wire:target="{{ $loadingTarget }}" class="hidden items-center justify-center gap-2">
+            <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+            {{ $loadingText }}
+        </span>
+    @else
+        @if($icon)
+            <i data-lucide="{{ $icon }}" class="w-4 h-4"></i>
+        @endif
+        {{ $slot }}
     @endif
-    {{ $slot }}
 </button>

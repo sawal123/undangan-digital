@@ -1,7 +1,7 @@
 <div class="absolute right-5 bottom-28 flex flex-col space-y-3 z-50">
-    <button class="bg-green-500 hover:opacity-50 text-white font-bold p-2 w-10 rounded-full aspect-square">
+    <a href="https://wa.me/?text={{ urlencode(url()->current()) }}" target="_blank" class="bg-green-500 hover:opacity-50 text-white font-bold p-2 w-10 rounded-full aspect-square flex items-center justify-center">
         <i class="fa-brands fa-whatsapp"></i>
-    </button>
+    </a>
     <button class="bg-[#FFC300] hover:opacity-50 text-black font-bold p-2 w-10 rounded-full aspect-square"
         onclick="toggleModalQr()" type="button">
         <i class="fa-solid fa-qrcode"></i></button>

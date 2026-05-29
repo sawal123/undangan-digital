@@ -7,7 +7,10 @@
                      placeholder="Undangan / Ngunduh Mantu Dll">
              </div>
              <div class="d-flex justify-content-end">
-                 <button class="btn btn-primary btn-sm" {{ $button ? '' : 'disabled' }}>Update</button>
+                 <button class="btn btn-primary btn-sm" wire:loading.attr="disabled" wire:target="titleA({{ $dataId }})" {{ $button ? '' : 'disabled' }}>
+                     <span wire:loading.remove wire:target="titleA({{ $dataId }})">Update</span>
+                     <span wire:loading wire:target="titleA({{ $dataId }})">Menyimpan...</span>
+                 </button>
              </div>
          </div>
      </div>
@@ -38,7 +41,10 @@
              </div>
          </div>
          <div class="d-flex justify-content-end">
-             <button class="btn btn-primary btn-sm" {{ $button ? '' : 'disabled' }}>Update</button>
+             <button class="btn btn-primary btn-sm" wire:loading.attr="disabled" wire:target="update({{ $dataId }})" {{ $button ? '' : 'disabled' }}>
+                 <span wire:loading.remove wire:target="update({{ $dataId }})">Update</span>
+                 <span wire:loading wire:target="update({{ $dataId }})">Menyimpan...</span>
+             </button>
          </div>
      </div>
  </form>

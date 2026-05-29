@@ -1,6 +1,6 @@
 <div class="relative min-h-screen hidden" id="gift">
     <!-- Top Section -->
-    @include('tema.ultah.top-section')
+    @include('tema.spiderman.top-section')
     <!-- End Top Section -->
 
     <!-- konten gallery -->
@@ -40,14 +40,14 @@
                 </div>
                 <div class="p-4 text-black">
                     <!-- Konten Modal -->
-                    @foreach ($data->kado as $index => $kado)
+                    @forelse ($data->kado as $index => $kado)
                         <div class="flex flex-row gap-2 items-center mb-4">
                             <div class="px-2 py-1 w-[80px] h-[58px] bg-gray-100 rounded-lg flex items-center">
-                                <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" alt="pembayaran"
+                                <img src="{{ asset('storage/' . $kado->giftPay?->icon) }}" alt="pembayaran"
                                     class="w-full h-full object-center object-contain">
                             </div>
                             <div class="flex flex-col justify-center items-start text-gray-900 text-start">
-                                <p class="font-extrabold text-[20px]">{{ $kado->nomorPay }}</p>
+                                <p class="nomor-rekening font-extrabold text-[20px]">{{ $kado->nomorPay }}</p>
                                 <button
                                     class="rounded-lg font-semibold w-auto border bg-[#FFC300] py-1 px-2 text-black text-[13px]"
                                     onclick="salinTeks(this)" type="button">
@@ -62,7 +62,9 @@
                                 <img src="{{ asset('storage/' . $kado->qris) }}" alt="QRIS" class="w-32 mt-2">
                             </div>
                         @endif
-                    @endforeach
+                    @empty
+                        <p class="text-sm text-center text-gray-700">Metode cashless belum tersedia.</p>
+                    @endforelse
                 </div>
                 <div class="p-4 border-t text-right">
                     <button class="rounded-lg bg-gray-300 hover:bg-gray-400 px-4 py-2 text-black font-semibold"
@@ -80,7 +82,7 @@
                 <p class="font-extrabold text-[20px] text-[#FFC300]">Kirim Kado</p>
                 <p class="font-extrabold text-[15px] text-center">
                     Anda dapat mengirim kado ke: <br>
-                    Jl Wildan Sari No 11 Banjarmasin Barat 703222
+                    Silakan hubungi penyelenggara untuk alamat pengiriman hadiah.
                 </p>
             </div>
         </div>
@@ -88,7 +90,7 @@
         <script>
             function salinTeks(button) {
                 // Ambil elemen teks dalam kartu yang sesuai dengan tombol yang diklik
-                const nomorRekening = button.closest('.relative').querySelector('.nomor-rekening').textContent;
+                const nomorRekening = button.closest('.flex-col').querySelector('.nomor-rekening').textContent;
 
                 // Salin teks ke clipboard
                 navigator.clipboard.writeText(nomorRekening).then(() => {
@@ -127,7 +129,10 @@ function toggleModal(modalId) {
 // Fungsi untuk menampilkan bagian tertentu
 function toggleSection(sectionId) {
     // Sembunyikan semua bagian lain
-    document.getElementById('kirimKado').classList.add('hidden');
+    const kirimKado = document.getElementById('kirimKado');
+    if (kirimKado) {
+        kirimKado.classList.add('hidden');
+    }
 
     // Tampilkan bagian yang dipilih
     const section = document.getElementById(sectionId);
@@ -142,6 +147,6 @@ function toggleSection(sectionId) {
     </div>
 
     <!-- Bottom Section -->
-    @include('tema.ultah.bottom-section')
+    @include('tema.spiderman.bottom-section')
     <!-- End Bottom Section -->
 </div>

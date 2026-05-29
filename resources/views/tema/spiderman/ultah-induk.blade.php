@@ -15,12 +15,19 @@
 
 
     <link rel="stylesheet" href="{{ asset('tema/spiderman/assets/swiper/swiper-bundle.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('tema/spiderman/src/css/gallery.css') }}">
+    <link rel="stylesheet" href="{{ asset('tema/spiderman/src/css/gallery.css') }}?v=gallery-fit-20260529">
 
     <script src="{{ asset('tema/spiderman/assets/swiper/swiper-bundle.min.js') }}"></script>
 </head>
 
 <body class=" bg-red-900 font-quantico">
+    @php
+        $birthday = $data->birthdayProfile;
+        $birthdayName = $birthday?->name ?? $data->title ?? 'Birthday';
+        $birthdayNickname = $birthday?->nickname ?? $birthdayName;
+        $birthdayAge = $birthday?->age;
+        $birthdayPhoto = $birthday?->photo ?? $data->pria?->image;
+    @endphp
 
     <!-- Cover -->
     @include('tema.spiderman.content.cover')
@@ -29,7 +36,7 @@
     <div class="">
 
         <!-- Konten undangan-->
-        <div class="w-full lg:w-[430px] relative  flex flex-col text-white overflow-hidden justify-center z-10 mx-auto lg:rounded-3xl"
+        <div class="spiderman-stage w-full lg:w-[430px] relative flex flex-col text-white overflow-hidden justify-center z-10 mx-auto lg:rounded-3xl"
             style="background-image: url('{{ asset('tema/spiderman/src/img/bg.webp') }}'); background-size: cover; background-position: center;">
 
             <!-- opening -->
@@ -94,7 +101,7 @@
 
     <!-- Swiper -->
 
-    <script src="{{ asset('tema/spiderman/src/js/swiper.js') }}"></script>
+    <script src="{{ asset('tema/spiderman/src/js/swiper.js') }}?v=gallery-fit-20260529"></script>
 
     <!-- aos -->
 
@@ -108,7 +115,7 @@
     <!-- nav -->
     <script src="{{ asset('tema/spiderman/src/js/nav.js') }}"></script>
     <!-- modal -->
-    <script src="{{ asset('tema/spiderman/src/js/modal.js') }}"></script>
+    <script src="{{ asset('tema/spiderman/src/js/modal.js') }}?v=wish-modal-fix-20260529"></script>
     <!-- audio -->
     <script src="{{ asset('tema/spiderman/src/js/audio.js') }}"></script>
     {{-- <script src="{{ asset('tema/spiderman/src/js/setDate.js') }}"></script> --}}

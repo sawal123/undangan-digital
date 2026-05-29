@@ -17,6 +17,23 @@
         </div>
     @endif
 
+    @if (session()->has('error'))
+        <div class="p-4 text-sm text-rose-800 rounded-xl bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400 border border-rose-200 dark:border-rose-800 flex items-center gap-3" role="alert">
+            <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500"></i>
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @unless ($canShareInvitation)
+        <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-sm flex items-start gap-3">
+            <i data-lucide="lock" class="w-5 h-5 mt-0.5"></i>
+            <div>
+                <p class="font-bold">Link undangan belum bisa dibagikan.</p>
+                <p class="mt-1 text-amber-700 dark:text-amber-400">Aktifkan undangan terlebih dahulu sebelum mengirim WhatsApp atau menyalin link tamu.</p>
+            </div>
+        </div>
+    @endunless
+
     <!-- Search & Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="md:col-span-2 relative" wire:ignore.self>
@@ -68,14 +85,15 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center gap-2">
-                                    <button wire:click="shareWA({{ $item->id }})" class="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors" title="Kirim via WhatsApp">
+                                    <button wire:click="shareWA({{ $item->id }})" @disabled(!$canShareInvitation) class="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors disabled:text-slate-300 disabled:cursor-not-allowed disabled:hover:bg-transparent" title="{{ $canShareInvitation ? 'Kirim via WhatsApp' : 'Undangan belum aktif' }}">
                                         <i data-lucide="send" class="w-5 h-5"></i>
                                     </button>
-                                    <button wire:click="shareTamu({{ $item->id }})" class="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors" title="Salin Link">
+                                    <button wire:click="shareTamu({{ $item->id }})" @disabled(!$canShareInvitation) class="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors disabled:text-slate-300 disabled:cursor-not-allowed disabled:hover:bg-transparent" title="{{ $canShareInvitation ? 'Salin Link' : 'Undangan belum aktif' }}">
                                         <i data-lucide="copy" class="w-5 h-5"></i>
                                     </button>
-                                    <button wire:click="EditTamu({{ $item->id }})" class="p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-colors" title="Edit">
-                                        <i data-lucide="edit-3" class="w-5 h-5"></i>
+                                    <button wire:click="EditTamu({{ $item->id }})" wire:loading.attr="disabled" wire:target="EditTamu({{ $item->id }})" class="p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed" title="Edit">
+                                        <i wire:loading.remove wire:target="EditTamu({{ $item->id }})" data-lucide="edit-3" class="w-5 h-5"></i>
+                                        <i wire:loading wire:target="EditTamu({{ $item->id }})" data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
                                     </button>
                                     <button x-on:click="$dispatch('set-delete', { id: '{{ $item->kode }}', method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors" title="Hapus">
                                         <i data-lucide="trash-2" class="w-5 h-5"></i>
@@ -109,7 +127,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'tamu-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">Simpan</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loading-target="save" loading-text="Menyimpan...">Simpan</x-ui.button>
             </div>
         </form>
     </x-ui.modal>

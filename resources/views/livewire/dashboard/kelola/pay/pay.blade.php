@@ -9,13 +9,19 @@
                 <form wire:submit.prevent='redeem'>
                     <div class="input-group">
                         <input type="text" class="form-control" wire:model='code' placeholder="Promo code">
-                        <button t class="btn btn-secondary">Redeem</button>
+                        <button class="btn btn-secondary" wire:loading.attr="disabled" wire:target="redeem">
+                            <span wire:loading.remove wire:target="redeem">Redeem</span>
+                            <span wire:loading wire:target="redeem">Memproses...</span>
+                        </button>
                     </div>
                     @if (session()->has('message'))
                         <div class="form-text" id="basic-addon4">{{ session('message') }}</div>
                     @endif
                 </form>
-                <button class="w-100 btn btn-primary mt-3" wire:click='checkOut'>Continue to checkout</button>
+                <button class="w-100 btn btn-primary mt-3" wire:click="checkOut" wire:loading.attr="disabled" wire:target="checkOut">
+                    <span wire:loading.remove wire:target="checkOut">Continue to checkout</span>
+                    <span wire:loading wire:target="checkOut">Memproses...</span>
+                </button>
             </div>
         </div><!--end col-->
 

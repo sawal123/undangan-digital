@@ -15,21 +15,7 @@
     <title>{{ $title ?? 'User Dashboard' }}</title>
 
     <!-- Tailwind CSS (Vite or CDN as fallback) -->
-    @if(file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                darkMode: 'class',
-                theme: {
-                    extend: {
-                        colors: {}
-                    }
-                }
-            }
-        </script>
-    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -175,7 +161,7 @@
                             <i data-lucide="menu" class="w-5 h-5"></i>
                         </button>
                         @php($currentInvitationId = request()->route('id'))
-                        @if($currentInvitationId && request()->is('dashboard/kelola/*/acara', 'dashboard/kelola/*/pengantin', 'dashboard/kelola/*/galeri', 'dashboard/kelola/*/musik', 'dashboard/kelola/*/ucapan', 'dashboard/kelola/*/tamu', 'dashboard/kelola/*/streaming', 'dashboard/kelola/*/kado', 'dashboard/kelola/*/kisah-cinta', 'dashboard/kelola/*/setting', 'dashboard/kelola/*/buku-tamu', 'dashboard/kelola/*/tema'))
+                        @if($currentInvitationId && request()->is('dashboard/kelola/*/acara', 'dashboard/kelola/*/pengantin', 'dashboard/kelola/*/birthday', 'dashboard/kelola/*/detail-event', 'dashboard/kelola/*/galeri', 'dashboard/kelola/*/musik', 'dashboard/kelola/*/ucapan', 'dashboard/kelola/*/tamu', 'dashboard/kelola/*/streaming', 'dashboard/kelola/*/kado', 'dashboard/kelola/*/kisah-cinta', 'dashboard/kelola/*/setting', 'dashboard/kelola/*/buku-tamu', 'dashboard/kelola/*/tema'))
                             <a href="{{ route('dashboard.undangan.kelola', $currentInvitationId) }}" wire:navigate
                                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all">
                                 <i data-lucide="arrow-left" class="w-4 h-4"></i>

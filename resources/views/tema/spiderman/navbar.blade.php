@@ -1,4 +1,4 @@
-<div class="navbar absolute bottom-3 w-full z-10" id="navbar">
+<div class="navbar absolute bottom-3 w-full z-50" id="navbar" style="z-index: 80;">
     <div
       class="py-3 relative flex justify-center ring-1 ring-offset-2 ring-white text-white w-full h-auto bg-blue-700 shadow-lg">
       <div class="flex flex-row justify-center items-center w-full text-sm gap-3 text-white">
@@ -22,11 +22,13 @@
           <i class="fa-solid fa-comment"></i>
           <span class="ml-2 hidden">Rspv</span>
         </button>
-        <button class="nav-link gift flex items-center hover:bg-red-700 p-2 rounded-lg transition duration-200"
-          onclick="showSection('gift', this)">
-          <i class="fa-solid fa-gift"></i>
-          <span class="ml-2 hidden">Gift</span>
-        </button>
+        @if ($data->fiturKado?->isActive)
+          <button class="nav-link gift flex items-center hover:bg-red-700 p-2 rounded-lg transition duration-200"
+            onclick="showSection('gift', this)">
+            <i class="fa-solid fa-gift"></i>
+            <span class="ml-2 hidden">Gift</span>
+          </button>
+        @endif
         <button class="nav-link thanks flex items-center hover:bg-red-700 p-2 rounded-lg transition duration-200"
           onclick="showSection('thanks', this)">
           <i class="fa-solid fa-square-check"></i>

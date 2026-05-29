@@ -40,11 +40,9 @@
         <link href="{{ asset('assetDashboard/libs/select2/dist/css/select2.css') }}" rel="stylesheet" />
     @endif
 
-    <link rel="stylesheet" href="{{ asset('build/assets/app-CczSUIEg.css') }}">
-
-
-
-    {{-- @vite([]) --}}
+    @if(file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
     @livewireStyles
 </head>
 
@@ -80,8 +78,6 @@
     <script src="{{ asset('assetDashboard/js/jquery.js') }}"></script>
     <!-- javascript -->
     <!-- JAVASCRIPT -->
-    <script src="{{ asset('build/assets/app-I5mmpHKZ.js') }}"></script>
-
     <script src="{{ asset('assetDashboard/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assetDashboard/libs/simplebar/simplebar.min.js') }}"></script>

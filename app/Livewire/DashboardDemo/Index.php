@@ -10,7 +10,7 @@ class Index extends Component
 {
     public function render()
     {
-        $dataUndangan = Auth::user()->data()->latest()->get();
+        $dataUndangan = Auth::user()->data()->with('eventType')->latest()->get();
         $dataUndangan->each(function ($item) {
             if (blank($item->uid)) {
                 $item->update(['uid' => Data::generateUniqueUid()]);

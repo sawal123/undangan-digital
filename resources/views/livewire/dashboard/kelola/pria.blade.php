@@ -69,8 +69,9 @@
         </div>
 
         <div class="pt-4 mt-6 border-t border-slate-200 dark:border-slate-800">
-            <button type="submit" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors gap-2 w-full sm:w-auto">
-                <i data-lucide="check-circle" class="w-4 h-4"></i> Simpan Data Pria
+            <button type="submit" wire:loading.attr="disabled" wire:target="save" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors gap-2 w-full sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed">
+                <span wire:loading.remove wire:target="save" class="inline-flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Simpan Data Pria</span>
+                <span wire:loading.flex wire:target="save" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
             </button>
         </div>
     </form>

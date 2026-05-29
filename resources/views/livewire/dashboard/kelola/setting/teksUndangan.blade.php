@@ -19,7 +19,10 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-primary btn-sm">Update</button>
+            <button class="btn btn-primary btn-sm" wire:loading.attr="disabled" wire:target="TeksUndangan">
+                <span wire:loading.remove wire:target="TeksUndangan">Update</span>
+                <span wire:loading wire:target="TeksUndangan">Menyimpan...</span>
+            </button>
         </div>
     </div>
 </form>

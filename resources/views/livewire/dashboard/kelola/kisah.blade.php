@@ -49,9 +49,9 @@
                             
                             @if(isset($poto[$item->id]))
                                 <div class="flex flex-col gap-1.5 w-full max-w-[120px]">
-                                    <button wire:click="saveImage({{ $item->id }})" wire:loading.attr="disabled" class="w-full px-3 py-1.5 bg-indigo-600 text-white text-[11px] font-bold rounded-lg hover:bg-indigo-700 transition-all shadow-sm flex items-center justify-center gap-1">
-                                        <i data-lucide="save" class="w-3 h-3"></i>
-                                        <span>Simpan</span>
+                                    <button wire:click="saveImage({{ $item->id }})" wire:loading.attr="disabled" wire:target="saveImage({{ $item->id }})" class="w-full px-3 py-1.5 bg-indigo-600 text-white text-[11px] font-bold rounded-lg hover:bg-indigo-700 transition-all shadow-sm flex items-center justify-center gap-1 disabled:opacity-60 disabled:cursor-not-allowed">
+                                        <span wire:loading.remove wire:target="saveImage({{ $item->id }})" class="inline-flex items-center gap-1"><i data-lucide="save" class="w-3 h-3"></i> Simpan</span>
+                                        <span wire:loading.flex wire:target="saveImage({{ $item->id }})" class="hidden items-center gap-1"><i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Menyimpan...</span>
                                     </button>
                                     <button wire:click="$set('poto.{{ $item->id }}', null)" class="w-full px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold rounded-lg transition-all backdrop-blur-md">
                                         Batal
@@ -78,8 +78,9 @@
                         <div class="flex justify-between items-start gap-3 mb-2">
                             <h4 class="text-base font-bold text-slate-800 dark:text-white leading-snug">{{ $item->title }}</h4>
                             <div class="flex items-center gap-1 flex-shrink-0 -mt-1">
-                                <button wire:click="modalEditKisah({{ $item->id }})" class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all" title="Edit Kisah">
-                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                <button wire:click="modalEditKisah({{ $item->id }})" wire:loading.attr="disabled" wire:target="modalEditKisah({{ $item->id }})" class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all disabled:opacity-60 disabled:cursor-not-allowed" title="Edit Kisah">
+                                    <i wire:loading.remove wire:target="modalEditKisah({{ $item->id }})" data-lucide="edit-3" class="w-4 h-4"></i>
+                                    <i wire:loading wire:target="modalEditKisah({{ $item->id }})" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
                                 </button>
                                 <button x-on:click="$dispatch('set-delete', { id: {{ $item->id }}, method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all" title="Hapus Kisah">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -132,7 +133,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'kisah-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">Simpan</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loading-target="save" loading-text="Menyimpan...">Simpan</x-ui.button>
             </div>
         </form>
     </x-ui.modal>

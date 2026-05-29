@@ -2,6 +2,20 @@ html,
 body {
   position: relative;
   height: 100%;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+}
+
+.spiderman-stage {
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
 }
 .swiper {
   width: 100%;
@@ -24,6 +38,79 @@ body {
   max-height: 75%;
   width: auto;
   height: auto;
+}
+
+.spiderman-gallery-section {
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.spiderman-gallery-content {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 98px 16px 112px;
+  overflow: hidden;
+}
+
+.spiderman-gallery-content .spiderman-gallery-title {
+  flex: 0 0 auto;
+  padding-top: 0;
+  padding-bottom: 18px;
+}
+
+.spiderman-gallery-swiper {
+  flex: 0 1 auto;
+  width: min(76vw, 318px);
+  height: min(48dvh, 390px);
+  margin-inline: auto;
+  overflow: hidden !important;
+  contain: layout paint;
+}
+
+.spiderman-gallery-swiper .swiper-wrapper {
+  align-items: stretch;
+  height: 100%;
+}
+
+.spiderman-gallery-swiper .spiderman-gallery-slide {
+  width: 100% !important;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.spiderman-gallery-swiper .spiderman-gallery-image {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+@media (max-height: 720px) {
+  .spiderman-gallery-content {
+    padding-top: 86px;
+    padding-bottom: 104px;
+  }
+
+  .spiderman-gallery-swiper {
+    height: min(44dvh, 330px);
+  }
+}
+
+@media (min-width: 640px) {
+  .spiderman-gallery-swiper {
+    width: min(70vw, 330px);
+    height: min(48dvh, 390px);
+  }
 }
 
 

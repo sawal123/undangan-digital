@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Data;
+use App\Models\EventType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,7 +17,10 @@ class SetupController extends Controller
     {
         //
         $nonce = bin2hex(random_bytes(16));
-        return view('user.setup', ['nonce' => $nonce]);
+        return view('user.setup', [
+            'eventTypes' => EventType::all(),
+            'nonce' => $nonce
+        ]);
     }
 
     public function add($id)
@@ -29,6 +33,7 @@ class SetupController extends Controller
         }
         return view('user.addUndangan', [
             'data' => $data,
+            'eventTypes' => EventType::all(),
             'nonce' => $nonce
         ]);
     }

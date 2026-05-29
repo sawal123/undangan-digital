@@ -1,6 +1,6 @@
 <div class="relative min-h-screen hidden" id="thanks">
     <!-- Top Section -->
-    @include('tema.ultah.top-section')
+    @include('tema.spiderman.top-section')
     <!-- End Top Section -->
 
     <!-- konten thanks -->
@@ -9,14 +9,16 @@
 
 
       <div class="text-center pt-32">
-        <h3 class="leading-none text-[40px] font-extrabold uppercase ">Thank you for <br>Your Atention <br>Hope To
-          See You <br>At The Event</h3>
+        <h3 class="leading-none text-[36px] font-extrabold uppercase ">Terima kasih<br>atas doa dan<br>kehadirannya</h3>
+        <p class="max-w-[320px] mx-auto mt-5 text-sm normal-case px-6">
+          {!! nl2br(e($data->teksUndangan?->penutup ?? 'Sampai jumpa di acara ulang tahun ' . $birthdayNickname . '.')) !!}
+        </p>
       </div>
 
 
     </div>
 
     <!-- Bottom Section -->
-    @include('tema.ultah.bottom-section')
+    @include('tema.spiderman.bottom-section')
     <!-- End Bottom Section -->
   </div>

@@ -3,7 +3,7 @@
     <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <h3 class="text-xl font-black text-slate-800 dark:text-white">Pilih Tema Undangan</h3>
         <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Pilih desain terbaik yang sesuai dengan konsep
-            pernikahan Anda.</p>
+            acara Anda.</p>
     </div>
 
     @if (session()->has('message'))
@@ -13,6 +13,24 @@
             {{ session('message') }}
         </div>
     @endif
+
+    @if (session()->has('error'))
+        <div class="p-4 text-sm text-rose-800 rounded-xl bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400 border border-rose-200 dark:border-rose-800 flex items-center gap-3"
+            role="alert">
+            <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500"></i>
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @unless ($canShareInvitation)
+        <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-sm flex items-start gap-3">
+            <i data-lucide="lock" class="w-5 h-5 mt-0.5"></i>
+            <div>
+                <p class="font-bold">Review belum bisa dibuka.</p>
+                <p class="mt-1 text-amber-700 dark:text-amber-400">Aktifkan undangan terlebih dahulu untuk review dengan data user.</p>
+            </div>
+        </div>
+    @endunless
 
     <!-- Themes Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -71,19 +89,43 @@
 
                 <!-- Content -->
                 <div class="p-5">
-                    <div class="flex items-center justify-between gap-2">
+                    <div class="items-center justify-between gap-2">
                         <div>
                             <h4 class="font-bold text-slate-800 dark:text-white">{{ $item->nama }}</h4>
                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
                                 {{ $item->category->category ?? 'Umum' }}</p>
                         </div>
-                        <button wire:click="choose({{ $item->id }})"
-                            class="px-4 py-2 {{ $isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-indigo-600 hover:text-white' }} text-xs font-bold rounded-xl transition-all">
-                            {{ $isSelected ? 'Terpilih' : 'Pilih' }}
-                        </button>
+                        {{-- <br> --}}
+                        <div class="flex mt-2 flex-col sm:flex-row items-end sm:items-center gap-2">
+                            @if ($isSelected)
+                                <button type="button" wire:click="review" wire:loading.attr="disabled" wire:target="review"
+                                    class="px-4 py-2 {{ $canShareInvitation ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' }} text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                                    <i wire:loading.remove wire:target="review" data-lucide="{{ $canShareInvitation ? 'eye' : 'lock' }}" class="w-4 h-4"></i>
+                                    <i wire:loading wire:target="review" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                                    <span wire:loading.remove wire:target="review">Review</span>
+                                    <span wire:loading wire:target="review">Mengecek...</span>
+                                </button>
+                            @endif
+                            <button wire:click="choose({{ $item->id }})" wire:loading.attr="disabled" wire:target="choose({{ $item->id }})"
+                                class="px-4 py-2 {{ $isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-indigo-600 hover:text-white' }} text-xs font-bold rounded-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+                                <span wire:loading.remove wire:target="choose({{ $item->id }})">{{ $isSelected ? 'Terpilih' : 'Pilih' }}</span>
+                                <span wire:loading.flex wire:target="choose({{ $item->id }})" class="hidden items-center gap-1.5"><i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Memilih...</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
 </div>
+
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('open-new-tab', (event) => {
+            const url = event.url || event[0]?.url;
+            if (url) {
+                window.open(url, '_blank');
+            }
+        });
+    });
+</script>

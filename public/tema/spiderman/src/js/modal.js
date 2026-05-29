@@ -23,8 +23,34 @@ function openModalImg(img) {
 // RSPV
   function toggleModalRspv() {
     const modal = document.getElementById('ModalRspv');
+    if (!modal) {
+      return;
+    }
+
     modal.classList.toggle('invisible');
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  const wishForm = document.getElementById('spidermanWishForm');
+
+  if (!wishForm) {
+    return;
+  }
+
+  wishForm.addEventListener('submit', function () {
+    const button = wishForm.querySelector('button[type="submit"]');
+    const submitLabel = wishForm.querySelector('.submit-label');
+    const loadingLabel = wishForm.querySelector('.loading-label');
+
+    if (!button) {
+      return;
+    }
+
+    button.disabled = true;
+    submitLabel?.classList.add('hidden');
+    loadingLabel?.classList.remove('hidden');
+  });
+});
 
 
 

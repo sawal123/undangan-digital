@@ -86,8 +86,9 @@
                     <p class="text-[9px] text-slate-400 mt-2 italic">* Angka ini akan otomatis diupdate ke link youtube</p>
                 </div>
 
-                <button wire:click="save" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-black rounded-2xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center justify-center gap-2">
-                    <i data-lucide="check-circle" class="w-5 h-5"></i> Simpan Pilihan Musik
+                <button wire:click="save" wire:loading.attr="disabled" wire:target="save" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-black rounded-2xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                    <span wire:loading.remove wire:target="save" class="inline-flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5"></i> Simpan Pilihan Musik</span>
+                    <span wire:loading.flex wire:target="save" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Menyimpan...</span>
                 </button>
             </div>
             @endif

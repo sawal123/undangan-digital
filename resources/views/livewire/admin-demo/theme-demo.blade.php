@@ -20,12 +20,12 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
             </div>
-            <x-ui.input wire:model.live="search" placeholder="Cari nama tema atau kategori..." icon="search" />
+            <x-ui.input wire:model.live="search" placeholder="Cari nama tema, kategori, atau jenis event..." icon="search" />
         </div>
     </x-ui.card>
 
     <x-ui.table 
-        :headers="['No.', 'Nama Undangan', 'Category', 'Path', 'Demo', 'Aksi']"
+        :headers="['No.', 'Nama Undangan', 'Event', 'Category', 'Path', 'Demo', 'Aksi']"
         title="Daftar Theme"
         :count="$themes->total()"
     >
@@ -45,6 +45,9 @@
                         @endif
                         <span class="font-medium text-slate-800 dark:text-slate-200">{{ $theme->nama }}</span>
                     </div>
+                </td>
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400">
+                    {{ $theme->eventType->name ?? '-' }}
                 </td>
                 <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400">
                     {{ $theme->category->category ?? '-' }}
@@ -80,6 +83,17 @@
     <x-ui.modal name="theme-modal" :title="$isEdit ? 'Edit Theme' : 'Add New Theme'" icon="palette">
         <form wire:submit="{{ $isEdit ? 'update' : 'store' }}" class="space-y-4">
             <x-ui.input label="Nama Undangan" wire:model="nama" placeholder="Contoh: Modern Elegant" />
+
+            <div class="w-full">
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Jenis Event</label>
+                <select wire:model="event_type_id" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                    <option value="">Pilih Jenis Event</option>
+                    @foreach($eventTypes as $eventType)
+                        <option value="{{ $eventType->id }}">{{ $eventType->name }}</option>
+                    @endforeach
+                </select>
+                @error('event_type_id') <span class="text-xs text-rose-500 mt-1">{{ $message }}</span> @enderror
+            </div>
             
             <div class="w-full">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Category</label>

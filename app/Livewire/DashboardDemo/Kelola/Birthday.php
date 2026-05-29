@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Livewire\DashboardDemo\Kelola;
+
+use App\Models\Data;
+use App\Models\KelolaUndangan\BirthdayProfile;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+
+class Birthday extends Component
+{
+    use WithFileUploads;
+
+    public $dataId;
+    public $name;
+    public $nickname;
+    public $age;
+    public $parent_name;
+    public $description;
+    public $photo;
+
+    protected $rules = [
+        'name' => 'required|string|max:255',
+        'nickname' => 'nullable|string|max:255',
+        'age' => 'nullable|integer|min:1|max:150',
+        'parent_name' => 'nullable|string|max:255',
+        'description' => 'nullable|string|max:1000',
+        'photo' => 'nullable',
+    ];
+
+    public function mount($id)
+    {
+        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
+        $this->loadProfile();
+    }
+
+    public function loadProfile()
+    {
+        $profile = BirthdayProfile::where('data_id', $this->dataId)->first();
+
+        if (! $profile) {
+            return;
+        }
+
+        $this->name = $profile->name;
+        $this->nickname = $profile->nickname;
+        $this->age = $profile->age;
+        $this->parent_name = $profile->parent_name;
+        $this->description = $profile->description;
+        $this->photo = $profile->photo ? asset('storage/' . $profile->photo) : null;
+    }
+
+    public function save()
+    {
+        $this->validate();
+
+        $profile = BirthdayProfile::where('data_id', $this->dataId)->first();
+        $photoPath = is_object($this->photo) ? $this->photo->store('birthday', 'public') : null;
+
+        if ($profile && $photoPath && $profile->photo && Storage::disk('public')->exists($profile->photo)) {
+            Storage::disk('public')->delete($profile->photo);
+        }
+
+        $data = [
+            'data_id' => $this->dataId,
+            'name' => $this->name,
+            'nickname' => $this->nickname,
+            'age' => $this->age,
+            'parent_name' => $this->parent_name,
+            'description' => $this->description,
+        ];
+
+        if ($photoPath) {
+            $data['photo'] = $photoPath;
+        }
+
+        BirthdayProfile::updateOrCreate(
+            ['data_id' => $this->dataId],
+            $data
+        );
+
+        session()->flash('message', 'Profil ulang tahun berhasil disimpan.');
+        $this->loadProfile();
+    }
+
+    public function render()
+    {
+        return view('livewire.dashboard.kelola.birthday')->layout('components.layouts.user-new', [
+            'headerTitle' => 'Profil Ulang Tahun',
+        ]);
+    }
+}

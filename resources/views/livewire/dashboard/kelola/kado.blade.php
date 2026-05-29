@@ -57,8 +57,9 @@
                             </div>
                         @endif
                     </div>
-                    <button wire:click="save" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center justify-center gap-2">
-                        <i data-lucide="save" class="w-4 h-4"></i> Simpan Metode
+                    <button wire:click="save" wire:loading.attr="disabled" wire:target="save" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                        <span wire:loading.remove wire:target="save" class="inline-flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Simpan Metode</span>
+                        <span wire:loading.flex wire:target="save" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
                     </button>
                 </div>
             </div>

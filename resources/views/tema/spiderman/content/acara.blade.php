@@ -2,7 +2,7 @@
 
 <div class="relative min-h-screen hidden " id="acara">
     <!-- Top Section -->
-    @include('tema.ultah.top-section')
+    @include('tema.spiderman.top-section')
     <!-- End Top Section -->
 
     <!-- konten acara -->
@@ -12,30 +12,30 @@
         Welcome To</div>
       <div class="text-center text-[40px] font-bold text-white leading-none  text-ellipsis inline-block align-top font-audiowide"
         data-aos="fade-down" data-aos-duration="2500" data-aos-easing="linear">
-        1ST</div>
+        {{ $birthdayAge ? $birthdayAge . 'TH' : 'BIRTHDAY' }}</div>
       <div
         class="text-center text-[18px] font-semibold text-white leading-none  text-ellipsis inline-block align-top"
         data-aos="fade-down" data-aos-duration="1700" data-aos-easing="linear">
-        {{ $data->pria->nama_lengkap }}</div>
+        {{ $birthdayName }}</div>
 
       <div class="flex flex-row justify-center items-center text-[#FFC300] space-x-1" data-aos="fade-down"
         data-aos-duration="2800" data-aos-easing="ease-in-sine">
-        <div class="text-[50px] font-semibold  leading-none "> {{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }}</div>
-        <div class=" text-[20px] font-semibold  leading-none text-start">{{ $data ? date('m', strtotime($data->acara[0]->date)) : '10' }}<br>{{ $data ? date('Y', strtotime($data->acara[0]->date)) : '2024' }}</div>
+        <div class="text-[50px] font-semibold  leading-none "> {{ $acara ? date('d', strtotime($acara->date)) : '10' }}</div>
+        <div class=" text-[20px] font-semibold  leading-none text-start">{{ $acara ? date('m', strtotime($acara->date)) : '10' }}<br>{{ $acara ? date('Y', strtotime($acara->date)) : '2024' }}</div>
 
         <!-- Divider -->
         <div class="h-16 w-[2px] bg-[#FFC300]"></div>
 
-        <div class=" text-[20px] font-semibold  leading-none text-end">17.00 WIT<br>S.D SELESAI</div>
+        <div class=" text-[20px] font-semibold  leading-none text-end">{{ $acara?->jam_start ?? '17.00' }} {{ $acara?->zona_waktu ?? '' }}<br>S.D {{ $acara?->jam_end ?? 'SELESAI' }}</div>
       </div>
 
       <div class="text-center" data-aos="fade-down" data-aos-duration="2000" data-aos-easing="ease-in-sine">
         <div class="text-[12px] font-semibold text-white leading-none">lokasi acara</div>
-        <div class="text-[15px] font-semibold text-white leading-none">Passo - kampung baru</div>
+        <div class="text-[15px] font-semibold text-white leading-none">{{ $acara?->alamat ?? 'Lokasi acara' }}</div>
       </div>
 
       <div class="text-center pt-1 " data-aos="fade-down" data-aos-duration="2000" data-aos-easing="linear">
-        <a href="#" class="rounded-lg font-semibold w-auto border bg-[#FFC300] py-1 px-2 text-black text-[13px]"><i
+        <a href="{{ $acara?->maps ?? '#' }}" target="_blank" class="rounded-lg font-semibold w-auto border bg-[#FFC300] py-1 px-2 text-black text-[13px]"><i
             class="fa-solid fa-map-location-dot mr-2"></i>lihat lokasi</a>
       </div>
 
@@ -66,8 +66,8 @@
         </a>
         <script>
           document.addEventListener("DOMContentLoaded", function() {
-              let eventTitle = "Pernikahan Kami";
-              let eventDateStart = "{{ date('Ymd', strtotime($acara->date)) }}T100000Z"; // Sesuaikan jam UTC
+              let eventTitle = "Ulang Tahun {{ $birthdayNickname }}";
+              let eventDateStart = "{{ $acara ? date('Ymd', strtotime($acara->date)) : date('Ymd') }}T100000Z"; // Sesuaikan jam UTC
 
               let eventDetails = "Jangan lewatkan momen spesial kami!";
               let eventLocation = "{{ $acara->alamat }}";
@@ -83,7 +83,7 @@
       <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
-            let eventDate = new Date("{{ $data ? date('Y-m-d', strtotime($data->acara[0]->date)) : '2024-10-10' }}").getTime();
+            let eventDate = new Date("{{ $acara ? date('Y-m-d', strtotime($acara->date)) : date('Y-m-d') }}").getTime();
 
             // Update countdown setiap detik
             let countdown = setInterval(function() {
@@ -117,6 +117,6 @@
     </div>
 
     <!-- Bottom Section -->
-    @include('tema.ultah.bottom-section')
+    @include('tema.spiderman.bottom-section')
     <!-- End Bottom Section -->
   </div>

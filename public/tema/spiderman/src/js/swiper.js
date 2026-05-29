@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
 var swiper = new Swiper(".mySwiper", {
-  spaceBetween: 30,
-  // slidesPerView: 3,
-  centeredSlides: true,
+  slidesPerView: 1,
+  spaceBetween: 0,
+  centeredSlides: false,
+  watchOverflow: true,
   navigation: {
     nextEl: ".swiper-button-next",
     prevEl: ".swiper-button-prev",

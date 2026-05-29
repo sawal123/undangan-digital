@@ -1,9 +1,9 @@
 <div id="cover"
     class="w-full lg:w-[430px] inset-0  absolute text-white z-50 mx-auto bg-red-500 lg:rounded-3xl min-h-screen rounded-3x overflow-hidden"
-    style="background-image: url('{{ asset('tema/ultah/src/img/bg.webp') }} '); background-size: cover; background-position: center;">
+    style="background-image: url('{{ asset('tema/spiderman/src/img/bg.webp') }} '); background-size: cover; background-position: center;">
 
     <!-- Top Section -->
-    @include('tema.ultah.top-section')
+    @include('tema.spiderman.top-section')
     <!-- End Top Section -->
 
     <div class="w-full flex flex-col items-center justify-center space-y-4">
@@ -15,7 +15,7 @@
             <div class="text-center font-extrabold text-[20px] space-y-2" data-aos="zoom-in" data-aos-duration="2500"
             data-aos-easing="ease-in-sine">
                 <h4 class="text-[20px]">JOIN US TO CELEBRATE</h4>
-                <h1 class="text-[50px] leading-none font-audiowide">{{ $data->pria->nama_panggilan }}</h1>
+                <h1 class="text-[50px] leading-none font-audiowide">{{ $birthdayNickname }}</h1>
                 <h4 class="text-[20px]">BIRTHDAY PARTY</h4>
             </div>
             <div class="text-center pt-6 space-y-2" data-aos="zoom-in" data-aos-duration="2500"
@@ -34,15 +34,15 @@
 
     <!-- Bottom Section -->
     <div class="absolute bottom-0 w-full">
-        <img src="{{ asset('tema/ultah/src/img/bm.webp') }}" alt="Bottom Middle" data-aos="fade-up" data-aos-easing="ease-in-sine" data-aos-duration="1500">
+        <img src="{{ asset('tema/spiderman/src/img/bm.webp') }}" alt="Bottom Middle" data-aos="fade-up" data-aos-easing="ease-in-sine" data-aos-duration="1500">
     </div>
     <div class="w-full flex absolute bottom-0">
         <div class="basis-1/2">
-            <img src="{{ asset('tema/ultah/src/img/bl.webp') }}" alt="Bottom Left" data-aos="fade-up-right" data-aos-easing="ease-in-sine"
+            <img src="{{ asset('tema/spiderman/src/img/bl.webp') }}" alt="Bottom Left" data-aos="fade-up-right" data-aos-easing="ease-in-sine"
                 data-aos-duration="2500">
         </div>
         <div class="basis-1/2">
-            <img src="{{ asset('tema/ultah/src/img/br.webp') }}" alt="Bottom Right" data-aos="fade-up-left" data-aos-easing="ease-in-sine"
+            <img src="{{ asset('tema/spiderman/src/img/br.webp') }}" alt="Bottom Right" data-aos="fade-up-left" data-aos-easing="ease-in-sine"
                 data-aos-duration="2500">
         </div>
     </div>

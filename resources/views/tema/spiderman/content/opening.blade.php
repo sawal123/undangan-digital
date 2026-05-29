@@ -1,6 +1,6 @@
 <div class="relative min-h-screen hidden transition-all" id="opening">
     <!-- Top Section -->
-    @include('tema.ultah.top-section')
+    @include('tema.spiderman.top-section')
     <!-- End Top Section -->
 
     <!-- konten opening -->
@@ -12,7 +12,7 @@
       <div class="text-center font-extrabold text-[20px] space-y-2" data-aos="zoom-in" data-aos-duration="2500"
         data-aos-easing="ease-in-sine">
         <h4 class="text-[20px]">JOIN US TO CELEBRATE</h4>
-        <h1 class="text-[50px] leading-none font-audiowide"> {{ $data->pria->nama_panggilan }}</h1>
+        <h1 class="text-[50px] leading-none font-audiowide"> {{ $birthdayNickname }}</h1>
         <h4 class="text-[20px]">BIRTHDAY PARTY</h4>
       </div>
       <div class="text-center pt-6 space-y-2" data-aos="zoom-in" data-aos-duration="2500"
@@ -23,6 +23,6 @@
     </div>
 
     <!-- Bottom Section -->
-    @include('tema.ultah.bottom-section')
+    @include('tema.spiderman.bottom-section')
     <!-- End Bottom Section -->
   </div>

@@ -102,7 +102,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'photo-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">Simpan</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loading-target="save" loading-text="Menyimpan...">Simpan</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -114,7 +114,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'video-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">Simpan</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loading-target="save" loading-text="Menyimpan...">Simpan</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
