@@ -18,18 +18,7 @@ export default defineConfig({
                 'resources/js/app.js',
             ],
             detectTls: 'undangan-digital.test',
-            refresh: [
-                {
-                    paths: [
-                        'resources/views/**',
-                        'app/Livewire/**',
-                        'routes/web.php',
-                    ],
-                    config: {
-                        delay: 250,
-                    },
-                },
-            ],
+            refresh: true,
         }),
     ],
 });

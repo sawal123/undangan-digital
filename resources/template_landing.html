@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Wayae Nikah | Undangan Digital & Cetak Modern</title>
+  <!-- Tailwind CSS CDN + Font Awesome Icons + Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    .playfair {
+      font-family: 'Playfair Display', serif;
+    }
+    body {
+      scroll-behavior: smooth;
+      background: #fffaf7;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #fff5f0 0%, #ffe9e0 100%);
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+    }
+    .btn-gold {
+      background: linear-gradient(105deg, #D4AF37 0%, #C5A028 100%);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-gold:hover {
+      background: linear-gradient(105deg, #C5A028 0%, #B48D1A 100%);
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.35);
+    }
+    .btn-rose {
+      background: #b5654c;
+      transition: all 0.2s;
+    }
+    .btn-rose:hover {
+      background: #9c4d36;
+      transform: scale(1.02);
+    }
+    .feature-icon {
+      background: #fdf0e9;
+      transition: 0.2s;
+    }
+    .service-card {
+      border: 1px solid #ffede3;
+    }
+    .floating-shape {
+      position: absolute;
+      opacity: 0.4;
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- NAVBAR / Header Ringan -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="container mx-auto px-5 md:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <i class="fas fa-ring text-2xl text-amber-600"></i>
+        <span class="playfair text-2xl font-semibold tracking-tight text-gray-800">Wayae<span class="text-amber-600">Nikah</span></span>
+      </div>
+      <nav class="hidden md:flex gap-7 text-gray-600 font-medium">
+        <a href="#layanan" class="hover:text-amber-600 transition">Layanan</a>
+        <a href="#fitur" class="hover:text-amber-600 transition">Fitur</a>
+        <a href="#promo" class="hover:text-amber-600 transition">Penawaran</a>
+      </nav>
+      <a href="#konsultasi" class="hidden md:block bg-amber-50 text-amber-700 px-5 py-2 rounded-full text-sm font-semibold border border-amber-200 hover:bg-amber-100 transition shadow-sm">
+        <i class="fas fa-headset mr-1"></i> Konsultasi
+      </a>
+      <button class="md:hidden text-gray-600 text-2xl focus:outline-none" id="menuBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <!-- Mobile menu simple -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-100 py-3 px-5 flex flex-col gap-3 text-gray-700">
+      <a href="#layanan" class="py-2 hover:text-amber-600"><i class="fas fa-envelope-open-text w-6"></i> Layanan</a>
+      <a href="#fitur" class="py-2 hover:text-amber-600"><i class="fas fa-star w-6"></i> Fitur</a>
+      <a href="#promo" class="py-2 hover:text-amber-600"><i class="fas fa-tag w-6"></i> Penawaran</a>
+      <a href="#konsultasi" class="py-2 bg-amber-50 text-amber-700 rounded-full text-center mt-1"><i class="fas fa-headset mr-1"></i> Konsultasi Gratis</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section dengan pesan utama -->
+    <section class="gradient-bg overflow-hidden relative">
+      <div class="floating-shape w-72 h-72 bg-amber-200/20 rounded-full blur-3xl -top-20 -left-20"></div>
+      <div class="floating-shape w-80 h-80 bg-rose-200/20 rounded-full blur-3xl bottom-10 right-0"></div>
+      <div class="container mx-auto px-5 md:px-8 py-16 md:py-24 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center gap-12">
+          <div class="flex-1 text-center lg:text-left">
+            <div class="inline-block px-4 py-1.5 bg-white/60 backdrop-blur-sm rounded-full text-sm font-medium text-amber-700 shadow-sm mb-5 border border-white/40">
+              <i class="fas fa-mosque mr-1"></i> Wedding Digital Solution
+            </div>
+            <h1 class="playfair text-4xl md:text-6xl font-bold text-gray-800 leading-tight">
+              Wayae Nikah <br> 
+              <span class="text-amber-600">Menawarkan Jasa</span> Undangan
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 mt-6 max-w-2xl mx-auto lg:mx-0">
+              <span class="font-semibold">Pesan 1 Bisa dikirim Kesemua Orang</span> — lebih hemat, lebih praktis, lebih simple dengan segala kelebihan lainnya!
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center lg:justify-start mt-8">
+              <a href="#layanan" class="btn-gold text-white px-7 py-3 rounded-full font-semibold shadow-md flex items-center gap-2">
+                <i class="fas fa-calendar-alt"></i> Buat Undangan
+              </a>
+              <a href="#konsultasi" class="bg-white border border-gray-300 text-gray-700 px-7 py-3 rounded-full font-semibold hover:bg-gray-50 shadow-sm transition flex items-center gap-2">
+                <i class="fas fa-comment-dots text-amber-500"></i> Konsultasi
+              </a>
+            </div>
+            <div class="flex flex-wrap gap-6 justify-center lg:justify-start mt-10 text-sm font-medium text-gray-600">
+              <div class="flex items-center gap-2"><i class="fas fa-check-circle text-amber-500"></i> Hemat Budget</div>
+              <div class="flex items-center gap-2"><i class="fas fa-check-circle text-amber-500"></i> Praktis & Cepat</div>
+              <div class="flex items-center gap-2"><i class="fas fa-check-circle text-amber-500"></i> Simple Modern</div>
+            </div>
+          </div>
+          <div class="flex-1 flex justify-center relative">
+            <div class="relative w-72 md:w-96">
+              <div class="absolute inset-0 bg-amber-300/20 rounded-full blur-2xl"></div>
+              <img src="https://placehold.co/600x500/FFF2EB/D4AF37?text=✨+Undangan+✨&font=playfair" alt="Undangan preview" class="relative rounded-2xl shadow-2xl border-4 border-white/80 object-cover w-full">
+              <div class="absolute -bottom-5 -right-5 bg-white shadow-xl rounded-xl p-3 flex items-center gap-2">
+                <i class="fas fa-heart text-rose-500 text-xl"></i>
+                <span class="font-semibold text-gray-800">+1000 Pasangan</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layanan: 3 pilar utama (Undangan Web, Cetak Fisik, Animasi) -->
+    <section id="layanan" class="py-20 bg-white">
+      <div class="container mx-auto px-5 md:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+          <h2 class="playfair text-3xl md:text-4xl font-bold text-gray-800">✨ Jasa Lengkap untuk Hari Bahagia ✨</h2>
+          <div class="w-24 h-1 bg-amber-400 mx-auto mt-4 rounded-full"></div>
+          <p class="text-gray-500 mt-4">Pilih sesuai gaya & kebutuhan Anda — online, cetak, atau animasi eksklusif</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Card Undangan Web -->
+          <div class="service-card bg-white rounded-2xl p-6 shadow-md card-hover transition-all text-center border-0 shadow-lg hover:shadow-xl">
+            <div class="w-20 h-20 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-globe text-3xl text-amber-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800">Undangan Web</h3>
+            <p class="text-gray-500 mt-2 text-sm">Digital interaktif, akses selamanya. Bagikan link ke seluruh tamu tanpa batas.</p>
+            <ul class="mt-4 space-y-1 text-left text-sm text-gray-600">
+              <li><i class="fas fa-check text-amber-500 w-4 mr-2"></i> Responsif HP & Desktop</li>
+              <li><i class="fas fa-check text-amber-500 w-4 mr-2"></i> Live RSVP & Lokasi</li>
+            </ul>
+          </div>
+          <!-- Card Cetak Undangan Fisik -->
+          <div class="service-card bg-white rounded-2xl p-6 shadow-md card-hover transition-all text-center shadow-lg">
+            <div class="w-20 h-20 bg-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-print text-3xl text-rose-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800">Cetak Undangan Fisik</h3>
+            <p class="text-gray-500 mt-2 text-sm">Premium paper, desain eksklusif, pilihan sampul & emboss elegan.</p>
+            <ul class="mt-4 space-y-1 text-left text-sm text-gray-600">
+              <li><i class="fas fa-check text-rose-500 w-4 mr-2"></i> Bahan mewah / custom</li>
+              <li><i class="fas fa-check text-rose-500 w-4 mr-2"></i> Cetak kilat + ongkir</li>
+            </ul>
+          </div>
+          <!-- Card Undangan Animasi -->
+          <div class="service-card bg-white rounded-2xl p-6 shadow-md card-hover transition-all text-center shadow-lg">
+            <div class="w-20 h-20 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-film text-3xl text-indigo-500"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800">Undangan Animasi</h3>
+            <p class="text-gray-500 mt-2 text-sm">Motion graphic personal, storytelling cinta yang tak terlupakan.</p>
+            <ul class="mt-4 space-y-1 text-left text-sm text-gray-600">
+              <li><i class="fas fa-check text-indigo-500 w-4 mr-2"></i> Durasi 30-60 detik</li>
+              <li><i class="fas fa-check text-indigo-500 w-4 mr-2"></i> Share ke WA / Media Sosial</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bagian Fitur Lengkap (Aktif Selamanya, Bebas Music, Ucapan & Doa, Kado, Kirim WA, Galeri) -->
+    <section id="fitur" class="py-20 bg-[#fefaf8]">
+      <div class="container mx-auto px-5 md:px-8">
+        <div class="text-center mb-14">
+          <div class="inline-flex items-center gap-2 bg-white/70 backdrop-blur-sm rounded-full px-4 py-1.5 border border-amber-200 shadow-sm">
+            <i class="fas fa-gem text-amber-500"></i>
+            <span class="text-sm font-semibold text-amber-700">Keunggulan Premium</span>
+          </div>
+          <h2 class="playfair text-3xl md:text-5xl font-bold mt-4 text-gray-800">Fitur Apa Saja Yang Kamu Dapat?</h2>
+          <p class="text-gray-500 max-w-2xl mx-auto mt-3 text-lg">Dengan Fitur Lengkap Kamu Bisa Atur Sendiri! 🎉</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+          <!-- Fitur 1: Aktif Selamanya -->
+          <div class="bg-white p-6 rounded-xl shadow-md flex items-start gap-4 transition-all hover:shadow-lg card-hover">
+            <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0"><i class="fas fa-infinity text-2xl text-amber-600"></i></div>
+            <div><h3 class="font-bold text-xl text-gray-800">Aktif Selamanya</h3><p class="text-gray-500 text-sm">Undangan web & animasi tidak kedaluwarsa, akses seumur hidup.</p></div>
+          </div>
+          <!-- Fitur 2: Bebas Music -->
+          <div class="bg-white p-6 rounded-xl shadow-md flex items-start gap-4 transition-all hover:shadow-lg card-hover">
+            <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0"><i class="fas fa-music text-2xl text-amber-600"></i></div>
+            <div><h3 class="font-bold text-xl text-gray-800">Bebas Music</h3><p class="text-gray-500 text-sm">Pilih lagu favorit, atur playlist sendiri tanpa ribet.</p></div>
+          </div>
+          <!-- Fitur 3: Ucapan & Doa -->
+          <div class="bg-white p-6 rounded-xl shadow-md flex items-start gap-4 transition-all hover:shadow-lg card-hover">
+            <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0"><i class="fas fa-hands-praying text-2xl text-amber-600"></i></div>
+            <div><h3 class="font-bold text-xl text-gray-800">Ucapan & Doa</h3><p class="text-gray-500 text-sm">Tamu bisa kirim doa & ucapan langsung di undangan.</p></div>
+          </div>
+          <!-- Fitur 4: Kado Digital -->
+          <div class="bg-white p-6 rounded-xl shadow-md flex items-start gap-4 transition-all hover:shadow-lg card-hover">
+            <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0"><i class="fas fa-gift text-2xl text-amber-600"></i></div>
+            <div><h3 class="font-bold text-xl text-gray-800">Kado</h3><p class="text-gray-500 text-sm">Fitur kado online, transfer via bank & e-wallet terintegrasi.</p></div>
+          </div>
+          <!-- Fitur 5: Kirim WA Massal -->
+          <div class="bg-white p-6 rounded-xl shadow-md flex items-start gap-4 transition-all hover:shadow-lg card-hover">
+            <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0"><i class="fab fa-whatsapp text-2xl text-green-600"></i></div>
+            <div><h3 class="font-bold text-xl text-gray-800">Kirim WA</h3><p class="text-gray-500 text-sm">Kirim undangan langsung ke WhatsApp tamu, praktis & cepat.</p></div>
+          </div>
+          <!-- Fitur 6: Galeri Foto & Video -->
+          <div class="bg-white p-6 rounded-xl shadow-md flex items-start gap-4 transition-all hover:shadow-lg card-hover">
+            <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center shrink-0"><i class="fas fa-images text-2xl text-amber-600"></i></div>
+            <div><h3 class="font-bold text-xl text-gray-800">Galeri Foto & Video</h3><p class="text-gray-500 text-sm">Unggah momen prewedding, video undangan, cerita cinta.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Penawaran Spesial: Bayar Sekali Bisa berkali-kali + CTA -->
+    <section id="promo" class="py-20 relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-r from-amber-50 via-rose-50 to-amber-50 opacity-60"></div>
+      <div class="container mx-auto px-5 md:px-8 relative z-10">
+        <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-amber-100">
+          <div class="grid md:grid-cols-2">
+            <div class="p-8 md:p-10 flex flex-col justify-center">
+              <div class="inline-flex items-center gap-2 bg-amber-100 text-amber-800 rounded-full px-4 py-1.5 w-fit text-sm font-semibold mb-4">
+                <i class="fas fa-bolt"></i> Special Offer
+              </div>
+              <h2 class="playfair text-3xl md:text-4xl font-bold text-gray-800 leading-tight">Jangan Ragu Untuk Hari Istimewa</h2>
+              <div class="mt-4 bg-amber-50 p-4 rounded-xl border-l-8 border-amber-400 my-4">
+                <p class="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-credit-card text-amber-600"></i> Bayar Sekali <span class="text-amber-600">Bisa digunakan Berkali-kali</span></p>
+                <p class="text-gray-600 mt-1">Nggak ada biaya bulanan, cukup investasi sekali untuk semua undangan & revisi.</p>
+              </div>
+              <ul class="space-y-2 text-gray-700 mb-6">
+                <li><i class="fas fa-check-circle text-amber-500 mr-2"></i> Update konten kapan saja</li>
+                <li><i class="fas fa-check-circle text-amber-500 mr-2"></i> Bisa cetak ulang kapan pun</li>
+                <li><i class="fas fa-check-circle text-amber-500 mr-2"></i> Support seumur hidup</li>
+              </ul>
+              <div class="flex flex-wrap gap-4 items-center mt-2">
+                <a href="#" class="btn-gold text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2"><i class="fas fa-envelope-open-text"></i> Buat Undangan Kamu!</a>
+                <a href="#konsultasi" class="bg-white border border-gray-300 px-5 py-3 rounded-full font-semibold text-gray-700 hover:bg-gray-50 transition flex items-center gap-2"><i class="fas fa-comments"></i> Konsultasi</a>
+              </div>
+            </div>
+            <div class="bg-amber-800/5 hidden md:flex items-center justify-center p-8 relative">
+              <div class="relative">
+                <i class="fas fa-heart text-9xl text-amber-200 absolute -top-6 -left-8 opacity-30"></i>
+                <div class="bg-white rounded-2xl p-5 shadow-xl w-64 text-center">
+                  <i class="fas fa-check-circle text-5xl text-amber-500 mb-2"></i>
+                  <p class="font-bold">Garansi seumur hidup</p>
+                  <p class="text-sm text-gray-500">1x pembayaran</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA + Konsultasi & Form Singkat -->
+    <section id="konsultasi" class="py-20 bg-white">
+      <div class="container mx-auto px-5 md:px-8 max-w-5xl">
+        <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 md:p-12 shadow-lg border border-amber-100">
+          <div class="text-center mb-8">
+            <i class="fas fa-calendar-check text-5xl text-amber-500 mb-3"></i>
+            <h3 class="playfair text-3xl font-bold text-gray-800">Siap wujudkan undangan impian?</h3>
+            <p class="text-gray-500 mt-2">Tim Wayae Nikah siap membantu konsultasi GRATIS dan custom sesuai keinginan Anda.</p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <form class="space-y-4">
+                <input type="text" placeholder="Nama lengkap" class="w-full border border-gray-200 rounded-xl px-5 py-3 focus:ring-2 focus:ring-amber-300 outline-none">
+                <input type="email" placeholder="Email / No WhatsApp" class="w-full border border-gray-200 rounded-xl px-5 py-3 focus:ring-2 focus:ring-amber-300 outline-none">
+                <select class="w-full border border-gray-200 rounded-xl px-5 py-3 text-gray-600 focus:ring-amber-300">
+                  <option>Pilih jenis undangan</option>
+                  <option>Undangan Web</option>
+                  <option>Cetak Fisik</option>
+                  <option>Undangan Animasi</option>
+                  <option>Paket Lengkap (All in One)</option>
+                </select>
+                <button class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-xl transition shadow-md flex justify-center gap-2 items-center"><i class="fab fa-whatsapp"></i> Kirim & Konsultasi Sekarang</button>
+                <p class="text-xs text-center text-gray-400">*Tim kami akan menghubungi dalam 1x24 jam</p>
+              </form>
+            </div>
+            <div class="text-center md:text-left space-y-3">
+              <div class="flex items-center gap-3 justify-center md:justify-start"><i class="fas fa-phone-alt text-amber-500 text-xl"></i><span class="font-medium">+62 812 3456 7890</span></div>
+              <div class="flex items-center gap-3 justify-center md:justify-start"><i class="fab fa-instagram text-amber-500 text-xl"></i><span>@wayae_nikah</span></div>
+              <div class="flex items-center gap-3 justify-center md:justify-start"><i class="fas fa-envelope text-amber-500 text-xl"></i><span>hello@wayaenikah.com</span></div>
+              <div class="mt-5 pt-3 border-t border-dashed border-gray-200">
+                <p class="text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-1"></i> 100% konsultasi privat & tanpa tekanan</p>
+                <p class="text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-1"></i> Garansi revisi sampai puas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer sederhana -->
+  <footer class="bg-gray-900 text-gray-300 py-10 mt-6">
+    <div class="container mx-auto px-5 md:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-2">
+          <i class="fas fa-ring text-amber-400 text-xl"></i>
+          <span class="playfair text-2xl font-semibold text-white">Wayae<span class="text-amber-400">Nikah</span></span>
+        </div>
+        <div class="flex gap-6 text-sm">
+          <a href="#" class="hover:text-amber-300">Tentang Kami</a>
+          <a href="#" class="hover:text-amber-300">Kebijakan Privasi</a>
+          <a href="#" class="hover:text-amber-300">Syarat & Ketentuan</a>
+        </div>
+        <div class="text-sm text-gray-400">© 2025 Wayae Nikah – Undangan Digital & Cetak Modern</div>
+      </div>
+      <div class="text-center text-xs text-gray-500 mt-6">Bayar sekali, tenang selamanya. Dari hati untuk hari spesialmu 💛</div>
+    </div>
+  </footer>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if(menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+      // Smooth close on click link
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+    }
+    // smooth scroll for all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if(href === "#" || href === "") return;
+        const target = document.querySelector(href);
+        if(target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

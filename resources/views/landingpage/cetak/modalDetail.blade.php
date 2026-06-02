@@ -1,113 +1,105 @@
-<div class="modal fade show d-block" tabindex="-1" aria-labelledby="productview-title" aria-hidden="true"
-    style="background-color: rgba(0, 0, 0, 0.5);">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content rounded shadow border-0">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title" id="productview-title">Detail Undangan</h5>
-                <button type="button" class="btn btn-icon btn-close" wire:click="closeModal">
-                    <i class="uil uil-times fs-4 text-dark"></i>
-                </button>
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 py-6 backdrop-blur-sm"
+    role="dialog" aria-modal="true" aria-labelledby="cetak-modal-title"
+    wire:keydown.escape.window="closeModal">
+    <div class="absolute inset-0" wire:click="closeModal"></div>
+
+    <div class="relative max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-2xl">
+        <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4 md:px-6">
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-rose-500">Detail Undangan</p>
+                <h2 id="cetak-modal-title" class="mt-1 text-xl font-bold text-slate-900">{{ $undang->nama }}</h2>
             </div>
-            <div class="modal-body p-4">
-                <div class="container-fluid px-0">
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <!-- Gambar Utama -->
-                            <style>
-                                .b {
-                                    height: 250px !important;
-                                    width: 100%;
+            <button type="button" wire:click="closeModal"
+                class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
+                aria-label="Tutup modal">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
 
-                                    object-fit: cover;
-                                    display: block;
-                                    order: 1px solid #ddd;
-                                }
+        <div class="max-h-[calc(92vh-73px)] overflow-y-auto p-5 md:p-6">
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+                <div>
+                    <div class="overflow-hidden rounded-2xl border border-rose-100 bg-[#fff5f0] shadow-sm">
+                        <img src="{{ asset('storage/' . $mainImage) }}" alt="Preview {{ $undang->nama }}"
+                            class="aspect-[4/3] w-full object-cover">
+                    </div>
 
-                                /* Gambar Kecil dengan Scroll Horizontal */
-                                .thumbnail-container {
-                                    max-width: 100%;
-                                    white-space: nowrap;
-                                    overflow-x: auto;
-                                    /* display: flex; */
-                                    justify-content: start;
-                                }
+                    @if (!empty($yes))
+                        <div class="mt-4 flex gap-3 overflow-x-auto pb-2">
+                            @foreach ($yes as $image)
+                                <button type="button" wire:key="thumbnail-{{ $image }}"
+                                    wire:click="updateMainImage('{{ $image }}')"
+                                    class="shrink-0 overflow-hidden rounded-xl border bg-white p-1 transition {{ $mainImage === $image ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 hover:border-rose-300' }}">
+                                    <img src="{{ asset('storage/' . $image) }}" alt="Thumbnail {{ $undang->nama }}"
+                                        class="h-20 w-20 rounded-lg object-cover">
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
 
-                                .thumbnail-container .thumbnail {
-                                    display: inline-block;
-                                    margin-right: 10px;
-                                }
+                <div class="flex flex-col">
+                    @php
+                        $plainDescription = strip_tags($deskripsi ?? '');
+                    @endphp
 
-                                .thumbnail-container .thumbnail img {
-                                    width: 80px !important;
-                                    height: 80px !important;
-                                    object-fit: cover;
-                                    cursor: pointer;
-                                    border: 1px solid #ddd;
-                                    border-radius: 4px;
-                                }
-                            </style>
-                            <div class="container">
-                                <div class="mb-3">
-                                    <img src="{{ asset('storage/' . $mainImage) }}" alt="Main Image"
-                                        class="img-fluid border rounded b">
-                                </div>
+                    <div class="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700">
+                        <i class="fas fa-tag"></i> {{ $undang->jenis }}
+                    </div>
 
-                                <div class="thumbnail-container">
-                                    @foreach ($yes as $index => $image)
-                                        <div class="thumbnail" wire:key="thumbnail-{{ $image }}">
-                                            <img src="{{ asset('storage/' . $image) }}" alt="Thumbnail"
-                                                class="img-thumbnail cursor-pointer"
-                                                wire:click="updateMainImage('{{ $image }}')">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div><!--end col-->
+                    <h3 class="font-display text-3xl font-bold leading-tight text-slate-900">{{ $undang->nama }}</h3>
 
-                        <div class="col-lg-7 mt-4 mt-lg-0 pt-2 pt-lg-0">
-                            <h4 class="title">{{ $undang->nama }}</h4>
+                    <div class="mt-4 flex flex-wrap items-end gap-3">
+                        <span class="text-2xl font-bold text-slate-900">
+                            Rp{{ number_format($undang->promo > 0 ? $undang->promo : $undang->harga, 0, ',', '.') }}
+                        </span>
+                        @if ($undang->promo > 0)
+                            <del class="text-base text-rose-500">Rp{{ number_format($undang->harga, 0, ',', '.') }}</del>
+                        @endif
+                    </div>
 
-                            <h5 class="text-muted">Rp{{ number_format($undang->promo > 0 ? $undang->promo : $undang->harga, 0, ',', '.') }}
-                                @if ($undang->promo > 0)
-                                    <del class="text-danger ms-2">Rp{{ number_format($undang->harga, 0, ',', '.') }}</del>
-                                @endif
-                            </h5>
-                            {{-- <button class="btn btn-sm btn-primary">{{$undang->jenis}}</button> --}}
+                    <div class="mt-6 rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                        <h4 class="mb-2 font-semibold text-slate-900">Deskripsi</h4>
+                        <div class="prose prose-sm max-w-none text-slate-600">
+                            @if ($isExpanded)
+                                {!! $deskripsi !!}
+                            @else
+                                {!! \Illuminate\Support\Str::limit($plainDescription, 160) !!}
+                            @endif
+                        </div>
 
-                            <h5 class="mt-4">Deskripsi :</h5>
-                            <p class="text-muted">
-                                @if ($isExpanded)
-                                    <p>{!! $deskripsi !!}</p>
-                                @else
-                                    {!! Str::limit($deskripsi, 100) !!}
-                                @endif
-                            </p>
-
-                            <!-- Tombol untuk toggling -->
+                        @if (strlen($plainDescription) > 160)
                             @if ($isExpanded)
                                 <button type="button" wire:click="toggleDownDescription({{ $undang->id }})"
-                                    class="btn btn-sm btn-light border">
-                                    Lihat Lebih Sedikit
+                                    class="mt-3 text-sm font-semibold text-rose-600 hover:text-rose-700">
+                                    Lihat lebih sedikit
                                 </button>
                             @else
                                 <button type="button" wire:click="toggleDescription({{ $undang->id }})"
-                                    class="btn btn-sm btn-light border">
-                                    Lihat Lebih Banyak
+                                    class="mt-3 text-sm font-semibold text-rose-600 hover:text-rose-700">
+                                    Lihat lebih banyak
                                 </button>
                             @endif
+                        @endif
+                    </div>
 
+                    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+                        <a href="https://wa.me/6282274677715?text=Saya+Pesan+Undangan+{{ rawurlencode($undang->nama) }}"
+                            target="_blank" rel="noopener"
+                            class="inline-flex items-center justify-center gap-2 rounded-full bg-rose-500 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-rose-500/20 transition hover:bg-rose-600">
+                            <i class="fab fa-whatsapp"></i> Pesan Sekarang
+                        </a>
+                        <button type="button" wire:click="closeModal"
+                            class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+                            Tutup
+                        </button>
+                    </div>
 
-
-                            <div class="mt-4 pt-2">
-                                <a href="https://wa.me/6282274677715?text=Saya+Pesan+Udangan+{{ $undang->nama }}"
-                                    class="btn btn-primary">Pesan Sekarang</a>
-                                    <button class="btn btn-secondary" wire:click='closeModal()'>Tutup</button>
-                            </div>
-
-
-                        </div><!--end col-->
-                    </div><!--end row-->
-                </div><!--end container-->
+                    <div class="mt-5 flex flex-wrap gap-3 text-sm text-slate-500">
+                        <span class="inline-flex items-center gap-2"><i class="fas fa-check-circle text-rose-500"></i> Detail jelas</span>
+                        <span class="inline-flex items-center gap-2"><i class="fas fa-check-circle text-rose-500"></i> Bisa konsultasi</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
