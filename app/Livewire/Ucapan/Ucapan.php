@@ -8,10 +8,12 @@ use App\Models\KelolaUndangan\Ucapan as KelolaUndanganUcapan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Ucapan extends Component
 {
+    #[Locked]
     public $dataId;
 
     public $kode;
@@ -75,6 +77,7 @@ class Ucapan extends Component
             'ucapan' => 'required|string|max:255',
             'status' => ['required', Rule::in(['hadir', 'tidak_hadir', 'tidak_datang', 'Hadir', 'Tidak Hadir', 'ragu', 'Datang Dong'])],
         ]);
+        $status = $this->normalizeAttendanceStatus($this->status);
 
         if (! $this->invitationIsActive || ! $this->isActive) {
             $this->dispatch('toast', [
@@ -113,7 +116,25 @@ class Ucapan extends Component
         } elseif (! $tamu && $fitur->publicIsActive) {
         }
 
-        DB::transaction(function () use ($tamu, &$addTamu, $fitur) {
+        DB::transaction(function () use ($tamu, &$addTamu, $fitur, $status) {
+            $guestName = $tamu?->nama ?? $this->nama;
+
+            $duplicate = KelolaUndanganUcapan::where('data_id', $this->dataId)
+                ->where('ucapan', $this->ucapan)
+                ->where('created_at', '>=', now()->subMinute())
+                ->whereHas('tamu', function ($query) use ($guestName, $tamu) {
+                    if ($tamu) {
+                        $query->whereKey($tamu->id);
+
+                        return;
+                    }
+
+                    $query->whereRaw('LOWER(nama) = ?', [Str::lower((string) $guestName)]);
+                })
+                ->exists();
+
+            abort_if($duplicate, 429, 'Ucapan yang sama sudah dikirim.');
+
             if (! $tamu && $fitur->publicIsActive) {
                 $addTamu = Tamu::create([
                     'data_id' => $this->dataId,
@@ -127,7 +148,7 @@ class Ucapan extends Component
                 'data_id' => $this->dataId,
                 'tamu_id' => $tamu ? $tamu->id : $addTamu->id,
                 'ucapan' => $this->ucapan,
-                'status' => $this->status,
+                'status' => $status,
             ]);
         });
 
@@ -149,5 +170,14 @@ class Ucapan extends Component
             'listUcapan' => $u,
 
         ]);
+    }
+
+    private function normalizeAttendanceStatus(string $status): string
+    {
+        return match (Str::lower(str_replace(' ', '_', $status))) {
+            'hadir', 'datang_dong' => 'hadir',
+            'tidak_hadir', 'tidak_datang' => 'tidak_hadir',
+            default => 'ragu',
+        };
     }
 }

@@ -139,13 +139,14 @@ class TemaController extends Controller
             'dataId' => 'required|exists:data,id',
             'nama' => 'nullable|string|max:50',
             'ucapan' => 'required|string|max:255',
-            'status' => ['required', Rule::in(['hadir', 'tidak_hadir', 'tidak_datang', 'Hadir', 'Tidak Hadir', 'ragu'])],
+            'status' => ['required', Rule::in(['hadir', 'tidak_hadir', 'tidak_datang', 'Hadir', 'Tidak Hadir', 'ragu', 'Datang Dong'])],
             'kode' => 'nullable|string|max:255',
         ], [
             'ucapan.required' => 'Ucapan tidak boleh kosong.',
             'ucapan.max' => 'Ucapan tidak boleh lebih dari 255 karakter.',
             'status.required' => 'Pilih Kehadiran Kamu.',
         ]);
+        $va['status'] = $this->normalizeAttendanceStatus($va['status']);
 
         $data = Data::findOrFail($va['dataId']);
 
@@ -180,6 +181,24 @@ class TemaController extends Controller
         }
 
         $doa = DB::transaction(function () use ($data, $tamu, $isPublicActive, $va, &$addTamu) {
+            $guestName = $tamu?->nama ?? $va['nama'] ?? null;
+
+            $duplicate = Ucapan::where('data_id', $data->id)
+                ->where('ucapan', $va['ucapan'])
+                ->where('created_at', '>=', now()->subMinute())
+                ->whereHas('tamu', function ($query) use ($guestName, $tamu) {
+                    if ($tamu) {
+                        $query->whereKey($tamu->id);
+
+                        return;
+                    }
+
+                    $query->whereRaw('LOWER(nama) = ?', [Str::lower((string) $guestName)]);
+                })
+                ->exists();
+
+            abort_if($duplicate, 429, 'Ucapan yang sama sudah dikirim.');
+
             if (! $tamu && $isPublicActive) {
                 $addTamu = Tamu::create([
                     'data_id' => $data->id,
@@ -190,14 +209,6 @@ class TemaController extends Controller
             }
 
             $guest = $tamu ?: $addTamu;
-
-            $duplicate = Ucapan::where('data_id', $data->id)
-                ->where('tamu_id', $guest->id)
-                ->where('ucapan', $va['ucapan'])
-                ->where('created_at', '>=', now()->subMinute())
-                ->exists();
-
-            abort_if($duplicate, 429, 'Ucapan yang sama sudah dikirim.');
 
             return Ucapan::create([
                 'data_id' => $data->id,
@@ -220,6 +231,15 @@ class TemaController extends Controller
         }
 
         return redirect()->back()->with('message', 'Ucapan doa berhasil dikirim');
+    }
+
+    private function normalizeAttendanceStatus(string $status): string
+    {
+        return match (Str::lower(str_replace(' ', '_', $status))) {
+            'hadir', 'datang_dong' => 'hadir',
+            'tidak_hadir', 'tidak_datang' => 'tidak_hadir',
+            default => 'ragu',
+        };
     }
 
     private function saveDoaError(Request $request, string $message, int $status)
