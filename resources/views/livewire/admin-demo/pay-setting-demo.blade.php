@@ -61,7 +61,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="w-full">
                     <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Kategori</label>
-                    <select wire:model="category" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                    <select wire:model.live="category" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
                         <option value="">Pilih Kategori</option>
                         <option value="manual">Manual</option>
                         <option value="bank_transfer">Bank Transfer</option>
@@ -70,10 +70,21 @@
                         <option value="cstore">Convenience Store</option>
                     </select>
                 </div>
-                <x-ui.input label="Admin Fee (Rp)" wire:model="fee" type="number" placeholder="0" />
+                <x-ui.input :label="$feeLabel" wire:model="fee" type="number" step="0.01" min="0" placeholder="0" />
             </div>
 
-            <x-ui.input label="Kode Midtrans" wire:model="midtrans_code" placeholder="Contoh: bca_va, gopay, credit_card, alfamart" />
+            <div class="w-full">
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Kode Midtrans</label>
+                <select wire:model="midtrans_code" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                    <option value="">Pilih Kode Midtrans</option>
+                    @foreach($midtransCodes as $code)
+                        <option value="{{ $code }}">{{ $code }}</option>
+                    @endforeach
+                </select>
+                @error('midtrans_code')
+                    <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
             <div class="w-full">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Deskripsi / Instruksi</label>

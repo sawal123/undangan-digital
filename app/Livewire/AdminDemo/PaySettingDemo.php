@@ -35,6 +35,8 @@ class PaySettingDemo extends Component
     {
         return view('livewire.admin-demo.pay-setting-demo', [
             'paySettings' => PaySetting::all(),
+            'midtransCodes' => $this->allowedMidtransCodes($this->category),
+            'feeLabel' => $this->feeLabel(),
         ])->layout('components.layouts.admin-new');
     }
 
@@ -57,14 +59,18 @@ class PaySettingDemo extends Component
         $p->save();
     }
 
+    public function updatedCategory(): void
+    {
+        $allowedCodes = $this->allowedMidtransCodes($this->category);
+
+        if (! in_array($this->midtrans_code, $allowedCodes, true)) {
+            $this->midtrans_code = $allowedCodes[0] ?? '';
+        }
+    }
+
     public function store()
     {
-        $this->validate([
-            'bank' => 'required',
-            'category' => ['required', Rule::in($this->categories)],
-            'midtrans_code' => 'required|string|max:50',
-            'fee' => 'required',
-        ]);
+        $this->validate($this->rules());
 
         $imagePath = $this->image ? $this->image->store('paysetting', 'public') : null;
 
@@ -101,12 +107,7 @@ class PaySettingDemo extends Component
     {
         $p = PaySetting::findOrFail($this->pay_id);
 
-        $this->validate([
-            'bank' => 'required',
-            'category' => ['required', Rule::in($this->categories)],
-            'midtrans_code' => 'required|string|max:50',
-            'fee' => 'required',
-        ]);
+        $this->validate($this->rules());
 
         $data = [
             'bank' => $this->bank,
@@ -139,5 +140,38 @@ class PaySettingDemo extends Component
         }
         $p->delete();
         session()->flash('message', 'Payment setting successfully deleted.');
+    }
+
+    private function rules(): array
+    {
+        $feeRules = ['required', 'numeric', 'min:0'];
+
+        if ($this->category === 'ewallet') {
+            $feeRules[] = 'max:100';
+        }
+
+        return [
+            'bank' => 'required',
+            'category' => ['required', Rule::in($this->categories)],
+            'midtrans_code' => ['required', 'string', 'max:50', Rule::in($this->allowedMidtransCodes($this->category))],
+            'fee' => $feeRules,
+        ];
+    }
+
+    private function allowedMidtransCodes(?string $category): array
+    {
+        return match ($category) {
+            'manual' => ['manual'],
+            'bank_transfer' => ['bank_transfer', 'bca_va', 'bni_va', 'bri_va', 'permata_va', 'echannel'],
+            'ewallet' => ['gopay', 'shopeepay', 'qris'],
+            'credit_card' => ['credit_card'],
+            'cstore' => ['cstore', 'alfamart', 'indomaret'],
+            default => [],
+        };
+    }
+
+    private function feeLabel(): string
+    {
+        return $this->category === 'ewallet' ? 'Fee (%)' : 'Fee (Rp)';
     }
 }

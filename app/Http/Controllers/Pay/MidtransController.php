@@ -75,7 +75,8 @@ class MidtransController extends Controller
                 'deny' => $this->markIfNotSuccess($transaction, 'FAILED'),
                 'expire' => $this->markIfNotSuccess($transaction, 'EXPIRED'),
                 'cancel' => $this->markIfNotSuccess($transaction, 'CANCEL'),
-                'refund', 'partial_refund' => $transaction->payment_status = 'REFUND',
+                'refund' => $this->markRefund($transaction),
+                'partial_refund' => $this->markPartialRefund($transaction),
                 default => Log::warning('Status Midtrans tidak dikenal', [
                     'invoice' => $transaction->invoice,
                     'status' => $status,
@@ -174,6 +175,21 @@ class MidtransController extends Controller
         }
 
         $transaction->payment_status = $status;
+    }
+
+    private function markRefund(ModelsTransaction $transaction): void
+    {
+        $transaction->payment_status = 'REFUND';
+
+        Log::warning('Refund penuh diterima dari Midtrans, status undangan memerlukan keputusan operasional manual', [
+            'invoice' => $transaction->invoice,
+            'data_id' => $transaction->data_id,
+        ]);
+    }
+
+    private function markPartialRefund(ModelsTransaction $transaction): void
+    {
+        $transaction->payment_status = 'PARTIAL_REFUND';
     }
 
     public function finishRedirect()
