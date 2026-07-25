@@ -7,6 +7,7 @@ use App\Models\Data;
 use App\Models\KelolaUndangan\Galery as KelolaUndanganGalery;
 // use Livewire\Features\SupportFileUploads\WithFileUploads;
 use App\Services\YouTubeUrlParser;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -131,42 +132,13 @@ class Galery extends Component
     public function previous($sort)
     {
         $this->authorizeInvitationState();
-        $dataSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort)->first();
-        $downSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort - 1)->first();
-        while ($downSort === null && $sort > 0) {
-            $sort--; // Kurangi nilai sort
-            $downSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort)->first();
-        }
-        if ($downSort !== null) {
-            $dataSort->update([
-                'sort' => $dataSort->sort - 1,
-            ]);
-            $downSort->update([
-                'sort' => $downSort->sort + 1,
-            ]);
-        }
-        $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
+        $this->moveGalleryItem((int) $sort, 'previous');
     }
 
     public function next($sort)
     {
         $this->authorizeInvitationState();
-        $dataSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort)->first();
-        $upSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort + 1)->first();
-
-        while ($upSort === null && $sort > 0 && $sort < $dataSort->count()) {
-            $sort--; // Kurangi nilai sort
-            $upSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort)->first();
-        }
-        $dataSort->update([
-            'sort' => $dataSort->sort + 1,
-        ]);
-        if ($upSort !== null) {
-            $upSort->update([
-                'sort' => $upSort->sort - 1,
-            ]);
-        }
-        $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
+        $this->moveGalleryItem((int) $sort, 'next');
     }
 
     public function render()
@@ -176,5 +148,37 @@ class Galery extends Component
         return view('livewire.dashboard.kelola.galery')->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Galeri',
         ]);
+    }
+
+    private function moveGalleryItem(int $sort, string $direction): void
+    {
+        DB::transaction(function () use ($sort, $direction) {
+            $current = KelolaUndanganGalery::where('data_id', $this->dataId)
+                ->where('sort', $sort)
+                ->lockForUpdate()
+                ->first();
+
+            if (! $current) {
+                return;
+            }
+
+            $neighborQuery = KelolaUndanganGalery::where('data_id', $this->dataId)->lockForUpdate();
+
+            $neighbor = $direction === 'previous'
+                ? $neighborQuery->where('sort', '<', $current->sort)->orderByDesc('sort')->first()
+                : $neighborQuery->where('sort', '>', $current->sort)->orderBy('sort')->first();
+
+            if (! $neighbor) {
+                return;
+            }
+
+            $currentSort = $current->sort;
+            $neighborSort = $neighbor->sort;
+
+            $current->update(['sort' => $neighborSort]);
+            $neighbor->update(['sort' => $currentSort]);
+        });
+
+        $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
     }
 }
