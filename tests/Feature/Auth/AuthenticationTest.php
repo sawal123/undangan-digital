@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\Data;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Volt\Volt;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -18,22 +18,20 @@ class AuthenticationTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSeeVolt('pages.auth.login');
+            ->assertSee('Sign in');
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
+        Role::findOrCreate('User');
         $user = User::factory()->create();
+        $user->assignRole('User');
+        $data = Data::factory()->for($user)->create();
 
-        $component = Volt::test('pages.auth.login')
-            ->set('form.email', $user->email)
-            ->set('form.password', 'password');
-
-        $component->call('login');
-
-        $component
-            ->assertHasNoErrors()
-            ->assertRedirect(RouteServiceProvider::HOME);
+        $this->post(route('login.auth'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ])->assertRedirect(route('dashboard.undangan.kelola', $data->uid));
 
         $this->assertAuthenticated();
     }
@@ -42,22 +40,20 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $component = Volt::test('pages.auth.login')
-            ->set('form.email', $user->email)
-            ->set('form.password', 'wrong-password');
-
-        $component->call('login');
-
-        $component
-            ->assertHasErrors()
-            ->assertNoRedirect();
+        $this->post(route('login.auth'), [
+            'email' => $user->email,
+            'password' => 'wrong-password',
+        ])->assertSessionHas('error');
 
         $this->assertGuest();
     }
 
     public function test_navigation_menu_can_be_rendered(): void
     {
+        Role::findOrCreate('User');
         $user = User::factory()->create();
+        $user->assignRole('User');
+        Data::factory()->for($user)->create();
 
         $this->actingAs($user);
 
@@ -65,22 +61,19 @@ class AuthenticationTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSeeVolt('layout.navigation');
+            ->assertSee('Daftar Undangan');
     }
 
     public function test_users_can_logout(): void
     {
+        Role::findOrCreate('User');
         $user = User::factory()->create();
+        $user->assignRole('User');
+        Data::factory()->for($user)->create();
 
         $this->actingAs($user);
 
-        $component = Volt::test('layout.navigation');
-
-        $component->call('logout');
-
-        $component
-            ->assertHasNoErrors()
-            ->assertRedirect('/');
+        $this->post(route('dashboard.logout'))->assertRedirect('/');
 
         $this->assertGuest();
     }
