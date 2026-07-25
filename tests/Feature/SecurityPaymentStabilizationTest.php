@@ -2,22 +2,41 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\DashboardDemo\Kelola\Acara;
+use App\Livewire\DashboardDemo\Kelola\Birthday;
+use App\Livewire\DashboardDemo\Kelola\EventDetail;
 use App\Livewire\DashboardDemo\Kelola\Galery;
+use App\Livewire\DashboardDemo\Kelola\Kado;
+use App\Livewire\DashboardDemo\Kelola\Kisah;
 use App\Livewire\DashboardDemo\Kelola\Pay\Pay;
+use App\Livewire\DashboardDemo\Kelola\Setting;
 use App\Livewire\DashboardDemo\Kelola\Sound;
 use App\Livewire\DashboardDemo\Kelola\Tamu as TamuComponent;
+use App\Livewire\DashboardDemo\Kelola\Ucapan as UcapanComponent;
 use App\Models\Admin\Harga;
 use App\Models\Admin\PaySetting;
 use App\Models\Data;
+use App\Models\GiftPay;
+use App\Models\KelolaUndangan\Acara as AcaraModel;
+use App\Models\KelolaUndangan\BirthdayProfile;
+use App\Models\KelolaUndangan\EventDetail as EventDetailModel;
 use App\Models\KelolaUndangan\FiturUcapan;
 use App\Models\KelolaUndangan\Galery as GalleryModel;
+use App\Models\KelolaUndangan\Kado as KadoModel;
+use App\Models\KelolaUndangan\KisahCinta;
+use App\Models\KelolaUndangan\Sound as SoundModel;
 use App\Models\KelolaUndangan\Tamu;
+use App\Models\KelolaUndangan\Ucapan as UcapanModel;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\PaymentCalculator;
+use Closure;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\ViewException;
+use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -25,6 +44,13 @@ use Tests\TestCase;
 class SecurityPaymentStabilizationTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config(['midtrans.serverKey' => 'test-server-key']);
+    }
 
     private function userWithInvitation(): array
     {
@@ -36,6 +62,49 @@ class SecurityPaymentStabilizationTest extends TestCase
         $data = Data::factory()->for($user)->create();
 
         return [$user, $data];
+    }
+
+    private function signedMidtransPayload(string $invoice, int $grossAmount, array $overrides = []): array
+    {
+        $payload = array_merge([
+            'order_id' => $invoice,
+            'status_code' => '200',
+            'transaction_status' => 'settlement',
+            'payment_type' => 'bank_transfer',
+            'transaction_id' => 'midtrans-transaction-1',
+            'fraud_status' => 'accept',
+            'gross_amount' => number_format($grossAmount, 2, '.', ''),
+        ], $overrides);
+
+        $payload['signature_key'] = hash(
+            'sha512',
+            $payload['order_id'].$payload['status_code'].$payload['gross_amount'].config('midtrans.serverKey')
+        );
+
+        return $payload;
+    }
+
+    private function assertDataIdTamperingIsRejected(
+        User $user,
+        string $component,
+        array $parameters,
+        int $victimDataId,
+        Closure $action,
+        Closure $assertUnchanged
+    ): void {
+        $rejected = false;
+
+        try {
+            $test = Livewire::actingAs($user)->test($component, $parameters);
+            $test->set('dataId', $victimDataId);
+            $action($test);
+        } catch (CannotUpdateLockedPropertyException) {
+            $rejected = true;
+        } finally {
+            $assertUnchanged();
+        }
+
+        $this->assertTrue($rejected, 'dataId tampering should be rejected by Livewire locked property.');
     }
 
     public function test_user_cannot_manage_another_users_invitation(): void
@@ -165,7 +234,7 @@ class SecurityPaymentStabilizationTest extends TestCase
         Harga::factory()->create(['harga' => 125000]);
         $payment = PaySetting::factory()->create();
 
-        $this->expectException(ModelNotFoundException::class);
+        $this->expectException(ViewException::class);
 
         Livewire::actingAs($user)
             ->test(Pay::class, ['dataId' => $otherData->id])
@@ -180,12 +249,63 @@ class SecurityPaymentStabilizationTest extends TestCase
 
     public function test_midtrans_callback_handles_unknown_invoice(): void
     {
+        $this->postJson('/midtrans/callback', $this->signedMidtransPayload('INV-UNKNOWN', 100000))
+            ->assertNotFound();
+    }
+
+    public function test_midtrans_callback_without_signature_is_rejected(): void
+    {
+        [, $data] = $this->userWithInvitation();
+        $transaction = Transaction::factory()->create([
+            'data_id' => $data->id,
+            'user_id' => $data->user_id,
+            'gross_amount' => 100000,
+        ]);
+
         $this->postJson('/midtrans/callback', [
-            'order_id' => 'INV-UNKNOWN',
+            'order_id' => $transaction->invoice,
+            'status_code' => '200',
             'transaction_status' => 'settlement',
             'payment_type' => 'bank_transfer',
             'gross_amount' => '100000.00',
-        ])->assertNotFound();
+        ])->assertForbidden();
+
+        $this->assertSame('PENDING', $transaction->fresh()->payment_status);
+        $this->assertFalse($data->fresh()->canBeShared());
+    }
+
+    public function test_midtrans_callback_with_wrong_signature_is_rejected(): void
+    {
+        [, $data] = $this->userWithInvitation();
+        $transaction = Transaction::factory()->create([
+            'data_id' => $data->id,
+            'user_id' => $data->user_id,
+            'gross_amount' => 100000,
+        ]);
+
+        $payload = $this->signedMidtransPayload($transaction->invoice, 100000);
+        $payload['signature_key'] = 'wrong-signature';
+
+        $this->postJson('/midtrans/callback', $payload)->assertForbidden();
+
+        $this->assertSame('PENDING', $transaction->fresh()->payment_status);
+        $this->assertFalse($data->fresh()->canBeShared());
+    }
+
+    public function test_midtrans_callback_with_valid_signature_activates_invitation(): void
+    {
+        [, $data] = $this->userWithInvitation();
+        $transaction = Transaction::factory()->create([
+            'data_id' => $data->id,
+            'user_id' => $data->user_id,
+            'gross_amount' => 100000,
+        ]);
+
+        $this->postJson('/midtrans/callback', $this->signedMidtransPayload($transaction->invoice, 100000))
+            ->assertOk();
+
+        $this->assertSame('SUCCESS', $transaction->fresh()->payment_status);
+        $this->assertTrue($data->fresh()->canBeShared());
     }
 
     public function test_midtrans_callback_rejects_wrong_gross_amount(): void
@@ -197,12 +317,8 @@ class SecurityPaymentStabilizationTest extends TestCase
             'gross_amount' => 100000,
         ]);
 
-        $this->postJson('/midtrans/callback', [
-            'order_id' => $transaction->invoice,
-            'transaction_status' => 'settlement',
-            'payment_type' => 'bank_transfer',
-            'gross_amount' => '99999.00',
-        ])->assertStatus(422);
+        $this->postJson('/midtrans/callback', $this->signedMidtransPayload($transaction->invoice, 99999))
+            ->assertStatus(422);
 
         $this->assertFalse($data->fresh()->canBeShared());
     }
@@ -216,18 +332,283 @@ class SecurityPaymentStabilizationTest extends TestCase
             'gross_amount' => 100000,
         ]);
 
-        $payload = [
-            'order_id' => $transaction->invoice,
-            'transaction_status' => 'settlement',
-            'payment_type' => 'bank_transfer',
-            'gross_amount' => '100000.00',
-        ];
+        $payload = $this->signedMidtransPayload($transaction->invoice, 100000);
 
         $this->postJson('/midtrans/callback', $payload)->assertOk();
         $this->postJson('/midtrans/callback', $payload)->assertOk();
 
         $this->assertSame('SUCCESS', $transaction->fresh()->payment_status);
         $this->assertTrue($data->fresh()->canBeShared());
+    }
+
+    public function test_midtrans_pending_after_success_does_not_downgrade_transaction(): void
+    {
+        [, $data] = $this->userWithInvitation();
+        $transaction = Transaction::factory()->create([
+            'data_id' => $data->id,
+            'user_id' => $data->user_id,
+            'gross_amount' => 100000,
+        ]);
+
+        $this->postJson('/midtrans/callback', $this->signedMidtransPayload($transaction->invoice, 100000))
+            ->assertOk();
+
+        $this->postJson('/midtrans/callback', $this->signedMidtransPayload($transaction->invoice, 100000, [
+            'status_code' => '201',
+            'transaction_status' => 'pending',
+            'fraud_status' => null,
+        ]))->assertOk();
+
+        $this->assertSame('SUCCESS', $transaction->fresh()->payment_status);
+        $this->assertTrue($data->fresh()->canBeShared());
+    }
+
+    public function test_payment_relation_remains_valid_after_midtrans_callback(): void
+    {
+        [, $data] = $this->userWithInvitation();
+        $payment = PaySetting::factory()->create([
+            'category' => 'bank_transfer',
+            'midtrans_code' => 'bank_transfer',
+        ]);
+        $transaction = Transaction::factory()->create([
+            'data_id' => $data->id,
+            'user_id' => $data->user_id,
+            'payment_method_id' => $payment->id,
+            'payment_type' => (string) $payment->id,
+            'gross_amount' => 100000,
+        ]);
+
+        $this->postJson('/midtrans/callback', $this->signedMidtransPayload($transaction->invoice, 100000, [
+            'payment_type' => 'bank_transfer',
+        ]))->assertOk();
+
+        $transaction->refresh();
+
+        $this->assertTrue($transaction->payment->is($payment));
+        $this->assertSame($payment->id, $transaction->payment_method_id);
+        $this->assertSame('bank_transfer', $transaction->midtrans_payment_type);
+    }
+
+    public function test_ewallet_category_calculates_percentage_fee(): void
+    {
+        Harga::factory()->create(['harga' => 100000]);
+        $payment = PaySetting::factory()->create([
+            'category' => 'ewallet',
+            'fee' => '2.5',
+            'midtrans_code' => 'gopay',
+        ]);
+
+        $amounts = app(PaymentCalculator::class)->calculate(null, $payment);
+
+        $this->assertSame(2500, $amounts['fee_amount']);
+        $this->assertSame(102500, $amounts['gross_amount']);
+    }
+
+    public function test_manual_payment_does_not_call_midtrans(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        Harga::factory()->create(['harga' => 125000]);
+        $payment = PaySetting::factory()->create([
+            'category' => 'manual',
+            'fee' => '0',
+            'midtrans_code' => 'manual',
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(Pay::class, ['dataId' => $data->id])
+            ->call('ifee', $payment->id)
+            ->call('checkOut')
+            ->assertRedirect(route('dashboard.tunai', $data->uid));
+
+        $this->assertSame('', Transaction::firstOrFail()->link_snap);
+    }
+
+    public function test_tamu_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        $victim = Tamu::factory()->create(['data_id' => $victimData->id, 'nama' => 'Korban']);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            TamuComponent::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->call('delete', $victim->kode),
+            fn () => $this->assertDatabaseHas('tamus', ['id' => $victim->id, 'nama' => 'Korban'])
+        );
+    }
+
+    public function test_galery_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        $victim = GalleryModel::factory()->for($victimData, 'data')->create(['poto' => 'galery/victim.jpg']);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            Galery::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->call('delete', $victim->id),
+            fn () => $this->assertDatabaseHas('galeries', ['id' => $victim->id, 'poto' => 'galery/victim.jpg'])
+        );
+    }
+
+    public function test_setting_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            Setting::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->set('title', 'Changed')->call('update', $victimData->id),
+            fn () => $this->assertDatabaseMissing('data', ['id' => $victimData->id, 'title' => 'Changed'])
+        );
+    }
+
+    public function test_acara_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        $victim = AcaraModel::create([
+            'data_id' => $victimData->id,
+            'nama_acara' => 'Akad Korban',
+            'vanue' => 'Gedung',
+            'alamat' => 'Jalan',
+            'date' => '2026-08-01',
+            'jam_start' => '09:00',
+            'jam_end' => '10:00',
+            'zona_waktu' => 'WIB',
+        ]);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            Acara::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->call('delete', $victim->id),
+            fn () => $this->assertDatabaseHas('acaras', ['id' => $victim->id, 'nama_acara' => 'Akad Korban'])
+        );
+    }
+
+    public function test_sound_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        $victim = SoundModel::create([
+            'data_id' => $victimData->id,
+            'sound' => 'victim.mp3',
+            'start' => '0',
+            'isActive' => true,
+        ]);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            Sound::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->call('delete', $victim->id),
+            fn () => $this->assertDatabaseHas('sounds', ['id' => $victim->id, 'sound' => 'victim.mp3'])
+        );
+    }
+
+    public function test_kado_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        $gift = GiftPay::create(['nama_pay' => 'Bank', 'icon' => 'bank.png']);
+        $victim = KadoModel::create([
+            'data_id' => $victimData->id,
+            'gift_id' => $gift->id,
+            'namaPay' => 'Korban',
+            'nomorPay' => '123',
+        ]);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            Kado::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->call('delete', $victim->id),
+            fn () => $this->assertDatabaseHas('kados', ['id' => $victim->id, 'namaPay' => 'Korban'])
+        );
+    }
+
+    public function test_kisah_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        $victim = KisahCinta::create([
+            'data_id' => $victimData->id,
+            'title' => 'Kisah Korban',
+            'deskripsi' => 'Tetap aman',
+        ]);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            Kisah::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->call('delete', $victim->id),
+            fn () => $this->assertDatabaseHas('kisah_cintas', ['id' => $victim->id, 'title' => 'Kisah Korban'])
+        );
+    }
+
+    public function test_ucapan_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        $guest = Tamu::factory()->create(['data_id' => $victimData->id]);
+        $victim = UcapanModel::factory()->create([
+            'data_id' => $victimData->id,
+            'tamu_id' => $guest->id,
+            'ucapan' => 'Ucapan korban',
+        ]);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            UcapanComponent::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->call('delete', $victim->id),
+            fn () => $this->assertDatabaseHas('ucapans', ['id' => $victim->id, 'ucapan' => 'Ucapan korban'])
+        );
+    }
+
+    public function test_birthday_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        BirthdayProfile::create(['data_id' => $victimData->id, 'name' => 'Korban']);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            Birthday::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->set('name', 'Changed')->call('save'),
+            fn () => $this->assertDatabaseHas('birthday_profiles', ['data_id' => $victimData->id, 'name' => 'Korban'])
+        );
+    }
+
+    public function test_event_detail_data_id_manipulation_is_rejected(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        [, $victimData] = $this->userWithInvitation();
+        EventDetailModel::create(['data_id' => $victimData->id, 'headline' => 'Korban']);
+
+        $this->assertDataIdTamperingIsRejected(
+            $user,
+            EventDetail::class,
+            ['id' => $data->uid],
+            $victimData->id,
+            fn ($component) => $component->set('headline', 'Changed')->call('save'),
+            fn () => $this->assertDatabaseHas('event_details', ['data_id' => $victimData->id, 'headline' => 'Korban'])
+        );
     }
 
     public function test_public_comment_cannot_enable_comment_feature(): void
@@ -263,6 +644,33 @@ class SecurityPaymentStabilizationTest extends TestCase
         ])->assertRedirect();
 
         $this->assertDatabaseMissing('ucapans', ['data_id' => $data->id]);
+    }
+
+    public function test_public_comment_duplicate_check_uses_normalized_guest_identity(): void
+    {
+        $data = Data::factory()->active()->create();
+        FiturUcapan::create([
+            'data_id' => $data->id,
+            'isActive' => true,
+            'publicIsActive' => true,
+            'viewIsActive' => true,
+        ]);
+
+        $payload = [
+            'dataId' => $data->id,
+            'nama' => 'Publik Sama',
+            'ucapan' => 'Selamat untuk acaranya',
+            'status' => 'Datang Dong',
+        ];
+
+        $this->postJson(route('savedoa'), $payload)->assertOk();
+        $this->postJson(route('savedoa'), $payload)->assertTooManyRequests();
+
+        $this->assertDatabaseCount('ucapans', 1);
+        $this->assertDatabaseHas('ucapans', [
+            'data_id' => $data->id,
+            'status' => 'hadir',
+        ]);
     }
 
     public function test_invalid_youtube_url_is_rejected(): void
