@@ -27,7 +27,7 @@ class RegistrationTest extends TestCase
             'email' => 'test@example.com',
             'whatsapp' => '628123456789',
             'password' => 'password',
-        ])->assertRedirect('/dashboard/setup');
+        ])->assertRedirect(route('verification.notice'));
 
         $user = User::where('email', 'test@example.com')->firstOrFail();
 
