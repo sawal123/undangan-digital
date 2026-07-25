@@ -29,6 +29,14 @@
                             <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                             <label for="password">Password</label>
                         </div>
+
+                        @if (config('security.turnstile.enabled') && config('security.turnstile.site_key'))
+                            <div class="cf-turnstile mb-3" data-sitekey="{{ config('security.turnstile.site_key') }}"></div>
+                            @error('captcha')
+                                <div class="text-danger small mb-2">{{ $message }}</div>
+                            @enderror
+                            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+                        @endif
                     
                         {{-- <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" required>

@@ -1,8 +1,11 @@
 <?php
 
 use App\Livewire\Actions\Logout;
+use App\Models\AuthActivityLog;
 use App\Providers\RouteServiceProvider;
+use App\Services\AuthActivityLogger;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -20,6 +23,24 @@ new #[Layout('layouts.guest')] class extends Component
             return;
         }
 
+        $key = 'verify-email-resend:'.Auth::id().'|'.request()->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            app(AuthActivityLogger::class)->log(
+                AuthActivityLog::EVENT_RATE_LIMIT_TRIGGERED,
+                'blocked',
+                Auth::user(),
+                metadata: ['limiter' => 'verify_email_resend'],
+                riskLevel: AuthActivityLog::RISK_HIGH,
+                riskReasons: ['rate limit pengiriman ulang verifikasi email terpicu']
+            );
+
+            Session::flash('status', 'verification-link-rate-limited');
+
+            return;
+        }
+
+        RateLimiter::hit($key, 60);
         Auth::user()->sendEmailVerificationNotification();
 
         Session::flash('status', 'verification-link-sent');
@@ -44,6 +65,12 @@ new #[Layout('layouts.guest')] class extends Component
     @if (session('status') == 'verification-link-sent')
         <div class="mb-4 font-medium text-sm text-green-600">
             {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+        </div>
+    @endif
+
+    @if (session('status') == 'verification-link-rate-limited')
+        <div class="mb-4 font-medium text-sm text-red-600">
+            {{ __('Please wait before requesting another verification link.') }}
         </div>
     @endif
 

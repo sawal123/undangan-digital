@@ -55,7 +55,7 @@ Route::get('/u/{slug}/{tamu?}', [TemaController::class, 'visit'])->name('visit')
 Route::post('u/savedoa', [TemaController::class, 'saveDoa'])->middleware('throttle:10,1')->name('savedoa');
 
 // Role User
-Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
+Route::middleware(['auth', 'not.suspended', 'verified', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
     Route::get('/add-undangan/{id}', [SetupController::class, 'add'])->name('add');
     Route::resource('data', DataController::class);
@@ -91,7 +91,7 @@ Route::middleware(['auth', 'role:User', 'setup.complete'])->prefix('dashboard')-
 Route::post('/midtrans/callback', [MidtransController::class, 'notificationHandler']);
 
 // Role Admin
-Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'not.suspended', 'security.admin.access', 'role:Owner'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', \App\Livewire\AdminDemo\DashboardDemo::class)->name('admin');
     Route::get('/theme', \App\Livewire\AdminDemo\ThemeDemo::class)->name('theme');
     Route::get('/setting', \App\Livewire\AdminDemo\CategoryDemo::class)->name('setting');
@@ -100,6 +100,7 @@ Route::middleware(['auth', 'role:Owner'])->prefix('admin')->name('admin.')->grou
     Route::get('/pay-setting', \App\Livewire\AdminDemo\PaySettingDemo::class)->name('pay.setting');
     Route::get('/transaksi', \App\Livewire\AdminDemo\TransaksiDemo::class)->name('transaksi');
     Route::get('/user', \App\Livewire\AdminDemo\UserDemo::class)->name('user');
+    Route::get('/security', \App\Livewire\AdminDemo\SecurityMonitoringDemo::class)->name('security');
     Route::get('/animation', \App\Livewire\AdminDemo\AnimationDemo::class)->name('animation');
     Route::get('/fonts', \App\Livewire\AdminDemo\FontsDemo::class)->name('fonts');
     Route::get('/cetak', \App\Livewire\AdminDemo\CetakDemo::class)->name('cetak');

@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\AuthActivityLog;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Services\AuthActivityLogger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
@@ -34,12 +36,21 @@ new class extends Component
         ]);
 
         $user->fill($validated);
+        $emailChanged = $user->isDirty('email');
 
-        if ($user->isDirty('email')) {
+        if ($emailChanged) {
             $user->email_verified_at = null;
         }
 
         $user->save();
+
+        if ($emailChanged) {
+            app(AuthActivityLogger::class)->log(
+                AuthActivityLog::EVENT_EMAIL_CHANGED,
+                user: $user,
+                metadata: ['new_email' => $user->email]
+            );
+        }
 
         $this->dispatch('profile-updated', name: $user->name);
     }
