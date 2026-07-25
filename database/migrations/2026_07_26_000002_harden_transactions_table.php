@@ -39,7 +39,11 @@ return new class extends Migration
                 ]);
             });
 
-        Schema::table('transactions', function (Blueprint $table) {
+        $this->normalizeLegacyTransactionValues();
+
+        $hasInvoiceUnique = $this->hasIndex('transactions', 'transactions_invoice_unique');
+
+        Schema::table('transactions', function (Blueprint $table) use ($hasInvoiceUnique) {
             if (! Schema::hasColumn('transactions', 'discount_amount')) {
                 $table->unsignedBigInteger('discount_amount')->default(0)->after('promo');
             }
@@ -48,12 +52,14 @@ return new class extends Migration
                 $table->unsignedBigInteger('fee_amount')->default(0)->after('discount_amount');
             }
 
-            $table->unique('invoice', 'transactions_invoice_unique');
+            if (! $hasInvoiceUnique) {
+                $table->unique('invoice', 'transactions_invoice_unique');
+            }
         });
 
         DB::table('transactions')->orderBy('id')->select(['id', 'promo'])->get()->each(function ($row) {
             DB::table('transactions')->where('id', $row->id)->update([
-                'discount_amount' => (int) $row->promo,
+                'discount_amount' => $this->normalizeAmount($row->promo),
             ]);
         });
 
@@ -85,5 +91,80 @@ return new class extends Migration
         } while (DB::table('transactions')->where('invoice', $invoice)->exists());
 
         return $invoice;
+    }
+
+    private function normalizeLegacyTransactionValues(): void
+    {
+        DB::table('transactions')
+            ->orderBy('id')
+            ->select(['id', 'price', 'promo', 'gross_amount', 'payment_status'])
+            ->get()
+            ->each(function ($row) {
+                DB::table('transactions')->where('id', $row->id)->update([
+                    'price' => (string) $this->normalizeAmount($row->price),
+                    'promo' => (string) $this->normalizeAmount($row->promo),
+                    'gross_amount' => (string) $this->normalizeAmount($row->gross_amount),
+                    'payment_status' => $this->normalizePaymentStatus($row->payment_status),
+                ]);
+            });
+    }
+
+    private function normalizeAmount(mixed $value): int
+    {
+        if ($value === null) {
+            return 0;
+        }
+
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return 0;
+        }
+
+        $value = str($value)
+            ->lower()
+            ->replace(['rp', 'idr', ' '], '')
+            ->toString();
+
+        if (str_starts_with($value, '-')) {
+            return 0;
+        }
+
+        if (preg_match('/[.,]\d{1,2}$/', $value) === 1) {
+            $value = preg_replace('/[.,]\d{1,2}$/', '', $value) ?? $value;
+        }
+
+        $digits = preg_replace('/\D+/', '', $value);
+
+        if ($digits === null || $digits === '') {
+            return 0;
+        }
+
+        return max(0, (int) $digits);
+    }
+
+    private function normalizePaymentStatus(mixed $value): string
+    {
+        $status = strtoupper(trim((string) $value));
+
+        return in_array($status, ['SUCCESS', 'PENDING', 'CANCEL', 'FAILED', 'EXPIRED', 'CHALLENGE', 'REFUND'], true)
+            ? $status
+            : 'PENDING';
+    }
+
+    private function hasIndex(string $table, string $index): bool
+    {
+        $driver = Schema::getConnection()->getDriverName();
+
+        if ($driver === 'mysql') {
+            return DB::selectOne("SHOW INDEX FROM {$table} WHERE Key_name = ?", [$index]) !== null;
+        }
+
+        if ($driver === 'sqlite') {
+            return collect(DB::select("PRAGMA index_list('{$table}')"))
+                ->contains(fn ($row) => ($row->name ?? null) === $index);
+        }
+
+        return false;
     }
 };

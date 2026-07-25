@@ -115,6 +115,11 @@ class SecurityPaymentStabilizationTest extends TestCase
         $migration->up();
     }
 
+    private function transactionHardeningMigration(): object
+    {
+        return require database_path('migrations/2026_07_26_000002_harden_transactions_table.php');
+    }
+
     public function test_user_cannot_manage_another_users_invitation(): void
     {
         [$user] = $this->userWithInvitation();
@@ -253,6 +258,34 @@ class SecurityPaymentStabilizationTest extends TestCase
     public function test_checkout_ignores_client_modified_total(): void
     {
         $this->test_checkout_recalculates_price_from_database();
+    }
+
+    public function test_transaction_hardening_migration_normalizes_legacy_amounts_before_type_change(): void
+    {
+        $migration = $this->transactionHardeningMigration();
+        $method = new \ReflectionMethod($migration, 'normalizeAmount');
+        $method->setAccessible(true);
+
+        $this->assertSame(10000, $method->invoke($migration, 'Rp 10.000'));
+        $this->assertSame(10000, $method->invoke($migration, '10,000'));
+        $this->assertSame(10000, $method->invoke($migration, '10000.00'));
+        $this->assertSame(10000, $method->invoke($migration, '10.000,00'));
+        $this->assertSame(0, $method->invoke($migration, null));
+        $this->assertSame(0, $method->invoke($migration, ''));
+        $this->assertSame(0, $method->invoke($migration, 'Rp -1.000'));
+        $this->assertSame(0, $method->invoke($migration, 'tidak valid'));
+    }
+
+    public function test_transaction_hardening_migration_normalizes_invalid_payment_status(): void
+    {
+        $migration = $this->transactionHardeningMigration();
+        $method = new \ReflectionMethod($migration, 'normalizePaymentStatus');
+        $method->setAccessible(true);
+
+        $this->assertSame('SUCCESS', $method->invoke($migration, 'success'));
+        $this->assertSame('CHALLENGE', $method->invoke($migration, 'challenge'));
+        $this->assertSame('PENDING', $method->invoke($migration, null));
+        $this->assertSame('PENDING', $method->invoke($migration, 'unknown'));
     }
 
     public function test_midtrans_callback_handles_unknown_invoice(): void
