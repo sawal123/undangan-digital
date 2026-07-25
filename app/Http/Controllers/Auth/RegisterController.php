@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 
 class RegisterController extends Controller
 {
@@ -18,7 +19,8 @@ class RegisterController extends Controller
     public function index()
     {
         $nonce = bin2hex(random_bytes(16));
-        return view('page.auth.register',['nonce'=>$nonce]);
+
+        return view('page.auth.register', ['nonce' => $nonce]);
     }
 
     /**
@@ -38,17 +40,17 @@ class RegisterController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|email',
             'whatsapp' => 'required|numeric',
-            'password' => 'required|string'
+            'password' => 'required|string',
         ]);
         DB::beginTransaction();
         try {
             $roleUser = Role::firstOrCreate(['name' => 'User']);
-            $user =  User::create([
+            $user = User::create([
                 'name' => $validasi['nama'],
                 'email' => $validasi['email'],
                 'avatar' => 'images/default-avatar.png',
                 'phone' => $validasi['whatsapp'],
-                'password' => $validasi['password']
+                'password' => Hash::make($validasi['password']),
             ]);
             $user->assignRole($roleUser);
             DB::commit();
@@ -61,9 +63,10 @@ class RegisterController extends Controller
             return redirect()->back()->with('message', 'Email tersebut sudah terdaftar, gunakan email yang lain.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }

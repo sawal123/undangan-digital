@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Data;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use App\Models\KelolaUndangan\FiturUcapan;
 use App\Models\KelolaUndangan\Tamu;
 use App\Models\KelolaUndangan\Ucapan;
-use Illuminate\Support\Facades\Crypt;
-use App\Models\KelolaUndangan\FiturUcapan;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class TemaController extends Controller
 {
@@ -27,21 +29,25 @@ class TemaController extends Controller
     {
         try {
             $temaPath = Crypt::decryptString($demo);
-            
+
             // Menggabungkan pencarian dan pemuatan relasi menjadi 1 kueri efisien
             $data = Data::with([
-                'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound', 
-                'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah', 
-                'kisah.image', 'dataFont.titleFont', 'dataFont.subFont', 
+                'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound',
+                'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah',
+                'kisah.image', 'dataFont.titleFont', 'dataFont.subFont',
                 'thumbnailWas', 'teksUndangan', 'coverUndangan',
-                'setting', 'qoute', 'teksPenutup', 'ucapan.tamu'
-            ])->where('uid', $id)->firstOrFail();
+                'setting', 'qoute', 'teksPenutup', 'ucapan.tamu',
+            ])
+                ->where('uid', $id)
+                ->when(auth()->check() && auth()->user()->hasRole('User'), fn ($query) => $query->where('user_id', auth()->id()))
+                ->firstOrFail();
 
             $preparedData = $this->prepareInvitationData($data, 'Nama Tamu (Contoh)');
-            
+
             return view($temaPath, $preparedData);
         } catch (\Exception $e) {
-            \Log::error('Error saat demo tema: ' . $e->getMessage());
+            \Log::error('Error saat demo tema: '.$e->getMessage());
+
             return abort(404, 'Tema atau data tidak ditemukan.');
         }
     }
@@ -55,20 +61,21 @@ class TemaController extends Controller
     {
         try {
             $data = Data::with([
-                'theme', 'eventType', 'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound', 
-                'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah', 
-                'kisah.image', 'dataFont.titleFont', 'dataFont.subFont', 
+                'theme', 'eventType', 'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound',
+                'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah',
+                'kisah.image', 'dataFont.titleFont', 'dataFont.subFont',
                 'thumbnailWas', 'teksUndangan', 'coverUndangan',
-                'setting', 'qoute', 'teksPenutup', 'ucapan.tamu'
+                'setting', 'qoute', 'teksPenutup', 'ucapan.tamu',
             ])->where('slug', $slug)->firstOrFail();
 
-            if (!$data->canBeShared()) {
+            if (! $data->canBeShared()) {
                 return abort(403, 'Undangan belum aktif dan belum bisa dibagikan.');
             }
 
             // Validasi theme
-            if (is_null($data->theme_id) || !$data->theme) {
+            if (is_null($data->theme_id) || ! $data->theme) {
                 session()->flash('message', 'Harap Pilih Tema Terlebih Dahulu!');
+
                 return redirect()->back();
             }
 
@@ -78,8 +85,9 @@ class TemaController extends Controller
         } catch (ModelNotFoundException $e) {
             return abort(404, 'Undangan tidak ditemukan.');
         } catch (\Exception $e) {
-            \Log::error('Error saat visit undangan: ' . $e->getMessage());
+            \Log::error('Error saat visit undangan: '.$e->getMessage());
             session()->flash('error', 'Terjadi kesalahan, silakan coba lagi.');
+
             return redirect()->back();
         }
     }
@@ -95,10 +103,10 @@ class TemaController extends Controller
         $ta = $tamu ? $data->tamu()->where('kode', $tamu)->first() : null;
 
         $hari = [
-            'Sunday'    => 'Minggu', 'Monday'    => 'Senin',
-            'Tuesday'   => 'Selasa', 'Wednesday' => 'Rabu',
-            'Thursday'  => 'Kamis',  'Friday'    => 'Jumat',
-            'Saturday'  => 'Sabtu',
+            'Sunday' => 'Minggu', 'Monday' => 'Senin',
+            'Tuesday' => 'Selasa', 'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',  'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
         ];
 
         $bulan = [
@@ -109,18 +117,18 @@ class TemaController extends Controller
         ];
 
         $video = $data->galery->pluck('video')->filter()->toArray();
-        $poto  = $data->galery->pluck('poto')->filter()->toArray();
+        $poto = $data->galery->pluck('poto')->filter()->toArray();
 
         return [
-            'data'        => $data,
-            'hari'        => $hari,
-            'bulan'       => $bulan,
-            'tamu'        => $ta->nama ?? $tamu ?? 'Tamu Undangan',
-            'video'       => $video,
-            'poto'        => $poto,
-            'kode'        => $tamu,
-            'ucapan'      => $data->ucapan()->with('tamu')->latest()->get(),
-            'acara'       => $acara,
+            'data' => $data,
+            'hari' => $hari,
+            'bulan' => $bulan,
+            'tamu' => $ta->nama ?? $tamu ?? 'Tamu Undangan',
+            'video' => $video,
+            'poto' => $poto,
+            'kode' => $tamu,
+            'ucapan' => $data->ucapan()->with('tamu')->latest()->get(),
+            'acara' => $acara,
             'thumbnailWa' => $thumbnailWa,
         ];
     }
@@ -128,63 +136,76 @@ class TemaController extends Controller
     public function saveDoa(Request $request)
     {
         $va = $request->validate([
-            'dataId' => 'required',
-            'nama'   => 'nullable|string|max:50',
+            'dataId' => 'required|exists:data,id',
+            'nama' => 'nullable|string|max:50',
             'ucapan' => 'required|string|max:255',
-            'status' => 'required|string|max:255'
+            'status' => ['required', Rule::in(['hadir', 'tidak_hadir', 'tidak_datang', 'Hadir', 'Tidak Hadir', 'ragu'])],
+            'kode' => 'nullable|string|max:255',
         ], [
             'ucapan.required' => 'Ucapan tidak boleh kosong.',
-            'ucapan.max'      => 'Ucapan tidak boleh lebih dari 255 karakter.',
+            'ucapan.max' => 'Ucapan tidak boleh lebih dari 255 karakter.',
             'status.required' => 'Pilih Kehadiran Kamu.',
         ]);
 
-        // Cek fitur ucapan secara aman (null-safe)
-        $fitur = FiturUcapan::firstOrCreate(
-            ['data_id' => $va['dataId']],
-            [
-                'isActive' => true,
-                'publicIsActive' => true,
-                'viewIsActive' => true,
-            ]
-        );
+        $data = Data::findOrFail($va['dataId']);
+
+        if (! $data->canBeShared()) {
+            return $this->saveDoaError($request, 'Undangan belum aktif.', 403);
+        }
+
+        $fitur = FiturUcapan::where('data_id', $data->id)->first();
+
+        if (! $fitur || ! $fitur->isActive) {
+            return $this->saveDoaError($request, 'Fitur ucapan tidak tersedia.', 403);
+        }
+
         $isPublicActive = $fitur?->publicIsActive ?? false;
 
         // Cek tamu dengan scope spesifik ke data_id undangan agar aman
-        $tamu = Tamu::where('data_id', $va['dataId'])
-                    ->where('kode', $request->input('kode'))
-                    ->first();
+        $tamu = Tamu::where('data_id', $data->id)
+            ->where('kode', $va['kode'] ?? null)
+            ->first();
 
         $addTamu = null;
 
-        if (!$tamu && !$isPublicActive) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'message' => 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.'
-                ], 403);
-            }
-
-            return redirect()->back()->with('error', 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.');
-        } elseif (!$tamu && $isPublicActive) {
+        if (! $tamu && ! $isPublicActive) {
+            return $this->saveDoaError($request, 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.', 403);
+        } elseif (! $tamu && $isPublicActive) {
             if (empty($va['nama'])) {
                 return redirect()->back()->withErrors([
                     'nama' => 'Nama tidak boleh kosong.',
                 ])->withInput();
             }
 
-            $addTamu = Tamu::create([
-                'data_id' => $va['dataId'],
-                'kode'    => 0,
-                'nama'    => $va['nama'],
-                'slug'    => Str::slug($va['nama'])
-            ]);
         }
 
-        $doa = Ucapan::create([
-            'data_id' => $va['dataId'],
-            'tamu_id' => $tamu ? $tamu->id : $addTamu->id,
-            'ucapan'  => $va['ucapan'],
-            'status'  => $va['status']
-        ]);
+        $doa = DB::transaction(function () use ($data, $tamu, $isPublicActive, $va, &$addTamu) {
+            if (! $tamu && $isPublicActive) {
+                $addTamu = Tamu::create([
+                    'data_id' => $data->id,
+                    'kode' => Str::lower(Str::random(12)),
+                    'nama' => $va['nama'],
+                    'slug' => Str::slug($va['nama']),
+                ]);
+            }
+
+            $guest = $tamu ?: $addTamu;
+
+            $duplicate = Ucapan::where('data_id', $data->id)
+                ->where('tamu_id', $guest->id)
+                ->where('ucapan', $va['ucapan'])
+                ->where('created_at', '>=', now()->subMinute())
+                ->exists();
+
+            abort_if($duplicate, 429, 'Ucapan yang sama sudah dikirim.');
+
+            return Ucapan::create([
+                'data_id' => $data->id,
+                'tamu_id' => $guest->id,
+                'ucapan' => $va['ucapan'],
+                'status' => $va['status'],
+            ]);
+        });
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -199,5 +220,14 @@ class TemaController extends Controller
         }
 
         return redirect()->back()->with('message', 'Ucapan doa berhasil dikirim');
+    }
+
+    private function saveDoaError(Request $request, string $message, int $status)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['message' => $message], $status);
+        }
+
+        return redirect()->back()->with('error', $message);
     }
 }

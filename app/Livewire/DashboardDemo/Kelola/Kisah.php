@@ -2,16 +2,16 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use App\Models\Data;
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\ImgKisahCinta;
 use App\Models\KelolaUndangan\KisahCinta;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Kisah extends Component
 {
+    use LoadsOwnedInvitation;
     use WithFileUploads;
 
     public $title = '';
@@ -36,7 +36,7 @@ class Kisah extends Component
 
     public function mount($id)
     {
-        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
+        $this->dataId = $this->ownedInvitationByUid($id)->id;
         $this->loadKisah();
     }
 
@@ -62,11 +62,11 @@ class Kisah extends Component
     public function modalEditKisah($id)
     {
         $this->idKisah = $id;
-        $kisah = KisahCinta::find($id);
+        $kisah = KisahCinta::where('data_id', $this->dataId)->findOrFail($id);
         $this->judul = $kisah->title;
         $this->cerita = $kisah->deskripsi;
         $this->formImage = null;
-        $this->title = "Edit Kisah";
+        $this->title = 'Edit Kisah';
         $this->dispatch('open-modal', name: 'kisah-modal');
     }
 
@@ -78,10 +78,10 @@ class Kisah extends Component
 
     public function delete($id)
     {
-        $k = KisahCinta::find($id);
+        $k = KisahCinta::where('data_id', $this->dataId)->findOrFail($id);
         if ($k) {
             // Hapus gambar jika ada
-            $img = ImgKisahCinta::where('kisah_id', $id)->first();
+            $img = ImgKisahCinta::where('data_id', $this->dataId)->where('kisah_id', $id)->first();
             if ($img && $img->image) {
                 Storage::delete('public/'.$img->image);
             }
@@ -105,11 +105,16 @@ class Kisah extends Component
     {
         if (! isset($this->poto[$id]) || ! $this->poto[$id]) {
             session()->flash('message', 'Upload Gambar Terlebih Dahulu!');
+
             return;
         }
+        $this->validate([
+            'poto.'.$id => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+        KisahCinta::where('data_id', $this->dataId)->findOrFail($id);
         $imagePath = $this->poto[$id]->store('kisah', 'public');
 
-        $img = ImgKisahCinta::where('kisah_id', $id)->first();
+        $img = ImgKisahCinta::where('data_id', $this->dataId)->where('kisah_id', $id)->first();
 
         if (! $img) {
             ImgKisahCinta::create([
@@ -136,8 +141,13 @@ class Kisah extends Component
     public function save()
     {
         $storyId = null;
+        $this->validate([
+            'judul' => 'required|string|max:255',
+            'cerita' => 'required|string|max:1000',
+            'formImage' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
         if ($this->idKisah) {
-            $kisah = KisahCinta::find($this->idKisah);
+            $kisah = KisahCinta::where('data_id', $this->dataId)->find($this->idKisah);
             if ($kisah) {
                 $kisah->update([
                     'title' => $this->judul,
@@ -159,7 +169,7 @@ class Kisah extends Component
         // Tangani upload gambar dari modal form
         if ($storyId && $this->formImage) {
             $imagePath = $this->formImage->store('kisah', 'public');
-            $img = ImgKisahCinta::where('kisah_id', $storyId)->first();
+            $img = ImgKisahCinta::where('data_id', $this->dataId)->where('kisah_id', $storyId)->first();
             if ($img) {
                 if ($img->image) {
                     Storage::delete('public/'.$img->image);

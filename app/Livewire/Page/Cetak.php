@@ -3,29 +3,35 @@
 namespace App\Livewire\Page;
 
 use App\Models\Admin\UndanganCetak;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Crypt;
 use Livewire\Component;
 
 class Cetak extends Component
 {
     public $isOpenModal = false;
+
     public $mainImage;
+
     public $gambar = [];
+
     public $undang;
 
     public $isExpanded = false; // Properti untuk mengontrol tampilan teks
+
     public $deskripsi;
+
     public $yes = [];
 
     // public $undangan = [];
     public $perPage = 8; // Jumlah awal data
+
     public $loadAmount = 8; // Jumlah data yang ditambahkan setiap kali tombol "Load More" diklik
+
     public $search = ''; // Menyimpan nilai pencarian
+
     public $productToken;
-
-
 
     public function toggleDescription($id)
     {
@@ -33,12 +39,14 @@ class Cetak extends Component
         $this->deskripsi = $s->deskripsi;
         $this->isExpanded = true;
     }
+
     public function toggleDownDescription($id)
     {
         $s = UndanganCetak::find($id);
         $this->deskripsi = $s->deskripsi;
         $this->isExpanded = false;
     }
+
     public function closeModal()
     {
         $this->isOpenModal = false;
@@ -46,12 +54,14 @@ class Cetak extends Component
         $this->productToken = null;
         $this->dispatch('cetak-modal-closed');
     }
+
     public function openModal($id)
     {
         $this->showModalForProduct($id);
         $this->productToken = $this->makeProductToken($this->undang->id);
         $this->dispatch('cetak-modal-opened', token: $this->productToken);
     }
+
     protected function showModalForProduct($id)
     {
         $this->undang = UndanganCetak::findOrFail($id);
@@ -61,27 +71,32 @@ class Cetak extends Component
         $this->isExpanded = false;
         $this->isOpenModal = true;
     }
+
     public function updateMainImage($image)
     {
         $this->mainImage = $image;
     }
+
     public $undangan;
+
     public function updateData()
     {
-        $this->undangan = UndanganCetak::where('nama', 'like', '%' . $this->search . '%')
-            ->orWhere('jenis', 'like', '%' . $this->search . '%')
-            ->orWhere('harga', 'like', '%' . $this->search . '%')
+        $this->undangan = UndanganCetak::where('nama', 'like', '%'.$this->search.'%')
+            ->orWhere('jenis', 'like', '%'.$this->search.'%')
+            ->orWhere('harga', 'like', '%'.$this->search.'%')
             ->limit($this->perPage)
             ->get();
         if ($this->search != '') {
             // dd($this->undangan);
         }
     }
+
     public function loadMore()
     {
         $this->perPage += $this->loadAmount;
         $this->updateData();
     }
+
     public function mount()
     {
         $this->updateData();
@@ -92,19 +107,19 @@ class Cetak extends Component
                 $id = $this->readProductToken($token);
                 $this->productToken = $token;
                 $this->showModalForProduct($id);
-            } catch (DecryptException | ModelNotFoundException $exception) {
+            } catch (DecryptException|ModelNotFoundException $exception) {
                 $this->productToken = null;
             }
         }
     }
+
     public function render()
     {
-        $this->undangan = UndanganCetak::where('nama', 'like', '%' . $this->search . '%')
-            ->orWhere('jenis', 'like', '%' . $this->search . '%')
-            ->orWhere('harga', 'like', '%' . $this->search . '%')
+        $this->undangan = UndanganCetak::where('nama', 'like', '%'.$this->search.'%')
+            ->orWhere('jenis', 'like', '%'.$this->search.'%')
+            ->orWhere('harga', 'like', '%'.$this->search.'%')
             ->limit($this->perPage)
             ->get();
-        error_reporting(0);
         $this->dispatch('slider');
 
         return view('landingpage.cetak')->layout('layouts.landing');

@@ -2,16 +2,21 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\Data;
 use App\Models\KelolaUndangan\Streaming as KelolaUndanganStreaming;
 use Livewire\Component;
-use Illuminate\Support\Facades\Crypt;
 
 class Streaming extends Component
 {
+    use LoadsOwnedInvitation;
+
     public $dataId;
+
     public $link = null;
+
     public $isActive = false;
+
     public $fiturStreaming;
 
     public function updateFiturStreaming($isActive)
@@ -21,26 +26,26 @@ class Streaming extends Component
         if ($streaming) {
             $streaming->update([
 
-                'isActive' => $isActive
+                'isActive' => $isActive,
             ]);
         } else {
             KelolaUndanganStreaming::create([
                 'data_id' => $this->dataId,
-                'isActive' => $isActive
+                'isActive' => $isActive,
             ]);
         }
         // $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
     }
+
     public function mount($id)
     {
-        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
+        $this->dataId = $this->ownedInvitationByUid($id)->id;
         $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->value('isActive') ?? false;
         $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
-        if($streaming){
+        if ($streaming) {
             $this->link = $streaming->link;
         }
     }
-
 
     public function save()
     {
@@ -59,13 +64,14 @@ class Streaming extends Component
                 session()->flash('message', 'Streaming Berhasil Ditambahkan.');
             }
         } catch (\Exception $e) {
-            session()->flash('message', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
+            session()->flash('message', 'Terjadi kesalahan saat menyimpan data: '.$e->getMessage());
         }
     }
+
     public function render()
     {
         return view('livewire.dashboard.kelola.streaming')->layout('components.layouts.user-new', [
-            'headerTitle' => 'Kelola Streaming'
+            'headerTitle' => 'Kelola Streaming',
         ]);
     }
 }

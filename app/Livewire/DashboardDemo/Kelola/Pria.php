@@ -2,27 +2,32 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use Livewire\Component;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Data;
 use App\Models\KelolaUndangan\Pria as KelolaUndanganPria;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
 // use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithFileUploads as LivewireWithFileUploads;
 
 class Pria extends Component
 {
-
     use LivewireWithFileUploads;
+
     public $dataId;
+
     public $nama;
+
     public $panggilan;
+
     public $deskripsi;
+
     public $gambar;
 
     protected $rules = [
         'nama' => 'required|string|max:255',
         'panggilan' => 'required|string|max:255',
         'deskripsi' => 'required|string|max:255',
-        // 'gambar' => 'image|max:2048',
+        'gambar' => 'nullable',
     ];
 
     public function mount($dataId)
@@ -34,13 +39,19 @@ class Pria extends Component
             $this->nama = $pria->nama_lengkap;
             $this->panggilan = $pria->nama_panggilan;
             $this->deskripsi = $pria->deskripsi;
-            $this->gambar = asset('storage/' . $pria->image);
+            $this->gambar = asset('storage/'.$pria->image);
         }
     }
 
     public function save()
     {
+        Data::query()->ownedBy(auth()->id())->findOrFail($this->dataId);
         $this->validate();
+        if (is_object($this->gambar)) {
+            $this->validate([
+                'gambar' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            ]);
+        }
 
         $data = KelolaUndanganPria::where('data_id', $this->dataId)->first();
         if ($data && $data->image) {
@@ -76,12 +87,10 @@ class Pria extends Component
             session()->flash('message', 'Data mempelai pria berhasil disimpan.');
         }
 
-
-
-        
-        // $this->reset(); 
+        // $this->reset();
 
     }
+
     public function render()
     {
         return view('livewire.dashboard.kelola.pria', []);

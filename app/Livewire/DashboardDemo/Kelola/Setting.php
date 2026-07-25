@@ -2,51 +2,72 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\Data;
 use App\Models\DataFonts;
 use App\Models\Fonts;
 use App\Models\KelolaUndangan\Qoute;
-use Livewire\Component;
+use App\Models\KelolaUndangan\ThumbnailWa;
+use App\Models\Setting as ModelsSetting;
 use App\Models\teksPenutup;
 use App\Models\TeksUndangan;
 use App\Models\teksWhatsApp;
 use Illuminate\Support\Facades\Storage;
-use App\Models\KelolaUndangan\ThumbnailWa;
-use App\Models\Setting as ModelsSetting;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
-use Illuminate\Support\Facades\Crypt;
 
 class Setting extends Component
 {
+    use LoadsOwnedInvitation;
     use WithFileUploads;
+
     public $dataId;
+
     public $title;
+
     public $slug;
+
     public $pesan;
+
     public $button = false;
 
-    public $fontTitle, $fontPara, $sizeTitle = 32, $sizePara = 16;
+    public $fontTitle;
+
+    public $fontPara;
+
+    public $sizeTitle = 32;
+
+    public $sizePara = 16;
 
     public $pembuka = '';
+
     public $acara = '';
+
     public $penutup = '';
 
     public $hormatKami;
+
     public $turut;
+
     public $gambar; // File yang diupload
+
     public $pesanWa = '';
+
     public $tit = '';
+
     public $qoute = '';
+
     public $subtitle = '';
 
     public $titleAcara;
 
     public $thumbnail;
 
-
     public function titleA($id)
     {
-        $setting = ModelsSetting::where('data_id', $id)->first();
+        $setting = ModelsSetting::where('data_id', $this->dataId)->first();
         if ($setting) {
             $setting->update([
                 'acara' => $this->titleAcara,
@@ -54,7 +75,7 @@ class Setting extends Component
             ]);
         } else {
             ModelsSetting::create([
-                'data_id' => $id,
+                'data_id' => $this->dataId,
                 'acara' => $this->titleAcara,
                 'subacara' => '',
             ]);
@@ -64,10 +85,10 @@ class Setting extends Component
 
     public function mount($id)
     {
-        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
-        $data = Data::with(['dataFont.titleFont', 'dataFont.subFont'])->find($this->dataId);
-        
-        if (!$data) {
+        $data = $this->ownedInvitationByUid($id, ['dataFont.titleFont', 'dataFont.subFont']);
+        $this->dataId = $data->id;
+
+        if (! $data) {
             return;
         }
 
@@ -87,18 +108,18 @@ class Setting extends Component
         $defaultFontId = Fonts::where('is_active', 1)->value('id');
         $this->fontTitle = $this->fontTitle ?: $defaultFontId;
         $this->fontPara = $this->fontPara ?: $defaultFontId;
-        
+
         $this->loadThumbnail();
-        
+
         if ($turut) {
             $this->hormatKami = $turut->hormat_kami;
             $this->turut = $turut->mengundang;
         }
-        
+
         if ($pesan) {
             $this->pesanWa = $pesan->pesan;
         }
-        
+
         if ($teksU) {
             $this->pembuka = $teksU->pembuka;
             $this->acara = $teksU->acara;
@@ -130,14 +151,14 @@ class Setting extends Component
             $qoute->update([
                 'title' => $this->tit,
                 'qoute' => $this->qoute,
-                'subtitle' => $this->subtitle
+                'subtitle' => $this->subtitle,
             ]);
         } else {
             Qoute::create([
                 'data_id' => $this->dataId,
                 'title' => $this->tit,
                 'qoute' => $this->qoute,
-                'subtitle' => $this->subtitle
+                'subtitle' => $this->subtitle,
             ]);
         }
 
@@ -146,12 +167,12 @@ class Setting extends Component
 
     private function normalizeArabicText(?string $value): ?string
     {
-        if ($value === null || $value === '' || !preg_match('/[ØÙÛ]/u', $value)) {
+        if ($value === null || $value === '' || ! preg_match('/[ØÙÛ]/u', $value)) {
             return $value;
         }
 
         foreach (['Windows-1252', 'ISO-8859-1'] as $encoding) {
-            $bytes = @iconv('UTF-8', $encoding . '//IGNORE', $value);
+            $bytes = @iconv('UTF-8', $encoding.'//IGNORE', $value);
             if ($bytes === false) {
                 continue;
             }
@@ -167,17 +188,23 @@ class Setting extends Component
 
     public function update($id)
     {
-        $data = Data::find($id);
+        $this->slug = Str::slug($this->slug);
+        $this->validate([
+            'title' => 'required|string|max:255',
+            'slug' => ['required', 'string', 'max:255', Rule::unique('data', 'slug')->ignore($this->dataId)],
+        ]);
+
+        $data = $this->ownedInvitationById($this->dataId);
         $data->update([
             'title' => $this->title,
-            'slug' => $this->slug
+            'slug' => $this->slug,
         ]);
         session()->flash('title', 'Data Undangan Berhasil Di update');
     }
 
     public function teksWhatsApp()
     {
-        $wa  = teksWhatsApp::where('data_id', $this->dataId)->first();
+        $wa = teksWhatsApp::where('data_id', $this->dataId)->first();
         if ($wa) {
             $wa->update([
                 'data_id' => $this->dataId,
@@ -187,15 +214,16 @@ class Setting extends Component
         } else {
             teksWhatsApp::create([
                 'data_id' => $this->dataId,
-                'pesan' => "Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami
+                'pesan' => 'Kepada {{tamu}}, Kami mengundang saudara/(i) untuk menghadiri acara pernikahan kami
 {{nama_mempelai1}} & {{nama_mempelai2}}
 Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
 {{link}}
-Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
+Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
             ]);
             session()->flash('teksWA', 'Teks WhatsApp Berhasil Dibuat.');
         }
     }
+
     public function loadThumbnail()
     {
         $this->thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
@@ -208,7 +236,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
 
         if ($thumbnail) {
             // Hapus file dari storage
-            Storage::delete('public/' . $thumbnail->thumbnail);
+            Storage::delete('public/'.$thumbnail->thumbnail);
             $thumbnail->delete();
 
             // Set feedback ke user
@@ -225,7 +253,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
     {
         // Validasi file
         $this->validate([
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,svg,webp|max:1024',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
         // Ambil thumbnail dari database
         $data = ThumbnailWa::where('data_id', $this->dataId)->first();
@@ -234,7 +262,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
         if ($data) {
             // Hapus file lama jika ada
             if ($data->thumbnail) {
-                Storage::delete('public/' . $data->thumbnail);
+                Storage::delete('public/'.$data->thumbnail);
             }
             // Perbarui data thumbnail
             $data->update(['thumbnail' => $imagePath]);
@@ -251,7 +279,6 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
         $this->loadThumbnail();
     }
 
-
     public function TeksUndangan()
     {
         $teksU = TeksUndangan::where('data_id', $this->dataId)->first();
@@ -259,7 +286,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
             $teksU->update([
                 'pembuka' => $this->pembuka,
                 'acara' => $this->acara,
-                'penutup' => $this->penutup
+                'penutup' => $this->penutup,
             ]);
             session()->flash('teksUndangan', 'Teks Undangan Berhasil Diupdate.');
         } else {
@@ -267,7 +294,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
                 'data_id' => $this->dataId,
                 'pembuka' => "بسم الله الرحمن الرحيم
                 Kami mohon do'a & restunya atas pernikahan kami",
-                'acara' => "Kami bermaksud untuk mengundang saudara/(i) dalam acara pernikahan kami pada:",
+                'acara' => 'Kami bermaksud untuk mengundang saudara/(i) dalam acara pernikahan kami pada:',
                 'penutup' => "Atas kehadiran saudara/(i) & Do'a restunya, kami ucapkan terimakasih",
             ]);
             session()->flash('teksUndangan', 'Teks Undangan Berhasil Dibuat.');
@@ -295,7 +322,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
 
     public function updateFont($id)
     {
-        $data = Data::find($id);
+        $data = $this->ownedInvitationById($this->dataId, ['dataFont']);
         if ($data->dataFont) {
             $font = $data->dataFont->update([
                 'f_title' => $this->fontTitle,
@@ -305,7 +332,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
             ]);
         } else {
             $font = DataFonts::create([
-                'data_id' => $id,
+                'data_id' => $this->dataId,
                 'f_title' => $this->fontTitle,
                 'f_sub' => $this->fontPara,
                 's_title' => $this->sizeTitle,
@@ -314,6 +341,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
         }
         session()->flash('font', 'Font Berhasil Diubah');
     }
+
     public function render()
     {
         $selectedFont = null;
@@ -325,23 +353,21 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
             $selectedPara = Fonts::firstWhere('id', $this->fontPara);
         }
         $this->thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
-        if (!$this->thumbnail) {
+        if (! $this->thumbnail) {
             $this->thumbnail = null;
         }
-        $dSlug = Data::where('slug', $this->slug)->first();
+        $dSlug = Data::where('slug', $this->slug)
+            ->whereKeyNot($this->dataId)
+            ->exists();
         if ($dSlug) {
-            if ($dSlug->id === $this->dataId) {
-                $this->pesan = "";
-                $this->button = true;
-            } else {
-                $this->pesan = "Slug " . $this->slug . " Sudah Digunakan Orang Lain";
-                $this->button = false;
-            }
+            $this->pesan = 'Slug '.$this->slug.' Sudah Digunakan Orang Lain';
+            $this->button = false;
         } else {
-            $this->pesan = "Slug " . $this->slug . " Bisa digunakan!";
+            $this->pesan = 'Slug '.$this->slug.' Bisa digunakan!';
             $this->button = true;
         }
         $fonts = Fonts::where('is_active', 1)->get();
+
         return view(
             'livewire.dashboard.kelola.setting',
             [
@@ -350,7 +376,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih."
                 'selectedPara' => $selectedPara,
             ]
         )->layout('components.layouts.user-new', [
-            'headerTitle' => 'Pengaturan'
+            'headerTitle' => 'Pengaturan',
         ]);
     }
 }

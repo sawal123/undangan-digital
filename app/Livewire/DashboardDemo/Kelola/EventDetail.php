@@ -2,7 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use App\Models\Data;
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\EventDetail as EventDetailModel;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -10,15 +10,23 @@ use Livewire\WithFileUploads;
 
 class EventDetail extends Component
 {
+    use LoadsOwnedInvitation;
     use WithFileUploads;
 
     public $dataId;
+
     public $eventTypeName = 'Event';
+
     public $headline;
+
     public $host_name;
+
     public $speaker_name;
+
     public $dress_code;
+
     public $description;
+
     public $image;
 
     protected $rules = [
@@ -32,7 +40,7 @@ class EventDetail extends Component
 
     public function mount($id)
     {
-        $data = Data::with('eventType')->where('uid', $id)->firstOrFail();
+        $data = $this->ownedInvitationByUid($id, ['eventType']);
 
         $this->dataId = $data->id;
         $this->eventTypeName = $data->eventType?->name ?? 'Event';
@@ -52,12 +60,17 @@ class EventDetail extends Component
         $this->speaker_name = $detail->speaker_name;
         $this->dress_code = $detail->dress_code;
         $this->description = $detail->description;
-        $this->image = $detail->image ? asset('storage/' . $detail->image) : null;
+        $this->image = $detail->image ? asset('storage/'.$detail->image) : null;
     }
 
     public function save()
     {
         $this->validate();
+        if (is_object($this->image)) {
+            $this->validate([
+                'image' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            ]);
+        }
 
         $detail = EventDetailModel::where('data_id', $this->dataId)->first();
         $imagePath = is_object($this->image) ? $this->image->store('event-detail', 'public') : null;
@@ -91,7 +104,7 @@ class EventDetail extends Component
     public function render()
     {
         return view('livewire.dashboard.kelola.event-detail')->layout('components.layouts.user-new', [
-            'headerTitle' => 'Detail ' . $this->eventTypeName,
+            'headerTitle' => 'Detail '.$this->eventTypeName,
         ]);
     }
 }

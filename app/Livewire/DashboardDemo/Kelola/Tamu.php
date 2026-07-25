@@ -2,76 +2,72 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use App\Models\Data;
-use Livewire\Component;
-use Illuminate\Support\Str;
-use App\Models\teksWhatsApp;
-use Livewire\WithPagination;
-use App\Models\KelolaUndangan\Tamu as Tamus;
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\Tamu as KelolaUndanganTamu;
-use Illuminate\Support\Facades\Crypt;
+use App\Models\KelolaUndangan\Tamu as Tamus;
+use App\Models\teksWhatsApp;
+use App\Services\InvitationMessageRenderer;
+use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Tamu extends Component
 {
+    use LoadsOwnedInvitation;
     use WithPagination;
+
     public $dataId;
+
     public $nama;
+
     public $whatsapp;
+
     public $query;
+
     public $undang;
+
     public $idTamu = null;
-    public $slug = "";
+
+    public $slug = '';
+
     public $invite = [];
+
     public $title = 'Add Tamu';
+
     public bool $canShareInvitation = false;
 
     public function mount($id)
     {
-        $data = Data::where('uid', $id)->firstOrFail();
+        $data = $this->ownedInvitationByUid($id);
         $this->dataId = $data->id;
         $this->canShareInvitation = $data->canBeShared();
     }
+
     public function close()
     {
         $this->dispatch('close-modal', name: 'delete-modal');
     }
 
-
-
     public function shareWA($id)
     {
-        $this->undang = Tamus::find($id);
-        if (!$this->undang) {
+        $this->undang = Tamus::where('data_id', $this->dataId)->find($id);
+        if (! $this->undang) {
             session()->flash('error', 'Data tamu tidak ditemukan.');
+
             return;
         }
 
-        $data = Data::find($this->undang->data_id);
+        $data = $this->ownedInvitationById($this->dataId, ['eventType', 'pria', 'wanita', 'birthdayProfile', 'eventDetail']);
 
-        if (!$data?->canBeShared()) {
+        if (! $data?->canBeShared()) {
             session()->flash('error', 'Undangan belum aktif, link belum bisa dibagikan.');
+
             return;
         }
 
         if ($this->undang) {
-            $namaTamu = $this->undang->nama; // Nama tamu dari database
-            // Membuat teks undangan
-            $pesan = teksWhatsApp::where('data_id', $this->undang->data_id)->first()->pesan;
-
-            $dataPengganti = [
-                'tamu' => $this->undang->nama,
-                'nama_mempelai1' => $data->wanita->nama_panggilan,
-                'nama_mempelai2' => $data->pria->nama_panggilan,
-                'link' => url('/u') . '/' . $data->slug . '/' . $this->undang->kode,
-            ];
-            $pesanFinal = str_replace(
-                ['{{tamu}}', '{{nama_mempelai1}}', '{{nama_mempelai2}}', '{{link}}'],
-                [$dataPengganti['tamu'], $dataPengganti['nama_mempelai1'], $dataPengganti['nama_mempelai2'], $dataPengganti['link']],
-                $pesan
-            );
-            // dd($pesanFinal);
-
-            
+            $pesan = teksWhatsApp::where('data_id', $this->dataId)->first()?->pesan;
+            $pesanFinal = app(InvitationMessageRenderer::class)->render($data, $this->undang, $pesan);
 
             // Mengonversi teks pesan ke URL encoded
             $this->undang->nomor = preg_replace('/^08/', '628', $this->undang->nomor);
@@ -82,56 +78,66 @@ class Tamu extends Component
             $this->dispatch('open-new-tab', ['url' => $whatsappUrl]);
         }
     }
+
     public function delete($kode)
     {
-        $tamu = Tamus::where('kode', $kode)->first();
+        $tamu = Tamus::where('data_id', $this->dataId)->where('kode', $kode)->firstOrFail();
         $tamu->delete();
         session()->flash('message', 'Tamu Berhasil Didelete.');
     }
+
     public function shareTamu($id)
     {
-        $this->undang = Tamus::find($id);
+        $this->undang = Tamus::with('data')->where('data_id', $this->dataId)->find($id);
 
-        if (!$this->undang?->data?->canBeShared()) {
+        if (! $this->undang?->data?->canBeShared()) {
             session()->flash('error', 'Undangan belum aktif, link belum bisa dibagikan.');
+
             return;
         }
 
         if ($this->undang) {
             $this->invite = [$this->undang->nama, $this->undang->kode];
         }
-        $this->slug = url('/u') . '/' . $this->undang->data->slug . '/' . $this->undang->kode;
+        $this->slug = url('/u').'/'.$this->undang->data->slug.'/'.$this->undang->kode;
         $this->dispatch('open-modal', name: 'share-modal');
     }
+
     public function EditTamu($id)
     {
-        $this->undang = Tamus::find($id);
+        $this->undang = Tamus::where('data_id', $this->dataId)->findOrFail($id);
 
         $this->idTamu = $this->undang->id;
         $this->nama = $this->undang->nama;
         $this->whatsapp = $this->undang->nomor;
 
         $this->dispatch('open-modal', name: 'tamu-modal');
-        $this->title = "Edit Tamu";
+        $this->title = 'Edit Tamu';
     }
+
     public function save()
     {
-        $tamu = KelolaUndanganTamu::where('id', $this->idTamu)->first();
+        $this->validate([
+            'nama' => 'required|string|max:255',
+            'whatsapp' => 'nullable|string|max:30',
+        ]);
+
+        $tamu = KelolaUndanganTamu::where('data_id', $this->dataId)->where('id', $this->idTamu)->first();
         if ($tamu) {
             $tamu->update([
                 'nama' => $this->nama,
-                'nomor' => $this->whatsapp
+                'nomor' => $this->whatsapp,
             ]);
             session()->flash('message', 'Tamu Berhasil DiUpdate.');
             $this->dispatch('close-modal', name: 'tamu-modal');
         } else {
-            $kode = rand(99, 9999);
+            $kode = $this->generateGuestCode();
             KelolaUndanganTamu::create([
                 'data_id' => $this->dataId,
                 'nama' => $this->nama,
                 'kode' => $kode,
                 'nomor' => $this->whatsapp,
-                'slug' => Str::slug($this->nama)
+                'slug' => Str::slug($this->nama),
             ]);
             session()->flash('message', 'Tamu Berhasil Ditambahkan.');
             $this->dispatch('close-modal', name: 'tamu-modal');
@@ -140,25 +146,39 @@ class Tamu extends Component
         KelolaUndanganTamu::where('data_id', $this->dataId)->get();
         $this->resetField();
     }
+
     public function resetField()
     {
         $this->nama = '';
         $this->whatsapp = '';
     }
 
+    private function generateGuestCode(): string
+    {
+        do {
+            $kode = Str::lower(Str::random(12));
+        } while (KelolaUndanganTamu::where('data_id', $this->dataId)->where('kode', $kode)->exists());
+
+        return $kode;
+    }
+
     public function render()
     {
         $tamu = empty($this->query)
             ? KelolaUndanganTamu::orderBy('id', 'desc')->where('data_id', $this->dataId)->paginate(5)
-            : KelolaUndanganTamu::where('nama', 'LIKE', '%' . $this->query . '%')->where('data_id', $this->dataId)
-            ->orWhere('kode', 'LIKE', '%' . $this->query . '%')
-            ->orWhere('nomor', 'LIKE', '%' . $this->query . '%')
-            ->orderBy('id', 'desc')->paginate(5);
+            : KelolaUndanganTamu::where('data_id', $this->dataId)
+                ->where(function ($query) {
+                    $query->where('nama', 'LIKE', '%'.$this->query.'%')
+                        ->orWhere('kode', 'LIKE', '%'.$this->query.'%')
+                        ->orWhere('nomor', 'LIKE', '%'.$this->query.'%');
+                })
+                ->orderBy('id', 'desc')->paginate(5);
+
         return view('livewire.dashboard.kelola.tamu', [
             'tamu' => $tamu,
             'canShareInvitation' => $this->canShareInvitation,
         ])->layout('components.layouts.user-new', [
-            'headerTitle' => 'Kelola Tamu'
+            'headerTitle' => 'Kelola Tamu',
         ]);
     }
 }

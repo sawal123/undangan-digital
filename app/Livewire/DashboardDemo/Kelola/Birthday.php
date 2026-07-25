@@ -2,7 +2,7 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use App\Models\Data;
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\BirthdayProfile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -10,14 +10,21 @@ use Livewire\WithFileUploads;
 
 class Birthday extends Component
 {
+    use LoadsOwnedInvitation;
     use WithFileUploads;
 
     public $dataId;
+
     public $name;
+
     public $nickname;
+
     public $age;
+
     public $parent_name;
+
     public $description;
+
     public $photo;
 
     protected $rules = [
@@ -31,7 +38,7 @@ class Birthday extends Component
 
     public function mount($id)
     {
-        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
+        $this->dataId = $this->ownedInvitationByUid($id)->id;
         $this->loadProfile();
     }
 
@@ -48,12 +55,17 @@ class Birthday extends Component
         $this->age = $profile->age;
         $this->parent_name = $profile->parent_name;
         $this->description = $profile->description;
-        $this->photo = $profile->photo ? asset('storage/' . $profile->photo) : null;
+        $this->photo = $profile->photo ? asset('storage/'.$profile->photo) : null;
     }
 
     public function save()
     {
         $this->validate();
+        if (is_object($this->photo)) {
+            $this->validate([
+                'photo' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            ]);
+        }
 
         $profile = BirthdayProfile::where('data_id', $this->dataId)->first();
         $photoPath = is_object($this->photo) ? $this->photo->store('birthday', 'public') : null;

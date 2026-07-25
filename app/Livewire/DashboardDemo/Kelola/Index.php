@@ -2,18 +2,20 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use App\Models\Data;
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use Livewire\Component;
-use Illuminate\Support\Facades\Crypt;
 
 class Index extends Component
 {
+    use LoadsOwnedInvitation;
+
     public $dataId;
+
     public $data;
 
     public function mount($id)
     {
-        $this->data = Data::with('eventType')->where('uid', $id)->firstOrFail();
+        $this->data = $this->ownedInvitationByUid($id, ['eventType']);
         $this->dataId = $this->data->id;
     }
 
@@ -60,9 +62,9 @@ class Index extends Component
         );
 
         return view('livewire.dashboard.kelola.index', [
-            'modules' => $modules
+            'modules' => $modules,
         ])->layout('components.layouts.user-new', [
-            'headerTitle' => 'Kelola Undangan'
+            'headerTitle' => 'Kelola Undangan',
         ]);
     }
 }
