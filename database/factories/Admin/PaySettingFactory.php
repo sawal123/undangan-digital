@@ -19,6 +19,7 @@ class PaySettingFactory extends Factory
             'deskripsi' => null,
             'isActive' => true,
             'slug' => 'manual',
+            'midtrans_code' => 'manual',
         ];
     }
 }

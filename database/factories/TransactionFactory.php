@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Admin\PaySetting;
 use App\Models\Data;
 use App\Models\Transaction;
 use App\Models\User;
@@ -27,6 +28,11 @@ class TransactionFactory extends Factory
             'gross_amount' => 100000,
             'payment_status' => 'PENDING',
             'payment_type' => null,
+            'payment_method_id' => PaySetting::factory(),
+            'midtrans_payment_type' => null,
+            'midtrans_transaction_id' => null,
+            'midtrans_status' => null,
+            'fraud_status' => null,
         ];
     }
 }

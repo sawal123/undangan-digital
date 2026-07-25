@@ -24,6 +24,11 @@ class Transaction extends Model
         'gross_amount',
         'payment_status',
         'payment_type',
+        'payment_method_id',
+        'midtrans_payment_type',
+        'midtrans_transaction_id',
+        'midtrans_status',
+        'fraud_status',
     ];
 
     protected $casts = [
@@ -46,6 +51,6 @@ class Transaction extends Model
 
     public function payment()
     {
-        return $this->belongsTo(PaySetting::class, 'payment_type', 'id');
+        return $this->belongsTo(PaySetting::class, 'payment_method_id', 'id');
     }
 }

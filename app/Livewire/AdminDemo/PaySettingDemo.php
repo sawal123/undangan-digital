@@ -3,17 +3,33 @@
 namespace App\Livewire\AdminDemo;
 
 use App\Models\Admin\PaySetting;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class PaySettingDemo extends Component
 {
     use WithFileUploads;
 
-    public $bank, $deskripsi, $category, $fee, $image, $pay_id;
+    public $bank;
+
+    public $deskripsi;
+
+    public $category;
+
+    public $fee;
+
+    public $image;
+
+    public $pay_id;
+
+    public $midtrans_code;
+
     public $isEdit = false;
+
+    private array $categories = ['manual', 'bank_transfer', 'ewallet', 'credit_card', 'cstore'];
 
     public function render()
     {
@@ -28,6 +44,7 @@ class PaySettingDemo extends Component
         $this->deskripsi = '';
         $this->category = '';
         $this->fee = '';
+        $this->midtrans_code = '';
         $this->image = null;
         $this->pay_id = null;
         $this->isEdit = false;
@@ -36,7 +53,7 @@ class PaySettingDemo extends Component
     public function toggleActive($id)
     {
         $p = PaySetting::findOrFail($id);
-        $p->isActive = !$p->isActive;
+        $p->isActive = ! $p->isActive;
         $p->save();
     }
 
@@ -44,7 +61,8 @@ class PaySettingDemo extends Component
     {
         $this->validate([
             'bank' => 'required',
-            'category' => 'required',
+            'category' => ['required', Rule::in($this->categories)],
+            'midtrans_code' => 'required|string|max:50',
             'fee' => 'required',
         ]);
 
@@ -57,7 +75,8 @@ class PaySettingDemo extends Component
             'deskripsi' => $this->deskripsi,
             'image' => $imagePath,
             'isActive' => true,
-            'slug' => Str::slug($this->bank)
+            'slug' => Str::slug($this->bank),
+            'midtrans_code' => $this->midtrans_code,
         ]);
 
         session()->flash('message', 'Payment setting successfully created.');
@@ -72,6 +91,7 @@ class PaySettingDemo extends Component
         $this->bank = $p->bank;
         $this->category = $p->category;
         $this->fee = $p->fee;
+        $this->midtrans_code = $p->midtrans_code;
         $this->deskripsi = $p->deskripsi;
         $this->isEdit = true;
         $this->dispatch('open-modal', name: 'pay-modal');
@@ -80,17 +100,27 @@ class PaySettingDemo extends Component
     public function update()
     {
         $p = PaySetting::findOrFail($this->pay_id);
-        
+
+        $this->validate([
+            'bank' => 'required',
+            'category' => ['required', Rule::in($this->categories)],
+            'midtrans_code' => 'required|string|max:50',
+            'fee' => 'required',
+        ]);
+
         $data = [
             'bank' => $this->bank,
             'category' => $this->category,
             'fee' => $this->fee,
             'deskripsi' => $this->deskripsi,
-            'slug' => Str::slug($this->bank)
+            'slug' => Str::slug($this->bank),
+            'midtrans_code' => $this->midtrans_code,
         ];
 
         if ($this->image) {
-            if ($p->image) Storage::disk('public')->delete($p->image);
+            if ($p->image) {
+                Storage::disk('public')->delete($p->image);
+            }
             $data['image'] = $this->image->store('paysetting', 'public');
         }
 
@@ -104,7 +134,9 @@ class PaySettingDemo extends Component
     public function delete($id)
     {
         $p = PaySetting::findOrFail($id);
-        if ($p->image) Storage::disk('public')->delete($p->image);
+        if ($p->image) {
+            Storage::disk('public')->delete($p->image);
+        }
         $p->delete();
         session()->flash('message', 'Payment setting successfully deleted.');
     }

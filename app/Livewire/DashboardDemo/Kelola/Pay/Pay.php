@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Midtrans\Config;
 use Midtrans\Snap;
 
 class Pay extends Component
 {
+    #[Locked]
     public $dataId;
 
     public $pay;
@@ -49,6 +51,7 @@ class Pay extends Component
 
     public function ifee($id)
     {
+        $this->authorizeInvitation();
         $this->paymentGateway = PaySetting::where('isActive', true)->findOrFail($id);
         $this->paymentGatewayId = $this->paymentGateway->id;
         $this->manual = $this->paymentGateway->category;
@@ -61,6 +64,7 @@ class Pay extends Component
 
     public function redeem()
     {
+        $this->authorizeInvitation();
         if (! $this->paymentGatewayId) {
             $this->promo = 0;
             $this->total = $this->harga;
@@ -94,17 +98,14 @@ class Pay extends Component
             'channel' => 'nullable|string|max:50',
         ]);
 
-        $data = Data::query()
-            ->where('user_id', Auth::id())
-            ->findOrFail($this->dataId);
+        $data = $this->authorizeInvitation();
 
         $paymentMethod = PaySetting::query()
             ->where('isActive', true)
             ->findOrFail($this->paymentGatewayId);
 
         if ($paymentMethod->category !== 'manual') {
-            $allowedChannel = $paymentMethod->slug.'_va';
-            if ($this->channel !== $allowedChannel) {
+            if ($this->channel !== $paymentMethod->midtrans_code) {
                 throw ValidationException::withMessages(['channel' => 'Kanal pembayaran tidak valid.']);
             }
         }
@@ -124,7 +125,8 @@ class Pay extends Component
                 'fee_amount' => $amounts['fee_amount'],
                 'gross_amount' => $amounts['gross_amount'],
                 'payment_status' => 'PENDING',
-                'payment_type' => $paymentMethod->id,
+                'payment_type' => (string) $paymentMethod->id,
+                'payment_method_id' => $paymentMethod->id,
             ]);
         });
 
@@ -148,7 +150,7 @@ class Pay extends Component
                 'email' => $this->email,
                 'phone' => $this->wa,
             ],
-            'enabled_payments' => [$this->channel],
+            'enabled_payments' => [$paymentMethod->midtrans_code],
             'credit_card' => [
                 'secure' => true,
             ],
@@ -178,6 +180,8 @@ class Pay extends Component
             $this->dataId = $dataId;
         }
 
+        $this->authorizeInvitation();
+
         $this->pay = PaySetting::where('isActive', true)->get();
         $this->nama = Auth::user()->name;
         $this->email = Auth::user()->email;
@@ -197,6 +201,15 @@ class Pay extends Component
 
     public function render()
     {
+        $this->authorizeInvitation();
+
         return view('livewire.dashboard.kelola.pay.pay');
+    }
+
+    private function authorizeInvitation(): Data
+    {
+        return Data::query()
+            ->where('user_id', Auth::id())
+            ->findOrFail((int) $this->dataId);
     }
 }
