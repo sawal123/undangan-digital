@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\AdminDemo\PaySettingDemo;
 use App\Livewire\DashboardDemo\Kelola\Acara;
 use App\Livewire\DashboardDemo\Kelola\Birthday;
 use App\Livewire\DashboardDemo\Kelola\EventDetail;
@@ -105,6 +106,13 @@ class SecurityPaymentStabilizationTest extends TestCase
         }
 
         $this->assertTrue($rejected, 'dataId tampering should be rejected by Livewire locked property.');
+    }
+
+    private function rerunPaymentSplitMigration(): void
+    {
+        $migration = require database_path('migrations/2026_07_26_000003_split_payment_method_and_midtrans_fields.php');
+
+        $migration->up();
     }
 
     public function test_user_cannot_manage_another_users_invitation(): void
@@ -423,6 +431,63 @@ class SecurityPaymentStabilizationTest extends TestCase
         $this->assertSame('', Transaction::firstOrFail()->link_snap);
     }
 
+    public function test_payment_split_migration_normalizes_legacy_categories(): void
+    {
+        $bankTransfer = PaySetting::factory()->create([
+            'category' => 'Bank Transfer',
+            'slug' => 'bca',
+            'midtrans_code' => null,
+        ]);
+        $ewallet = PaySetting::factory()->create([
+            'category' => 'E-Wallet',
+            'slug' => 'ovo',
+            'midtrans_code' => null,
+        ]);
+
+        $this->rerunPaymentSplitMigration();
+
+        $this->assertDatabaseHas('pay_settings', [
+            'id' => $bankTransfer->id,
+            'category' => 'bank_transfer',
+            'midtrans_code' => 'bank_transfer',
+        ]);
+        $this->assertDatabaseHas('pay_settings', [
+            'id' => $ewallet->id,
+            'category' => 'ewallet',
+            'midtrans_code' => 'gopay',
+        ]);
+    }
+
+    public function test_payment_split_migration_leaves_orphan_legacy_payment_type_null(): void
+    {
+        [, $data] = $this->userWithInvitation();
+        $deletedPayment = PaySetting::factory()->create();
+        $deletedPaymentId = $deletedPayment->id;
+        $deletedPayment->delete();
+
+        $transaction = Transaction::factory()->create([
+            'data_id' => $data->id,
+            'user_id' => $data->user_id,
+            'payment_type' => (string) $deletedPaymentId,
+            'payment_method_id' => null,
+        ]);
+
+        $this->rerunPaymentSplitMigration();
+
+        $this->assertNull($transaction->fresh()->payment_method_id);
+    }
+
+    public function test_pay_setting_demo_validates_ewallet_fee_and_midtrans_code(): void
+    {
+        Livewire::test(PaySettingDemo::class)
+            ->set('bank', 'OVO')
+            ->set('category', 'ewallet')
+            ->set('fee', 101)
+            ->set('midtrans_code', 'bca_va')
+            ->call('store')
+            ->assertHasErrors(['fee', 'midtrans_code']);
+    }
+
     public function test_tamu_data_id_manipulation_is_rejected(): void
     {
         [$user, $data] = $this->userWithInvitation();
@@ -453,6 +518,49 @@ class SecurityPaymentStabilizationTest extends TestCase
             fn ($component) => $component->call('delete', $victim->id),
             fn () => $this->assertDatabaseHas('galeries', ['id' => $victim->id, 'poto' => 'galery/victim.jpg'])
         );
+    }
+
+    public function test_gallery_previous_on_first_item_keeps_sort_unchanged(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        $first = GalleryModel::factory()->for($data, 'data')->create(['sort' => 1]);
+        $second = GalleryModel::factory()->for($data, 'data')->create(['sort' => 2]);
+
+        Livewire::actingAs($user)
+            ->test(Galery::class, ['id' => $data->uid])
+            ->call('previous', 1);
+
+        $this->assertSame(1, (int) $first->fresh()->sort);
+        $this->assertSame(2, (int) $second->fresh()->sort);
+    }
+
+    public function test_gallery_next_on_last_item_keeps_sort_unchanged(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        $first = GalleryModel::factory()->for($data, 'data')->create(['sort' => 1]);
+        $second = GalleryModel::factory()->for($data, 'data')->create(['sort' => 2]);
+
+        Livewire::actingAs($user)
+            ->test(Galery::class, ['id' => $data->uid])
+            ->call('next', 2);
+
+        $this->assertSame(1, (int) $first->fresh()->sort);
+        $this->assertSame(2, (int) $second->fresh()->sort);
+    }
+
+    public function test_gallery_reorder_with_invalid_sort_keeps_items_unchanged(): void
+    {
+        [$user, $data] = $this->userWithInvitation();
+        $first = GalleryModel::factory()->for($data, 'data')->create(['sort' => 1]);
+        $second = GalleryModel::factory()->for($data, 'data')->create(['sort' => 2]);
+
+        Livewire::actingAs($user)
+            ->test(Galery::class, ['id' => $data->uid])
+            ->call('previous', 99)
+            ->call('next', 99);
+
+        $this->assertSame(1, (int) $first->fresh()->sort);
+        $this->assertSame(2, (int) $second->fresh()->sort);
     }
 
     public function test_setting_data_id_manipulation_is_rejected(): void
