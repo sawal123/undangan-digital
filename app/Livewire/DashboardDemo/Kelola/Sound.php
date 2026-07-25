@@ -6,6 +6,7 @@ use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\Sound as KelolaSound;
 use App\Models\Music;
 use App\Services\YouTubeUrlParser;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,6 +15,7 @@ class Sound extends Component
     use LoadsOwnedInvitation;
     use WithPagination;
 
+    #[Locked]
     public $dataId;
 
     public $detik = 0;
@@ -120,6 +122,7 @@ class Sound extends Component
 
     public function switch($dataId, $isChecked)
     {
+        $this->authorizeInvitationState();
         $this->isChecked = $isChecked; // Update nilai isChecked berdasarkan status checkbox
 
         $sound = KelolaSound::where('data_id', $this->dataId)->first();
@@ -140,6 +143,7 @@ class Sound extends Component
 
     public function save()
     {
+        $this->authorizeInvitationState();
         $soundUrl = '';
 
         if ($this->selectM) {
@@ -189,6 +193,7 @@ class Sound extends Component
 
     public function delete($id)
     {
+        $this->authorizeInvitationState();
         KelolaSound::where('data_id', $this->dataId)->findOrFail($id)->delete();
         session()->flash('message', 'Musik Berhasil Dihapus.');
         $this->sound = KelolaSound::where('data_id', $this->dataId)->first();
@@ -196,6 +201,8 @@ class Sound extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         $musik = empty($this->query)
             ? Music::paginate(5)
             : Music::where('judul', 'LIKE', '%'.$this->query.'%')

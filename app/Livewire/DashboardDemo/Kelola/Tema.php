@@ -4,12 +4,14 @@ namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\Theme;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Tema extends Component
 {
     use LoadsOwnedInvitation;
 
+    #[Locked]
     public $dataId;
 
     public $tema;
@@ -40,6 +42,8 @@ class Tema extends Component
 
     public function choose($id)
     {
+        $this->loadData();
+
         $this->data->theme_id = $id;
         $this->data->save();
         session()->flash('message', 'Yeay... Tema Berhasil Dipilih.');
@@ -67,6 +71,8 @@ class Tema extends Component
 
     public function render()
     {
+        $this->loadData();
+
         return view('livewire.dashboard.kelola.tema')->layout('components.layouts.user-new', [
             'headerTitle' => 'Pilih Tema',
         ]);

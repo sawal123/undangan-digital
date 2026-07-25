@@ -5,6 +5,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\BirthdayProfile;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -13,6 +14,7 @@ class Birthday extends Component
     use LoadsOwnedInvitation;
     use WithFileUploads;
 
+    #[Locked]
     public $dataId;
 
     public $name;
@@ -44,6 +46,7 @@ class Birthday extends Component
 
     public function loadProfile()
     {
+        $this->authorizeInvitationState();
         $profile = BirthdayProfile::where('data_id', $this->dataId)->first();
 
         if (! $profile) {
@@ -60,6 +63,7 @@ class Birthday extends Component
 
     public function save()
     {
+        $this->authorizeInvitationState();
         $this->validate();
         if (is_object($this->photo)) {
             $this->validate([
@@ -98,6 +102,8 @@ class Birthday extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         return view('livewire.dashboard.kelola.birthday')->layout('components.layouts.user-new', [
             'headerTitle' => 'Profil Ulang Tahun',
         ]);

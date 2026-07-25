@@ -3,12 +3,14 @@
 namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Index extends Component
 {
     use LoadsOwnedInvitation;
 
+    #[Locked]
     public $dataId;
 
     public $data;
@@ -21,6 +23,8 @@ class Index extends Component
 
     public function render()
     {
+        $this->data = $this->ownedInvitationById($this->dataId, ['eventType']);
+
         $commonModules = [
             ['nama' => 'Acara', 'icon' => 'calendar', 'url' => 'acara', 'desc' => 'Kelola jadwal & lokasi'],
             ['nama' => 'Galeri', 'icon' => 'image', 'url' => 'galeri', 'desc' => 'Foto & video momen'],

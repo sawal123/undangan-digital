@@ -8,6 +8,7 @@ use App\Models\KelolaUndangan\Galery as KelolaUndanganGalery;
 // use Livewire\Features\SupportFileUploads\WithFileUploads;
 use App\Services\YouTubeUrlParser;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -16,6 +17,7 @@ class Galery extends Component
     use LoadsOwnedInvitation;
     use WithFileUploads;
 
+    #[Locked]
     public $dataId;
 
     public $poto;
@@ -41,6 +43,7 @@ class Galery extends Component
 
     public function delete($id)
     {
+        $this->authorizeInvitationState();
         $galery = KelolaUndanganGalery::where('data_id', $this->dataId)->findOrFail($id);
         // dd($galery);
         // Ambil semua data dengan data_id yang sesuai, urutkan berdasarkan `sort`, dan reset ulang nilai `sort`
@@ -60,6 +63,7 @@ class Galery extends Component
 
     public function pre($id)
     {
+        $this->authorizeInvitationState();
         // dd($id);
         $this->preview = KelolaUndanganGalery::where('data_id', $this->dataId)->findOrFail($id);
         $this->dispatch('open-modal', name: 'preview-modal');
@@ -82,6 +86,7 @@ class Galery extends Component
 
     public function save()
     {
+        $this->authorizeInvitationState();
 
         $data = KelolaUndanganGalery::where('data_id', $this->dataId)->get();
         if ($data->count() < 10 || ! $data) {
@@ -125,6 +130,7 @@ class Galery extends Component
 
     public function previous($sort)
     {
+        $this->authorizeInvitationState();
         $dataSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort)->first();
         $downSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort - 1)->first();
         while ($downSort === null && $sort > 0) {
@@ -144,6 +150,7 @@ class Galery extends Component
 
     public function next($sort)
     {
+        $this->authorizeInvitationState();
         $dataSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort)->first();
         $upSort = KelolaUndanganGalery::where('data_id', $this->dataId)->where('sort', $sort + 1)->first();
 
@@ -164,6 +171,8 @@ class Galery extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         return view('livewire.dashboard.kelola.galery')->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Galeri',
         ]);

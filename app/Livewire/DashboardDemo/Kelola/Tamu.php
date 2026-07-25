@@ -8,6 +8,7 @@ use App\Models\KelolaUndangan\Tamu as Tamus;
 use App\Models\teksWhatsApp;
 use App\Services\InvitationMessageRenderer;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -16,6 +17,7 @@ class Tamu extends Component
     use LoadsOwnedInvitation;
     use WithPagination;
 
+    #[Locked]
     public $dataId;
 
     public $nama;
@@ -50,7 +52,8 @@ class Tamu extends Component
 
     public function shareWA($id)
     {
-        $this->undang = Tamus::where('data_id', $this->dataId)->find($id);
+        $this->authorizeInvitationState();
+        $this->undang = Tamus::where('data_id', $this->dataId)->findOrFail($id);
         if (! $this->undang) {
             session()->flash('error', 'Data tamu tidak ditemukan.');
 
@@ -81,6 +84,7 @@ class Tamu extends Component
 
     public function delete($kode)
     {
+        $this->authorizeInvitationState();
         $tamu = Tamus::where('data_id', $this->dataId)->where('kode', $kode)->firstOrFail();
         $tamu->delete();
         session()->flash('message', 'Tamu Berhasil Didelete.');
@@ -88,7 +92,8 @@ class Tamu extends Component
 
     public function shareTamu($id)
     {
-        $this->undang = Tamus::with('data')->where('data_id', $this->dataId)->find($id);
+        $this->authorizeInvitationState();
+        $this->undang = Tamus::with('data')->where('data_id', $this->dataId)->findOrFail($id);
 
         if (! $this->undang?->data?->canBeShared()) {
             session()->flash('error', 'Undangan belum aktif, link belum bisa dibagikan.');
@@ -105,6 +110,7 @@ class Tamu extends Component
 
     public function EditTamu($id)
     {
+        $this->authorizeInvitationState();
         $this->undang = Tamus::where('data_id', $this->dataId)->findOrFail($id);
 
         $this->idTamu = $this->undang->id;
@@ -117,6 +123,7 @@ class Tamu extends Component
 
     public function save()
     {
+        $this->authorizeInvitationState();
         $this->validate([
             'nama' => 'required|string|max:255',
             'whatsapp' => 'nullable|string|max:30',
@@ -164,6 +171,8 @@ class Tamu extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         $tamu = empty($this->query)
             ? KelolaUndanganTamu::orderBy('id', 'desc')->where('data_id', $this->dataId)->paginate(5)
             : KelolaUndanganTamu::where('data_id', $this->dataId)

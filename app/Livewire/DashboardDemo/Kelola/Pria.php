@@ -5,6 +5,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 use App\Models\Data;
 use App\Models\KelolaUndangan\Pria as KelolaUndanganPria;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 // use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithFileUploads as LivewireWithFileUploads;
@@ -13,6 +14,7 @@ class Pria extends Component
 {
     use LivewireWithFileUploads;
 
+    #[Locked]
     public $dataId;
 
     public $nama;
@@ -32,7 +34,7 @@ class Pria extends Component
 
     public function mount($dataId)
     {
-        $this->dataId = $dataId;
+        $this->dataId = Data::query()->ownedBy(auth()->id())->findOrFail($dataId)->id;
         $pria = KelolaUndanganPria::where('data_id', $this->dataId)->first();
 
         if ($pria) {
@@ -45,7 +47,7 @@ class Pria extends Component
 
     public function save()
     {
-        Data::query()->ownedBy(auth()->id())->findOrFail($this->dataId);
+        $this->authorizeInvitation();
         $this->validate();
         if (is_object($this->gambar)) {
             $this->validate([
@@ -93,6 +95,13 @@ class Pria extends Component
 
     public function render()
     {
+        $this->authorizeInvitation();
+
         return view('livewire.dashboard.kelola.pria', []);
+    }
+
+    private function authorizeInvitation(): Data
+    {
+        return Data::query()->ownedBy(auth()->id())->findOrFail($this->dataId);
     }
 }

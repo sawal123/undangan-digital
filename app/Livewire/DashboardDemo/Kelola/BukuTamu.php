@@ -3,12 +3,14 @@
 namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class BukuTamu extends Component
 {
     use LoadsOwnedInvitation;
 
+    #[Locked]
     public $dataId;
 
     public $search = '';
@@ -20,6 +22,8 @@ class BukuTamu extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         $data = \App\Models\KelolaUndangan\Ucapan::where('data_id', $this->dataId)
             ->with('tamu')
             ->when($this->search, function ($q) {

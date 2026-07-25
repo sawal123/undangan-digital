@@ -5,6 +5,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\FiturUcapan;
 use App\Models\KelolaUndangan\Ucapan as KelolaUndanganUcapan;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,6 +14,7 @@ class Ucapan extends Component
     use LoadsOwnedInvitation;
     use WithPagination;
 
+    #[Locked]
     public $dataId;
 
     public $fitUcapan;
@@ -36,17 +38,14 @@ class Ucapan extends Component
 
     public function tanggapi($id)
     {
+        $this->authorizeInvitationState();
         $balas = $this->balas[$id] ?? null;
-        $ucapan = KelolaUndanganUcapan::where('data_id', $this->dataId)->find($id);
-        // dd($balas);
-        if ($ucapan) {
-            if (! $ucapan->balas || $ucapan->balas) {
-                $ucapan->balas = $balas;
-                $ucapan->save();
-            }
+        $ucapan = KelolaUndanganUcapan::where('data_id', $this->dataId)->findOrFail($id);
+        if (! $ucapan->balas || $ucapan->balas) {
+            $ucapan->balas = $balas;
+            $ucapan->save();
         }
         $this->balas = [];
-        $ucapan = KelolaUndanganUcapan::where('id', $id)->first();
     }
 
     public function mount($id)
@@ -57,11 +56,13 @@ class Ucapan extends Component
 
     public function data($id)
     {
+        $this->authorizeInvitationState();
         $this->fitUcapan = FiturUcapan::where('data_id', $this->dataId)->first();
     }
 
     public function updateFiturUcapan($id, $isFitur, $column)
     {
+        $this->authorizeInvitationState();
         abort_unless(in_array($column, ['isActive', 'publicIsActive', 'viewIsActive'], true), 422);
 
         $fitur = FiturUcapan::where('data_id', $this->dataId)->first();
@@ -80,16 +81,16 @@ class Ucapan extends Component
 
     public function delete($id)
     {
-        $delete = KelolaUndanganUcapan::with('tamu')->where('data_id', $this->dataId)->find($id);
-        if ($delete) {
-            $delete->delete();
-            $ucapan = KelolaUndanganUcapan::where('data_id', $delete->data_id)->get();
-            session()->flash('message', 'Ucapan & Doa '.$delete->tamu->nama.' Dihapus Permanen');
-        }
+        $this->authorizeInvitationState();
+        $delete = KelolaUndanganUcapan::with('tamu')->where('data_id', $this->dataId)->findOrFail($id);
+        $delete->delete();
+        session()->flash('message', 'Ucapan & Doa '.$delete->tamu->nama.' Dihapus Permanen');
     }
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         $ucapan = empty($this->query)
             ? KelolaUndanganUcapan::where('data_id', $this->dataId)->paginate(5)
             : KelolaUndanganUcapan::with('tamu')->where('data_id', $this->dataId) // Memuat relasi tamu

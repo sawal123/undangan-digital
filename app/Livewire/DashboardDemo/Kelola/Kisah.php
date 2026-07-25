@@ -6,6 +6,7 @@ use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\ImgKisahCinta;
 use App\Models\KelolaUndangan\KisahCinta;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -22,6 +23,7 @@ class Kisah extends Component
 
     public $cerita = '';
 
+    #[Locked]
     public $dataId;
 
     public $kisahCInta;
@@ -42,6 +44,7 @@ class Kisah extends Component
 
     public function loadKisah()
     {
+        $this->authorizeInvitationState();
         $this->kisahCInta = KisahCinta::with('image')->where('data_id', $this->dataId)->get();
     }
 
@@ -61,6 +64,7 @@ class Kisah extends Component
 
     public function modalEditKisah($id)
     {
+        $this->authorizeInvitationState();
         $this->idKisah = $id;
         $kisah = KisahCinta::where('data_id', $this->dataId)->findOrFail($id);
         $this->judul = $kisah->title;
@@ -78,6 +82,7 @@ class Kisah extends Component
 
     public function delete($id)
     {
+        $this->authorizeInvitationState();
         $k = KisahCinta::where('data_id', $this->dataId)->findOrFail($id);
         if ($k) {
             // Hapus gambar jika ada
@@ -103,6 +108,7 @@ class Kisah extends Component
 
     public function saveImage($id)
     {
+        $this->authorizeInvitationState();
         if (! isset($this->poto[$id]) || ! $this->poto[$id]) {
             session()->flash('message', 'Upload Gambar Terlebih Dahulu!');
 
@@ -140,6 +146,7 @@ class Kisah extends Component
 
     public function save()
     {
+        $this->authorizeInvitationState();
         $storyId = null;
         $this->validate([
             'judul' => 'required|string|max:255',
@@ -147,15 +154,13 @@ class Kisah extends Component
             'formImage' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
         if ($this->idKisah) {
-            $kisah = KisahCinta::where('data_id', $this->dataId)->find($this->idKisah);
-            if ($kisah) {
-                $kisah->update([
-                    'title' => $this->judul,
-                    'deskripsi' => $this->cerita,
-                ]);
-                $storyId = $kisah->id;
-                session()->flash('message', 'Kisah Cinta Kamu Berhasil Diperbarui.');
-            }
+            $kisah = KisahCinta::where('data_id', $this->dataId)->findOrFail($this->idKisah);
+            $kisah->update([
+                'title' => $this->judul,
+                'deskripsi' => $this->cerita,
+            ]);
+            $storyId = $kisah->id;
+            session()->flash('message', 'Kisah Cinta Kamu Berhasil Diperbarui.');
         } else {
             $kisah = KisahCinta::create([
                 'data_id' => $this->dataId,
@@ -190,6 +195,8 @@ class Kisah extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         return view('livewire.dashboard.kelola.kisah')->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Kisah Cinta',
         ]);

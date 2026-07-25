@@ -5,12 +5,14 @@ namespace App\Livewire\DashboardDemo\Kelola;
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\Data;
 use App\Models\KelolaUndangan\Acara as KelolaUndanganAcara;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Acara extends Component
 {
     use LoadsOwnedInvitation;
 
+    #[Locked]
     public $dataId;
 
     public $acara;
@@ -56,6 +58,7 @@ class Acara extends Component
 
     public function edit($id)
     {
+        $this->authorizeInvitationState();
         $acara = KelolaUndanganAcara::where('data_id', $this->dataId)->findOrFail($id);
 
         $this->selectedAcaraId = $acara->id;
@@ -74,12 +77,11 @@ class Acara extends Component
 
     public function delete($id)
     {
-        $acara = KelolaUndanganAcara::where('data_id', $this->dataId)->find($id);
-        if ($acara) {
-            $acara->delete();
-            $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
-            session()->flash('message', 'Data Acara Berhasil Dihapus.');
-        }
+        $this->authorizeInvitationState();
+        $acara = KelolaUndanganAcara::where('data_id', $this->dataId)->findOrFail($id);
+        $acara->delete();
+        $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
+        session()->flash('message', 'Data Acara Berhasil Dihapus.');
     }
 
     public function close()
@@ -90,6 +92,7 @@ class Acara extends Component
 
     public function save()
     {
+        $this->authorizeInvitationState();
         // $this->close();
         $this->validate();
         if ($this->selectedAcaraId) {
@@ -151,6 +154,8 @@ class Acara extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         return view('livewire.dashboard.kelola.acara', [
             'dataAcara' => $this->dataAcara,
         ])->layout('components.layouts.user-new', ['headerTitle' => 'Kelola Acara']);

@@ -7,6 +7,7 @@ use App\Models\GiftPay;
 use App\Models\KelolaUndangan\FiturKado;
 use App\Models\KelolaUndangan\Kado as KelolaUndanganKado;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -15,6 +16,7 @@ class Kado extends Component
     use LoadsOwnedInvitation;
     use WithFileUploads;
 
+    #[Locked]
     public $dataId;
 
     public $kado;
@@ -57,6 +59,7 @@ class Kado extends Component
 
     public function barcodePreview($id)
     {
+        $this->authorizeInvitationState();
         $kado = KelolaUndanganKado::where('data_id', $this->dataId)->findOrFail($id);
         $this->barcode = $kado->qris;
         $this->codeId = $id;
@@ -75,6 +78,7 @@ class Kado extends Component
 
     public function delete($id)
     {
+        $this->authorizeInvitationState();
         $kado = KelolaUndanganKado::where('data_id', $this->dataId)->findOrFail($id);
         if ($kado && $kado->qris) {
             // Hapus gambar dari storage
@@ -86,6 +90,7 @@ class Kado extends Component
 
     public function switch($id, $isChecked)
     {
+        $this->authorizeInvitationState();
         $this->isChecked = $isChecked;
         $fitur = FiturKado::where('data_id', $this->dataId)->first();
         if ($fitur) {
@@ -103,6 +108,7 @@ class Kado extends Component
 
     public function save()
     {
+        $this->authorizeInvitationState();
         $this->validate([
             'giftId' => 'required|exists:gift_pays,id',
             'namaPay' => 'required|string|max:255',
@@ -127,6 +133,8 @@ class Kado extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         return view('livewire.dashboard.kelola.kado')->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Kado',
         ]);

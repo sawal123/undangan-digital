@@ -5,6 +5,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\EventDetail as EventDetailModel;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -13,6 +14,7 @@ class EventDetail extends Component
     use LoadsOwnedInvitation;
     use WithFileUploads;
 
+    #[Locked]
     public $dataId;
 
     public $eventTypeName = 'Event';
@@ -49,6 +51,7 @@ class EventDetail extends Component
 
     public function loadDetail()
     {
+        $this->authorizeInvitationState();
         $detail = EventDetailModel::where('data_id', $this->dataId)->first();
 
         if (! $detail) {
@@ -65,6 +68,7 @@ class EventDetail extends Component
 
     public function save()
     {
+        $this->authorizeInvitationState();
         $this->validate();
         if (is_object($this->image)) {
             $this->validate([
@@ -103,6 +107,8 @@ class EventDetail extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         return view('livewire.dashboard.kelola.event-detail')->layout('components.layouts.user-new', [
             'headerTitle' => 'Detail '.$this->eventTypeName,
         ]);

@@ -22,4 +22,9 @@ trait LoadsOwnedInvitation
             ->ownedBy(auth()->id())
             ->findOrFail($id);
     }
+
+    protected function authorizeInvitationState(array $with = []): Data
+    {
+        return $this->ownedInvitationById((int) $this->dataId, $with);
+    }
 }

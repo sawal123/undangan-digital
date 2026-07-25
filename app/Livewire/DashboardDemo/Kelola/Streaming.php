@@ -3,14 +3,15 @@
 namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
-use App\Models\Data;
 use App\Models\KelolaUndangan\Streaming as KelolaUndanganStreaming;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Streaming extends Component
 {
     use LoadsOwnedInvitation;
 
+    #[Locked]
     public $dataId;
 
     public $link = null;
@@ -21,6 +22,8 @@ class Streaming extends Component
 
     public function updateFiturStreaming($isActive)
     {
+        $this->authorizeInvitationState();
+
         $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
         // dd($streaming);
         if ($streaming) {
@@ -50,6 +53,8 @@ class Streaming extends Component
     public function save()
     {
         try {
+            $this->authorizeInvitationState();
+
             $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
             if ($streaming) {
                 $streaming->update([
@@ -70,6 +75,8 @@ class Streaming extends Component
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         return view('livewire.dashboard.kelola.streaming')->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Streaming',
         ]);

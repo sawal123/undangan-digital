@@ -5,6 +5,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 use App\Models\Data;
 use App\Models\KelolaUndangan\Wanita as ModelsWanita;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -12,6 +13,7 @@ class Wanita extends Component
 {
     use WithFileUploads;
 
+    #[Locked]
     public $dataId;
 
     public $nama;
@@ -33,7 +35,7 @@ class Wanita extends Component
 
     public function mount($dataId)
     {
-        $this->dataId = $dataId;
+        $this->dataId = Data::query()->ownedBy(auth()->id())->findOrFail($dataId)->id;
         $pria = ModelsWanita::where('data_id', $this->dataId)->first();
 
         if ($pria) {
@@ -46,7 +48,7 @@ class Wanita extends Component
 
     public function save()
     {
-        Data::query()->ownedBy(auth()->id())->findOrFail($this->dataId);
+        $this->authorizeInvitation();
         $this->validate();
         if (is_object($this->gambar)) {
             $this->validate([
@@ -91,6 +93,13 @@ class Wanita extends Component
 
     public function render()
     {
+        $this->authorizeInvitation();
+
         return view('livewire.dashboard.kelola.wanita');
+    }
+
+    private function authorizeInvitation(): Data
+    {
+        return Data::query()->ownedBy(auth()->id())->findOrFail($this->dataId);
     }
 }

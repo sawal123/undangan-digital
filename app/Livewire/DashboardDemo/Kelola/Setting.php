@@ -15,6 +15,7 @@ use App\Models\teksWhatsApp;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
@@ -23,6 +24,7 @@ class Setting extends Component
     use LoadsOwnedInvitation;
     use WithFileUploads;
 
+    #[Locked]
     public $dataId;
 
     public $title;
@@ -67,6 +69,7 @@ class Setting extends Component
 
     public function titleA($id)
     {
+        $this->authorizeInvitationState();
         $setting = ModelsSetting::where('data_id', $this->dataId)->first();
         if ($setting) {
             $setting->update([
@@ -142,6 +145,7 @@ class Setting extends Component
 
     public function aksiQoute()
     {
+        $this->authorizeInvitationState();
         $this->tit = $this->normalizeArabicText($this->tit);
         $this->qoute = $this->normalizeArabicText($this->qoute);
         $this->subtitle = $this->normalizeArabicText($this->subtitle);
@@ -204,6 +208,7 @@ class Setting extends Component
 
     public function teksWhatsApp()
     {
+        $this->authorizeInvitationState();
         $wa = teksWhatsApp::where('data_id', $this->dataId)->first();
         if ($wa) {
             $wa->update([
@@ -226,12 +231,14 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
 
     public function loadThumbnail()
     {
+        $this->authorizeInvitationState();
         $this->thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
         $this->gambar = null;
     }
 
     public function delThumbnail()
     {
+        $this->authorizeInvitationState();
         $thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
 
         if ($thumbnail) {
@@ -251,6 +258,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
 
     public function thumbnailWa()
     {
+        $this->authorizeInvitationState();
         // Validasi file
         $this->validate([
             'gambar' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -281,6 +289,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
 
     public function TeksUndangan()
     {
+        $this->authorizeInvitationState();
         $teksU = TeksUndangan::where('data_id', $this->dataId)->first();
         if ($teksU) {
             $teksU->update([
@@ -303,6 +312,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
 
     public function teksPenutup()
     {
+        $this->authorizeInvitationState();
         $teksP = teksPenutup::where('data_id', $this->dataId)->first();
         if ($teksP) {
             $teksP->update([
@@ -344,6 +354,8 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
 
     public function render()
     {
+        $this->authorizeInvitationState();
+
         $selectedFont = null;
         if ($this->fontTitle) {
             $selectedFont = Fonts::firstWhere('id', $this->fontTitle);
