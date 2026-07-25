@@ -2,100 +2,135 @@
 
 namespace App\Livewire\DashboardDemo\Kelola\Pay;
 
-use Midtrans\Snap;
-use Midtrans\Config;
-use Livewire\Component;
 use App\Models\Admin\Harga;
-use App\Models\Admin\Promo;
-use App\Models\Transaction;
-use Illuminate\Support\Str;
 use App\Models\Admin\PaySetting;
+use App\Models\Data;
+use App\Models\Transaction;
+use App\Services\PaymentCalculator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Livewire\Component;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class Pay extends Component
 {
     public $dataId;
+
     public $pay;
+
     public $nama;
+
     public $email;
+
     public $wa;
 
     public $code;
+
     public $codee;
 
     public $harga;
+
     public $total = 0;
+
     public $promo = 0;
+
     public $fee;
+
     public $channel;
 
     public $manual;
+
     public $paymentGateway;
 
+    public $paymentGatewayId;
 
     public function ifee($id)
     {
-        $this->paymentGateway = PaySetting::find($id);
+        $this->paymentGateway = PaySetting::where('isActive', true)->findOrFail($id);
+        $this->paymentGatewayId = $this->paymentGateway->id;
         $this->manual = $this->paymentGateway->category;
-        // dd($this->manual);
-        if ($this->paymentGateway->category === "ewallet") {
-            $this->total = $this->harga + ($this->harga * $this->paymentGateway->fee / 100);
-            $this->fee = $this->harga * $this->paymentGateway->fee / 100;
-        } else {
-            $this->fee =  $this->paymentGateway->fee;
-            $this->total  = $this->harga + $this->paymentGateway->fee;
-        }
+        $amounts = app(PaymentCalculator::class)->calculate($this->code ?: null, $this->paymentGateway);
+        $this->harga = $amounts['base_price'];
+        $this->promo = $amounts['discount_amount'];
+        $this->fee = $amounts['fee_amount'];
+        $this->total = $amounts['gross_amount'];
     }
+
     public function redeem()
     {
-        $this->codee = Promo::where('kode', $this->code)->first();
-        if ($this->codee) {
-            $this->total = $this->harga - $this->codee->promo;
-            $this->promo = $this->codee->promo;
-            session()->flash('message', 'Kode Berhasil Dipasang');
-        } else {
+        if (! $this->paymentGatewayId) {
             $this->promo = 0;
             $this->total = $this->harga;
-            session()->flash('message', 'Kode Tidak Berlaku');
+            session()->flash('message', 'Pilih metode pembayaran terlebih dahulu.');
+
+            return;
+        }
+
+        try {
+            $this->paymentGateway = PaySetting::where('isActive', true)->findOrFail($this->paymentGatewayId);
+            $amounts = app(PaymentCalculator::class)->calculate($this->code ?: null, $this->paymentGateway);
+            $this->codee = $amounts['promo'];
+            $this->harga = $amounts['base_price'];
+            $this->promo = $amounts['discount_amount'];
+            $this->fee = $amounts['fee_amount'];
+            $this->total = $amounts['gross_amount'];
+            session()->flash('message', 'Kode Berhasil Dipasang');
+        } catch (ValidationException $exception) {
+            $this->promo = 0;
+            $this->total = $this->harga;
+            $this->codee = null;
+            session()->flash('message', $exception->getMessage());
         }
     }
 
     public function checkOut()
     {
-        // ambil data DataId
-        $selectedDataId = $this->dataId;
-        // dd($selectedDataId);
+        $this->validate([
+            'dataId' => 'required|integer',
+            'paymentGatewayId' => 'required|integer|exists:pay_settings,id',
+            'channel' => 'nullable|string|max:50',
+        ]);
 
-        if ($this->manual === 'manual') {
-            $transactions = Transaction::create([
-                'invoice' => 'INV-' . Str::random(8),
-                'user_id' => Auth::user()->id,
-                'data_id' => $selectedDataId,
-                'link_snap' => '',
-                'kode' => $this->codee ? $this->codee->kode : '',
-                'price' => $this->harga,
-                'promo' => $this->promo,
-                'gross_amount' => $this->total == 0 ? $this->harga : $this->total,
-                'payment_status' => 'PENDING',
-                'payment_type' => $this->paymentGateway->id,
-            ]);
-            return redirect('/dashboard/finishtunai/' . Crypt::encryptString($selectedDataId));
+        $data = Data::query()
+            ->where('user_id', Auth::id())
+            ->findOrFail($this->dataId);
+
+        $paymentMethod = PaySetting::query()
+            ->where('isActive', true)
+            ->findOrFail($this->paymentGatewayId);
+
+        if ($paymentMethod->category !== 'manual') {
+            $allowedChannel = $paymentMethod->slug.'_va';
+            if ($this->channel !== $allowedChannel) {
+                throw ValidationException::withMessages(['channel' => 'Kanal pembayaran tidak valid.']);
+            }
         }
 
-        // create Transaction 
-        $transactions = Transaction::create([
-            'invoice' => 'INV-' . Str::random(8),
-            'user_id' => Auth::user()->id,
-            'data_id' => $selectedDataId,
-            'link_snap' => '',
-            'kode' => $this->codee ? $this->codee->kode : '',
-            'price' => $this->harga,
-            'promo' => $this->promo,
-            'gross_amount' => $this->total == 0 ? $this->harga : $this->total,
-            'payment_status' => 'PENDING',
-            'payment_type' => $this->paymentGateway->id,
-        ]);
+        $amounts = app(PaymentCalculator::class)->calculate($this->code ?: null, $paymentMethod);
+
+        $transactions = DB::transaction(function () use ($data, $paymentMethod, $amounts) {
+            return Transaction::create([
+                'invoice' => $this->generateInvoice(),
+                'user_id' => Auth::id(),
+                'data_id' => $data->id,
+                'link_snap' => '',
+                'kode' => $amounts['promo']?->kode ?? '',
+                'price' => $amounts['base_price'],
+                'promo' => $amounts['discount_amount'],
+                'discount_amount' => $amounts['discount_amount'],
+                'fee_amount' => $amounts['fee_amount'],
+                'gross_amount' => $amounts['gross_amount'],
+                'payment_status' => 'PENDING',
+                'payment_type' => $paymentMethod->id,
+            ]);
+        });
+
+        if ($paymentMethod->category === 'manual') {
+            return redirect()->route('dashboard.tunai', $data->uid);
+        }
 
         Config::$serverKey = config('midtrans.serverKey');
         Config::$isProduction = config('midtrans.isProduction');
@@ -106,7 +141,7 @@ class Pay extends Component
         $midtrans_params = [
             'transaction_details' => [
                 'order_id' => $transactions->invoice,
-                'gross_amount' => (int) $this->total == 0 ? $this->harga : $this->total,
+                'gross_amount' => $amounts['gross_amount'],
             ],
             'customer_details' => [
                 'first_name' => $this->nama,
@@ -114,13 +149,12 @@ class Pay extends Component
                 'phone' => $this->wa,
             ],
             'enabled_payments' => [$this->channel],
-            "credit_card" => [
-                "secure" => true
-            ]
+            'credit_card' => [
+                'secure' => true,
+            ],
         ];
 
-
-        // link snap payment_url 
+        // link snap payment_url
         try {
             $paymentUrl = Snap::createTransaction($midtrans_params)->redirect_url;
             // update link payment
@@ -131,25 +165,36 @@ class Pay extends Component
             // redirect to payment gateway midtrans
             return redirect()->away($paymentUrl);
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            report($e);
+            session()->flash('message', 'Gagal membuat pembayaran Midtrans. Silakan coba lagi.');
         }
 
         return redirect()->back();
     }
 
-
-
-    public function mount()
+    public function mount($dataId = null)
     {
-        error_reporting(0);
-        $this->pay = PaySetting::all();
+        if ($dataId !== null) {
+            $this->dataId = $dataId;
+        }
+
+        $this->pay = PaySetting::where('isActive', true)->get();
         $this->nama = Auth::user()->name;
         $this->email = Auth::user()->email;
         $this->wa = Auth::user()->phone;
-        $harga = Harga::all();
-        $this->harga = $harga[0]->harga;
-        // dd($this->harga);
+        $this->harga = (int) (Harga::query()->latest('id')->value('harga') ?? 0);
+        $this->total = $this->harga;
     }
+
+    private function generateInvoice(): string
+    {
+        do {
+            $invoice = 'INV-'.Str::upper(Str::random(12));
+        } while (Transaction::where('invoice', $invoice)->exists());
+
+        return $invoice;
+    }
+
     public function render()
     {
         return view('livewire.dashboard.kelola.pay.pay');
