@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +27,12 @@ class User extends Authenticatable
         'is_active',
         'address',
         'last_login_at',
+        'last_login_ip',
+        'last_user_agent',
+        'security_risk_level',
+        'suspended_at',
+        'suspension_reason',
+        'suspended_by',
         'password',
 
     ];
@@ -48,10 +54,22 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'suspended_at' => 'datetime',
         'password' => 'hashed',
     ];
 
-    public function data(){
+    public function data()
+    {
         return $this->hasMany(Data::class);
+    }
+
+    public function authActivityLogs()
+    {
+        return $this->hasMany(AuthActivityLog::class);
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
     }
 }

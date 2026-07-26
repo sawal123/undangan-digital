@@ -2,23 +2,29 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use App\Models\Data;
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
-use Illuminate\Support\Facades\Crypt;
 
 class Index extends Component
 {
+    use LoadsOwnedInvitation;
+
+    #[Locked]
     public $dataId;
+
     public $data;
 
     public function mount($id)
     {
-        $this->data = Data::with('eventType')->where('uid', $id)->firstOrFail();
+        $this->data = $this->ownedInvitationByUid($id, ['eventType']);
         $this->dataId = $this->data->id;
     }
 
     public function render()
     {
+        $this->data = $this->ownedInvitationById($this->dataId, ['eventType']);
+
         $commonModules = [
             ['nama' => 'Acara', 'icon' => 'calendar', 'url' => 'acara', 'desc' => 'Kelola jadwal & lokasi'],
             ['nama' => 'Galeri', 'icon' => 'image', 'url' => 'galeri', 'desc' => 'Foto & video momen'],
@@ -60,9 +66,9 @@ class Index extends Component
         );
 
         return view('livewire.dashboard.kelola.index', [
-            'modules' => $modules
+            'modules' => $modules,
         ])->layout('components.layouts.user-new', [
-            'headerTitle' => 'Kelola Undangan'
+            'headerTitle' => 'Kelola Undangan',
         ]);
     }
 }

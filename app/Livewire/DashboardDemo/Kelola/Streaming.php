@@ -2,49 +2,59 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use App\Models\Data;
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\Streaming as KelolaUndanganStreaming;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
-use Illuminate\Support\Facades\Crypt;
 
 class Streaming extends Component
 {
+    use LoadsOwnedInvitation;
+
+    #[Locked]
     public $dataId;
+
     public $link = null;
+
     public $isActive = false;
+
     public $fiturStreaming;
 
     public function updateFiturStreaming($isActive)
     {
+        $this->authorizeInvitationState();
+
         $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
         // dd($streaming);
         if ($streaming) {
             $streaming->update([
 
-                'isActive' => $isActive
+                'isActive' => $isActive,
             ]);
         } else {
             KelolaUndanganStreaming::create([
                 'data_id' => $this->dataId,
-                'isActive' => $isActive
+                'isActive' => $isActive,
             ]);
         }
         // $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
     }
+
     public function mount($id)
     {
-        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
+        $this->dataId = $this->ownedInvitationByUid($id)->id;
         $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->value('isActive') ?? false;
         $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
-        if($streaming){
+        if ($streaming) {
             $this->link = $streaming->link;
         }
     }
 
-
     public function save()
     {
         try {
+            $this->authorizeInvitationState();
+
             $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
             if ($streaming) {
                 $streaming->update([
@@ -59,13 +69,16 @@ class Streaming extends Component
                 session()->flash('message', 'Streaming Berhasil Ditambahkan.');
             }
         } catch (\Exception $e) {
-            session()->flash('message', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
+            session()->flash('message', 'Terjadi kesalahan saat menyimpan data: '.$e->getMessage());
         }
     }
+
     public function render()
     {
+        $this->authorizeInvitationState();
+
         return view('livewire.dashboard.kelola.streaming')->layout('components.layouts.user-new', [
-            'headerTitle' => 'Kelola Streaming'
+            'headerTitle' => 'Kelola Streaming',
         ]);
     }
 }

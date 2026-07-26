@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use App\Models\Data;
 use App\Models\EventType;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class SetupController extends Controller
 {
@@ -17,9 +19,10 @@ class SetupController extends Controller
     {
         //
         $nonce = bin2hex(random_bytes(16));
+
         return view('user.setup', [
             'eventTypes' => EventType::all(),
-            'nonce' => $nonce
+            'nonce' => $nonce,
         ]);
     }
 
@@ -27,26 +30,28 @@ class SetupController extends Controller
     {
         //
         $nonce = bin2hex(random_bytes(16));
-        $data = User::find(base64_decode($id));
-        if (!$data) {
+        $data = User::where('id', base64_decode($id))->where('id', Auth::id())->first();
+        if (! $data) {
             return redirect()->route('dashboard.setup')->with('error', 'Data tidak ditemukan');
         }
+
         return view('user.addUndangan', [
             'data' => $data,
             'eventTypes' => EventType::all(),
-            'nonce' => $nonce
+            'nonce' => $nonce,
         ]);
     }
 
     public function checkName(Request $request)
     {
-        $data = Data::where('slug', $request->name)->exists();
+        $data = Data::where('slug', Str::slug($request->name))->exists();
         if ($data) {
             return response()->json([
                 'success' => false,
                 'message' => 'Slug sudah digunakan, Cari slug lain!',
             ]);
         }
+
         return response()->json([
             'success' => true,
             'message' => 'Bagus, Slug bisa digunakan!',
@@ -67,7 +72,6 @@ class SetupController extends Controller
     public function store(Request $request)
     {
         //
-
 
     }
 

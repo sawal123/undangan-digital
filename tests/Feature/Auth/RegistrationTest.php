@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Providers\RouteServiceProvider;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Volt\Volt;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -17,21 +17,21 @@ class RegistrationTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSeeVolt('pages.auth.register');
+            ->assertSee('Register');
     }
 
     public function test_new_users_can_register(): void
     {
-        $component = Volt::test('pages.auth.register')
-            ->set('name', 'Test User')
-            ->set('email', 'test@example.com')
-            ->set('password', 'password')
-            ->set('password_confirmation', 'password');
+        $this->post(route('register.store'), [
+            'nama' => 'Test User',
+            'email' => 'test@example.com',
+            'whatsapp' => '628123456789',
+            'password' => 'password',
+        ])->assertRedirect(route('verification.notice'));
 
-        $component->call('register');
+        $user = User::where('email', 'test@example.com')->firstOrFail();
 
-        $component->assertRedirect(RouteServiceProvider::HOME);
-
+        $this->assertTrue(Hash::check('password', $user->password));
         $this->assertAuthenticated();
     }
 }

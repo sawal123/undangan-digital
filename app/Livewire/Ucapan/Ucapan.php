@@ -2,48 +2,66 @@
 
 namespace App\Livewire\Ucapan;
 
-use Livewire\Component;
-use Illuminate\Support\Str;
-use App\Models\KelolaUndangan\Tamu;
 use App\Models\KelolaUndangan\FiturUcapan;
+use App\Models\KelolaUndangan\Tamu;
 use App\Models\KelolaUndangan\Ucapan as KelolaUndanganUcapan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Livewire\Attributes\Locked;
+use Livewire\Component;
 
 class Ucapan extends Component
 {
+    #[Locked]
     public $dataId;
+
     public $kode;
+
     public $nama;
+
     public $ucapan;
+
     public $status;
+
     public $publicIsActive;
+
     public $viewIsActive;
+
     public $isActive;
+
     public $tamu;
 
+    public bool $invitationIsActive = false;
+
     public $success = false;
+
     public $error = false;
+
     public $message;
 
-
     protected $rules = [
-        'nama'   => 'required|string|max:20',
+        'nama' => 'required|string|max:20',
         'ucapan' => 'required|string|max:255',
         'status' => 'required|string|max:255',
     ];
 
     protected $messages = [
-        'nama.required'   => 'Nama tidak boleh kosong.',
+        'nama.required' => 'Nama tidak boleh kosong.',
         'ucapan.required' => 'Ucapan tidak boleh kosong.',
-        'ucapan.max'      => 'Ucapan tidak boleh lebih dari 255 karakter.',
+        'ucapan.max' => 'Ucapan tidak boleh lebih dari 255 karakter.',
         'status.required' => 'Pilih Kehadiran Kamu.',
     ];
+
     public $theme;
+
     public function mount($data, $tamu, $kode = null)
     {
         $this->dataId = $data->id;
         $this->publicIsActive = $data->FiturUcapan->publicIsActive ?? false;
         $this->viewIsActive = $data->FiturUcapan->viewIsActive ?? false;
         $this->isActive = $data->FiturUcapan->isActive ?? false;
+        $this->invitationIsActive = $data->canBeShared();
         $this->tamu = $tamu;
         $this->kode = $kode;
         $this->nama = $tamu; // isi default kalau ada
@@ -54,38 +72,85 @@ class Ucapan extends Component
 
     public function save()
     {
-        $this->validate();
+        $this->validate([
+            'nama' => 'required|string|max:20',
+            'ucapan' => 'required|string|max:255',
+            'status' => ['required', Rule::in(['hadir', 'tidak_hadir', 'tidak_datang', 'Hadir', 'Tidak Hadir', 'ragu', 'Datang Dong'])],
+        ]);
+        $status = $this->normalizeAttendanceStatus($this->status);
+
+        if (! $this->invitationIsActive || ! $this->isActive) {
+            $this->dispatch('toast', [
+                'type' => 'error',
+                'message' => 'Fitur ucapan tidak tersedia.',
+            ]);
+
+            return;
+        }
 
         $fitur = FiturUcapan::where('data_id', $this->dataId)->first();
+
+        if (! $fitur) {
+            $this->dispatch('toast', [
+                'type' => 'error',
+                'message' => 'Fitur ucapan tidak tersedia.',
+            ]);
+
+            return;
+        }
 
         $tamu = null;
         $addTamu = null;
 
         if ($this->kode) {
-            $tamu = Tamu::where('kode', $this->kode)->first();
+            $tamu = Tamu::where('data_id', $this->dataId)->where('kode', $this->kode)->first();
         }
 
-        if (!$tamu && !$fitur->publicIsActive) {
+        if (! $tamu && ! $fitur->publicIsActive) {
             $this->dispatch('toast', [
                 'type' => 'error',
-                'message' => 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.'
+                'message' => 'Anda Tidak Masuk Dalam Daftar Tamu Yang Diundang.',
             ]);
+
             return;
-        } elseif (!$tamu && $fitur->publicIsActive) {
-            $addTamu = Tamu::create([
-                'data_id' => $this->dataId,
-                'kode'    => 0,
-                'nama'    => $this->nama,
-                'slug'    => Str::slug($this->nama)
-            ]);
+        } elseif (! $tamu && $fitur->publicIsActive) {
         }
 
-        KelolaUndanganUcapan::create([
-            'data_id' => $this->dataId,
-            'tamu_id' => $tamu ? $tamu->id : $addTamu->id,
-            'ucapan'  => $this->ucapan,
-            'status'  => $this->status
-        ]);
+        DB::transaction(function () use ($tamu, &$addTamu, $fitur, $status) {
+            $guestName = $tamu?->nama ?? $this->nama;
+
+            $duplicate = KelolaUndanganUcapan::where('data_id', $this->dataId)
+                ->where('ucapan', $this->ucapan)
+                ->where('created_at', '>=', now()->subMinute())
+                ->whereHas('tamu', function ($query) use ($guestName, $tamu) {
+                    if ($tamu) {
+                        $query->whereKey($tamu->id);
+
+                        return;
+                    }
+
+                    $query->whereRaw('LOWER(nama) = ?', [Str::lower((string) $guestName)]);
+                })
+                ->exists();
+
+            abort_if($duplicate, 429, 'Ucapan yang sama sudah dikirim.');
+
+            if (! $tamu && $fitur->publicIsActive) {
+                $addTamu = Tamu::create([
+                    'data_id' => $this->dataId,
+                    'kode' => Str::lower(Str::random(12)),
+                    'nama' => $this->nama,
+                    'slug' => Str::slug($this->nama),
+                ]);
+            }
+
+            KelolaUndanganUcapan::create([
+                'data_id' => $this->dataId,
+                'tamu_id' => $tamu ? $tamu->id : $addTamu->id,
+                'ucapan' => $this->ucapan,
+                'status' => $status,
+            ]);
+        });
 
         // reset form setelah simpan
         $this->reset(['nama', 'ucapan', 'status']);
@@ -100,9 +165,19 @@ class Ucapan extends Component
         $u = KelolaUndanganUcapan::where('data_id', $this->dataId)
             ->orderBy('created_at', 'desc')
             ->get();
-        return view('livewire.ucapan.' . $this->theme, [
+
+        return view('livewire.ucapan.'.$this->theme, [
             'listUcapan' => $u,
 
         ]);
+    }
+
+    private function normalizeAttendanceStatus(string $status): string
+    {
+        return match (Str::lower(str_replace(' ', '_', $status))) {
+            'hadir', 'datang_dong' => 'hadir',
+            'tidak_hadir', 'tidak_datang' => 'tidak_hadir',
+            default => 'ragu',
+        };
     }
 }

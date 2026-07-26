@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\AuthActivityLog;
+use App\Services\AuthActivityLogger;
+use App\Services\TurnstileVerifier;
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -16,6 +19,19 @@ new #[Layout('layouts.guest')] class extends Component
         $this->validate([
             'email' => ['required', 'string', 'email'],
         ]);
+
+        if (! app(TurnstileVerifier::class)->verify(request())) {
+            $this->addError('captcha', __('Security verification failed.'));
+
+            return;
+        }
+
+        app(AuthActivityLogger::class)->log(
+            AuthActivityLog::EVENT_PASSWORD_RESET_REQUESTED,
+            'requested',
+            email: $this->email,
+            metadata: ['channel' => 'forgot_password']
+        );
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
@@ -50,6 +66,7 @@ new #[Layout('layouts.guest')] class extends Component
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-error :messages="$errors->get('captcha')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">

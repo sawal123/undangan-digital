@@ -190,6 +190,11 @@
                     <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">User</span>
                 </a>
+                <a href="{{ route('admin.security') }}" wire:navigate
+                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.security') ? 'active' : '' }}">
+                    <i data-lucide="shield-alert" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="text-sm font-medium">Keamanan</span>
+                </a>
                 <a href="{{ route('admin.setting') }}" wire:navigate
                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.setting') ? 'active' : '' }}">
                     <i data-lucide="settings" class="w-5 h-5 flex-shrink-0"></i>

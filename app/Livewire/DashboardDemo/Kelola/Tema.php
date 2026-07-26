@@ -2,25 +2,33 @@
 
 namespace App\Livewire\DashboardDemo\Kelola;
 
-use App\Models\Data;
+use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\Theme;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
-use Illuminate\Support\Facades\Crypt;
 
 class Tema extends Component
 {
+    use LoadsOwnedInvitation;
+
+    #[Locked]
     public $dataId;
+
     public $tema;
+
     public $data;
+
     public bool $canShareInvitation = false;
 
-    public function mount($id){
-        $this->dataId = Data::where('uid', $id)->firstOrFail()->id;
+    public function mount($id)
+    {
+        $this->dataId = $this->ownedInvitationByUid($id)->id;
         $this->loadData();
     }
-    
-    public function loadData(){
-        $this->data = Data::with('eventType')->find($this->dataId);
+
+    public function loadData()
+    {
+        $this->data = $this->ownedInvitationById($this->dataId, ['eventType']);
         $this->canShareInvitation = $this->data?->canBeShared() ?? false;
         $this->tema = Theme::with(['category', 'eventType'])
             ->when($this->data->event_type_id, function ($query) {
@@ -32,7 +40,10 @@ class Tema extends Component
             ->get();
     }
 
-    public function choose($id){
+    public function choose($id)
+    {
+        $this->loadData();
+
         $this->data->theme_id = $id;
         $this->data->save();
         session()->flash('message', 'Yeay... Tema Berhasil Dipilih.');
@@ -43,13 +54,15 @@ class Tema extends Component
     {
         $this->loadData();
 
-        if (!$this->data?->canBeShared()) {
+        if (! $this->data?->canBeShared()) {
             session()->flash('error', 'Undangan belum aktif, review dengan data user belum bisa dibuka.');
+
             return;
         }
 
-        if (!$this->data->theme_id) {
+        if (! $this->data->theme_id) {
             session()->flash('error', 'Pilih tema terlebih dahulu sebelum review.');
+
             return;
         }
 
@@ -58,8 +71,10 @@ class Tema extends Component
 
     public function render()
     {
+        $this->loadData();
+
         return view('livewire.dashboard.kelola.tema')->layout('components.layouts.user-new', [
-            'headerTitle' => 'Pilih Tema'
+            'headerTitle' => 'Pilih Tema',
         ]);
     }
 }

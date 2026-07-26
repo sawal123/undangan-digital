@@ -23,7 +23,7 @@
     </x-ui.card>
 
     <x-ui.table 
-        :headers="['No.', 'Nama', 'Email', 'Role', 'WhatsApp', 'Aksi']"
+        :headers="['No.', 'Nama', 'Email', 'Role', 'WhatsApp', 'Status', 'Login Terakhir', 'IP', 'Gagal 24j', 'Risk', 'Dibuat', 'Aksi']"
         title="Daftar Pengguna"
         :count="$users->total()"
     >
@@ -62,10 +62,55 @@
                 <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-sm">
                     {{ $item->phone ?? '-' }}
                 </td>
+                <td class="px-5 py-3.5 whitespace-nowrap text-xs">
+                    <div class="flex flex-col gap-1">
+                        <span class="font-medium {{ $item->hasVerifiedEmail() ? 'text-emerald-600' : 'text-amber-600' }}">
+                            {{ $item->hasVerifiedEmail() ? 'Verified' : 'Belum Verified' }}
+                        </span>
+                        <span class="font-medium {{ $item->suspended_at ? 'text-rose-600' : 'text-slate-500' }}">
+                            {{ $item->suspended_at ? 'Suspended' : 'Active' }}
+                        </span>
+                    </div>
+                </td>
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-xs whitespace-nowrap">
+                    {{ $item->last_login_at ? \Illuminate\Support\Carbon::parse($item->last_login_at)->format('d M Y H:i') : '-' }}
+                </td>
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-xs whitespace-nowrap">
+                    {{ $item->last_login_ip ?? '-' }}
+                </td>
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-xs text-center">
+                    {{ $item->failed_logins_24h_count ?? 0 }}
+                </td>
+                <td class="px-5 py-3.5 text-xs whitespace-nowrap">
+                    <span class="font-medium {{ in_array($item->security_risk_level, ['high', 'critical']) ? 'text-rose-600' : 'text-slate-500' }}">
+                        {{ ucfirst($item->security_risk_level ?? 'low') }}
+                    </span>
+                </td>
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-xs whitespace-nowrap">
+                    {{ $item->created_at?->format('d M Y') ?? '-' }}
+                </td>
                 <td class="px-5 py-3.5 text-center flex-shrink-0">
                     <div class="flex items-center justify-center gap-1">
                         <button wire:click="edit({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors" title="Edit User">
                             <i data-lucide="pencil" class="w-4 h-4"></i>
+                        </button>
+                        @if($item->suspended_at)
+                            <button wire:click="reactivate({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 transition-colors" title="Aktifkan Akun">
+                                <i data-lucide="user-check" class="w-4 h-4"></i>
+                            </button>
+                        @else
+                            <button wire:click="suspend({{ $item->id }}, 'admin_review')" class="p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 transition-colors" title="Suspend Akun">
+                                <i data-lucide="user-x" class="w-4 h-4"></i>
+                            </button>
+                        @endif
+                        <button wire:click="revokeSessions({{ $item->id }}, 'admin_review')" class="p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors" title="Cabut Semua Sesi">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                        <button wire:click="resendVerification({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 transition-colors" title="Kirim Verifikasi">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        </button>
+                        <button wire:click="forcePasswordReset({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-violet-50 dark:hover:bg-violet-900/30 text-violet-600 dark:text-violet-400 transition-colors" title="Paksa Reset Password">
+                            <i data-lucide="key-round" class="w-4 h-4"></i>
                         </button>
                         <button x-on:click="$dispatch('set-delete', { id: {{ $item->id }}, method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors" title="Hapus User">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>

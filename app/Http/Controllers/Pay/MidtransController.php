@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Pay;
 
-use Midtrans\Config;
-use Midtrans\Transaction;
-use Midtrans\Notification;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction as ModelsTransaction;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Midtrans\Config;
 
 class MidtransController extends Controller
 {
@@ -19,76 +19,177 @@ class MidtransController extends Controller
         Config::$isSanitized = config('midtrans.isSanitized');
         Config::$is3ds = config('midtrans.is3ds');
 
-        // Midtrans Notification
-        try {
-            $notif = new Notification();
-        } catch (\Exception $e) {
-            exit($e->getMessage());
+        $notif = $this->verifiedNotificationPayload($request);
+
+        if (! $notif) {
+            return response()->json(['message' => 'invalid signature'], 403);
         }
 
-        $status = $notif->transaction_status;
-        $type = $notif->payment_type;
-        $order_id = $notif->order_id;
-        $fraud = $notif->fraud_status;
+        $status = $notif->transaction_status ?? null;
+        $type = $notif->payment_type ?? null;
+        $order_id = $notif->order_id ?? null;
+        $fraud = $notif->fraud_status ?? null;
+        $grossAmount = $this->normalizeAmount($notif->gross_amount ?? 0);
+        $transactionId = $notif->transaction_id ?? null;
 
-        $transaction = ModelsTransaction::where('invoice', $order_id)->first();
-        // dd($transaction->data);
-        if ($status == 'capture') {
-            if ($type == 'credit_card') {
-                $transaction->payment_status = ($fraud == 'challenge') ? 'CHALLENGE' : 'SUCCESS';
-            }
-        } else if ($status == 'settlement') {
-            if ($transaction->data) {
-                $transaction->data->isActive = 1;
-                $transaction->data->save();
-            } else {
-                return response()->json([
-                    'meta' => [
-                        'code' => 200,
-                        'message' => 'Data Id Tidak Ditemukan!'
-                    ]
-                ]);
-            }
-            $transaction->payment_status = 'SUCCESS';
-        } else if ($status == 'pending') {
-            $transaction->payment_status = 'PENDING';
-        } else if ($status == 'deny') {
-            $transaction->payment_status = 'FAILED';
-        } else if ($status == 'expire') {
-            $transaction->payment_status = 'EXPIRED';
-        } else if ($status == 'cancel') {
-            $transaction->payment_status = 'CANCEL';
+        if (! $order_id) {
+            Log::warning('Midtrans callback tanpa order_id', ['payload' => (array) $notif]);
+
+            return response()->json(['message' => 'order_id is required'], 422);
         }
 
+        $response = DB::transaction(function () use ($order_id, $grossAmount, $status, $type, $fraud, $transactionId) {
+            $transaction = ModelsTransaction::with('data')->where('invoice', $order_id)->lockForUpdate()->first();
 
-        $transaction->payment_type = $type;
-        $transaction->save();
+            if (! $transaction) {
+                Log::warning('Midtrans callback invoice tidak ditemukan', [
+                    'order_id' => $order_id,
+                ]);
 
-        // Response json notif postman
-        if ($transaction) {
-            if ($status == 'capture'  && $fraud == 'deny') {
-                return response()->json([
-                    'meta' => [
-                        'code' => 200,
-                        'message' => 'Midtrans Payment Challenge'
-                    ]
-                ]);
-            } else if ($status == 'pending' && $status == 'deny' && $status == 'expire' && $status == 'cancel') {
-                return response()->json([
-                    'meta' => [
-                        'code' => 200,
-                        'message' => 'Midtrans Payment Not Settlement'
-                    ]
-                ]);
+                return response()->json(['message' => 'transaction not found'], 404);
             }
+
+            if ($grossAmount !== (int) $transaction->gross_amount) {
+                Log::warning('Midtrans callback nominal tidak sesuai', [
+                    'order_id' => $order_id,
+                    'callback_gross_amount' => $grossAmount,
+                    'transaction_gross_amount' => (int) $transaction->gross_amount,
+                ]);
+
+                return response()->json(['message' => 'gross amount mismatch'], 422);
+            }
+
+            $transaction->forceFill([
+                'midtrans_payment_type' => $type,
+                'midtrans_transaction_id' => $transactionId,
+                'midtrans_status' => $status,
+                'fraud_status' => $fraud,
+            ]);
+
+            match ($status) {
+                'settlement' => $this->markSuccess($transaction),
+                'capture' => $type === 'credit_card' && $fraud === 'accept'
+                    ? $this->markSuccess($transaction)
+                    : $this->markChallengeOrPending($transaction, $fraud),
+                'pending' => $this->markPending($transaction),
+                'deny' => $this->markIfNotSuccess($transaction, 'FAILED'),
+                'expire' => $this->markIfNotSuccess($transaction, 'EXPIRED'),
+                'cancel' => $this->markIfNotSuccess($transaction, 'CANCEL'),
+                'refund' => $this->markRefund($transaction),
+                'partial_refund' => $this->markPartialRefund($transaction),
+                default => Log::warning('Status Midtrans tidak dikenal', [
+                    'invoice' => $transaction->invoice,
+                    'status' => $status,
+                ]),
+            };
+
+            $transaction->save();
+
+            return null;
+        });
+
+        if ($response) {
+            return $response;
         }
 
         return response()->json([
             'meta' => [
                 'code' => 200,
-                'message' => 'Midtrans Notification Success'
-            ]
+                'message' => 'Midtrans Notification Success',
+            ],
         ]);
+    }
+
+    private function verifiedNotificationPayload(Request $request): ?object
+    {
+        if (! $this->hasValidSignature($request)) {
+            Log::warning('Midtrans callback signature tidak valid', [
+                'order_id' => $request->input('order_id'),
+                'status_code' => $request->input('status_code'),
+            ]);
+
+            return null;
+        }
+
+        return (object) $request->all();
+    }
+
+    private function hasValidSignature(Request $request): bool
+    {
+        $signature = $request->input('signature_key');
+        $orderId = $request->input('order_id');
+        $statusCode = $request->input('status_code');
+        $grossAmount = $request->input('gross_amount');
+        $serverKey = config('midtrans.serverKey');
+
+        if (! $signature || ! $orderId || ! $statusCode || ! $grossAmount || ! $serverKey) {
+            return false;
+        }
+
+        $expected = hash('sha512', $orderId.$statusCode.$grossAmount.$serverKey);
+
+        return hash_equals($expected, $signature);
+    }
+
+    private function normalizeAmount(mixed $amount): int
+    {
+        return (int) round((float) $amount);
+    }
+
+    private function markSuccess(ModelsTransaction $transaction): void
+    {
+        if ($transaction->payment_status === 'SUCCESS') {
+            return;
+        }
+
+        $transaction->payment_status = 'SUCCESS';
+
+        if ($transaction->data) {
+            $transaction->data->forceFill(['isActive' => true])->save();
+        } else {
+            Log::warning('Transaksi sukses tanpa relasi undangan', [
+                'invoice' => $transaction->invoice,
+                'data_id' => $transaction->data_id,
+            ]);
+        }
+    }
+
+    private function markChallengeOrPending(ModelsTransaction $transaction, ?string $fraud): void
+    {
+        if ($transaction->payment_status === 'SUCCESS') {
+            return;
+        }
+
+        $transaction->payment_status = $fraud === 'challenge' ? 'CHALLENGE' : 'PENDING';
+    }
+
+    private function markPending(ModelsTransaction $transaction): void
+    {
+        $this->markIfNotSuccess($transaction, 'PENDING');
+    }
+
+    private function markIfNotSuccess(ModelsTransaction $transaction, string $status): void
+    {
+        if ($transaction->payment_status === 'SUCCESS') {
+            return;
+        }
+
+        $transaction->payment_status = $status;
+    }
+
+    private function markRefund(ModelsTransaction $transaction): void
+    {
+        $transaction->payment_status = 'REFUND';
+
+        Log::warning('Refund penuh diterima dari Midtrans, status undangan memerlukan keputusan operasional manual', [
+            'invoice' => $transaction->invoice,
+            'data_id' => $transaction->data_id,
+        ]);
+    }
+
+    private function markPartialRefund(ModelsTransaction $transaction): void
+    {
+        $transaction->payment_status = 'PARTIAL_REFUND';
     }
 
     public function finishRedirect()
