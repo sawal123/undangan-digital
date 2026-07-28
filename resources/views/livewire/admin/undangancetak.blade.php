@@ -69,7 +69,9 @@
                             <th scope="col">Jenis</th>
                             <th scope="col">Stok</th>
                             <th scope="col">Terjual</th>
-                            <th scope="col">Harga</th>
+                            <th scope="col">Harga Jual</th>
+                            <th scope="col">Harga Modal</th>
+                            <th scope="col">Ukuran OPP</th>
                             <th scope="col">Promo</th>
                             <th scope="col">Aksi</th>
                         </tr>
@@ -95,7 +97,9 @@
                                 <td>{{ $item->jenis }}</td>
                                 <td>{{ $item->stok }}</td>
                                 <td>{{ $item->terjual }}</td>
-                                <td>{{ $item->harga }}</td>
+                                <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($item->harga_modal ?? 0, 0, ',', '.') }}</td>
+                                <td>{{ $item->ukuran_opp ?? '-' }}</td>
                                 <td>{{ $item->promo }}</td>
 
                                 <td>
@@ -173,10 +177,32 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group my-3">
-                                                <label>Harga</label>
+                                                <label>Harga Jual</label>
                                                 <input type="number" class="form-control" wire:model="harga"
                                                     placeholder="Masukkan Harga">
-                                                @error('Harga')
+                                                @error('harga')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group my-3">
+                                                <label>Harga Modal</label>
+                                                <input type="number" class="form-control" wire:model="harga_modal"
+                                                    placeholder="Masukkan Harga Modal">
+                                                @error('harga_modal')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group my-3">
+                                                <label>Ukuran OPP</label>
+                                                <input type="text" class="form-control" wire:model="ukuran_opp"
+                                                    placeholder="Contoh: 13 x 20 cm">
+                                                @error('ukuran_opp')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>

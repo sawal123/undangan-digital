@@ -16,7 +16,7 @@ class CetakDemo extends Component
     public $search = '';
     public $perPage = 10;
     
-    public $nama, $jenis, $stok, $terjual, $harga, $promo, $deskripsi, $undangan_id;
+    public $nama, $jenis, $stok, $terjual, $harga, $harga_modal, $ukuran_opp, $promo, $deskripsi, $undangan_id;
     public $thumbnails = [];
     public $isEdit = false;
     
@@ -28,7 +28,9 @@ class CetakDemo extends Component
         $undanganData = UndanganCetak::query()
             ->when($this->search, function ($query) {
                 $query->where('nama', 'like', '%' . $this->search . '%')
-                    ->orWhere('jenis', 'like', '%' . $this->search . '%');
+                    ->orWhere('jenis', 'like', '%' . $this->search . '%')
+                    ->orWhere('harga_modal', 'like', '%' . $this->search . '%')
+                    ->orWhere('ukuran_opp', 'like', '%' . $this->search . '%');
             })
             ->latest()
             ->paginate($this->perPage);
@@ -46,6 +48,8 @@ class CetakDemo extends Component
         $this->stok = '';
         $this->terjual = '';
         $this->harga = '';
+        $this->harga_modal = '';
+        $this->ukuran_opp = '';
         $this->promo = '';
         $this->deskripsi = '';
         $this->thumbnails = [];
@@ -60,6 +64,8 @@ class CetakDemo extends Component
             'jenis' => 'required|string',
             'stok' => 'required|numeric',
             'harga' => 'required|numeric',
+            'harga_modal' => 'nullable|numeric',
+            'ukuran_opp' => 'nullable|string|max:50',
             'thumbnails.*' => 'image|max:2048',
         ]);
 
@@ -76,6 +82,8 @@ class CetakDemo extends Component
             'stok' => $this->stok,
             'terjual' => $this->terjual ?? 0,
             'harga' => $this->harga,
+            'harga_modal' => $this->harga_modal ?? 0,
+            'ukuran_opp' => $this->ukuran_opp,
             'promo' => $this->promo,
             'deskripsi' => $this->deskripsi,
             'gambar' => json_encode($thumbnailPaths),
@@ -95,6 +103,8 @@ class CetakDemo extends Component
         $this->stok = $u->stok;
         $this->terjual = $u->terjual;
         $this->harga = $u->harga;
+        $this->harga_modal = $u->harga_modal;
+        $this->ukuran_opp = $u->ukuran_opp;
         $this->promo = $u->promo;
         $this->deskripsi = $u->deskripsi;
         // Keep existing thumbnails as strings if needed, but for preview we need careful handling
@@ -109,6 +119,8 @@ class CetakDemo extends Component
             'jenis' => 'required|string',
             'stok' => 'required|numeric',
             'harga' => 'required|numeric',
+            'harga_modal' => 'nullable|numeric',
+            'ukuran_opp' => 'nullable|string|max:50',
         ]);
 
         $u = UndanganCetak::findOrFail($this->undangan_id);
@@ -119,6 +131,8 @@ class CetakDemo extends Component
             'stok' => $this->stok,
             'terjual' => $this->terjual,
             'harga' => $this->harga,
+            'harga_modal' => $this->harga_modal ?? 0,
+            'ukuran_opp' => $this->ukuran_opp,
             'promo' => $this->promo,
             'deskripsi' => $this->deskripsi,
         ];

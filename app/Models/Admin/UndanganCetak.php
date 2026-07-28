@@ -8,8 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class UndanganCetak extends Model
 {
     use HasFactory;
-    protected $fillable = ['nama',
-    'jenis', 'stok', 'terjual',
-    'harga', 'promo', 'favorite',
-    'deskripsi', 'gambar'];
+    protected $fillable = [
+        'nama',
+        'jenis',
+        'stok',
+        'terjual',
+        'harga',
+        'harga_modal',
+        'ukuran_opp',
+        'promo',
+        'favorite',
+        'deskripsi',
+        'gambar'
+    ];
 }

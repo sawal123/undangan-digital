@@ -37,7 +37,7 @@
     </x-ui.card>
 
     <x-ui.table 
-        :headers="['Produk', 'Jenis', 'Stok', 'Terjual', 'Harga', 'Aksi']"
+        :headers="['Produk', 'Jenis', 'Stok', 'Terjual', 'Harga Jual', 'Harga Modal', 'Ukuran OPP', 'Aksi']"
         title="Daftar Produk Cetak"
         :count="$undangan->total()"
     >
@@ -75,6 +75,12 @@
                     @if($item->promo)
                         <p class="text-[10px] text-rose-500 line-through">Rp {{ number_format($item->promo, 0, ',', '.') }}</p>
                     @endif
+                </td>
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-sm">
+                    Rp {{ number_format($item->harga_modal ?? 0, 0, ',', '.') }}
+                </td>
+                <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-sm">
+                    {{ $item->ukuran_opp ?? '-' }}
                 </td>
                 <td class="px-5 py-3.5 text-center">
                     <div class="flex items-center justify-center gap-1">
@@ -114,7 +120,12 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <x-ui.input label="Harga" wire:model="harga" type="number" placeholder="1500" />
+                <x-ui.input label="Harga Jual" wire:model="harga" type="number" placeholder="1500" />
+                <x-ui.input label="Harga Modal" wire:model="harga_modal" type="number" placeholder="1000" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <x-ui.input label="Ukuran OPP" wire:model="ukuran_opp" placeholder="Contoh: 13 x 20 cm" />
                 <x-ui.input label="Harga Promo (Opsional)" wire:model="promo" type="number" />
             </div>
 

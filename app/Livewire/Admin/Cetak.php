@@ -23,6 +23,8 @@ class Cetak extends Component
     public $stok;
     public $terjual;
     public $harga;
+    public $harga_modal;
+    public $ukuran_opp;
     public $promo;
     public $thumbnails = []; // Untuk thumbnail
     public $undanganId; // Jika Anda ingin mengubah data yang sudah ada
@@ -90,6 +92,8 @@ class Cetak extends Component
         $this->stok = '';
         $this->terjual = '';
         $this->harga = '';
+        $this->harga_modal = '';
+        $this->ukuran_opp = '';
         $this->promo = '';
         $this->deskripsi = '';
         $this->thumbnails = [];
@@ -107,6 +111,8 @@ class Cetak extends Component
             $this->stok = $undangan->stok;
             $this->terjual = $undangan->terjual;
             $this->harga = $undangan->harga;
+            $this->harga_modal = $undangan->harga_modal;
+            $this->ukuran_opp = $undangan->ukuran_opp;
             $this->promo = $undangan->promo;
             $this->deskripsi = $undangan->deskripsi;
             $this->thumbnails = json_decode($undangan->gambar); // Gambar yang ada saat edit
@@ -124,6 +130,8 @@ class Cetak extends Component
             $undangan->stok = $this->stok;
             $undangan->terjual = $this->terjual;
             $undangan->harga = $this->harga;
+            $undangan->harga_modal = $this->harga_modal ?? 0;
+            $undangan->ukuran_opp = $this->ukuran_opp;
             $undangan->promo = $this->promo;
             $undangan->deskripsi = $this->deskripsi;
 
@@ -175,6 +183,8 @@ class Cetak extends Component
         'stok' => 'required|numeric|min:0',
         'terjual' => 'required|numeric|min:0',
         'harga' => 'required|numeric|min:0',
+        'harga_modal' => 'nullable|numeric|min:0',
+        'ukuran_opp' => 'nullable|string|max:50',
         'promo' => 'nullable|numeric|min:0',
         'thumbnails' => 'nullable|array', // Menambahkan validasi untuk array
         'thumbnails.*' => 'image|mimes:jpg,webp,WEBP,png,jpeg,gif,svg|max:2024', // Validasi masing-masing file gambar
@@ -203,6 +213,8 @@ class Cetak extends Component
             'stok' => $this->stok,
             'terjual' => $this->terjual,
             'harga' => $this->harga,
+            'harga_modal' => $this->harga_modal ?? 0,
+            'ukuran_opp' => $this->ukuran_opp,
             'promo' => $this->promo,
             'favorite' => $this->favorite,
             'gambar' => json_encode($thumbnailPaths), // Menyimpan array gambar sebagai JSON
@@ -306,7 +318,9 @@ class Cetak extends Component
                 ->orWhere('jenis', 'like', '%' . $this->search . '%')
                 ->orWhere('stok', 'like', '%' . $this->search . '%')
                 ->orWhere('terjual', 'like', '%' . $this->search . '%')
-                ->orWhere('harga', 'like', '%' . $this->search . '%');
+                ->orWhere('harga', 'like', '%' . $this->search . '%')
+                ->orWhere('harga_modal', 'like', '%' . $this->search . '%')
+                ->orWhere('ukuran_opp', 'like', '%' . $this->search . '%');
         }
         $undanganData = $query->paginate($this->perPage);
         // dd($undanganData);
