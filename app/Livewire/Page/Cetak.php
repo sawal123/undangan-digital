@@ -4,128 +4,143 @@ namespace App\Livewire\Page;
 
 use App\Models\Admin\UndanganCetak;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class Cetak extends Component
 {
-    public $isOpenModal = false;
+    public bool $isOpenModal = false;
 
-    public $mainImage;
+    public bool $isExpanded = false;
 
-    public $gambar = [];
+    public int $perPage = 8;
 
-    public $undang;
+    public int $loadAmount = 8;
 
-    public $isExpanded = false; // Properti untuk mengontrol tampilan teks
+    public string $search = '';
 
-    public $deskripsi;
+    public ?string $productToken = null;
 
-    public $yes = [];
+    public ?string $mainImage = null;
 
-    // public $undangan = [];
-    public $perPage = 8; // Jumlah awal data
+    public ?string $deskripsi = null;
 
-    public $loadAmount = 8; // Jumlah data yang ditambahkan setiap kali tombol "Load More" diklik
+    public array $yes = [];
 
-    public $search = ''; // Menyimpan nilai pencarian
+    public ?UndanganCetak $undang = null;
 
-    public $productToken;
-
-    public function toggleDescription($id)
+    public function updatedSearch(): void
     {
-        $s = UndanganCetak::find($id);
-        $this->deskripsi = $s->deskripsi;
+        $this->perPage = 8;
+    }
+
+    public function clearSearch(): void
+    {
+        $this->search = '';
+        $this->perPage = 8;
+    }
+
+    public function expandDescription(): void
+    {
         $this->isExpanded = true;
     }
 
-    public function toggleDownDescription($id)
+    public function collapseDescription(): void
     {
-        $s = UndanganCetak::find($id);
-        $this->deskripsi = $s->deskripsi;
         $this->isExpanded = false;
     }
 
-    public function closeModal()
+    public function closeModal(): void
     {
         $this->isOpenModal = false;
         $this->isExpanded = false;
         $this->productToken = null;
+        $this->undang = null;
+        $this->mainImage = null;
+        $this->yes = [];
+        $this->deskripsi = null;
         $this->dispatch('cetak-modal-closed');
     }
 
-    public function openModal($id)
+    public function openModal(int $id): void
     {
+        $this->isExpanded = false;
         $this->showModalForProduct($id);
         $this->productToken = $this->makeProductToken($this->undang->id);
         $this->dispatch('cetak-modal-opened', token: $this->productToken);
     }
 
-    protected function showModalForProduct($id)
+    protected function showModalForProduct(int $id): void
     {
         $this->undang = UndanganCetak::findOrFail($id);
-        $this->yes = json_decode($this->undang->gambar) ?: [];
+        $this->yes = $this->undang->image_urls;
         $this->deskripsi = $this->undang->deskripsi;
-        $this->mainImage = $this->yes[0] ?? 'default-thumbnail.jpg';
+        $this->mainImage = $this->yes[0] ?? asset('images/default-invitation.png');
         $this->isExpanded = false;
         $this->isOpenModal = true;
     }
 
-    public function updateMainImage($image)
+    public function updateMainImage(string $image): void
     {
         $this->mainImage = $image;
     }
 
-    public $undangan;
-
-    public function updateData()
-    {
-        $this->undangan = UndanganCetak::where('nama', 'like', '%'.$this->search.'%')
-            ->orWhere('jenis', 'like', '%'.$this->search.'%')
-            ->orWhere('harga', 'like', '%'.$this->search.'%')
-            ->limit($this->perPage)
-            ->get();
-        if ($this->search != '') {
-            // dd($this->undangan);
-        }
-    }
-
-    public function loadMore()
+    public function loadMore(): void
     {
         $this->perPage += $this->loadAmount;
-        $this->updateData();
     }
 
-    public function mount()
+    public function mount(): void
     {
-        $this->updateData();
         $token = request()->query('produk');
 
         if ($token) {
             try {
-                $id = $this->readProductToken($token);
-                $this->productToken = $token;
-                $this->showModalForProduct($id);
+                $id = $this->readProductToken((string) $token);
+                if ($id > 0) {
+                    $this->productToken = (string) $token;
+                    $this->showModalForProduct($id);
+                }
             } catch (DecryptException|ModelNotFoundException $exception) {
                 $this->productToken = null;
             }
         }
     }
 
-    public function render()
+    private function productsQuery(): Builder
     {
-        $this->undangan = UndanganCetak::where('nama', 'like', '%'.$this->search.'%')
-            ->orWhere('jenis', 'like', '%'.$this->search.'%')
-            ->orWhere('harga', 'like', '%'.$this->search.'%')
-            ->limit($this->perPage)
-            ->get();
-        $this->dispatch('slider');
-
-        return view('landingpage.cetak')->layout('layouts.landing');
+        return UndanganCetak::query()
+            ->when(!empty(trim($this->search)), function (Builder $query): void {
+                $searchTerm = '%' . trim($this->search) . '%';
+                $query->where(function (Builder $sub) use ($searchTerm): void {
+                    $sub->where('nama', 'like', $searchTerm)
+                        ->orWhere('jenis', 'like', $searchTerm)
+                        ->orWhere('harga', 'like', $searchTerm);
+                });
+            })
+            ->latest('id');
     }
 
-    protected function makeProductToken($id): string
+    public function render(): View
+    {
+        $query = $this->productsQuery();
+        $totalResults = (clone $query)->count();
+        $undangan = (clone $query)->limit($this->perPage)->get();
+        $hasMore = $this->perPage < $totalResults;
+
+        $this->dispatch('slider');
+
+        return view('landingpage.cetak', [
+            'undangan' => $undangan,
+            'totalResults' => $totalResults,
+            'hasMore' => $hasMore,
+        ])->layout('layouts.landing');
+    }
+
+    protected function makeProductToken(int $id): string
     {
         $max = 36 ** 6;
         $tokenNumber = (((int) $id * 92821) + 177013) % $max;
@@ -133,9 +148,9 @@ class Cetak extends Component
         return strtolower(base_convert((string) $tokenNumber, 10, 36));
     }
 
-    protected function readProductToken($token): int
+    protected function readProductToken(string $token): int
     {
-        $token = strtolower((string) $token);
+        $token = strtolower(trim($token));
 
         if (preg_match('/^[a-z0-9]{1,6}$/', $token)) {
             $max = 36 ** 6;
@@ -149,7 +164,7 @@ class Cetak extends Component
         return (int) Crypt::decryptString($token);
     }
 
-    protected function modInverse($number, $modulo): int
+    protected function modInverse(int $number, int $modulo): int
     {
         $a = $number;
         $m = $modulo;

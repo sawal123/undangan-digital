@@ -5,19 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Wayae Nikah" />
-    <meta property="og:url" content="{{ url()->current() }}" />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:image" content="{{ asset('logo/logo.svg') }}">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Wayae Nikah">
-    <meta name="description" content="Wayae Login dan buat undangan kamu" />
-    <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
-    <meta name="author" content="Wayae Nikah" />
-    <meta name="Version" content="v1.0.0" />
-
-    <title>Wayae Nikah</title>
+    <!-- SEO & Metadata -->
+    <x-seo-meta />
 
     <!-- Fonts & Styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +18,7 @@
     <link href="{{ asset('assets/libs/tiny-slider/tiny-slider.css') }}" rel="stylesheet">
 
     <link href="{{ asset('assets/css/style.min.css') }}" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/libs/dist/css/lightbox.css') }}">
 

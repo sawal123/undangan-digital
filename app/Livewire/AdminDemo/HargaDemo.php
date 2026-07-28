@@ -8,24 +8,36 @@ use Livewire\Component;
 
 class HargaDemo extends Component
 {
-    public $harga_list, $promo_list;
-    public $promoName, $promoType, $promoDiscount, $promo_id;
-    public $hargaDasar, $flashSale, $harga_id;
-    public $isEditPromo = false;
-    public $isEditHarga = false;
+    public string $promoName = '';
+
+    public string $promoType = 'percentage';
+
+    public string $promoDiscount = '';
+
+    public ?int $promo_id = null;
+
+    public string $hargaDasar = '';
+
+    public string $flashSale = '';
+
+    public ?int $harga_id = null;
+
+    public bool $isEditPromo = false;
+
+    public bool $isEditHarga = false;
 
     public function render()
     {
         return view('livewire.admin-demo.harga-demo', [
             'harga' => Harga::all(),
-            'promo' => Promo::all(),
+            'promo' => Promo::latest('id')->get(),
         ])->layout('components.layouts.admin-new');
     }
 
-    public function resetInput()
+    public function resetInput(): void
     {
         $this->promoName = '';
-        $this->promoType = '';
+        $this->promoType = 'percentage';
         $this->promoDiscount = '';
         $this->promo_id = null;
         $this->hargaDasar = '';
@@ -33,75 +45,119 @@ class HargaDemo extends Component
         $this->harga_id = null;
         $this->isEditPromo = false;
         $this->isEditHarga = false;
+        $this->resetValidation();
     }
 
-    public function editHarga($id)
+    public function createPromo(): void
+    {
+        $this->resetInput();
+        $this->dispatch('open-modal', name: 'promo-modal');
+    }
+
+    public function editHarga(int $id): void
     {
         $h = Harga::findOrFail($id);
-        $this->harga_id = $id;
-        $this->hargaDasar = $h->harga;
-        $this->flashSale = $h->flashsale;
+        $this->harga_id = $h->id;
+        $this->hargaDasar = (string) $h->harga;
+        $this->flashSale = (string) ($h->flashsale ?? '');
         $this->isEditHarga = true;
+        $this->resetValidation();
         $this->dispatch('open-modal', name: 'harga-modal');
     }
 
-    public function updateHarga()
+    public function updateHarga(): void
     {
-        Harga::findOrFail($this->harga_id)->update([
-            'harga' => $this->hargaDasar,
-            'flashsale' => $this->flashSale,
+        if (!$this->harga_id) {
+            return;
+        }
+
+        $this->validate([
+            'hargaDasar' => 'required|numeric|min:0',
+            'flashSale' => 'nullable|numeric|min:0',
+        ], [
+            'hargaDasar.required' => 'Harga dasar wajib diisi.',
+            'hargaDasar.min' => 'Harga dasar minimal 0.',
         ]);
-        session()->flash('message', 'Harga successfully updated.');
+
+        $h = Harga::findOrFail($this->harga_id);
+        $h->update([
+            'harga' => (int) $this->hargaDasar,
+            'flashsale' => !empty($this->flashSale) ? (int) $this->flashSale : 0,
+        ]);
+
+        session()->flash('message', 'Harga berhasil diperbarui.');
         $this->resetInput();
         $this->dispatch('close-modal', name: 'harga-modal');
     }
 
-    public function editPromo($id)
+    public function editPromo(int $id): void
     {
         $p = Promo::findOrFail($id);
-        $this->promo_id = $id;
+        $this->promo_id = $p->id;
         $this->promoName = $p->kode;
-        $this->promoType = $p->type;
-        $this->promoDiscount = $p->promo;
+        $this->promoType = $p->type ?? 'percentage';
+        $this->promoDiscount = (string) $p->promo;
         $this->isEditPromo = true;
+        $this->resetValidation();
         $this->dispatch('open-modal', name: 'promo-modal');
     }
 
-    public function storePromo()
+    public function storePromo(): void
     {
+        $discountRules = $this->promoType === 'percentage' ? 'required|numeric|min:0|max:100' : 'required|numeric|min:0';
+
         $this->validate([
-            'promoName' => 'required',
-            'promoType' => 'required',
-            'promoDiscount' => 'required|numeric',
+            'promoName' => 'required|string|max:100',
+            'promoType' => 'required|in:percentage,fixed,nominal',
+            'promoDiscount' => $discountRules,
+        ], [
+            'promoName.required' => 'Kode promo wajib diisi.',
+            'promoDiscount.max' => 'Diskon persentase tidak boleh melebihi 100%.',
         ]);
 
         Promo::create([
-            'kode' => $this->promoName,
+            'kode' => strtoupper(trim($this->promoName)),
             'type' => $this->promoType,
-            'promo' => $this->promoDiscount,
+            'promo' => (int) $this->promoDiscount,
         ]);
 
-        session()->flash('message', 'Promo successfully created.');
+        session()->flash('message', 'Kode promo berhasil dibuat.');
         $this->resetInput();
         $this->dispatch('close-modal', name: 'promo-modal');
     }
 
-    public function updatePromo()
+    public function updatePromo(): void
     {
-        Promo::findOrFail($this->promo_id)->update([
-            'kode' => $this->promoName,
-            'type' => $this->promoType,
-            'promo' => $this->promoDiscount,
+        if (!$this->promo_id) {
+            return;
+        }
+
+        $discountRules = $this->promoType === 'percentage' ? 'required|numeric|min:0|max:100' : 'required|numeric|min:0';
+
+        $this->validate([
+            'promoName' => 'required|string|max:100',
+            'promoType' => 'required|in:percentage,fixed,nominal',
+            'promoDiscount' => $discountRules,
+        ], [
+            'promoName.required' => 'Kode promo wajib diisi.',
+            'promoDiscount.max' => 'Diskon persentase tidak boleh melebihi 100%.',
         ]);
 
-        session()->flash('message', 'Promo successfully updated.');
+        $p = Promo::findOrFail($this->promo_id);
+        $p->update([
+            'kode' => strtoupper(trim($this->promoName)),
+            'type' => $this->promoType,
+            'promo' => (int) $this->promoDiscount,
+        ]);
+
+        session()->flash('message', 'Kode promo berhasil diperbarui.');
         $this->resetInput();
         $this->dispatch('close-modal', name: 'promo-modal');
     }
 
-    public function deletePromo($id)
+    public function deletePromo(int $id): void
     {
         Promo::findOrFail($id)->delete();
-        session()->flash('message', 'Promo successfully deleted.');
+        session()->flash('message', 'Kode promo berhasil dihapus.');
     }
 }

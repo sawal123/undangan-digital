@@ -12,21 +12,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @php
-        $sysSetting = \App\Models\SystemSetting::first();
-        $appName = $sysSetting->app_name ?? 'AdminPanel Pro';
-        $faviconUrl = !empty($sysSetting->favicon) ? asset('storage/' . $sysSetting->favicon) : null;
-    @endphp
-    <title>{{ !empty($sysSetting->seo_title) ? $sysSetting->seo_title : ($title ?? $appName) }}</title>
-    @if($faviconUrl)
-        <link rel="icon" href="{{ $faviconUrl }}">
-    @endif
-    @if(!empty($sysSetting->seo_keywords))
-        <meta name="keywords" content="{{ $sysSetting->seo_keywords }}">
-    @endif
-    @if(!empty($sysSetting->seo_description))
-        <meta name="description" content="{{ $sysSetting->seo_description }}">
-    @endif
+    <!-- SEO & Metadata -->
+    <x-seo-meta :title="$title ?? 'Admin Panel'" robots="noindex,nofollow" />
 
     <!-- Tailwind CSS (Vite or CDN as fallback) -->
     @if(file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -126,10 +113,11 @@
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
 
             <!-- Logo -->
+            @php $currentSetting = \App\Models\SystemSetting::current(); @endphp
             <div
                 class="flex items-center gap-3 px-5 py-5 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
-                @if(!empty($sysSetting->logo))
-                    <img src="{{ asset('storage/' . $sysSetting->logo) }}" class="w-9 h-9 object-contain rounded-lg flex-shrink-0" alt="Logo">
+                @if($currentSetting->logo_url)
+                    <img src="{{ $currentSetting->logo_url }}" class="w-9 h-9 object-contain rounded-lg flex-shrink-0" alt="Logo">
                 @else
                     <div class="w-9 h-9 bg-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
                         <i data-lucide="layers" class="w-5 h-5 text-white"></i>
@@ -137,9 +125,9 @@
                 @endif
                 <div class="flex-1 min-w-0">
                     <h1 class="text-slate-900 dark:text-white font-bold text-lg leading-tight truncate">
-                        {{ $appName }}
+                        {{ $currentSetting->app_name }}
                     </h1>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs">Dashboard v2.5</p>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs">Admin Panel</p>
                 </div>
                 <button x-on:click="sidebarOpen = false"
                     class="lg:hidden p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors">
@@ -283,7 +271,7 @@
 
                             <div x-show="open" x-cloak x-on:click.away="open = false"
                                 class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg py-1 z-50">
-                                <a href="#"
+                                <a href="{{ route('profile') }}" wire:navigate
                                     class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                                     <i data-lucide="user" class="w-4 h-4"></i> Profil Saya
                                 </a>

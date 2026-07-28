@@ -2,111 +2,97 @@
 
 namespace App\Livewire\AdminDemo;
 
-use App\Models\Theme;
 use App\Models\Category;
 use App\Models\EventType;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Livewire\WithFileUploads;
+use App\Models\Theme;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class ThemeDemo extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads, WithPagination;
 
-    public $search = '';
-    public $nama, $category_id, $event_type_id, $path, $demo, $thumbnail, $theme_id;
-    public $isEdit = false;
+    public string $search = '';
+
+    public string $nama = '';
+
+    public string $category_id = '';
+
+    public string $event_type_id = '';
+
+    public string $path = '';
+
+    public string $demo = '';
+
+    public $thumbnail;
+
+    public ?int $theme_id = null;
+
+    public bool $isEdit = false;
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
 
     public function render()
     {
         $themes = Theme::with(['category', 'eventType'])
-            ->where('nama', 'like', '%' . $this->search . '%')
-            ->orWhereHas('category', function($query) {
-                $query->where('category', 'like', '%' . $this->search . '%');
+            ->when(!empty(trim($this->search)), function ($query) {
+                $searchTerm = '%' . trim($this->search) . '%';
+                $query->where(function ($sub) use ($searchTerm) {
+                    $sub->where('nama', 'like', $searchTerm)
+                        ->orWhereHas('category', function ($q) use ($searchTerm) {
+                            $q->where('category', 'like', $searchTerm);
+                        })
+                        ->orWhereHas('eventType', function ($q) use ($searchTerm) {
+                            $q->where('name', 'like', $searchTerm);
+                        });
+                });
             })
-            ->orWhereHas('eventType', function($query) {
-                $query->where('name', 'like', '%' . $this->search . '%');
-            })
-            ->latest()
+            ->latest('id')
             ->paginate(10);
 
         return view('livewire.admin-demo.theme-demo', [
             'themes' => $themes,
-            'categories' => Category::all(),
-            'eventTypes' => EventType::all(),
+            'categories' => Category::orderBy('category')->get(['id', 'category']),
+            'eventTypes' => EventType::orderBy('name')->get(['id', 'name']),
         ])->layout('components.layouts.admin-new');
     }
 
-    public function resetInput()
+    public function resetInput(): void
     {
         $this->nama = '';
         $this->category_id = '';
-        $this->event_type_id = EventType::where('key', 'wedding')->value('id');
+        $this->event_type_id = (string) (EventType::where('key', 'wedding')->value('id') ?? '');
         $this->path = '';
         $this->demo = '';
         $this->thumbnail = null;
         $this->theme_id = null;
         $this->isEdit = false;
+        $this->resetValidation();
     }
 
-    public function store()
+    public function create(): void
     {
-        $this->validate([
-            'nama' => 'required|string|max:255',
-            'category_id' => 'required',
-            'event_type_id' => 'required|exists:event_types,id',
-            'path' => 'required|string|max:255',
-            'demo' => 'nullable|string|max:255',
-            'thumbnail' => 'nullable|image|max:1024'
-        ]);
-
-        $data = [
-            'nama' => $this->nama,
-            'category_id' => $this->category_id,
-            'event_type_id' => $this->event_type_id,
-            'path' => $this->path,
-            'demo' => $this->demo,
-        ];
-
-        if ($this->thumbnail) {
-            $data['thumbnail'] = $this->thumbnail->store('thumbnail', 'public');
-        }
-
-        Theme::create($data);
-
-        session()->flash('message', 'Theme successfully created.');
         $this->resetInput();
-        $this->dispatch('close-modal', name: 'theme-modal');
-    }
-
-    public function edit($id)
-    {
-        $theme = Theme::findOrFail($id);
-        $this->theme_id = $id;
-        $this->nama = $theme->nama;
-        $this->category_id = $theme->category_id;
-        $this->event_type_id = $theme->event_type_id;
-        $this->path = $theme->path;
-        $this->demo = $theme->demo;
-        $this->isEdit = true;
-        
         $this->dispatch('open-modal', name: 'theme-modal');
     }
 
-    public function update()
+    public function store(): void
     {
         $this->validate([
             'nama' => 'required|string|max:255',
-            'category_id' => 'required',
+            'category_id' => 'required|exists:categories,id',
             'event_type_id' => 'required|exists:event_types,id',
             'path' => 'required|string|max:255',
             'demo' => 'nullable|string|max:255',
-            'thumbnail' => 'nullable|image|max:1024'
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $theme = Theme::findOrFail($this->theme_id);
-        
         $data = [
             'nama' => $this->nama,
             'category_id' => $this->category_id,
@@ -115,27 +101,110 @@ class ThemeDemo extends Component
             'demo' => $this->demo,
         ];
 
+        $newFile = null;
         if ($this->thumbnail) {
-            if ($theme->thumbnail) {
-                Storage::disk('public')->delete($theme->thumbnail);
-            }
-            $data['thumbnail'] = $this->thumbnail->store('thumbnail', 'public');
+            $newFile = $this->thumbnail->store('thumbnail', 'public');
+            $data['thumbnail'] = $newFile;
         }
 
-        $theme->update($data);
+        try {
+            DB::transaction(function () use ($data) {
+                Theme::create($data);
+            });
 
-        session()->flash('message', 'Theme successfully updated.');
-        $this->resetInput();
-        $this->dispatch('close-modal', name: 'theme-modal');
+            session()->flash('message', 'Tema berhasil dibuat.');
+            $this->resetInput();
+            $this->dispatch('close-modal', name: 'theme-modal');
+        } catch (\Throwable $e) {
+            if ($newFile) {
+                Storage::disk('public')->delete($newFile);
+            }
+            session()->flash('error', 'Gagal membuat tema: ' . $e->getMessage());
+        }
     }
 
-    public function delete($id)
+    public function edit(int $id): void
     {
         $theme = Theme::findOrFail($id);
-        if ($theme->thumbnail) {
-            Storage::disk('public')->delete($theme->thumbnail);
+        $this->theme_id = $theme->id;
+        $this->nama = $theme->nama;
+        $this->category_id = (string) $theme->category_id;
+        $this->event_type_id = (string) $theme->event_type_id;
+        $this->path = $theme->path;
+        $this->demo = $theme->demo ?? '';
+        $this->thumbnail = null;
+        $this->isEdit = true;
+        $this->resetValidation();
+        $this->dispatch('open-modal', name: 'theme-modal');
+    }
+
+    public function update(): void
+    {
+        if (!$this->theme_id) {
+            return;
         }
+
+        $this->validate([
+            'nama' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'event_type_id' => 'required|exists:event_types,id',
+            'path' => 'required|string|max:255',
+            'demo' => 'nullable|string|max:255',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $theme = Theme::findOrFail($this->theme_id);
+
+        $data = [
+            'nama' => $this->nama,
+            'category_id' => $this->category_id,
+            'event_type_id' => $this->event_type_id,
+            'path' => $this->path,
+            'demo' => $this->demo,
+        ];
+
+        $newFile = null;
+        $oldFileToDelete = null;
+
+        if ($this->thumbnail) {
+            $newFile = $this->thumbnail->store('thumbnail', 'public');
+            $data['thumbnail'] = $newFile;
+            if ($theme->thumbnail) {
+                $oldFileToDelete = $theme->thumbnail;
+            }
+        }
+
+        try {
+            DB::transaction(function () use ($theme, $data) {
+                $theme->update($data);
+            });
+
+            if ($oldFileToDelete) {
+                Storage::disk('public')->delete($oldFileToDelete);
+            }
+
+            session()->flash('message', 'Tema berhasil diperbarui.');
+            $this->resetInput();
+            $this->dispatch('close-modal', name: 'theme-modal');
+        } catch (\Throwable $e) {
+            if ($newFile) {
+                Storage::disk('public')->delete($newFile);
+            }
+            session()->flash('error', 'Gagal memperbarui tema: ' . $e->getMessage());
+        }
+    }
+
+    public function delete(int $id): void
+    {
+        $theme = Theme::findOrFail($id);
+        $oldFile = $theme->thumbnail;
+
         $theme->delete();
-        session()->flash('message', 'Theme successfully deleted.');
+
+        if ($oldFile) {
+            Storage::disk('public')->delete($oldFile);
+        }
+
+        session()->flash('message', 'Tema berhasil dihapus.');
     }
 }

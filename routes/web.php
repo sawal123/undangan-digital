@@ -58,10 +58,10 @@ Route::post('u/savedoa', [TemaController::class, 'saveDoa'])->middleware('thrott
 Route::middleware(['auth', 'not.suspended', 'verified', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
     Route::get('/add-undangan/{id}', [SetupController::class, 'add'])->name('add');
-    Route::resource('data', DataController::class);
+    Route::resource('data', DataController::class)->only(['store']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/', \App\Livewire\DashboardDemo\Index::class)->name('index');
-    Route::get('/transaksi', \App\Livewire\Dashboard\Transaksi::class)->name('transaksi.index');
+    Route::get('/transaksi', \App\Livewire\DashboardDemo\Transaksi::class)->name('transaksi.index');
 
     // Kelola Undangan
     Route::get('/kelola/{id}', \App\Livewire\DashboardDemo\Kelola\Index::class)->name('undangan.kelola');

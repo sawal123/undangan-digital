@@ -4,6 +4,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Models\Data;
 use App\Models\KelolaUndangan\Wanita as ModelsWanita;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -14,81 +15,97 @@ class Wanita extends Component
     use WithFileUploads;
 
     #[Locked]
-    public $dataId;
+    public int $dataId;
 
-    public $nama;
+    public string $nama = '';
 
-    public $panggilan;
+    public string $panggilan = '';
 
-    public $deskripsi;
+    public string $deskripsi = '';
 
-    public $gambar;
+    public ?string $existingImage = null;
 
-    protected $listeners = ['refreshIcons' => '$refresh'];
+    public $newImage;
 
-    protected $rules = [
-        'nama' => 'required|string|max:255',
-        'panggilan' => 'required|string|max:255',
-        'deskripsi' => 'required|string|max:255',
-        'gambar' => 'nullable',
-    ];
-
-    public function mount($dataId)
+    public function mount(int $dataId): void
     {
         $this->dataId = Data::query()->ownedBy(auth()->id())->findOrFail($dataId)->id;
-        $pria = ModelsWanita::where('data_id', $this->dataId)->first();
+        $wanita = ModelsWanita::where('data_id', $this->dataId)->first();
 
-        if ($pria) {
-            $this->nama = $pria->nama_lengkap;
-            $this->panggilan = $pria->nama_panggilan;
-            $this->deskripsi = $pria->deskripsi;
-            $this->gambar = asset('storage/'.$pria->image);
+        if ($wanita) {
+            $this->nama = $wanita->nama_lengkap ?? '';
+            $this->panggilan = $wanita->nama_panggilan ?? '';
+            $this->deskripsi = $wanita->deskripsi ?? '';
+            $this->existingImage = $wanita->image ? asset('storage/' . $wanita->image) : null;
         }
     }
 
-    public function save()
+    public function save(): void
     {
         $this->authorizeInvitation();
-        $this->validate();
-        if (is_object($this->gambar)) {
-            $this->validate([
-                'gambar' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
-            ]);
-        }
 
-        $data = ModelsWanita::where('data_id', $this->dataId)->first();
-        if ($data && $data->image) {
-            // Hapus image lama jika ada
-            if (Storage::disk('public')->exists($data->image)) {
-                Storage::disk('public')->delete($data->image);
+        $this->validate([
+            'nama' => 'required|string|max:255',
+            'panggilan' => 'required|string|max:255',
+            'deskripsi' => 'required|string|max:1000',
+            'newImage' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ], [
+            'nama.required' => 'Nama lengkap wajib diisi.',
+            'panggilan.required' => 'Nama panggilan wajib diisi.',
+            'deskripsi.required' => 'Deskripsi wajib diisi.',
+            'newImage.image' => 'File harus berupa gambar.',
+        ]);
+
+        $wanita = ModelsWanita::where('data_id', $this->dataId)->first();
+
+        $uploadedPath = null;
+        $oldFileToDelete = null;
+
+        if ($this->newImage) {
+            $uploadedPath = $this->newImage->store('wanita', 'public');
+            if ($wanita && $wanita->image) {
+                $oldFileToDelete = $wanita->image;
             }
         }
-        $imagePath = is_object($this->gambar) ? $this->gambar->store('pria', 'public') : null;
-        if ($data) {
-            $updateData = [
-                'nama_lengkap' => $this->nama,
-                'nama_panggilan' => $this->panggilan,
-                'deskripsi' => $this->deskripsi,
-            ];
 
-            // Tambahkan `image` ke array pembaruan hanya jika ada gambar baru
-            if ($imagePath) {
-                $updateData['image'] = $imagePath;
+        try {
+            DB::transaction(function () use ($wanita, $uploadedPath) {
+                $payload = [
+                    'nama_lengkap' => trim($this->nama),
+                    'nama_panggilan' => trim($this->panggilan),
+                    'deskripsi' => trim($this->deskripsi),
+                ];
+
+                if ($uploadedPath) {
+                    $payload['image'] = $uploadedPath;
+                }
+
+                if ($wanita) {
+                    $wanita->update($payload);
+                } else {
+                    $payload['data_id'] = $this->dataId;
+                    ModelsWanita::create($payload);
+                }
+            });
+
+            // Delete old file ONLY after DB update succeeds
+            if ($oldFileToDelete) {
+                Storage::disk('public')->delete($oldFileToDelete);
             }
-            $data->update($updateData);
-            session()->flash('message', 'Data mempelai wanita berhasil disimpan.');
-        } else {
-            ModelsWanita::create([
-                'data_id' => $this->dataId,
-                'nama_lengkap' => $this->nama,
-                'nama_panggilan' => $this->panggilan,
-                'deskripsi' => $this->deskripsi,
-                'image' => $imagePath,
-            ]);
-            session()->flash('message', 'Data mempelai wanita berhasil disimpan.');
-        }
-        // $this->dispatchBrowserEvent('icon-refresh');
 
+            if ($uploadedPath) {
+                $this->existingImage = asset('storage/' . $uploadedPath);
+            }
+
+            $this->newImage = null;
+            $this->resetValidation();
+            session()->flash('message', 'Data mempelai wanita berhasil disimpan.');
+        } catch (\Throwable $e) {
+            if ($uploadedPath) {
+                Storage::disk('public')->delete($uploadedPath);
+            }
+            session()->flash('error', 'Gagal menyimpan data mempelai wanita: ' . $e->getMessage());
+        }
     }
 
     public function render()

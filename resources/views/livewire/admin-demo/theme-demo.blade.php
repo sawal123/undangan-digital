@@ -4,7 +4,7 @@
             <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Kelola Theme</h2>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Daftar tema undangan digital (Versi Livewire Demo).</p>
         </div>
-        <x-ui.button variant="primary" icon="plus" x-on:click="$wire.resetInput(); $dispatch('open-modal', { name: 'theme-modal' })">
+        <x-ui.button variant="primary" icon="plus" wire:click="create" loadingTarget="create" loadingText="Memuat...">
             Add Theme
         </x-ui.button>
     </div>
@@ -28,6 +28,7 @@
         :headers="['No.', 'Nama Undangan', 'Event', 'Category', 'Path', 'Demo', 'Aksi']"
         title="Daftar Theme"
         :count="$themes->total()"
+        loadingTarget="search,gotoPage,nextPage,previousPage"
     >
         @foreach($themes as $index => $theme)
             <tr class="table-row-hover transition-colors">
@@ -63,8 +64,9 @@
                 </td>
                 <td class="px-5 py-3.5 text-center">
                     <div class="flex items-center justify-center gap-1">
-                        <button wire:click="edit({{ $theme->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors" title="Edit">
-                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                        <button wire:click="edit({{ $theme->id }})" wire:loading.attr="disabled" wire:target="edit({{ $theme->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors disabled:opacity-50" title="Edit">
+                            <span wire:loading.remove wire:target="edit({{ $theme->id }})"><i data-lucide="pencil" class="w-4 h-4"></i></span>
+                            <span wire:loading wire:target="edit({{ $theme->id }})"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
                         <button x-on:click="$dispatch('set-delete', { id: {{ $theme->id }}, method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors" title="Hapus">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -123,7 +125,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'theme-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">
+                <x-ui.button variant="primary" type="submit" :loadingTarget="$isEdit ? 'update' : 'store'" :loadingText="$isEdit ? 'Memperbarui...' : 'Menyimpan...'">
                     {{ $isEdit ? 'Update Theme' : 'Save Theme' }}
                 </x-ui.button>
             </div>
@@ -135,7 +137,7 @@
         <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
         <div class="flex justify-end gap-2 mt-6">
             <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'delete-modal' })">Batal</x-ui.button>
-            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
+            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" loadingTarget="delete" loadingText="Menghapus..." x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
         </div>
     </x-ui.modal>
 </div>

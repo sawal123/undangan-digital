@@ -3,7 +3,6 @@
 namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
-use App\Models\Data;
 use App\Models\KelolaUndangan\Acara as KelolaUndanganAcara;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -13,50 +12,47 @@ class Acara extends Component
     use LoadsOwnedInvitation;
 
     #[Locked]
-    public $dataId;
+    public int $dataId;
 
-    public $acara;
+    public string $acara = '';
 
-    public $vanue;
+    public string $vanue = '';
 
-    public $alamat;
+    public string $alamat = '';
 
-    public $date;
+    public string $date = '';
 
-    public $start;
+    public string $start = '';
 
-    public $end;
+    public string $end = '';
 
-    public $selesai;
+    public bool $selesai = false;
 
-    public $zona;
+    public string $zona = 'WIB';
 
-    public $maps = '';
+    public string $maps = '';
 
-    public $deleteId;
+    public ?int $selectedAcaraId = null;
 
-    public $selectedAcaraId;
-
-    public $dataAcara;
-
-    protected $rules = [
+    protected array $rules = [
         'acara' => 'required|string|max:255',
         'vanue' => 'required|string|max:255',
         'alamat' => 'required|string|max:255',
         'date' => 'required|string|max:255',
         'start' => 'required|string|max:255',
-        'zona' => 'string|max:255',
-        'maps' => 'string|max:255',
+        'zona' => 'nullable|string|max:255',
+        'maps' => 'nullable|string|max:500',
     ];
 
-    protected $messages = [
-        'acara.required' => 'Nama Acara wajib diisi!',
-        'vanue.required' => 'Nama Vanue wajib diisi!',
-        'vanue.required' => 'Nama Vanue wajib diisi!',
-        // 'zona.required' => 'Nama Vanue wajib diisi!',
+    protected array $messages = [
+        'acara.required' => 'Nama acara wajib diisi.',
+        'vanue.required' => 'Nama lokasi/venue wajib diisi.',
+        'alamat.required' => 'Alamat lokasi wajib diisi.',
+        'date.required' => 'Tanggal acara wajib diisi.',
+        'start.required' => 'Waktu mulai wajib diisi.',
     ];
 
-    public function edit($id)
+    public function edit(int $id): void
     {
         $this->authorizeInvitationState();
         $acara = KelolaUndanganAcara::where('data_id', $this->dataId)->findOrFail($id);
@@ -68,77 +64,74 @@ class Acara extends Component
         $this->date = $acara->date;
         $this->start = $acara->jam_start;
         $this->end = $acara->jam_end;
-        $this->selesai = $acara->jam_end == 'Selesai' ? true : false;
-        $this->zona = $acara->zona_waktu;
-        $this->maps = $acara->maps;
+        $this->selesai = ($acara->jam_end === 'Selesai');
+        $this->zona = $acara->zona_waktu ?? 'WIB';
+        $this->maps = $acara->maps ?? '';
+        $this->resetValidation();
+
         $this->dispatch('open-modal', name: 'acara-modal');
-        // dd($acara);
     }
 
-    public function delete($id)
+    public function delete(int $id): void
     {
         $this->authorizeInvitationState();
         $acara = KelolaUndanganAcara::where('data_id', $this->dataId)->findOrFail($id);
         $acara->delete();
-        $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
-        session()->flash('message', 'Data Acara Berhasil Dihapus.');
+
+        session()->flash('message', 'Data acara berhasil dihapus.');
     }
 
-    public function close()
+    public function close(): void
     {
         $this->dispatch('close-modal', name: 'acara-modal');
         $this->resetInputFields();
     }
 
-    public function save()
+    public function save(): void
     {
         $this->authorizeInvitationState();
-        // $this->close();
         $this->validate();
+
+        $jamEndValue = ($this->selesai || empty(trim($this->end))) ? 'Selesai' : trim($this->end);
+
         if ($this->selectedAcaraId) {
-            // Update jika ada `selectedAcaraId`
             $acara = KelolaUndanganAcara::where('data_id', $this->dataId)->findOrFail($this->selectedAcaraId);
             $acara->update([
-                'nama_acara' => $this->acara,
-                'vanue' => $this->vanue,
-                'alamat' => $this->alamat,
-                'date' => $this->date,
-                'jam_start' => $this->start,
-                'jam_end' => $this->selesai == 1 || $this->end == '' ? 'Selesai' : $this->end,
-                'zona_waktu' => $this->zona,
-                'maps' => $this->maps,
+                'nama_acara' => trim($this->acara),
+                'vanue' => trim($this->vanue),
+                'alamat' => trim($this->alamat),
+                'date' => trim($this->date),
+                'jam_start' => trim($this->start),
+                'jam_end' => $jamEndValue,
+                'zona_waktu' => trim($this->zona),
+                'maps' => trim($this->maps),
             ]);
             session()->flash('message', 'Data acara berhasil diperbarui.');
-            $this->dispatch('close-modal', name: 'acara-modal');
         } else {
-            // Create jika `selectedAcaraId` kosong
             KelolaUndanganAcara::create([
                 'data_id' => $this->dataId,
-                'nama_acara' => $this->acara,
-                'vanue' => $this->vanue,
-                'alamat' => $this->alamat,
-                'date' => $this->date,
-                'jam_start' => $this->start,
-                'jam_end' => $this->selesai == 1 || $this->end == '' ? 'Selesai' : $this->end,
-                'zona_waktu' => $this->zona,
-                'maps' => $this->maps,
+                'nama_acara' => trim($this->acara),
+                'vanue' => trim($this->vanue),
+                'alamat' => trim($this->alamat),
+                'date' => trim($this->date),
+                'jam_start' => trim($this->start),
+                'jam_end' => $jamEndValue,
+                'zona_waktu' => trim($this->zona),
+                'maps' => trim($this->maps),
             ]);
-            $this->resetInputFields();
             session()->flash('message', 'Data acara berhasil disimpan.');
-            $this->dispatch('close-modal', name: 'acara-modal');
         }
 
-        // session()->flash('message', 'Data Acara Berhasil Disimpan.');
-        $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
+        $this->resetInputFields();
+        $this->dispatch('close-modal', name: 'acara-modal');
     }
 
-    public function mount($id)
+    public function mount(string $id): void
     {
         $this->dataId = $this->ownedInvitationByUid($id)->id;
-        $this->dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->get();
     }
 
-    public function resetInputFields()
+    public function resetInputFields(): void
     {
         $this->acara = '';
         $this->vanue = '';
@@ -147,17 +140,20 @@ class Acara extends Component
         $this->start = '';
         $this->end = '';
         $this->selesai = false;
-        $this->zona = '';
+        $this->zona = 'WIB';
         $this->maps = '';
         $this->selectedAcaraId = null;
+        $this->resetValidation();
     }
 
     public function render()
     {
         $this->authorizeInvitationState();
 
+        $dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->orderBy('id')->get();
+
         return view('livewire.dashboard.kelola.acara', [
-            'dataAcara' => $this->dataAcara,
-        ])->layout('components.layouts.user-new', ['headerTitle' => 'Kelola Acara']);
+            'dataAcara' => $dataAcara,
+        ]);
     }
 }

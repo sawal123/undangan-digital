@@ -12,9 +12,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'User Dashboard' }}</title>
+    
+    <!-- SEO & Metadata -->
+    <x-seo-meta :title="$title ?? 'Dashboard'" robots="noindex,nofollow" />
 
-    <!-- Tailwind CSS (Vite or CDN as fallback) -->
+    <!-- Tailwind CSS (Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Lucide Icons -->
@@ -23,8 +25,7 @@
     <!-- Google Fonts (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         [x-cloak] { display: none !important; }
@@ -86,6 +87,7 @@
 </head>
 
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 h-screen overflow-hidden transition-colors duration-300">
+    @php($sysSetting = \App\Models\SystemSetting::current())
     <div class="flex h-full">
         <!-- Sidebar Overlay (Mobile) -->
         <div x-show="sidebarOpen" x-cloak x-on:click="sidebarOpen = false"
@@ -102,10 +104,11 @@
             <!-- Logo -->
             <div class="flex items-center gap-3 px-5 py-5 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
                 <a href="/" class="flex items-center gap-2 w-full">
-                    <img src="{{ asset('logo/logo.svg') }}" height="40" class="h-10" alt="Logo">
+                    <img src="{{ $sysSetting->logo_url ?? asset('logo/logo.svg') }}" height="40" class="h-10 max-w-[160px] object-contain" alt="{{ $sysSetting->app_name ?? 'WayaeNikah' }}">
                 </a>
                 <button x-on:click="sidebarOpen = false"
-                    class="lg:hidden p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors">
+                    class="lg:hidden p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors"
+                    aria-label="Tutup Menu">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -125,10 +128,11 @@
                 </a>
                 
                 <p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-6 mb-2">Bantuan</p>
-                <a href="https://wa.me/6282274677715" target="_blank"
+                @php($waNumber = config('services.contact.whatsapp', '6282274677715'))
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $waNumber) }}" target="_blank" rel="noopener noreferrer"
                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
                     <i data-lucide="phone" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="text-sm font-medium">Costumer Service</span>
+                    <span class="text-sm font-medium">Customer Service</span>
                 </a>
             </nav>
 
@@ -136,7 +140,7 @@
             <div class="p-4 border-t border-slate-200 dark:border-slate-700 flex-shrink-0">
                 <div class="flex items-center gap-3 px-2 py-2 rounded-lg bg-slate-100 dark:bg-slate-800">
                     <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span class="text-indigo-600 dark:text-indigo-400 font-semibold text-xs">{{ substr(auth()->user()->name ?? 'U', 0, 2) }}</span>
+                        <span class="text-indigo-600 dark:text-indigo-400 font-semibold text-xs">{{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}</span>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-xs text-slate-700 dark:text-slate-200 font-medium truncate">
@@ -157,7 +161,8 @@
                 <div class="flex items-center justify-between px-4 lg:px-6 py-3">
                     <div class="flex items-center gap-3 flex-1 min-w-0">
                         <button x-on:click="sidebarOpen = true"
-                            class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors">
+                            class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+                            aria-label="Buka Menu">
                             <i data-lucide="menu" class="w-5 h-5"></i>
                         </button>
                         @php($currentInvitationId = request()->route('id'))
@@ -173,17 +178,19 @@
 
                     <div class="flex items-center gap-2 flex-shrink-0">
                         <button x-on:click="toggleTheme()"
-                            class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all">
+                            class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all"
+                            aria-label="Beralih Mode Gelap/Terang">
                             <i x-show="!darkMode" data-lucide="moon" class="w-5 h-5"></i>
                             <i x-show="darkMode" x-cloak data-lucide="sun" class="w-5 h-5"></i>
                         </button>
 
                         <!-- Profile Dropdown -->
-                        <div class="relative ml-1" x-data="{ open: false }">
+                        <div class="relative ml-1" x-data="{ open: false }" x-on:keydown.escape.window="open = false">
                             <button x-on:click="open = !open"
-                                class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
+                                class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-all"
+                                aria-label="Menu Pengguna">
                                 <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-semibold text-sm ring-2 ring-indigo-200 dark:ring-indigo-800">
-                                    {{ substr(auth()->user()->name ?? 'US', 0, 2) }}
+                                    {{ strtoupper(substr(auth()->user()->name ?? 'US', 0, 2)) }}
                                 </div>
                                 <span class="text-sm font-medium text-slate-700 dark:text-slate-200 hidden md:inline">{{ auth()->user()->name ?? 'User' }}</span>
                                 <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 hidden md:block transition-transform" :class="open ? 'rotate-180' : ''"></i>
@@ -218,18 +225,13 @@
 
     @livewireScripts
     <script>
-        document.addEventListener('livewire:navigated', () => {
-            lucide.createIcons();
-        });
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-        });
-        document.addEventListener('livewire:initialized', () => {
-            Livewire.hook('morph.updated', ({ el, component }) => {
+        const initIcons = () => {
+            if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
-            });
-        });
-        lucide.createIcons();
+            }
+        };
+        document.addEventListener('livewire:navigated', initIcons);
+        document.addEventListener('DOMContentLoaded', initIcons);
     </script>
 </body>
 </html>

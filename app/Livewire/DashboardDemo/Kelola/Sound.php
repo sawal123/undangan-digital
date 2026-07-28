@@ -16,64 +16,52 @@ class Sound extends Component
     use WithPagination;
 
     #[Locked]
-    public $dataId;
+    public int $dataId;
 
-    public $detik = 0;
+    public int $detik = 0;
 
-    public $sound = null;
+    public ?KelolaSound $sound = null;
 
-    public $music;
+    public ?Music $selectM = null;
 
-    public $selectM;
+    public string $query = '';
 
-    public $select = false;
+    public string $youtube = '';
 
-    public $link;
+    public ?string $previewUrl = null;
 
-    public $query = '';
+    public ?string $previewType = null; // 'audio' or 'youtube'
 
-    public $url;
+    public string $tab = 'library'; // 'library' or 'youtube'
 
-    public $youtube = '';
+    public ?Music $currentMusic = null;
 
-    public $previewUrl = null;
+    public bool $isChecked = false;
 
-    public $previewType = null; // 'library' or 'youtube'
-
-    public $tab = 'library'; // 'library' or 'youtube'
-
-    public $currentMusic = null;
-
-    public $isChecked;
-
-    public function search()
+    public function updatedQuery(): void
     {
         $this->resetPage();
     }
 
-    public function selectMusic($id)
+    public function selectMusic(int $id): void
     {
         $this->selectM = Music::find($id);
         if ($this->selectM) {
             $this->previewUrl = $this->selectM->link;
-            // Check if it's a youtube link
-            if (str_contains($this->previewUrl, 'youtube.com')) {
+            if (str_contains($this->previewUrl, 'youtube.com') || str_contains($this->previewUrl, 'youtu.be')) {
                 $this->previewType = 'youtube';
             } else {
                 $this->previewType = 'audio';
             }
-            // Reset youtube if library selected
             $this->youtube = '';
-            $this->url = '';
         }
     }
 
-    public function updatedYoutube($value)
+    public function updatedYoutube(?string $value): void
     {
         if ($value) {
             $this->previewUrl = app(YouTubeUrlParser::class)->toEmbedUrl($value, (int) $this->detik);
             $this->previewType = $this->previewUrl ? 'youtube' : null;
-            // Reset library selection if youtube entered
             $this->selectM = null;
         } else {
             $this->previewUrl = null;
@@ -81,25 +69,24 @@ class Sound extends Component
         }
     }
 
-    public function mount($id)
+    public function mount(string $id): void
     {
         $this->dataId = $this->ownedInvitationByUid($id)->id;
         $this->sound = KelolaSound::where('data_id', $this->dataId)->first();
-        if ($this->sound) {
-            $this->detik = $this->sound->start;
-            // Try to find if current sound is from library
+        if ($this->sound && $this->sound->sound && $this->sound->sound !== 'null') {
+            $this->detik = (int) $this->sound->start;
             $this->currentMusic = Music::where('link', $this->sound->sound)->first();
 
-            if (str_contains($this->sound->sound, 'youtube.com') && ! $this->currentMusic) {
+            if (str_contains($this->sound->sound, 'youtu') && !$this->currentMusic) {
                 $this->tab = 'youtube';
                 $this->youtube = $this->sound->sound;
             }
         }
 
-        $this->isChecked = $this->sound ? $this->sound->isActive : false;
+        $this->isChecked = $this->sound ? (bool) $this->sound->isActive : false;
     }
 
-    public function updatedDetik()
+    public function updatedDetik(): void
     {
         if ($this->previewType === 'youtube') {
             $sourceUrl = $this->selectM ? $this->selectM->link : $this->youtube;
@@ -107,65 +94,70 @@ class Sound extends Component
         }
     }
 
-    public function getConvertedUrl($rawUrl)
+    public function getConvertedUrl(?string $rawUrl): string
     {
         if (empty($rawUrl)) {
             return '';
         }
 
-        if (! str_contains($rawUrl, 'youtu')) {
+        if (!str_contains($rawUrl, 'youtu')) {
             return $rawUrl;
         }
 
         return app(YouTubeUrlParser::class)->toEmbedUrl($rawUrl, (int) $this->detik) ?? '';
     }
 
-    public function switch($dataId, $isChecked)
+    public function switch(bool $isChecked): void
     {
         $this->authorizeInvitationState();
-        $this->isChecked = $isChecked; // Update nilai isChecked berdasarkan status checkbox
+        $this->isChecked = $isChecked;
 
         $sound = KelolaSound::where('data_id', $this->dataId)->first();
 
-        if (! $sound) {
-            KelolaSound::create([
+        if (!$sound) {
+            $this->sound = KelolaSound::create([
                 'data_id' => $this->dataId,
-                'sound' => 'null',
-                'start' => '0',
+                'sound' => '',
+                'start' => 0,
                 'isActive' => $this->isChecked,
             ]);
         } else {
             $sound->update([
                 'isActive' => $this->isChecked,
             ]);
-        }$this->sound = KelolaSound::where('data_id', $this->dataId)->first();
+            $this->sound = $sound;
+        }
+        session()->flash('message', 'Status musik berhasil diperbarui.');
     }
 
-    public function save()
+    public function save(): void
     {
         $this->authorizeInvitationState();
+
+        $this->validate([
+            'detik' => 'required|integer|min:0|max:86400',
+        ], [
+            'detik.min' => 'Waktu detik mulai minimal 0.',
+        ]);
+
         $soundUrl = '';
 
         if ($this->selectM) {
-            // Priority to library selection
             $soundUrl = $this->getConvertedUrl($this->selectM->link);
-        } elseif ($this->youtube) {
-            // Custom youtube input
+        } elseif (!empty(trim($this->youtube))) {
             $soundUrl = app(YouTubeUrlParser::class)->toEmbedUrl($this->youtube, (int) $this->detik);
-            if (! $soundUrl) {
+            if (!$soundUrl) {
                 $this->addError('youtube', 'URL YouTube tidak valid.');
-
                 return;
             }
         }
 
         if (empty($soundUrl)) {
-            session()->flash('message', 'Pilih musik terlebih dahulu.');
-
+            session()->flash('error', 'Pilih musik dari pustaka atau masukkan link YouTube terlebih dahulu.');
             return;
         }
 
-        if (! $this->sound) {
+        if (!$this->sound) {
             $this->sound = KelolaSound::create([
                 'data_id' => $this->dataId,
                 'sound' => $soundUrl,
@@ -179,39 +171,28 @@ class Sound extends Component
             ]);
         }
 
-        $this->previewUrl = null;
-        $this->previewType = null;
-        $this->selectM = null;
-        $this->youtube = '';
-
-        // Refresh sound and currentMusic metadata
-        $this->sound = KelolaSound::where('data_id', $this->dataId)->first();
-        $this->currentMusic = Music::where('link', $this->sound->sound)->first();
-
-        session()->flash('message', 'Musik Berhasil Disimpan.');
-    }
-
-    public function delete($id)
-    {
-        $this->authorizeInvitationState();
-        KelolaSound::where('data_id', $this->dataId)->findOrFail($id)->delete();
-        session()->flash('message', 'Musik Berhasil Dihapus.');
-        $this->sound = KelolaSound::where('data_id', $this->dataId)->first();
+        session()->flash('message', 'Musik latar belakang berhasil disimpan.');
     }
 
     public function render()
     {
         $this->authorizeInvitationState();
 
-        $musik = empty($this->query)
-            ? Music::paginate(5)
-            : Music::where('judul', 'LIKE', '%'.$this->query.'%')
-                ->orWhere('artis', 'LIKE', '%'.$this->query.'%')
-                ->orWhere('category', 'LIKE', '%'.$this->query.'%')
-                ->paginate(5);
+        $musicList = Music::query()
+            ->when(!empty(trim($this->query)), function ($q) {
+                $searchTerm = '%' . trim($this->query) . '%';
+                $q->where(function ($sub) use ($searchTerm) {
+                    $sub->where('judul', 'like', $searchTerm)
+                        ->orWhere('artis', 'like', $searchTerm)
+                        ->orWhere('category', 'like', $searchTerm);
+                });
+            })
+            ->latest('id')
+            ->paginate(6);
 
         return view('livewire.dashboard.kelola.sound', [
-            'musik' => $musik,
+            'musik' => $musicList,
+            'musicList' => $musicList,
         ])->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Musik',
         ]);

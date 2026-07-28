@@ -3,21 +3,9 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Wayae Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Wayae Login dan buat undangan kamu" />
-    <meta name="keywords" content="Undangan Digital, Undangan Digital Murah, Wayae Nikah, Wayae Kawin" />
-    <meta name="author" content="Wayae Nikah" />
-    <meta name="website" content="https://wayaenikah.com" />
-    <meta name="Version" content="v1.0.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-
-    {{-- <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'nonce-{{ $nonce }}'; style-src 'self' 'nonce-{{ $nonce }}';"> --}}
-
-
-    <link rel="shortcut icon" href="{{ asset('logo/logo.svg') }}" />
+    <!-- SEO & Metadata -->
+    <x-seo-meta :title="$title ?? 'Autentikasi'" robots="noindex,nofollow" />
     <!-- Css -->
     <link href="{{ asset('assetDashboard/libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
     <!-- Bootstrap Css -->

@@ -16,7 +16,7 @@
             <div class="relative flex-1 max-w-md">
                 <x-ui.input wire:model.live="search" placeholder="Cari nama, email, atau WA..." icon="search" />
             </div>
-            <x-ui.button variant="primary" icon="user-plus" wire:click="create">
+            <x-ui.button variant="primary" icon="user-plus" wire:click="create" loadingTarget="create" loadingText="Memuat...">
                 Tambah User
             </x-ui.button>
         </div>
@@ -26,6 +26,7 @@
         :headers="['No.', 'Nama', 'Email', 'Role', 'WhatsApp', 'Status', 'Login Terakhir', 'IP', 'Gagal 24j', 'Risk', 'Dibuat', 'Aksi']"
         title="Daftar Pengguna"
         :count="$users->total()"
+        loadingTarget="search,gotoPage,nextPage,previousPage"
     >
         @foreach($users as $index => $item)
             <tr class="table-row-hover transition-colors">
@@ -91,26 +92,32 @@
                 </td>
                 <td class="px-5 py-3.5 text-center flex-shrink-0">
                     <div class="flex items-center justify-center gap-1">
-                        <button wire:click="edit({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors" title="Edit User">
-                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                        <button wire:click="edit({{ $item->id }})" wire:loading.attr="disabled" wire:target="edit({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors disabled:opacity-50" title="Edit User">
+                            <span wire:loading.remove wire:target="edit({{ $item->id }})"><i data-lucide="pencil" class="w-4 h-4"></i></span>
+                            <span wire:loading wire:target="edit({{ $item->id }})"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
                         @if($item->suspended_at)
-                            <button wire:click="reactivate({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 transition-colors" title="Aktifkan Akun">
-                                <i data-lucide="user-check" class="w-4 h-4"></i>
+                            <button wire:click="reactivate({{ $item->id }})" wire:loading.attr="disabled" wire:target="reactivate({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 transition-colors disabled:opacity-50" title="Aktifkan Akun">
+                                <span wire:loading.remove wire:target="reactivate({{ $item->id }})"><i data-lucide="user-check" class="w-4 h-4"></i></span>
+                                <span wire:loading wire:target="reactivate({{ $item->id }})"><x-loading-spinner class="w-4 h-4" /></span>
                             </button>
                         @else
-                            <button wire:click="suspend({{ $item->id }}, 'admin_review')" class="p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 transition-colors" title="Suspend Akun">
-                                <i data-lucide="user-x" class="w-4 h-4"></i>
+                            <button wire:click="suspend({{ $item->id }}, 'admin_review')" wire:loading.attr="disabled" wire:target="suspend({{ $item->id }}, 'admin_review')" class="p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 transition-colors disabled:opacity-50" title="Suspend Akun">
+                                <span wire:loading.remove wire:target="suspend({{ $item->id }}, 'admin_review')"><i data-lucide="user-x" class="w-4 h-4"></i></span>
+                                <span wire:loading wire:target="suspend({{ $item->id }}, 'admin_review')"><x-loading-spinner class="w-4 h-4" /></span>
                             </button>
                         @endif
-                        <button wire:click="revokeSessions({{ $item->id }}, 'admin_review')" class="p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors" title="Cabut Semua Sesi">
-                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        <button wire:click="revokeSessions({{ $item->id }}, 'admin_review')" wire:loading.attr="disabled" wire:target="revokeSessions({{ $item->id }}, 'admin_review')" class="p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors disabled:opacity-50" title="Cabut Semua Sesi">
+                            <span wire:loading.remove wire:target="revokeSessions({{ $item->id }}, 'admin_review')"><i data-lucide="log-out" class="w-4 h-4"></i></span>
+                            <span wire:loading wire:target="revokeSessions({{ $item->id }}, 'admin_review')"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
-                        <button wire:click="resendVerification({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 transition-colors" title="Kirim Verifikasi">
-                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        <button wire:click="resendVerification({{ $item->id }})" wire:loading.attr="disabled" wire:target="resendVerification({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 transition-colors disabled:opacity-50" title="Kirim Verifikasi">
+                            <span wire:loading.remove wire:target="resendVerification({{ $item->id }})"><i data-lucide="mail" class="w-4 h-4"></i></span>
+                            <span wire:loading wire:target="resendVerification({{ $item->id }})"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
-                        <button wire:click="forcePasswordReset({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-violet-50 dark:hover:bg-violet-900/30 text-violet-600 dark:text-violet-400 transition-colors" title="Paksa Reset Password">
-                            <i data-lucide="key-round" class="w-4 h-4"></i>
+                        <button wire:click="forcePasswordReset({{ $item->id }})" wire:loading.attr="disabled" wire:target="forcePasswordReset({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-violet-50 dark:hover:bg-violet-900/30 text-violet-600 dark:text-violet-400 transition-colors disabled:opacity-50" title="Paksa Reset Password">
+                            <span wire:loading.remove wire:target="forcePasswordReset({{ $item->id }})"><i data-lucide="key-round" class="w-4 h-4"></i></span>
+                            <span wire:loading wire:target="forcePasswordReset({{ $item->id }})"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
                         <button x-on:click="$dispatch('set-delete', { id: {{ $item->id }}, method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors" title="Hapus User">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -155,7 +162,7 @@
             
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'user-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">{{ $isEdit ? 'Update Data' : 'Simpan User' }}</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loadingTarget="store" :loadingText="$isEdit ? 'Memperbarui...' : 'Menyimpan...'">{{ $isEdit ? 'Update Data' : 'Simpan User' }}</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -165,7 +172,7 @@
         <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data pengguna ini? Tindakan ini tidak dapat dibatalkan.</p>
         <div class="flex justify-end gap-2 mt-6">
             <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'delete-modal' })">Batal</x-ui.button>
-            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
+            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" loadingTarget="delete" loadingText="Menghapus..." x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
         </div>
     </x-ui.modal>
 </div>

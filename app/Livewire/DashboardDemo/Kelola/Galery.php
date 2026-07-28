@@ -3,9 +3,7 @@
 namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
-use App\Models\Data;
 use App\Models\KelolaUndangan\Galery as KelolaUndanganGalery;
-// use Livewire\Features\SupportFileUploads\WithFileUploads;
 use App\Services\YouTubeUrlParser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -19,133 +17,169 @@ class Galery extends Component
     use WithFileUploads;
 
     #[Locked]
-    public $dataId;
+    public int $dataId;
 
     public $poto;
 
-    public $video = null;
+    public ?string $video = null;
 
-    public $type;
+    public ?string $url = null;
 
-    public $id = '';
+    public ?KelolaUndanganGalery $preview = null;
 
-    public $data;
-
-    public $url;
-
-    public $deleteId = '';
-
-    public function close()
+    public function close(): void
     {
         $this->dispatch('close-modal', name: 'delete-modal');
-        $this->poto = '';
-        $this->video = '';
+        $this->poto = null;
+        $this->video = null;
+        $this->resetValidation();
     }
 
-    public function delete($id)
+    public function delete(int $id): void
     {
         $this->authorizeInvitationState();
-        $galery = KelolaUndanganGalery::where('data_id', $this->dataId)->findOrFail($id);
-        // dd($galery);
-        // Ambil semua data dengan data_id yang sesuai, urutkan berdasarkan `sort`, dan reset ulang nilai `sort`
-        if ($galery->poto !== null) {
-            Storage::delete('public/'.$galery->poto); // Pastikan path benar
-        }
-        $galery->delete();
 
-        $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort')->get();
-        foreach ($this->data as $index => $data) {
-            $data->update(['sort' => $index + 1]);
-        }
-        session()->flash('message', 'Data Galery Berhasil Dihapus.');
+        DB::transaction(function () use ($id) {
+            $galery = KelolaUndanganGalery::where('data_id', $this->dataId)->lockForUpdate()->findOrFail($id);
+            $photoPath = $galery->poto;
+
+            $galery->delete();
+
+            if ($photoPath && Storage::disk('public')->exists($photoPath)) {
+                Storage::disk('public')->delete($photoPath);
+            }
+
+            $remaining = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort')->get();
+            foreach ($remaining as $index => $item) {
+                $item->update(['sort' => $index + 1]);
+            }
+        });
+
+        session()->flash('message', 'Data galeri berhasil dihapus.');
     }
 
-    public $preview = null;
+    public function pre(int $id): void
+    {
+        $this->openPreview($id);
+    }
 
-    public function pre($id)
+    public function openPreview(int $id): void
     {
         $this->authorizeInvitationState();
-        // dd($id);
         $this->preview = KelolaUndanganGalery::where('data_id', $this->dataId)->findOrFail($id);
         $this->dispatch('open-modal', name: 'preview-modal');
     }
 
-    public function convertUrl()
+    public function convertUrl(): void
     {
+        if (empty($this->video)) {
+            $this->url = null;
+            return;
+        }
+
         $this->url = app(YouTubeUrlParser::class)->toEmbedUrl($this->video);
 
-        if (! $this->url) {
+        if (!$this->url) {
             $this->addError('video', 'URL YouTube tidak valid.');
         }
     }
 
-    public function mount($id)
+    public function mount(string $id): void
     {
         $this->dataId = $this->ownedInvitationByUid($id)->id;
-        $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
     }
 
-    public function save()
+    public function save(): void
     {
         $this->authorizeInvitationState();
 
-        $data = KelolaUndanganGalery::where('data_id', $this->dataId)->get();
-        if ($data->count() < 10 || ! $data) {
-            if ($this->poto !== null) {
-                $this->validate([
-                    'poto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-                ]);
-                $imagePath = is_object($this->poto) ? $this->poto->store('galery', 'public') : null;
-                KelolaUndanganGalery::create([
-                    'data_id' => $this->dataId,
-                    'sort' => $data->count() + 1,
-                    'poto' => $imagePath,
-                ]);
-            } else {
-                $this->validate([
-                    'video' => 'required|url|max:225',
-                ]);
-                $this->convertUrl();
-                if (! $this->url) {
-                    return;
+        $count = KelolaUndanganGalery::where('data_id', $this->dataId)->count();
+
+        if ($count >= 10) {
+            $this->dispatch('close-modal', name: 'photo-modal');
+            $this->dispatch('close-modal', name: 'video-modal');
+            session()->flash('error', 'Galeri Anda telah mencapai batas maksimal (10 item).');
+            return;
+        }
+
+        if ($this->poto !== null) {
+            $this->validate([
+                'poto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            ], [
+                'poto.required' => 'File foto wajib dipilih.',
+                'poto.image' => 'File harus berupa gambar valid.',
+            ]);
+
+            $imagePath = $this->poto->store('galery', 'public');
+
+            try {
+                DB::transaction(function () use ($count, $imagePath) {
+                    KelolaUndanganGalery::create([
+                        'data_id' => $this->dataId,
+                        'sort' => $count + 1,
+                        'poto' => $imagePath,
+                    ]);
+                });
+
+                session()->flash('message', 'Foto galeri berhasil tersimpan.');
+            } catch (\Throwable $e) {
+                if ($imagePath) {
+                    Storage::disk('public')->delete($imagePath);
                 }
+                session()->flash('error', 'Gagal menyimpan foto galeri: ' . $e->getMessage());
+            }
+        } else {
+            $this->validate([
+                'video' => 'required|url|max:255',
+            ], [
+                'video.required' => 'URL video YouTube wajib diisi.',
+            ]);
+
+            $this->convertUrl();
+            if (!$this->url) {
+                return;
+            }
+
+            DB::transaction(function () use ($count) {
                 KelolaUndanganGalery::create([
                     'data_id' => $this->dataId,
-                    'sort' => $data->count() + 1,
+                    'sort' => $count + 1,
                     'video' => $this->url,
                 ]);
-            }
-            $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
+            });
 
-            $this->dispatch('close-modal', name: 'photo-modal');
-            $this->dispatch('close-modal', name: 'video-modal');
-            session()->flash('message', 'Galery Telah Tersimpan.');
-            $this->poto = '';
-            $this->video = '';
-        } else {
-            $this->dispatch('close-modal', name: 'photo-modal');
-            $this->dispatch('close-modal', name: 'video-modal');
-            session()->flash('message', 'Galery Anda Telah Mencapai Batas Maksimal.');
+            session()->flash('message', 'Video galeri berhasil tersimpan.');
         }
+
+        $this->dispatch('close-modal', name: 'photo-modal');
+        $this->dispatch('close-modal', name: 'video-modal');
+        $this->poto = null;
+        $this->video = null;
+        $this->url = null;
+        $this->resetValidation();
     }
 
-    public function previous($sort)
+    public function previous(int $sort): void
     {
         $this->authorizeInvitationState();
-        $this->moveGalleryItem((int) $sort, 'previous');
+        $this->moveGalleryItem($sort, 'previous');
     }
 
-    public function next($sort)
+    public function next(int $sort): void
     {
         $this->authorizeInvitationState();
-        $this->moveGalleryItem((int) $sort, 'next');
+        $this->moveGalleryItem($sort, 'next');
     }
 
     public function render()
     {
         $this->authorizeInvitationState();
 
-        return view('livewire.dashboard.kelola.galery')->layout('components.layouts.user-new', [
+        $dataGalery = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
+
+        return view('livewire.dashboard.kelola.galery', [
+            'data' => $dataGalery,
+        ])->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Galeri',
         ]);
     }
@@ -158,7 +192,7 @@ class Galery extends Component
                 ->lockForUpdate()
                 ->first();
 
-            if (! $current) {
+            if (!$current) {
                 return;
             }
 
@@ -168,7 +202,7 @@ class Galery extends Component
                 ? $neighborQuery->where('sort', '<', $current->sort)->orderByDesc('sort')->first()
                 : $neighborQuery->where('sort', '>', $current->sort)->orderBy('sort')->first();
 
-            if (! $neighbor) {
+            if (!$neighbor) {
                 return;
             }
 
@@ -178,7 +212,5 @@ class Galery extends Component
             $current->update(['sort' => $neighborSort]);
             $neighbor->update(['sort' => $currentSort]);
         });
-
-        $this->data = KelolaUndanganGalery::where('data_id', $this->dataId)->orderBy('sort', 'asc')->get();
     }
 }

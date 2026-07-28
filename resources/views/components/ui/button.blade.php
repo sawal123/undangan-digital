@@ -38,9 +38,9 @@
             @endif
             {{ $slot }}
         </span>
-        <span wire:loading.flex wire:target="{{ $loadingTarget }}" class="hidden items-center justify-center gap-2">
-            <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
-            {{ $loadingText }}
+        <span wire:loading.inline-flex wire:target="{{ $loadingTarget }}" class="items-center justify-center gap-2">
+            <x-loading-spinner class="w-4 h-4" />
+            <span>{{ $loadingText }}</span>
         </span>
     @else
         @if($icon)

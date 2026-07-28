@@ -3,24 +3,32 @@
 namespace App\Livewire\DashboardDemo;
 
 use App\Models\Data;
-use Livewire\Component;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+
     public function render()
     {
-        $dataUndangan = Auth::user()->data()->with('eventType')->latest()->get();
-        $dataUndangan->each(function ($item) {
-            if (blank($item->uid)) {
-                $item->update(['uid' => Data::generateUniqueUid()]);
-            }
-        });
+        $dataUndangan = Data::query()
+            ->where('user_id', Auth::id())
+            ->with('eventType')
+            ->withExists([
+                'transaction as has_pending_transaction' => function ($query) {
+                    $query->where('payment_status', Transaction::STATUS_PENDING);
+                },
+            ])
+            ->latest('id')
+            ->paginate(10);
 
         return view('livewire.dashboard.index', [
-            'dataUndangan' => $dataUndangan
+            'dataUndangan' => $dataUndangan,
         ])->layout('components.layouts.user-new', [
-            'headerTitle' => 'Daftar Undangan'
+            'headerTitle' => 'Daftar Undangan',
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Livewire\AdminDemo;
 
 use App\Models\Admin\PaySetting;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -13,34 +14,34 @@ class PaySettingDemo extends Component
 {
     use WithFileUploads;
 
-    public $bank;
+    public string $bank = '';
 
-    public $deskripsi;
+    public string $deskripsi = '';
 
-    public $category;
+    public string $category = '';
 
-    public $fee;
+    public string $fee = '';
 
     public $image;
 
-    public $pay_id;
+    public ?int $pay_id = null;
 
-    public $midtrans_code;
+    public string $midtrans_code = '';
 
-    public $isEdit = false;
+    public bool $isEdit = false;
 
     private array $categories = ['manual', 'bank_transfer', 'ewallet', 'credit_card', 'cstore'];
 
     public function render()
     {
         return view('livewire.admin-demo.pay-setting-demo', [
-            'paySettings' => PaySetting::all(),
+            'paySettings' => PaySetting::orderBy('bank')->get(),
             'midtransCodes' => $this->allowedMidtransCodes($this->category),
             'feeLabel' => $this->feeLabel(),
         ])->layout('components.layouts.admin-new');
     }
 
-    public function resetInput()
+    public function resetInput(): void
     {
         $this->bank = '';
         $this->deskripsi = '';
@@ -50,96 +51,136 @@ class PaySettingDemo extends Component
         $this->image = null;
         $this->pay_id = null;
         $this->isEdit = false;
+        $this->resetValidation();
     }
 
-    public function toggleActive($id)
+    public function toggleActive(int $id): void
     {
         $p = PaySetting::findOrFail($id);
-        $p->isActive = ! $p->isActive;
+        $p->isActive = !$p->isActive;
         $p->save();
+        session()->flash('message', 'Status metode pembayaran berhasil diperbarui.');
     }
 
     public function updatedCategory(): void
     {
         $allowedCodes = $this->allowedMidtransCodes($this->category);
 
-        if (! in_array($this->midtrans_code, $allowedCodes, true)) {
+        if (!in_array($this->midtrans_code, $allowedCodes, true)) {
             $this->midtrans_code = $allowedCodes[0] ?? '';
         }
     }
 
-    public function store()
+    public function store(): void
     {
         $this->validate($this->rules());
 
-        $imagePath = $this->image ? $this->image->store('paysetting', 'public') : null;
+        $newImage = null;
+        if ($this->image) {
+            $newImage = $this->image->store('paysetting', 'public');
+        }
 
-        PaySetting::create([
-            'bank' => $this->bank,
-            'category' => $this->category,
-            'fee' => $this->fee,
-            'deskripsi' => $this->deskripsi,
-            'image' => $imagePath,
-            'isActive' => true,
-            'slug' => Str::slug($this->bank),
-            'midtrans_code' => $this->midtrans_code,
-        ]);
+        try {
+            DB::transaction(function () use ($newImage) {
+                PaySetting::create([
+                    'bank' => trim($this->bank),
+                    'category' => $this->category,
+                    'fee' => (int) $this->fee,
+                    'deskripsi' => trim($this->deskripsi),
+                    'image' => $newImage,
+                    'isActive' => true,
+                    'slug' => Str::slug($this->bank),
+                    'midtrans_code' => $this->midtrans_code,
+                ]);
+            });
 
-        session()->flash('message', 'Payment setting successfully created.');
-        $this->resetInput();
-        $this->dispatch('close-modal', name: 'pay-modal');
+            session()->flash('message', 'Metode pembayaran berhasil dibuat.');
+            $this->resetInput();
+            $this->dispatch('close-modal', name: 'pay-modal');
+        } catch (\Throwable $e) {
+            if ($newImage) {
+                Storage::disk('public')->delete($newImage);
+            }
+            session()->flash('error', 'Gagal menyimpan metode pembayaran: ' . $e->getMessage());
+        }
     }
 
-    public function edit($id)
+    public function edit(int $id): void
     {
         $p = PaySetting::findOrFail($id);
-        $this->pay_id = $id;
+        $this->pay_id = $p->id;
         $this->bank = $p->bank;
         $this->category = $p->category;
-        $this->fee = $p->fee;
+        $this->fee = (string) $p->fee;
         $this->midtrans_code = $p->midtrans_code;
-        $this->deskripsi = $p->deskripsi;
+        $this->deskripsi = $p->deskripsi ?? '';
+        $this->image = null;
         $this->isEdit = true;
+        $this->resetValidation();
         $this->dispatch('open-modal', name: 'pay-modal');
     }
 
-    public function update()
+    public function update(): void
     {
-        $p = PaySetting::findOrFail($this->pay_id);
+        if (!$this->pay_id) {
+            return;
+        }
 
+        $p = PaySetting::findOrFail($this->pay_id);
         $this->validate($this->rules());
 
         $data = [
-            'bank' => $this->bank,
+            'bank' => trim($this->bank),
             'category' => $this->category,
-            'fee' => $this->fee,
-            'deskripsi' => $this->deskripsi,
+            'fee' => (int) $this->fee,
+            'deskripsi' => trim($this->deskripsi),
             'slug' => Str::slug($this->bank),
             'midtrans_code' => $this->midtrans_code,
         ];
 
+        $newImage = null;
+        $oldImageToDelete = null;
+
         if ($this->image) {
+            $newImage = $this->image->store('paysetting', 'public');
+            $data['image'] = $newImage;
             if ($p->image) {
-                Storage::disk('public')->delete($p->image);
+                $oldImageToDelete = $p->image;
             }
-            $data['image'] = $this->image->store('paysetting', 'public');
         }
 
-        $p->update($data);
+        try {
+            DB::transaction(function () use ($p, $data) {
+                $p->update($data);
+            });
 
-        session()->flash('message', 'Payment setting successfully updated.');
-        $this->resetInput();
-        $this->dispatch('close-modal', name: 'pay-modal');
+            if ($oldImageToDelete) {
+                Storage::disk('public')->delete($oldImageToDelete);
+            }
+
+            session()->flash('message', 'Metode pembayaran berhasil diperbarui.');
+            $this->resetInput();
+            $this->dispatch('close-modal', name: 'pay-modal');
+        } catch (\Throwable $e) {
+            if ($newImage) {
+                Storage::disk('public')->delete($newImage);
+            }
+            session()->flash('error', 'Gagal memperbarui metode pembayaran: ' . $e->getMessage());
+        }
     }
 
-    public function delete($id)
+    public function delete(int $id): void
     {
         $p = PaySetting::findOrFail($id);
-        if ($p->image) {
-            Storage::disk('public')->delete($p->image);
-        }
+        $oldImage = $p->image;
+
         $p->delete();
-        session()->flash('message', 'Payment setting successfully deleted.');
+
+        if ($oldImage) {
+            Storage::disk('public')->delete($oldImage);
+        }
+
+        session()->flash('message', 'Metode pembayaran berhasil dihapus.');
     }
 
     private function rules(): array
@@ -151,10 +192,12 @@ class PaySettingDemo extends Component
         }
 
         return [
-            'bank' => 'required',
+            'bank' => 'required|string|max:255',
             'category' => ['required', Rule::in($this->categories)],
             'midtrans_code' => ['required', 'string', 'max:50', Rule::in($this->allowedMidtransCodes($this->category))],
             'fee' => $feeRules,
+            'deskripsi' => 'nullable|string|max:500',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
         ];
     }
 

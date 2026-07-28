@@ -15,7 +15,7 @@
             <div class="relative w-full max-w-md">
                 <x-ui.input wire:model.live="search" placeholder="Cari status atau tipe pembayaran..." icon="search" />
             </div>
-            <x-ui.button variant="primary" type="button" icon="plus" wire:click="openCreate">
+            <x-ui.button variant="primary" type="button" icon="plus" wire:click="openCreate" loadingTarget="openCreate" loadingText="Memuat...">
                 Tambah Transaksi
             </x-ui.button>
         </div>
@@ -25,6 +25,7 @@
         :headers="['No. Order', 'Produk', 'Total', 'Metode', 'Status', 'Aksi']"
         title="Daftar Transaksi"
         :count="$transactions->total()"
+        loadingTarget="search,gotoPage,nextPage,previousPage"
     >
         @foreach($transactions as $t)
             <tr class="table-row-hover transition-colors">
@@ -59,8 +60,9 @@
                 </td>
                 <td class="px-5 py-3.5 text-center">
                     <div class="flex items-center justify-center gap-1">
-                        <button wire:click="edit({{ $t->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors">
-                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                        <button wire:click="edit({{ $t->id }})" wire:loading.attr="disabled" wire:target="edit({{ $t->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors disabled:opacity-50">
+                            <span wire:loading.remove wire:target="edit({{ $t->id }})"><i data-lucide="pencil" class="w-4 h-4"></i></span>
+                            <span wire:loading wire:target="edit({{ $t->id }})"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
                         <button x-on:click="$dispatch('set-delete', { id: {{ $t->id }}, method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -149,7 +151,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'create-transaksi-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">Simpan Transaksi</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loadingTarget="create" loadingText="Menyimpan...">Simpan Transaksi</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -183,7 +185,7 @@
             </div>
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'transaksi-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">Update Transaksi</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loadingTarget="update" loadingText="Memperbarui...">Update Transaksi</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -193,7 +195,7 @@
         <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
         <div class="flex justify-end gap-2 mt-6">
             <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'delete-modal' })">Batal</x-ui.button>
-            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
+            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" loadingTarget="delete" loadingText="Menghapus..." x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
         </div>
     </x-ui.modal>
 </div>

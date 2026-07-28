@@ -25,16 +25,51 @@ class SecurityMonitoringDemo extends Component
 
     public string $date = '';
 
+    public function updatedEventType(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedRiskLevel(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedEmail(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedIp(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedAccountStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDate(): void
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $logs = AuthActivityLog::query()
             ->with('user')
-            ->when($this->eventType, fn ($query) => $query->where('event_type', $this->eventType))
-            ->when($this->riskLevel, fn ($query) => $query->where('risk_level', $this->riskLevel))
-            ->when($this->status, fn ($query) => $query->where('status', $this->status))
-            ->when($this->email, fn ($query) => $query->where('email', 'like', '%'.$this->email.'%'))
-            ->when($this->ip, fn ($query) => $query->where('ip_address', 'like', '%'.$this->ip.'%'))
-            ->when($this->date, fn ($query) => $query->whereDate('occurred_at', $this->date))
+            ->when(!empty($this->eventType), fn ($query) => $query->where('event_type', $this->eventType))
+            ->when(!empty($this->riskLevel), fn ($query) => $query->where('risk_level', $this->riskLevel))
+            ->when(!empty($this->status), fn ($query) => $query->where('status', $this->status))
+            ->when(!empty(trim($this->email)), fn ($query) => $query->where('email', 'like', '%' . trim($this->email) . '%'))
+            ->when(!empty(trim($this->ip)), fn ($query) => $query->where('ip_address', 'like', '%' . trim($this->ip) . '%'))
+            ->when(!empty($this->date), fn ($query) => $query->whereDate('occurred_at', $this->date))
             ->when($this->accountStatus === 'verified', fn ($query) => $query->whereHas('user', fn ($user) => $user->whereNotNull('email_verified_at')))
             ->when($this->accountStatus === 'unverified', fn ($query) => $query->whereHas('user', fn ($user) => $user->whereNull('email_verified_at')))
             ->when($this->accountStatus === 'suspended', fn ($query) => $query->whereHas('user', fn ($user) => $user->whereNotNull('suspended_at')))

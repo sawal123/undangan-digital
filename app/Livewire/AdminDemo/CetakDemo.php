@@ -4,172 +4,241 @@ namespace App\Livewire\AdminDemo;
 
 use App\Models\Admin\JenisUdangan;
 use App\Models\Admin\UndanganCetak;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class CetakDemo extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads, WithPagination;
 
-    public $search = '';
-    public $perPage = 10;
-    
-    public $nama, $jenis, $stok, $terjual, $harga, $harga_modal, $ukuran_opp, $promo, $deskripsi, $undangan_id;
-    public $thumbnails = [];
-    public $isEdit = false;
-    
-    public $jenisUndangan; // For adding new category
-    public $idJenis;
+    public string $search = '';
+
+    public int $perPage = 10;
+
+    public string $nama = '';
+
+    public string $jenis = '';
+
+    public string $stok = '';
+
+    public string $terjual = '0';
+
+    public string $harga = '';
+
+    public string $harga_modal = '0';
+
+    public string $ukuran_opp = '';
+
+    public string $promo = '0';
+
+    public string $deskripsi = '';
+
+    public ?int $undangan_id = null;
+
+    public array $thumbnails = [];
+
+    public bool $isEdit = false;
+
+    public string $jenisUndangan = '';
+
+    public ?int $idJenis = null;
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
 
     public function render()
     {
         $undanganData = UndanganCetak::query()
-            ->when($this->search, function ($query) {
-                $query->where('nama', 'like', '%' . $this->search . '%')
-                    ->orWhere('jenis', 'like', '%' . $this->search . '%')
-                    ->orWhere('harga_modal', 'like', '%' . $this->search . '%')
-                    ->orWhere('ukuran_opp', 'like', '%' . $this->search . '%');
+            ->when(!empty(trim($this->search)), function ($query) {
+                $searchTerm = '%' . trim($this->search) . '%';
+                $query->where(function ($sub) use ($searchTerm) {
+                    $sub->where('nama', 'like', $searchTerm)
+                        ->orWhere('jenis', 'like', $searchTerm)
+                        ->orWhere('harga_modal', 'like', $searchTerm)
+                        ->orWhere('ukuran_opp', 'like', $searchTerm);
+                });
             })
-            ->latest()
+            ->latest('id')
             ->paginate($this->perPage);
 
         return view('livewire.admin-demo.cetak-demo', [
             'undangan' => $undanganData,
-            'categories' => JenisUdangan::all()
+            'categories' => JenisUdangan::orderBy('jenis')->get(),
         ])->layout('components.layouts.admin-new');
     }
 
-    public function resetInput()
+    public function resetInput(): void
     {
         $this->nama = '';
         $this->jenis = '';
         $this->stok = '';
-        $this->terjual = '';
+        $this->terjual = '0';
         $this->harga = '';
-        $this->harga_modal = '';
+        $this->harga_modal = '0';
         $this->ukuran_opp = '';
-        $this->promo = '';
+        $this->promo = '0';
         $this->deskripsi = '';
         $this->thumbnails = [];
         $this->undangan_id = null;
         $this->isEdit = false;
+        $this->resetValidation();
+        $this->dispatch('open-modal', name: 'cetak-modal');
     }
 
-    public function store()
+    public function store(): void
     {
         $this->validate([
             'nama' => 'required|string|max:255',
-            'jenis' => 'required|string',
-            'stok' => 'required|numeric',
-            'harga' => 'required|numeric',
-            'harga_modal' => 'nullable|numeric',
+            'jenis' => 'required|string|max:255',
+            'stok' => 'required|numeric|min:0',
+            'harga' => 'required|numeric|min:0',
+            'harga_modal' => 'nullable|numeric|min:0',
             'ukuran_opp' => 'nullable|string|max:50',
-            'thumbnails.*' => 'image|max:2048',
+            'promo' => 'nullable|numeric|min:0',
+            'deskripsi' => 'nullable|string',
+            'thumbnails.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $thumbnailPaths = [];
         if ($this->thumbnails) {
             foreach ($this->thumbnails as $thumbnail) {
-                $thumbnailPaths[] = $thumbnail->store('thumbnails', 'public');
+                if (is_object($thumbnail)) {
+                    $thumbnailPaths[] = $thumbnail->store('thumbnails', 'public');
+                }
             }
         }
 
-        UndanganCetak::create([
-            'nama' => $this->nama,
-            'jenis' => $this->jenis,
-            'stok' => $this->stok,
-            'terjual' => $this->terjual ?? 0,
-            'harga' => $this->harga,
-            'harga_modal' => $this->harga_modal ?? 0,
-            'ukuran_opp' => $this->ukuran_opp,
-            'promo' => $this->promo,
-            'deskripsi' => $this->deskripsi,
-            'gambar' => json_encode($thumbnailPaths),
-        ]);
+        try {
+            DB::transaction(function () use ($thumbnailPaths) {
+                UndanganCetak::create([
+                    'nama' => trim($this->nama),
+                    'jenis' => trim($this->jenis),
+                    'stok' => (int) $this->stok,
+                    'terjual' => (int) ($this->terjual ?: 0),
+                    'harga' => (int) $this->harga,
+                    'harga_modal' => (int) ($this->harga_modal ?: 0),
+                    'ukuran_opp' => trim($this->ukuran_opp),
+                    'promo' => (int) ($this->promo ?: 0),
+                    'favorite' => 0,
+                    'deskripsi' => trim($this->deskripsi),
+                    'gambar' => $thumbnailPaths,
+                ]);
+            });
 
-        session()->flash('message', 'Undangan Cetak successfully created.');
-        $this->resetInput();
-        $this->dispatch('close-modal', name: 'cetak-modal');
+            session()->flash('message', 'Undangan cetak berhasil dibuat.');
+            $this->resetInput();
+            $this->dispatch('close-modal', name: 'cetak-modal');
+        } catch (\Throwable $e) {
+            foreach ($thumbnailPaths as $path) {
+                Storage::disk('public')->delete($path);
+            }
+            session()->flash('error', 'Gagal membuat undangan cetak: ' . $e->getMessage());
+        }
     }
 
-    public function edit($id)
+    public function edit(int $id): void
     {
         $u = UndanganCetak::findOrFail($id);
-        $this->undangan_id = $id;
+        $this->undangan_id = $u->id;
         $this->nama = $u->nama;
         $this->jenis = $u->jenis;
-        $this->stok = $u->stok;
-        $this->terjual = $u->terjual;
-        $this->harga = $u->harga;
-        $this->harga_modal = $u->harga_modal;
-        $this->ukuran_opp = $u->ukuran_opp;
-        $this->promo = $u->promo;
-        $this->deskripsi = $u->deskripsi;
-        // Keep existing thumbnails as strings if needed, but for preview we need careful handling
+        $this->stok = (string) $u->stok;
+        $this->terjual = (string) $u->terjual;
+        $this->harga = (string) $u->harga;
+        $this->harga_modal = (string) $u->harga_modal;
+        $this->ukuran_opp = $u->ukuran_opp ?? '';
+        $this->promo = (string) $u->promo;
+        $this->deskripsi = $u->deskripsi ?? '';
+        $this->thumbnails = [];
         $this->isEdit = true;
+        $this->resetValidation();
         $this->dispatch('open-modal', name: 'cetak-modal');
     }
 
-    public function update()
+    public function update(): void
     {
+        if (!$this->undangan_id) {
+            return;
+        }
+
         $this->validate([
             'nama' => 'required|string|max:255',
-            'jenis' => 'required|string',
-            'stok' => 'required|numeric',
-            'harga' => 'required|numeric',
-            'harga_modal' => 'nullable|numeric',
+            'jenis' => 'required|string|max:255',
+            'stok' => 'required|numeric|min:0',
+            'harga' => 'required|numeric|min:0',
+            'harga_modal' => 'nullable|numeric|min:0',
             'ukuran_opp' => 'nullable|string|max:50',
+            'promo' => 'nullable|numeric|min:0',
+            'deskripsi' => 'nullable|string',
+            'thumbnails.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $u = UndanganCetak::findOrFail($this->undangan_id);
-        
+
         $data = [
-            'nama' => $this->nama,
-            'jenis' => $this->jenis,
-            'stok' => $this->stok,
-            'terjual' => $this->terjual,
-            'harga' => $this->harga,
-            'harga_modal' => $this->harga_modal ?? 0,
-            'ukuran_opp' => $this->ukuran_opp,
-            'promo' => $this->promo,
-            'deskripsi' => $this->deskripsi,
+            'nama' => trim($this->nama),
+            'jenis' => trim($this->jenis),
+            'stok' => (int) $this->stok,
+            'terjual' => (int) ($this->terjual ?: 0),
+            'harga' => (int) $this->harga,
+            'harga_modal' => (int) ($this->harga_modal ?: 0),
+            'ukuran_opp' => trim($this->ukuran_opp),
+            'promo' => (int) ($this->promo ?: 0),
+            'deskripsi' => trim($this->deskripsi),
         ];
 
+        $newUploadedPaths = [];
         if ($this->thumbnails) {
-            $existingImages = json_decode($u->gambar, true) ?? [];
-            $newImages = [];
+            $existingImages = is_array($u->gambar) ? $u->gambar : [];
             foreach ($this->thumbnails as $thumbnail) {
                 if (is_object($thumbnail)) {
-                    $newImages[] = $thumbnail->store('thumbnails', 'public');
+                    $newUploadedPaths[] = $thumbnail->store('thumbnails', 'public');
                 }
             }
-            $data['gambar'] = json_encode(array_merge($existingImages, $newImages));
+            $data['gambar'] = array_merge($existingImages, $newUploadedPaths);
         }
 
-        $u->update($data);
+        try {
+            DB::transaction(function () use ($u, $data) {
+                $u->update($data);
+            });
 
-        session()->flash('message', 'Undangan Cetak successfully updated.');
-        $this->resetInput();
-        $this->dispatch('close-modal', name: 'cetak-modal');
+            session()->flash('message', 'Undangan cetak berhasil diperbarui.');
+            $this->resetInput();
+            $this->dispatch('close-modal', name: 'cetak-modal');
+        } catch (\Throwable $e) {
+            foreach ($newUploadedPaths as $path) {
+                Storage::disk('public')->delete($path);
+            }
+            session()->flash('error', 'Gagal memperbarui undangan cetak: ' . $e->getMessage());
+        }
     }
 
-    public function delete($id)
+    public function delete(int $id): void
     {
         $u = UndanganCetak::findOrFail($id);
-        $images = json_decode($u->gambar, true) ?? [];
-        foreach ($images as $img) {
-            Storage::disk('public')->delete($img);
-        }
+        $images = is_array($u->gambar) ? $u->gambar : [];
+
         $u->delete();
-        session()->flash('message', 'Undangan Cetak successfully deleted.');
+
+        foreach ($images as $img) {
+            if (is_string($img) && !empty($img)) {
+                Storage::disk('public')->delete($img);
+            }
+        }
+
+        session()->flash('message', 'Undangan cetak berhasil dihapus.');
     }
 
-    public function createCategory()
+    public function createCategory(): void
     {
         $this->validate(['jenisUndangan' => 'required|string|max:255']);
-        JenisUdangan::create(['jenis' => $this->jenisUndangan]);
+        JenisUdangan::create(['jenis' => trim($this->jenisUndangan)]);
         $this->jenisUndangan = '';
         session()->flash('message', 'Kategori berhasil ditambahkan.');
     }

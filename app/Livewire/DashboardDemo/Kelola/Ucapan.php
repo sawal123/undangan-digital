@@ -15,98 +15,109 @@ class Ucapan extends Component
     use WithPagination;
 
     #[Locked]
-    public $dataId;
+    public int $dataId;
 
-    public $fitUcapan;
+    public ?FiturUcapan $fitUcapan = null;
 
-    public $isFitur;
+    public bool $isFitur = false;
 
-    public $isPublic;
+    public bool $isPublic = false;
 
-    public $isView;
+    public bool $isView = false;
 
-    public $balas = [];
+    public array $balas = [];
 
-    public $query;
+    public string $query = '';
 
-    public $deleteId;
+    public ?int $deleteId = null;
 
-    public function close()
+    public function updatedQuery(): void
+    {
+        $this->resetPage();
+    }
+
+    public function close(): void
     {
         $this->dispatch('close-modal', name: 'delete-modal');
     }
 
-    public function tanggapi($id)
+    public function tanggapi(int $id): void
     {
         $this->authorizeInvitationState();
-        $balas = $this->balas[$id] ?? null;
+
+        $this->validate([
+            'balas.' . $id => 'nullable|string|max:1000',
+        ], [
+            'balas.' . $id . '.max' => 'Balasan tidak boleh melebihi 1000 karakter.',
+        ]);
+
+        $balas = trim((string) ($this->balas[$id] ?? ''));
         $ucapan = KelolaUndanganUcapan::where('data_id', $this->dataId)->findOrFail($id);
-        if (! $ucapan->balas || $ucapan->balas) {
-            $ucapan->balas = $balas;
-            $ucapan->save();
-        }
-        $this->balas = [];
+        $ucapan->balas = $balas !== '' ? $balas : null;
+        $ucapan->save();
+
+        unset($this->balas[$id]);
+        session()->flash('message', 'Balasan ucapan berhasil disimpan.');
     }
 
-    public function mount($id)
+    public function mount(string $id): void
     {
         $this->dataId = $this->ownedInvitationByUid($id)->id;
-        $this->fitUcapan = FiturUcapan::where('data_id', $this->dataId)->first();
+        $this->loadFeatureSettings();
     }
 
-    public function data($id)
+    public function loadFeatureSettings(): void
     {
         $this->authorizeInvitationState();
         $this->fitUcapan = FiturUcapan::where('data_id', $this->dataId)->first();
     }
 
-    public function updateFiturUcapan($id, $isFitur, $column)
+    public function updateFiturUcapan(int $id, bool $isFitur, string $column): void
     {
         $this->authorizeInvitationState();
         abort_unless(in_array($column, ['isActive', 'publicIsActive', 'viewIsActive'], true), 422);
 
-        $fitur = FiturUcapan::where('data_id', $this->dataId)->first();
-        if (! $fitur) {
-            FiturUcapan::create([
-                'data_id' => $this->dataId,
-                $column => true,
-            ]);
-        } else {
-            $fitur->update([
-                $column => $isFitur,
-            ]);
-        }
-        $this->data($this->dataId);
+        FiturUcapan::updateOrCreate(
+            ['data_id' => $this->dataId],
+            [$column => $isFitur]
+        );
+
+        $this->loadFeatureSettings();
+        session()->flash('message', 'Fitur ucapan berhasil diperbarui.');
     }
 
-    public function delete($id)
+    public function delete(int $id): void
     {
         $this->authorizeInvitationState();
         $delete = KelolaUndanganUcapan::with('tamu')->where('data_id', $this->dataId)->findOrFail($id);
+        $namaTamu = $delete->tamu?->nama ?? 'Tamu';
         $delete->delete();
-        session()->flash('message', 'Ucapan & Doa '.$delete->tamu->nama.' Dihapus Permanen');
+        session()->flash('message', 'Ucapan & Doa dari ' . $namaTamu . ' berhasil dihapus.');
     }
 
     public function render()
     {
         $this->authorizeInvitationState();
 
-        $ucapan = empty($this->query)
-            ? KelolaUndanganUcapan::where('data_id', $this->dataId)->paginate(5)
-            : KelolaUndanganUcapan::with('tamu')->where('data_id', $this->dataId) // Memuat relasi tamu
-                ->when($this->query, function ($query) {
-                    $query->where(function ($query) {   // Membungkus kondisi pencarian
-                        $query->where('ucapan', 'LIKE', '%'.$this->query.'%')
-                            ->orWhere('status', 'LIKE', '%'.$this->query.'%')
-                            ->orWhere('balas', 'LIKE', '%'.$this->query.'%')
-                            ->orWhereHas('tamu', function ($query) { // Menambahkan pencarian relasi tamu
-                                $query->where('nama', 'LIKE', '%'.$this->query.'%');
-                            });
-                    });
-                })
-                ->paginate(5);
+        $ucapan = KelolaUndanganUcapan::with('tamu')
+            ->where('data_id', $this->dataId)
+            ->when(!empty(trim($this->query)), function ($query) {
+                $searchTerm = '%' . trim($this->query) . '%';
+                $query->where(function ($sub) use ($searchTerm) {
+                    $sub->where('ucapan', 'LIKE', $searchTerm)
+                        ->orWhere('status', 'LIKE', $searchTerm)
+                        ->orWhere('balas', 'LIKE', $searchTerm)
+                        ->orWhereHas('tamu', function ($q) use ($searchTerm) {
+                            $q->where('nama', 'LIKE', $searchTerm);
+                        });
+                });
+            })
+            ->latest('id')
+            ->paginate(5);
 
-        return view('livewire.dashboard.kelola.ucapan', compact('ucapan'))->layout('components.layouts.user-new', [
+        return view('livewire.dashboard.kelola.ucapan', [
+            'ucapan' => $ucapan,
+        ])->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Ucapan',
         ]);
     }

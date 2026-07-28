@@ -2,52 +2,61 @@
 
 namespace App\Livewire\AdminDemo;
 
-use App\Models\User;
-use App\Models\Data;
-use App\Models\Transaction;
 use App\Models\Admin\Animation;
 use App\Models\Admin\UndanganCetak;
-use Livewire\Component;
-use Carbon\Carbon;
+use App\Models\Data;
+use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class DashboardDemo extends Component
 {
     public function render()
     {
-        // === Stats ===
+        $metrics = $this->getDashboardMetrics();
+
+        return view('livewire.admin-demo.dashboard-demo', $metrics)
+            ->layout('components.layouts.admin-new');
+    }
+
+    private function getDashboardMetrics(): array
+    {
+        $now = now();
+        $startOfMonth = $now->copy()->startOfMonth();
+        $startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
+        $endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
+
+        // Stats Counts
         $totalUsers = User::count();
         $totalDigital = Data::count();
         $totalFisik = UndanganCetak::count();
         $totalAnimasi = Animation::count();
 
-        // === Revenue Metrics ===
-        $totalRevenue = Transaction::where('payment_status', 'settlement')->sum('gross_amount');
-        $monthlyRevenue = Transaction::where('payment_status', 'settlement')
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->whereYear('created_at', Carbon::now()->year)
+        // Revenue Metrics (supports SUCCESS & SETTLEMENT)
+        $totalRevenue = (int) Transaction::successful()->sum('gross_amount');
+
+        $monthlyRevenue = (int) Transaction::successful()
+            ->where('created_at', '>=', $startOfMonth)
             ->sum('gross_amount');
 
-        $lastMonthRevenue = Transaction::where('payment_status', 'settlement')
-            ->whereMonth('created_at', Carbon::now()->subMonth()->month)
-            ->whereYear('created_at', Carbon::now()->subMonth()->year)
+        $lastMonthRevenue = (int) Transaction::successful()
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
             ->sum('gross_amount');
 
         $revenueGrowth = $lastMonthRevenue > 0
             ? round((($monthlyRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100, 1)
             : ($monthlyRevenue > 0 ? 100 : 0);
 
-        // New users this month
-        $newUsersThisMonth = User::whereMonth('created_at', Carbon::now()->month)
-            ->whereYear('created_at', Carbon::now()->year)
-            ->count();
+        // New Users
+        $newUsersThisMonth = User::where('created_at', '>=', $startOfMonth)->count();
 
-        // Pending transactions
-        $pendingTransactions = Transaction::where('payment_status', 'pending')->count();
+        // Pending Transactions
+        $pendingTransactions = Transaction::pendingStatus()->count();
 
-        // === Sales Chart Data (Last 30 Days) ===
-        $salesData = Transaction::where('payment_status', 'settlement')
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
+        // Sales Chart Data (Last 30 Days)
+        $salesData = Transaction::successful()
+            ->where('created_at', '>=', $now->copy()->subDays(30))
             ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('SUM(gross_amount) as total_sales'),
@@ -57,24 +66,22 @@ class DashboardDemo extends Component
             ->orderBy('date', 'ASC')
             ->get();
 
-        $chartLabels = $salesData->pluck('date')->map(fn($date) => Carbon::parse($date)->format('d M'))->toArray();
-        $chartValues = $salesData->pluck('total_sales')->toArray();
-        $chartOrders = $salesData->pluck('total_orders')->toArray();
+        $chartLabels = $salesData->pluck('date')->map(fn ($date) => date('d M', strtotime($date)))->toArray();
+        $chartValues = $salesData->pluck('total_sales')->map(fn ($val) => (int) $val)->toArray();
+        $chartOrders = $salesData->pluck('total_orders')->map(fn ($val) => (int) $val)->toArray();
 
-        // === Recent Transactions (last 5) ===
+        // Recent Items
         $recentTransactions = Transaction::with(['user', 'data'])
-            ->latest()
+            ->latest('id')
             ->take(5)
             ->get();
 
-        // === Recent Users (last 5) ===
-        $recentUsers = User::latest()->take(5)->get();
+        $recentUsers = User::latest('id')->take(5)->get();
 
-        // === Monthly Transactions count ===
         $totalTransactions = Transaction::count();
-        $settledTransactions = Transaction::where('payment_status', 'settlement')->count();
+        $settledTransactions = Transaction::successful()->count();
 
-        return view('livewire.admin-demo.dashboard-demo', [
+        return [
             'stats' => [
                 'users' => $totalUsers,
                 'digital' => $totalDigital,
@@ -99,6 +106,6 @@ class DashboardDemo extends Component
                 'total' => $totalTransactions,
                 'settled' => $settledTransactions,
             ],
-        ])->layout('components.layouts.admin-new');
+        ];
     }
 }

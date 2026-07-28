@@ -42,8 +42,9 @@
                     
                     <!-- Quick Actions Overlay -->
                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                        <button wire:click="pre({{ $item->id }})" class="p-2 bg-white/20 backdrop-blur-md text-white rounded-lg hover:bg-white/40 transition-colors">
-                            <i data-lucide="maximize-2" class="w-5 h-5"></i>
+                        <button wire:click="pre({{ $item->id }})" wire:loading.attr="disabled" wire:target="pre({{ $item->id }})" class="p-2 bg-white/20 backdrop-blur-md text-white rounded-lg hover:bg-white/40 transition-colors disabled:opacity-50">
+                            <span wire:loading.remove wire:target="pre({{ $item->id }})"><i data-lucide="maximize-2" class="w-5 h-5"></i></span>
+                            <span wire:loading wire:target="pre({{ $item->id }})"><x-loading-spinner class="w-5 h-5" /></span>
                         </button>
                     </div>
                 </div>
@@ -51,13 +52,15 @@
                 <!-- Footer / Controls -->
                 <div class="p-4 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-1">
-                        <button @if($index === 0) disabled @else wire:click="previous({{ $item->sort }})" @endif
+                        <button @if($index === 0) disabled @else wire:click="previous({{ $item->sort }})" wire:loading.attr="disabled" wire:target="previous({{ $item->sort }})" @endif
                             class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-30 disabled:pointer-events-none transition-colors">
-                            <i data-lucide="arrow-left-circle" class="w-5 h-5"></i>
+                            <span wire:loading.remove wire:target="previous({{ $item->sort }})"><i data-lucide="arrow-left-circle" class="w-5 h-5"></i></span>
+                            <span wire:loading wire:target="previous({{ $item->sort }})"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
-                        <button @if($data->count() === $index + 1) disabled @else wire:click="next({{ $item->sort }})" @endif
+                        <button @if($data->count() === $index + 1) disabled @else wire:click="next({{ $item->sort }})" wire:loading.attr="disabled" wire:target="next({{ $item->sort }})" @endif
                             class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-30 disabled:pointer-events-none transition-colors">
-                            <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                            <span wire:loading.remove wire:target="next({{ $item->sort }})"><i data-lucide="arrow-right-circle" class="w-5 h-5"></i></span>
+                            <span wire:loading wire:target="next({{ $item->sort }})"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
                     </div>
                     
@@ -102,7 +105,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'photo-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit" loading-target="save" loading-text="Menyimpan...">Simpan</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loadingTarget="save" loadingText="Menyimpan...">Simpan</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -114,7 +117,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'video-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit" loading-target="save" loading-text="Menyimpan...">Simpan</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loadingTarget="save" loadingText="Menyimpan...">Simpan</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -138,7 +141,7 @@
         <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
         <div class="flex justify-end gap-2 mt-6">
             <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'delete-modal' })">Batal</x-ui.button>
-            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
+            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" loadingTarget="delete" loadingText="Menghapus..." x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
         </div>
     </x-ui.modal>
 </div>

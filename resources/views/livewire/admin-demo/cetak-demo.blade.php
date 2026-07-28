@@ -8,7 +8,7 @@
             <x-ui.button variant="secondary" icon="tag" x-on:click="$dispatch('open-modal', { name: 'category-modal' })">
                 Kategori
             </x-ui.button>
-            <x-ui.button variant="primary" icon="plus" x-on:click="$wire.resetInput(); $dispatch('open-modal', { name: 'cetak-modal' })">
+            <x-ui.button variant="primary" icon="plus" wire:click="resetInput" loadingTarget="resetInput" loadingText="Memuat...">
                 Tambah Produk
             </x-ui.button>
         </div>
@@ -40,6 +40,7 @@
         :headers="['Produk', 'Jenis', 'Stok', 'Terjual', 'Harga Jual', 'Harga Modal', 'Ukuran OPP', 'Aksi']"
         title="Daftar Produk Cetak"
         :count="$undangan->total()"
+        loadingTarget="search,perPage,gotoPage,nextPage,previousPage"
     >
         @foreach($undangan as $item)
             <tr class="table-row-hover transition-colors">
@@ -84,8 +85,13 @@
                 </td>
                 <td class="px-5 py-3.5 text-center">
                     <div class="flex items-center justify-center gap-1">
-                        <button wire:click="edit({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors">
-                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                        <button wire:click="edit({{ $item->id }})" wire:loading.attr="disabled" wire:target="edit({{ $item->id }})" class="p-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors disabled:opacity-50">
+                            <span wire:loading.remove wire:target="edit({{ $item->id }})">
+                                <i data-lucide="pencil" class="w-4 h-4"></i>
+                            </span>
+                            <span wire:loading wire:target="edit({{ $item->id }})">
+                                <x-loading-spinner class="w-4 h-4" />
+                            </span>
                         </button>
                         <button x-on:click="$dispatch('set-delete', { id: {{ $item->id }}, method: 'delete' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -142,7 +148,7 @@
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'cetak-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">{{ $isEdit ? 'Update' : 'Simpan' }}</x-ui.button>
+                <x-ui.button variant="primary" type="submit" :loadingTarget="$isEdit ? 'update' : 'store'" :loadingText="$isEdit ? 'Memperbarui...' : 'Menyimpan...'">{{ $isEdit ? 'Update' : 'Simpan' }}</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -151,7 +157,7 @@
     <x-ui.modal name="category-modal" title="Kelola Kategori" icon="tag">
         <form wire:submit="createCategory" class="flex gap-2 mb-4">
             <x-ui.input wire:model="jenisUndangan" placeholder="Nama kategori baru..." class="flex-1" />
-            <x-ui.button variant="primary" type="submit">Tambah</x-ui.button>
+            <x-ui.button variant="primary" type="submit" loadingTarget="createCategory" loadingText="Menyimpan...">Tambah</x-ui.button>
         </form>
         
         <div class="mt-4 border-t border-slate-100 dark:border-slate-700 pt-4">
@@ -171,7 +177,7 @@
         <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
         <div class="flex justify-end gap-2 mt-6">
             <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'delete-modal' })">Batal</x-ui.button>
-            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
+            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" loadingTarget="delete" loadingText="Menghapus..." x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
         </div>
     </x-ui.modal>
 </div>

@@ -59,61 +59,75 @@
 
 
 
-            <div class="table-responsive">
-                <table class="table ">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">Gambar</th>
-                            <th scope="col">Jenis</th>
-                            <th scope="col">Stok</th>
-                            <th scope="col">Terjual</th>
-                            <th scope="col">Harga Jual</th>
-                            <th scope="col">Harga Modal</th>
-                            <th scope="col">Ukuran OPP</th>
-                            <th scope="col">Promo</th>
-                            <th scope="col">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($u as $index => $item)
+            <div class="table-responsive position-relative">
+                <div wire:loading.flex wire:target="search,gotoPage,nextPage,previousPage" class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 z-3 align-items-center justify-content-center">
+                    <div class="d-flex align-items-center gap-2 bg-white p-3 rounded shadow-sm border">
+                        <x-loading-spinner class="w-5 h-5 text-primary" text="Memuat data..." />
+                    </div>
+                </div>
+                <div wire:loading.class="opacity-50 pointer-events-none" wire:target="search,gotoPage,nextPage,previousPage">
+                    <table class="table ">
+                        <thead>
                             <tr>
-                                <th scope="row">{{ ($u->currentPage() - 1) * $u->perPage() + $index + 1 }}</th>
-                                <td>{{ $item->nama }}</td>
-                                <td>
-                                    @php
-                                        // Mendecode gambar dari database
-                                        $gambar = json_decode($item->gambar);
-                                    @endphp @if (!empty($gambar) && isset($gambar[0]))
-                                        <img src="{{ asset('storage/' . $gambar[0]) }}" alt="Thumbnail"
-                                            class="img-thumbnail" width="40">
-                                    @else
-                                        <!-- Gambar default jika tidak ada gambar -->
-                                        <img src="{{ asset('storage/default-thumbnail.jpg') }}" alt="Thumbnail"
-                                            class="img-thumbnail" width="40">
-                                    @endif
-                                </td>
-                                <td>{{ $item->jenis }}</td>
-                                <td>{{ $item->stok }}</td>
-                                <td>{{ $item->terjual }}</td>
-                                <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                                <td>Rp {{ number_format($item->harga_modal ?? 0, 0, ',', '.') }}</td>
-                                <td>{{ $item->ukuran_opp ?? '-' }}</td>
-                                <td>{{ $item->promo }}</td>
-
-                                <td>
-                                    <button class="btn btn-primary btn-sm"
-                                        wire:click='editUndangan({{ $item->id }})'>Edit</button>
-                                    <button class="btn btn-danger btn-sm"
-                                        wire:click='confirmDel({{ $item->id }})'>delete</button>
-                                </td>
+                                <th scope="col">#</th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">Gambar</th>
+                                <th scope="col">Jenis</th>
+                                <th scope="col">Stok</th>
+                                <th scope="col">Terjual</th>
+                                <th scope="col">Harga Jual</th>
+                                <th scope="col">Harga Modal</th>
+                                <th scope="col">Ukuran OPP</th>
+                                <th scope="col">Promo</th>
+                                <th scope="col">Aksi</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <div class="mt-4">
-                    {{ $u->links(data: ['scrollTo' => false]) }}
+                        </thead>
+                        <tbody>
+                            @foreach ($u as $index => $item)
+                                <tr>
+                                    <th scope="row">{{ ($u->currentPage() - 1) * $u->perPage() + $index + 1 }}</th>
+                                    <td>{{ $item->nama }}</td>
+                                    <td>
+                                        @php
+                                            // Mendecode gambar dari database
+                                            $gambar = json_decode($item->gambar);
+                                        @endphp @if (!empty($gambar) && isset($gambar[0]))
+                                            <img src="{{ asset('storage/' . $gambar[0]) }}" alt="Thumbnail"
+                                                class="img-thumbnail" width="40">
+                                        @else
+                                            <!-- Gambar default jika tidak ada gambar -->
+                                            <img src="{{ asset('storage/default-thumbnail.jpg') }}" alt="Thumbnail"
+                                                class="img-thumbnail" width="40">
+                                        @endif
+                                    </td>
+                                    <td>{{ $item->jenis }}</td>
+                                    <td>{{ $item->stok }}</td>
+                                    <td>{{ $item->terjual }}</td>
+                                    <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($item->harga_modal ?? 0, 0, ',', '.') }}</td>
+                                    <td>{{ $item->ukuran_opp ?? '-' }}</td>
+                                    <td>{{ $item->promo }}</td>
+
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"
+                                            wire:click='editUndangan({{ $item->id }})'
+                                            wire:loading.attr="disabled"
+                                            wire:target="editUndangan({{ $item->id }})">
+                                            <span wire:loading.remove wire:target="editUndangan({{ $item->id }})">Edit</span>
+                                            <span wire:loading wire:target="editUndangan({{ $item->id }})">
+                                                <x-loading-spinner class="w-3 h-3" />
+                                            </span>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm"
+                                            wire:click='confirmDel({{ $item->id }})'>delete</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="mt-4">
+                        {{ $u->links(data: ['scrollTo' => false]) }}
+                    </div>
                 </div>
             </div>
 
@@ -265,7 +279,15 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
                                         wire:click="closeModal">Tutup</button>
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="saveUndangan,upUndangan">
+                                        <span wire:loading.remove wire:target="saveUndangan,upUndangan">
+                                            {{ $judul === 'Tambah' ? 'Simpan' : 'Update' }}
+                                        </span>
+                                        <span wire:loading wire:target="saveUndangan,upUndangan" class="d-inline-flex align-items-center gap-2">
+                                            <x-loading-spinner class="w-4 h-4" />
+                                            <span>{{ $judul === 'Tambah' ? 'Menyimpan...' : 'Memperbarui...' }}</span>
+                                        </span>
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -284,7 +306,15 @@
                         <div class="d-flex justify-content-center gap-2">
                             <button class="btn btn-light border" wire:click="closeModal">Batal</button>
                             <button class="btn btn-danger"
-                                wire:click='delUndangan({{ $idTrans }})'>Hapus</button>
+                                wire:click='delUndangan({{ $idTrans }})'
+                                wire:loading.attr="disabled"
+                                wire:target="delUndangan">
+                                <span wire:loading.remove wire:target="delUndangan">Hapus</span>
+                                <span wire:loading wire:target="delUndangan" class="d-inline-flex align-items-center gap-2">
+                                    <x-loading-spinner class="w-4 h-4" />
+                                    <span>Menghapus...</span>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>

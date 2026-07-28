@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'contact' => [
+        'whatsapp' => env('CONTACT_WHATSAPP', '6282274677715'),
+    ],
+
 ];

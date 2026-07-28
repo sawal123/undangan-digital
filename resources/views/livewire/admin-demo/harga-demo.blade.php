@@ -20,7 +20,7 @@
                         <td class="px-5 py-3.5 text-sm">Rp {{ number_format($h->harga, 0, ',', '.') }}</td>
                         <td class="px-5 py-3.5 text-sm text-rose-600 font-bold">Rp {{ number_format($h->flashsale, 0, ',', '.') }}</td>
                         <td class="px-5 py-3.5 text-center">
-                            <x-ui.button variant="secondary" size="sm" wire:click="editHarga({{ $h->id }})">Edit</x-ui.button>
+                            <x-ui.button variant="secondary" size="sm" wire:click="editHarga({{ $h->id }})" loadingTarget="editHarga({{ $h->id }})" loadingText="Memuat...">Edit</x-ui.button>
                         </td>
                     </tr>
                 @endforeach
@@ -31,7 +31,7 @@
         <div>
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold text-slate-800 dark:text-white">Kode Promo</h3>
-                <x-ui.button variant="primary" size="sm" icon="plus" x-on:click="$wire.resetInput(); $dispatch('open-modal', { name: 'promo-modal' })">Tambah Promo</x-ui.button>
+                <x-ui.button variant="primary" size="sm" icon="plus" wire:click="createPromo" loadingTarget="createPromo" loadingText="Memuat...">Tambah Promo</x-ui.button>
             </div>
             <x-ui.table :headers="['Kode', 'Tipe', 'Potongan', 'Aksi']">
                 @foreach($promo as $p)
@@ -45,7 +45,10 @@
                         </td>
                         <td class="px-5 py-3.5 text-center">
                             <div class="flex gap-1 justify-center">
-                                <button wire:click="editPromo({{ $p->id }})" class="p-1 hover:text-indigo-600 transition-colors"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                                <button wire:click="editPromo({{ $p->id }})" wire:loading.attr="disabled" wire:target="editPromo({{ $p->id }})" class="p-1 hover:text-indigo-600 transition-colors disabled:opacity-50">
+                                    <span wire:loading.remove wire:target="editPromo({{ $p->id }})"><i data-lucide="pencil" class="w-4 h-4"></i></span>
+                                    <span wire:loading wire:target="editPromo({{ $p->id }})"><x-loading-spinner class="w-4 h-4" /></span>
+                                </button>
                                 <button x-on:click="$dispatch('set-delete', { id: {{ $p->id }}, method: 'deletePromo' }); $dispatch('open-modal', { name: 'delete-modal' })" class="p-1 hover:text-rose-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                             </div>
                         </td>
@@ -62,7 +65,7 @@
             <x-ui.input label="Harga Flash Sale" wire:model="flashSale" type="number" />
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'harga-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">Update Harga</x-ui.button>
+                <x-ui.button variant="primary" type="submit" loadingTarget="updateHarga" loadingText="Memperbarui...">Update Harga</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -82,7 +85,7 @@
             <x-ui.input label="Nilai Potongan" wire:model="promoDiscount" type="number" />
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'promo-modal' })">Batal</x-ui.button>
-                <x-ui.button variant="primary" type="submit">{{ $isEditPromo ? 'Update' : 'Simpan' }}</x-ui.button>
+                <x-ui.button variant="primary" type="submit" :loadingTarget="$isEditPromo ? 'updatePromo' : 'storePromo'" :loadingText="$isEditPromo ? 'Memperbarui...' : 'Menyimpan...'">{{ $isEditPromo ? 'Update' : 'Simpan' }}</x-ui.button>
             </div>
         </form>
     </x-ui.modal>
@@ -92,7 +95,7 @@
         <p class="text-sm text-slate-600 dark:text-slate-400">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
         <div class="flex justify-end gap-2 mt-6">
             <x-ui.button variant="secondary" x-on:click="$dispatch('close-modal', { name: 'delete-modal' })">Batal</x-ui.button>
-            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
+            <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" loadingTarget="deletePromo" loadingText="Menghapus..." x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
         </div>
     </x-ui.modal>
 </div>
