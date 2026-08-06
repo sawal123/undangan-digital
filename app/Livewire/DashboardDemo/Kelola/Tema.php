@@ -4,6 +4,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\Theme;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -36,6 +37,11 @@ class Tema extends Component
             })
             ->findOrFail($id);
 
+        // Validate theme is compatible with current event type
+        if ($theme->event_type_id && $theme->event_type_id !== $data->event_type_id) {
+            abort(403, 'Tema ini tidak kompatibel dengan tipe acara Anda.');
+        }
+
         $data->theme_id = $theme->id;
         $data->save();
 
@@ -59,7 +65,7 @@ class Tema extends Component
         $this->dispatch('open-new-tab', url: route('visit', ['slug' => $data->slug]));
     }
 
-    public function render()
+    public function render(): View
     {
         $data = $this->ownedInvitationById($this->dataId, ['eventType']);
         $this->canShareInvitation = $data?->canBeShared() ?? false;

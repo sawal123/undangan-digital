@@ -9,6 +9,7 @@ use App\Services\YouTubeUrlParser;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\View;
 
 class Sound extends Component
 {

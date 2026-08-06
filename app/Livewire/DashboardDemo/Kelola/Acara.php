@@ -4,6 +4,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\KelolaUndangan\Acara as KelolaUndanganAcara;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -28,7 +29,9 @@ class Acara extends Component
 
     public bool $selesai = false;
 
-    public string $zona = 'WIB';
+    private const DEFAULT_TIMEZONE = 'WIB';
+
+    public string $zona = self::DEFAULT_TIMEZONE;
 
     public string $maps = '';
 
@@ -65,7 +68,7 @@ class Acara extends Component
         $this->start = $acara->jam_start;
         $this->end = $acara->jam_end;
         $this->selesai = ($acara->jam_end === 'Selesai');
-        $this->zona = $acara->zona_waktu ?? 'WIB';
+        $this->zona = $acara->zona_waktu ?? self::DEFAULT_TIMEZONE;
         $this->maps = $acara->maps ?? '';
         $this->resetValidation();
 
@@ -140,13 +143,13 @@ class Acara extends Component
         $this->start = '';
         $this->end = '';
         $this->selesai = false;
-        $this->zona = 'WIB';
+        $this->zona = self::DEFAULT_TIMEZONE;
         $this->maps = '';
         $this->selectedAcaraId = null;
         $this->resetValidation();
     }
 
-    public function render()
+    public function render(): View
     {
         $this->authorizeInvitationState();
 
@@ -154,6 +157,8 @@ class Acara extends Component
 
         return view('livewire.dashboard.kelola.acara', [
             'dataAcara' => $dataAcara,
+        ])->layout('components.layouts.user-new', [
+            'headerTitle' => 'Kelola Acara',
         ]);
     }
 }

@@ -7,34 +7,36 @@ use App\Models\Data;
 
 class PayController extends Controller
 {
-    protected function getData($id)
+    protected function getData(string $id): ?Data
     {
+        if (empty($id) || !is_string($id)) {
+            return null;
+        }
+
         return Data::where('uid', $id)
             ->where('user_id', auth()->id())
             ->first();
     }
 
-    public function index($id)
+    public function index(string $id)
     {
-        if ($this->getData($id)) {
-            return view('user.kelola.pay.pay', [
-                'data' => $this->getData($id),
-            ]);
-        } else {
-            return abort('403');
+        $data = $this->getData($id);
+        if (!$data) {
+            abort(403);
         }
-
+        return view('user.kelola.pay.pay', [
+            'data' => $data,
+        ]);
     }
 
-    public function tunai($id)
+    public function tunai(string $id)
     {
-        if ($this->getData($id)) {
-            return view('user.kelola.pay.finishTunai', [
-                'data' => $this->getData($id),
-            ]);
-        } else {
-            return abort('403');
+        $data = $this->getData($id);
+        if (!$data) {
+            abort(403);
         }
-
+        return view('user.kelola.pay.finishTunai', [
+            'data' => $data,
+        ]);
     }
 }
