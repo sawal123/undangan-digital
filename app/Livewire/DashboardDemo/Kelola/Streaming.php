@@ -55,13 +55,17 @@ class Streaming extends Component
         try {
             $this->authorizeInvitationState();
 
-            // Validate URL if provided
-            if (!empty($this->link)) {
-                if (!filter_var($this->link, FILTER_VALIDATE_URL)) {
-                    session()->flash('error', 'URL streaming tidak valid.');
-                    return;
-                }
-            }
+            // Validate streaming link with Laravel validation
+            $this->validate([
+                'link' => [
+                    'nullable',
+                    'url:http,https',
+                    'max:2048',
+                ],
+            ], [
+                'link.url' => 'URL streaming harus menggunakan protocol http atau https.',
+                'link.max' => 'URL streaming terlalu panjang (maksimal 2048 karakter).',
+            ]);
 
             $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
             if ($streaming) {

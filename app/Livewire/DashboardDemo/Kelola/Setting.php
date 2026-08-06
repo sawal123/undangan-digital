@@ -86,6 +86,21 @@ class Setting extends Component
         session()->flash('title', 'Title Berhasil Di update');
     }
 
+    private function refreshSlugAvailability(): void
+    {
+        $slug = Str::slug($this->slug);
+        
+        $exists = Data::query()
+            ->where('slug', $slug)
+            ->whereKeyNot($this->dataId)
+            ->exists();
+        
+        $this->button = !$exists;
+        $this->pesan = $exists
+            ? "Slug {$slug} sudah digunakan."
+            : "Slug {$slug} bisa digunakan.";
+    }
+
     public function mount(string $id): void
     {
         $data = $this->ownedInvitationByUid($id, ['dataFont.titleFont', 'dataFont.subFont']);
@@ -141,6 +156,9 @@ class Setting extends Component
 
         $this->title = $data->title;
         $this->slug = $data->slug;
+        
+        // Refresh slug availability on mount so button is not disabled initially
+        $this->refreshSlugAvailability();
     }
 
     public function aksiQoute(): void
@@ -356,17 +374,8 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
     {
         $this->authorizeInvitationState();
         
-        $dSlug = Data::where('slug', $this->slug)
-            ->whereKeyNot($this->dataId)
-            ->exists();
-        
-        if ($dSlug) {
-            $this->pesan = 'Slug '.$this->slug.' Sudah Digunakan Orang Lain';
-            $this->button = false;
-        } else {
-            $this->pesan = 'Slug '.$this->slug.' Bisa digunakan!';
-            $this->button = true;
-        }
+        $this->slug = Str::slug($this->slug);
+        $this->refreshSlugAvailability();
     }
 
     public function render()

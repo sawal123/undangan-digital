@@ -39,13 +39,13 @@ class Birthday extends Component
         'photo' => 'nullable',
     ];
 
-    public function mount($id)
+    public function mount(string $id): void
     {
         $this->dataId = $this->ownedInvitationByUid($id)->id;
         $this->loadProfile();
     }
 
-    public function loadProfile()
+    public function loadProfile(): void
     {
         $this->authorizeInvitationState();
         $profile = BirthdayProfile::where('data_id', $this->dataId)->first();
@@ -62,7 +62,7 @@ class Birthday extends Component
         $this->photo = $profile->photo ? asset('storage/'.$profile->photo) : null;
     }
 
-    public function save()
+    public function save(): void
     {
         $this->authorizeInvitationState();
         $this->validate();
@@ -101,7 +101,7 @@ class Birthday extends Component
         $this->loadProfile();
     }
 
-    public function render()
+    public function render(): View
     {
         $this->authorizeInvitationState();
 

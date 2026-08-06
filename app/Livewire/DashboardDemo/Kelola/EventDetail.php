@@ -67,7 +67,7 @@ class EventDetail extends Component
         $this->image = $detail->image ? asset('storage/'.$detail->image) : null;
     }
 
-    public function save()
+    public function save(): void
     {
         $this->authorizeInvitationState();
         $this->validate();
@@ -106,7 +106,7 @@ class EventDetail extends Component
         $this->loadDetail();
     }
 
-    public function render()
+    public function render(): View
     {
         $this->authorizeInvitationState();
 

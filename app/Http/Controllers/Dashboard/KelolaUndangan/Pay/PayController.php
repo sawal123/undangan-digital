@@ -9,7 +9,7 @@ class PayController extends Controller
 {
     protected function getData(string $id): ?Data
     {
-        if (empty($id) || !is_string($id)) {
+        if (empty($id)) {
             return null;
         }
 
@@ -18,7 +18,7 @@ class PayController extends Controller
             ->first();
     }
 
-    public function index(string $id)
+    public function index(string $id): \Illuminate\View\View
     {
         $data = $this->getData($id);
         if (!$data) {
@@ -29,7 +29,7 @@ class PayController extends Controller
         ]);
     }
 
-    public function tunai(string $id)
+    public function tunai(string $id): \Illuminate\View\View
     {
         $data = $this->getData($id);
         if (!$data) {

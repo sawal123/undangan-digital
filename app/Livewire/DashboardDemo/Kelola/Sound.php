@@ -175,7 +175,7 @@ class Sound extends Component
         session()->flash('message', 'Musik latar belakang berhasil disimpan.');
     }
 
-    public function render()
+    public function render(): View
     {
         $this->authorizeInvitationState();
 
