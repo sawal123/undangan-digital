@@ -9,6 +9,7 @@ use App\Services\YouTubeUrlParser;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\View;
 
 class Sound extends Component
 {
@@ -174,7 +175,7 @@ class Sound extends Component
         session()->flash('message', 'Musik latar belakang berhasil disimpan.');
     }
 
-    public function render()
+    public function render(): View
     {
         $this->authorizeInvitationState();
 

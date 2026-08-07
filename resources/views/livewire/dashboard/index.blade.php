@@ -22,7 +22,7 @@
     <div class="grid grid-cols-1 gap-4">
         @forelse ($dataUndangan as $item)
             @php
-                $hasPending = collect($item->transaction)->contains('payment_status', 'PENDING');
+                $hasPending = $item->has_pending_transaction ?? false;
                 $invitationUid = $item->uid;
                 $canShareInvitation = $item->canBeShared();
             @endphp

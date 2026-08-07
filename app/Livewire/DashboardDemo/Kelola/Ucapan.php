@@ -8,6 +8,7 @@ use App\Models\KelolaUndangan\Ucapan as KelolaUndanganUcapan;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\View;
 
 class Ucapan extends Component
 {

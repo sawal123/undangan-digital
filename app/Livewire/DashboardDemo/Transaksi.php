@@ -3,6 +3,7 @@
 namespace App\Livewire\DashboardDemo;
 
 use App\Models\Transaction;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -18,7 +19,7 @@ class Transaksi extends Component
         $this->resetPage();
     }
 
-    public function render()
+    public function render(): View
     {
         $transactions = Transaction::query()
             ->where('user_id', Auth::id())

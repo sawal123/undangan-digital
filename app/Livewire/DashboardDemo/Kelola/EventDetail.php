@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Contracts\View\View;
 
 class EventDetail extends Component
 {
@@ -66,7 +67,7 @@ class EventDetail extends Component
         $this->image = $detail->image ? asset('storage/'.$detail->image) : null;
     }
 
-    public function save()
+    public function save(): void
     {
         $this->authorizeInvitationState();
         $this->validate();
@@ -105,7 +106,7 @@ class EventDetail extends Component
         $this->loadDetail();
     }
 
-    public function render()
+    public function render(): View
     {
         $this->authorizeInvitationState();
 
