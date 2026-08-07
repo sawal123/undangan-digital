@@ -11,7 +11,13 @@ class Category extends Model
 
     protected $fillable = ['category', 'icon'];
 
-    public function theme(){
+    public function theme()
+    {
         return $this->hasMany(Theme::class);
+    }
+
+    public function music()
+    {
+        return $this->hasMany(Music::class);
     }
 }
