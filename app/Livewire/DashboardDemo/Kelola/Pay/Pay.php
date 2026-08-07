@@ -193,7 +193,7 @@ class Pay extends Component
     private function generateInvoice(): string
     {
         do {
-            $invoice = 'INV-'.Str::upper(Str::random(12));
+            $invoice = 'INV-' . Str::upper(Str::random(12));
         } while (Transaction::where('invoice', $invoice)->exists());
 
         return $invoice;
@@ -203,7 +203,10 @@ class Pay extends Component
     {
         $this->authorizeInvitation();
 
-        return view('livewire.dashboard.kelola.pay.pay');
+        return view('livewire.dashboard.kelola.pay.pay')
+            ->layout('components.layouts.user-new', [
+                'headerTitle' => 'Pembayaran',
+            ]);
     }
 
     private function authorizeInvitation(): Data

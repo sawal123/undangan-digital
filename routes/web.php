@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Dashboard\DataController;
-use App\Http\Controllers\Dashboard\KelolaUndangan\Pay\PayController;
 use App\Http\Controllers\Dashboard\SetupController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\FilePreviewController;
@@ -80,13 +79,13 @@ Route::middleware(['auth', 'not.suspended', 'role:User', 'setup.complete'])->pre
     Route::get('/kelola/{id}/buku-tamu', \App\Livewire\DashboardDemo\Kelola\BukuTamu::class)->name('undangan.bukutamu');
     Route::get('/kelola/{id}/tema', \App\Livewire\DashboardDemo\Kelola\Tema::class)->name('undangan.tema');
     Route::get('/demo/{token}', [TemaController::class, 'demo'])->name('demo');
-    Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
+    Route::get('/pay/{id}', \App\Livewire\DashboardDemo\Kelola\Pay\Pay::class)->name('pay');
 
     Route::get('/midtrans/finish', [MidtransController::class, 'finishRedirect']);
     Route::get('/midtrans/unfinished', [MidtransController::class, 'unfinishRedirect']);
     Route::get('/midtrans/failed', [MidtransController::class, 'errorRedirect']);
 
-    Route::get('/finishtunai/{id}', [PayController::class, 'tunai'])->name('tunai');
+    Route::get('/finishtunai/{id}', \App\Livewire\DashboardDemo\Kelola\Pay\Tunai::class)->name('tunai');
 });
 Route::post('/midtrans/callback', [MidtransController::class, 'notificationHandler']);
 
