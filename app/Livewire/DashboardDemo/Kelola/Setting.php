@@ -67,7 +67,7 @@ class Setting extends Component
 
     public $thumbnail;
 
-    public function titleA($id)
+    public function titleA($id): void
     {
         $this->authorizeInvitationState();
         $setting = ModelsSetting::where('data_id', $this->dataId)->first();
@@ -86,7 +86,22 @@ class Setting extends Component
         session()->flash('title', 'Title Berhasil Di update');
     }
 
-    public function mount($id)
+    private function refreshSlugAvailability(): void
+    {
+        $slug = Str::slug($this->slug);
+        
+        $exists = Data::query()
+            ->where('slug', $slug)
+            ->whereKeyNot($this->dataId)
+            ->exists();
+        
+        $this->button = !$exists;
+        $this->pesan = $exists
+            ? "Slug {$slug} sudah digunakan."
+            : "Slug {$slug} bisa digunakan.";
+    }
+
+    public function mount(string $id): void
     {
         $data = $this->ownedInvitationByUid($id, ['dataFont.titleFont', 'dataFont.subFont']);
         $this->dataId = $data->id;
@@ -141,9 +156,12 @@ class Setting extends Component
 
         $this->title = $data->title;
         $this->slug = $data->slug;
+        
+        // Refresh slug availability on mount so button is not disabled initially
+        $this->refreshSlugAvailability();
     }
 
-    public function aksiQoute()
+    public function aksiQoute(): void
     {
         $this->authorizeInvitationState();
         $this->tit = $this->normalizeArabicText($this->tit);
@@ -190,7 +208,7 @@ class Setting extends Component
         return $value;
     }
 
-    public function update($id)
+    public function update($id): void
     {
         $this->slug = Str::slug($this->slug);
         $this->validate([
@@ -206,7 +224,7 @@ class Setting extends Component
         session()->flash('title', 'Data Undangan Berhasil Di update');
     }
 
-    public function teksWhatsApp()
+    public function teksWhatsApp(): void
     {
         $this->authorizeInvitationState();
         $wa = teksWhatsApp::where('data_id', $this->dataId)->first();
@@ -229,14 +247,14 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         }
     }
 
-    public function loadThumbnail()
+    public function loadThumbnail(): void
     {
         $this->authorizeInvitationState();
         $this->thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
         $this->gambar = null;
     }
 
-    public function delThumbnail()
+    public function delThumbnail(): void
     {
         $this->authorizeInvitationState();
         $thumbnail = ThumbnailWa::where('data_id', $this->dataId)->first();
@@ -256,7 +274,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         }
     }
 
-    public function thumbnailWa()
+    public function thumbnailWa(): void
     {
         $this->authorizeInvitationState();
         // Validasi file
@@ -287,7 +305,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         $this->loadThumbnail();
     }
 
-    public function TeksUndangan()
+    public function TeksUndangan(): void
     {
         $this->authorizeInvitationState();
         $teksU = TeksUndangan::where('data_id', $this->dataId)->first();
@@ -310,7 +328,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         }
     }
 
-    public function teksPenutup()
+    public function teksPenutup(): void
     {
         $this->authorizeInvitationState();
         $teksP = teksPenutup::where('data_id', $this->dataId)->first();
@@ -330,7 +348,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         }
     }
 
-    public function updateFont($id)
+    public function updateFont($id): void
     {
         $data = $this->ownedInvitationById($this->dataId, ['dataFont']);
         if ($data->dataFont) {
@@ -352,6 +370,14 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         session()->flash('font', 'Font Berhasil Diubah');
     }
 
+    public function updatedSlug(): void
+    {
+        $this->authorizeInvitationState();
+        
+        $this->slug = Str::slug($this->slug);
+        $this->refreshSlugAvailability();
+    }
+
     public function render()
     {
         $this->authorizeInvitationState();
@@ -368,16 +394,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         if (! $this->thumbnail) {
             $this->thumbnail = null;
         }
-        $dSlug = Data::where('slug', $this->slug)
-            ->whereKeyNot($this->dataId)
-            ->exists();
-        if ($dSlug) {
-            $this->pesan = 'Slug '.$this->slug.' Sudah Digunakan Orang Lain';
-            $this->button = false;
-        } else {
-            $this->pesan = 'Slug '.$this->slug.' Bisa digunakan!';
-            $this->button = true;
-        }
+
         $fonts = Fonts::where('is_active', 1)->get();
 
         return view(

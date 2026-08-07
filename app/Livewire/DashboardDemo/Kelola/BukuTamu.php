@@ -3,24 +3,32 @@
 namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class BukuTamu extends Component
 {
     use LoadsOwnedInvitation;
+    use WithPagination;
 
     #[Locked]
-    public $dataId;
+    public int $dataId;
 
-    public $search = '';
+    public string $search = '';
 
-    public function mount($id)
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function mount(string $id): void
     {
         $this->dataId = $this->ownedInvitationByUid($id)->id;
     }
 
-    public function render()
+    public function render(): View
     {
         $this->authorizeInvitationState();
 

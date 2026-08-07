@@ -40,7 +40,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'setup.complete' => \App\Http\Middleware\EnsureSetupComplete::class,
         'not.suspended' => \App\Http\Middleware\EnsureAccountIsNotSuspended::class,
         'security.admin.access' => \App\Http\Middleware\LogAdminAccessDenied::class,
+        'api.key' => \App\Http\Middleware\ApiKeyAuth::class,
     ];
 }

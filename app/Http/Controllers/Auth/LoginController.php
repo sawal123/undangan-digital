@@ -30,8 +30,8 @@ class LoginController extends Controller
     public function login(LoginRequest $request, AuthActivityLogger $activityLogger, TurnstileVerifier $turnstile)
     {
         $email = Str::lower((string) $request->input('email'));
-        $ipKey = 'login-ip:'.$request->ip();
-        $emailIpKey = 'login-email-ip:'.$email.'|'.$request->ip();
+        $ipKey = 'login-ip:' . $request->ip();
+        $emailIpKey = 'login-email-ip:' . $email . '|' . $request->ip();
         $message = 'Email atau kata sandi tidak sesuai.';
 
         if (
@@ -93,10 +93,6 @@ class LoginController extends Controller
         }
 
         if (auth()->user()->hasRole('User')) {
-            if (! auth()->user()->hasVerifiedEmail()) {
-                return redirect()->route('verification.notice');
-            }
-
             $data = Data::where('user_id', Auth::user()->id)->latest()->first();
 
             if ($data) {

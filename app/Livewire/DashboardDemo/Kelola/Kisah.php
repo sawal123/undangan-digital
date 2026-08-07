@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Contracts\View\View;
 
 class Kisah extends Component
 {
@@ -222,6 +223,8 @@ class Kisah extends Component
         return view('livewire.dashboard.kelola.kisah', [
             'kisahCInta' => $kisahCinta,
             'kisahCinta' => $kisahCinta,
+        ])->layout('components.layouts.user-new', [
+            'headerTitle' => 'Kisah Cinta',
         ]);
     }
 }

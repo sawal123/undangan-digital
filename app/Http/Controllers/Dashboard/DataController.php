@@ -37,8 +37,6 @@ class DataController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // dd($request->title);
         $request->merge([
             'slug' => Str::slug($request->input('slug')),
         ]);

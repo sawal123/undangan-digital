@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ 
-          darkMode: localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
-          sidebarOpen: false,
-          toggleTheme() {
-              this.darkMode = !this.darkMode;
-              localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
-          }
-      }" :class="{ 'dark': darkMode }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{
+    darkMode: localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    sidebarOpen: false,
+    toggleTheme() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+    }
+}" :class="{ 'dark': darkMode }">
 
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@
     <x-seo-meta :title="$title ?? 'Admin Panel'" robots="noindex,nofollow" />
 
     <!-- Tailwind CSS (Vite or CDN as fallback) -->
-    @if(file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
         <script src="https://cdn.tailwindcss.com"></script>
@@ -116,8 +116,9 @@
             @php $currentSetting = \App\Models\SystemSetting::current(); @endphp
             <div
                 class="flex items-center gap-3 px-5 py-5 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
-                @if($currentSetting->logo_url)
-                    <img src="{{ $currentSetting->logo_url }}" class="w-9 h-9 object-contain rounded-lg flex-shrink-0" alt="Logo">
+                @if ($currentSetting->logo_url)
+                    <img src="{{ $currentSetting->logo_url }}" class="w-9 h-9 object-contain rounded-lg flex-shrink-0"
+                        alt="Logo">
                 @else
                     <div class="w-9 h-9 bg-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
                         <i data-lucide="layers" class="w-5 h-5 text-white"></i>
@@ -144,57 +145,62 @@
                     <span class="text-sm font-medium">Dashboard</span>
                 </a>
                 <a href="{{ route('admin.theme') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.theme') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.theme') ? 'active' : '' }}">
                     <i data-lucide="palette" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Theme</span>
                 </a>
                 <a href="{{ route('admin.fonts') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.fonts') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.fonts') ? 'active' : '' }}">
                     <i data-lucide="type" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Fonts</span>
                 </a>
+                <a href="{{ route('admin.music') }}" wire:navigate
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.music') ? 'active' : '' }}">
+                    <i data-lucide="music" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="text-sm font-medium">Musik</span>
+                </a>
                 <a href="{{ route('admin.animation') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.animation') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.animation') ? 'active' : '' }}">
                     <i data-lucide="video" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Undangan Animasi</span>
                 </a>
                 <a href="{{ route('admin.cetak') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.cetak') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.cetak') ? 'active' : '' }}">
                     <i data-lucide="package" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Undangan Cetak</span>
                 </a>
                 <a href="{{ route('admin.harga') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.harga') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.harga') ? 'active' : '' }}">
                     <i data-lucide="banknote" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Harga</span>
                 </a>
                 <a href="{{ route('admin.transaksi') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.transaksi') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.transaksi') ? 'active' : '' }}">
                     <i data-lucide="credit-card" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Transaksi</span>
                 </a>
                 <a href="{{ route('admin.user') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.user') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.user') ? 'active' : '' }}">
                     <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">User</span>
                 </a>
                 <a href="{{ route('admin.security') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.security') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.security') ? 'active' : '' }}">
                     <i data-lucide="shield-alert" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Keamanan</span>
                 </a>
                 <a href="{{ route('admin.setting') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.setting') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.setting') ? 'active' : '' }}">
                     <i data-lucide="settings" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Setting</span>
                 </a>
                 <a href="{{ route('admin.system.setting') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.system.setting') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.system.setting') ? 'active' : '' }}">
                     <i data-lucide="sliders" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Setting System</span>
                 </a>
                 <a href="{{ route('admin.pay.setting') }}" wire:navigate
-                   class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.pay.setting') ? 'active' : '' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.pay.setting') ? 'active' : '' }}">
                     <i data-lucide="wallet" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Gift Pay Setting</span>
                 </a>
@@ -305,7 +311,10 @@
             lucide.createIcons();
         });
         document.addEventListener('livewire:initialized', () => {
-            Livewire.hook('morph.updated', ({ el, component }) => {
+            Livewire.hook('morph.updated', ({
+                el,
+                component
+            }) => {
                 lucide.createIcons();
             });
         });

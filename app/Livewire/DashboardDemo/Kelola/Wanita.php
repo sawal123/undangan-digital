@@ -112,7 +112,9 @@ class Wanita extends Component
     {
         $this->authorizeInvitation();
 
-        return view('livewire.dashboard.kelola.wanita');
+        return view('livewire.dashboard.kelola.wanita')->layout('components.layouts.user-new', [
+            'headerTitle' => 'Data Mempelai Wanita',
+        ]);
     }
 
     private function authorizeInvitation(): Data

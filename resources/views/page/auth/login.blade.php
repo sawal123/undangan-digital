@@ -29,7 +29,8 @@
                             <!-- Input Password dengan Heroicon -->
                             <div class="input-group mb-3">
                                 <div class="form-floating">
-                                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                                    <input type="password" class="form-control" name="password" id="password"
+                                        placeholder="Password">
                                     <label for="password">Password</label>
                                 </div>
                                 <button class="btn btn-outline-secondary" type="button" id="togglePassword">
@@ -43,6 +44,14 @@
                             </div>
 
                             <button class="btn btn-primary w-100" type="submit">Sign in</button>
+
+                            <div class="mt-3">
+                                <p class="text-center text-muted mb-3">atau</p>
+                                <a href="{{ route('auth.google') }}" class="btn btn-outline-secondary w-100"
+                                    style="border: 1px solid #e0e0e0;">
+                                    <i class="fab fa-google me-2"></i> Login dengan Google
+                                </a>
+                            </div>
 
                             <div class="col-12 text-center mt-3">
                                 <p class="mb-0 mt-3"><small class="text-dark me-2">Don't have an account ?</small> <a

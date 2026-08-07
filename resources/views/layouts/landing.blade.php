@@ -11,7 +11,9 @@
     <!-- Fonts & Styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/@mdi/font/css/materialdesignicons.min.css') }}" rel="stylesheet" type="text/css">
@@ -28,8 +30,8 @@
 <body class="antialiased">
     <!-- Loader -->
 
-        @unless (request()->routeIs('home', 'web', 'animasi', 'cetak'))
-            <livewire:part.header>
+    @unless (request()->routeIs('home', 'web', 'animasi', 'cetak'))
+        <livewire:part.header>
         @endunless
 
         <main>
@@ -38,14 +40,14 @@
 
 
         @livewireScripts
-        <script src="{{asset('assets/js/jquery.js')}}"></script>
+        <script src="{{ asset('assets/js/jquery.js') }}"></script>
         <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('assets/libs/tiny-slider/min/tiny-slider.js') }}"></script>
         <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
         <script src="{{ asset('assets/js/plugins.init.js') }}"></script>
         <script src="{{ asset('assets/libs/dist/js/lightbox.js') }}"></script>
         <script src="{{ asset('assets/js/app.js') }}"></script>
-        
+
 
 </body>
 

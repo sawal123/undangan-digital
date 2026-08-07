@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta property="og:title" content="{{ $data->title }}" />
-    <meta property="og:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image" content="{{ asset('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ url()->current() }}" />
@@ -15,7 +15,7 @@
     <!-- WhatsApp Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $data->title }}">
-    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta name="twitter:image" content="{{ asset('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <title>{{ $data->title }}</title>
     <!--  css -->
     <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/aos/dist/aos.css') }}">
@@ -115,7 +115,7 @@
             // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
             let eventDate = new Date(
                 "{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}"
-                ).getTime();
+            ).getTime();
 
             // Update countdown setiap detik
             let countdown = setInterval(function() {

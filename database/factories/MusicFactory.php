@@ -23,7 +23,7 @@ class MusicFactory extends Factory
             'link' => 'https://www.youtube.com/embed/' . $this->faker->regexify('[A-Za-z0-9]{10}'),
             'judul' => $this->faker->sentence(3),
             'artis' => $this->faker->name,
-            'category' => $this->faker->randomElement(['Original', 'Cover', 'Remix']),
+            'category_id' => \App\Models\Category::inRandomOrder()->value('id') ?? \App\Models\Category::factory(),
         ];
     }
 }

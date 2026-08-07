@@ -55,7 +55,7 @@ Route::get('/u/{slug}/{tamu?}', [TemaController::class, 'visit'])->name('visit')
 Route::post('u/savedoa', [TemaController::class, 'saveDoa'])->middleware('throttle:10,1')->name('savedoa');
 
 // Role User
-Route::middleware(['auth', 'not.suspended', 'verified', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
+Route::middleware(['auth', 'not.suspended', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
     Route::get('/add-undangan/{id}', [SetupController::class, 'add'])->name('add');
     Route::resource('data', DataController::class)->only(['store']);
@@ -79,7 +79,7 @@ Route::middleware(['auth', 'not.suspended', 'verified', 'role:User', 'setup.comp
     Route::get('/kelola/{id}/setting', \App\Livewire\DashboardDemo\Kelola\Setting::class)->name('undangan.setting');
     Route::get('/kelola/{id}/buku-tamu', \App\Livewire\DashboardDemo\Kelola\BukuTamu::class)->name('undangan.bukutamu');
     Route::get('/kelola/{id}/tema', \App\Livewire\DashboardDemo\Kelola\Tema::class)->name('undangan.tema');
-    Route::get('/demo/{demo}/{id}', [TemaController::class, 'demo'])->name('demo');
+    Route::get('/demo/{token}', [TemaController::class, 'demo'])->name('demo');
     Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
 
     Route::get('/midtrans/finish', [MidtransController::class, 'finishRedirect']);
@@ -103,6 +103,7 @@ Route::middleware(['auth', 'not.suspended', 'security.admin.access', 'role:Owner
     Route::get('/security', \App\Livewire\AdminDemo\SecurityMonitoringDemo::class)->name('security');
     Route::get('/animation', \App\Livewire\AdminDemo\AnimationDemo::class)->name('animation');
     Route::get('/fonts', \App\Livewire\AdminDemo\FontsDemo::class)->name('fonts');
+    Route::get('/music', \App\Livewire\AdminDemo\MusicDemo::class)->name('music');
     Route::get('/cetak', \App\Livewire\AdminDemo\CetakDemo::class)->name('cetak');
     Route::get('/system-setting', \App\Livewire\AdminDemo\SystemSettingDemo::class)->name('system.setting');
     Route::get('/demo/{demo}', [TemaController::class, 'temademo'])->name('temademo');
@@ -113,4 +114,4 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

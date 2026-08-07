@@ -11,9 +11,9 @@ class Pengantin extends Component
     use LoadsOwnedInvitation;
 
     #[Locked]
-    public $dataId;
+    public int $dataId;
 
-    public function mount($id)
+    public function mount(string $id): void
     {
         $this->dataId = $this->ownedInvitationByUid($id)->id;
     }
