@@ -137,8 +137,8 @@
 
             <div class="w-full">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Deskripsi</label>
-                <div wire:ignore x-data="cetakDeskripsiEditor(@js($deskripsi))" x-init="init()">
-                    <textarea id="cetak-deskripsi-editor" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm"></textarea>
+                <div wire:ignore wire:key="cetak-deskripsi-editor" class="cetak-description-editor" x-data="cetakDeskripsiEditor()" x-init="init()">
+                    <textarea x-ref="textarea" rows="3"></textarea>
                 </div>
                 @error('deskripsi') <span class="text-xs text-rose-500 mt-1">{{ $message }}</span> @enderror
             </div>
@@ -183,23 +183,32 @@
             <x-ui.button variant="primary" class="bg-rose-600 hover:bg-rose-700 text-white border-none" loadingTarget="delete" loadingText="Menghapus..." x-on:click="$wire.call(deleteMethod, deleteId); $dispatch('close-modal', { name: 'delete-modal' })">Ya, Hapus</x-ui.button>
         </div>
     </x-ui.modal>
-</div>
 
 <script>
-    function cetakDeskripsiEditor(initialContent) {
+    function cetakDeskripsiEditor() {
         return {
             editor: null,
             init() {
-                const textarea = this.$el.querySelector('#cetak-deskripsi-editor');
+                const textarea = this.$refs.textarea;
 
                 const create = () => {
+                    if (textarea._ckeditorInstance || textarea._ckeditorInitializing) {
+                        this.editor = textarea._ckeditorInstance ?? null;
+                        return;
+                    }
+
+                    textarea._ckeditorInitializing = true;
                     ClassicEditor.create(textarea).then((editor) => {
                         this.editor = editor;
-                        editor.setData(initialContent || '');
+                        textarea._ckeditorInstance = editor;
+                        textarea._ckeditorInitializing = false;
                         editor.model.document.on('change:data', () => {
                             @this.set('deskripsi', editor.getData());
                         });
-                    }).catch((error) => console.error('CKEditor error:', error));
+                    }).catch((error) => {
+                        textarea._ckeditorInitializing = false;
+                        console.error('CKEditor error:', error);
+                    });
                 };
 
                 if (window.ClassicEditor) {
@@ -215,14 +224,42 @@
                     script.addEventListener('load', create, { once: true });
                 }
 
-                // Sinkronkan ulang isi editor saat modal dibuka untuk Tambah/Edit produk lain
                 Livewire.on('set-editor-content', (event) => {
                     const content = event.content ?? event[0]?.content ?? '';
                     if (this.editor) {
                         this.editor.setData(content || '');
+                    } else {
+                        textarea.value = content || '';
                     }
                 });
             },
         };
     }
 </script>
+
+<style>
+    .dark .cetak-description-editor .ck.ck-toolbar,
+    .dark .cetak-description-editor .ck.ck-editor__main > .ck-editor__editable {
+        background: #0f172a;
+        border-color: #475569;
+        color: #e2e8f0;
+    }
+
+    .dark .cetak-description-editor .ck.ck-toolbar .ck-button,
+    .dark .cetak-description-editor .ck.ck-toolbar .ck-button .ck-button__label,
+    .dark .cetak-description-editor .ck.ck-toolbar .ck-icon,
+    .dark .cetak-description-editor .ck.ck-editor__main > .ck-editor__editable {
+        color: #e2e8f0;
+    }
+
+    .dark .cetak-description-editor .ck.ck-toolbar .ck-button:hover,
+    .dark .cetak-description-editor .ck.ck-toolbar .ck-button.ck-on {
+        background: #334155;
+    }
+
+    .dark .cetak-description-editor .ck.ck-toolbar,
+    .dark .cetak-description-editor .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+        border-color: #334155;
+    }
+</style>
+</div>
