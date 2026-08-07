@@ -88,7 +88,6 @@ class CetakDemo extends Component
         $this->isEdit = false;
         $this->resetValidation();
         $this->dispatch('open-modal', name: 'cetak-modal');
-        $this->dispatch('set-editor-content', content: $this->deskripsi);
     }
 
     public function store(): void
@@ -159,7 +158,6 @@ class CetakDemo extends Component
         $this->isEdit = true;
         $this->resetValidation();
         $this->dispatch('open-modal', name: 'cetak-modal');
-        $this->dispatch('set-editor-content', content: $this->deskripsi);
     }
 
     public function update(): void
