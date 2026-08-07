@@ -1,9 +1,11 @@
 <div class="flex justify-center py-10 px-4">
     <div class="w-full max-w-md">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 text-center">
+        <div
+            class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 text-center">
             {{-- Icon Sukses --}}
             <div class="mb-6">
-                <div class="w-20 h-20 mx-auto bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                <div
+                    class="w-20 h-20 mx-auto bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
                     <i data-lucide="check-circle" class="w-10 h-10 text-emerald-600 dark:text-emerald-400"></i>
                 </div>
             </div>
@@ -17,12 +19,14 @@
             </p>
 
             {{-- Info Box --}}
-            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-4 mb-6 text-left">
+            <div
+                class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-4 mb-6 text-left">
                 <div class="flex items-start gap-3">
                     <i data-lucide="clock" class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5"></i>
                     <div>
                         <p class="text-sm font-medium text-amber-800 dark:text-amber-300">Perlu Bantuan?</p>
-                        <p class="text-xs text-amber-600 dark:text-amber-400 mt-1">Jika status belum aktif setelah 1x24 jam, segera hubungi admin kami.</p>
+                        <p class="text-xs text-amber-600 dark:text-amber-400 mt-1">Jika status belum aktif setelah 1x24
+                            jam, segera hubungi admin kami.</p>
                     </div>
                 </div>
             </div>

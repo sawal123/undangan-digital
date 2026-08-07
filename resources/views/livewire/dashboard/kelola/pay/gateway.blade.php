@@ -8,7 +8,8 @@
                 <input type="radio" id="pay{{ $item->id }}" name="channel" value="{{ $item->midtrans_code }}"
                     wire:model.lazy="channel" class="sr-only">
                 <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white dark:bg-slate-600">
-                    <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover" alt="{{ $item->bank }}">
+                    <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover"
+                        alt="{{ $item->bank }}">
                 </div>
                 <div class="text-left min-w-0">
                     <p class="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{{ $item->bank }}</p>

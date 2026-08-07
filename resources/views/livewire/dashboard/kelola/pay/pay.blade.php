@@ -2,7 +2,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {{-- Kolom Kiri: Rincian & Checkout --}}
         <div class="lg:col-span-1 lg:order-2">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sticky top-6">
+            <div
+                class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sticky top-6">
                 <h3 class="text-lg font-semibold text-slate-800 dark:text-white mb-4">Rincian Pembayaran</h3>
 
                 @include('livewire.dashboard.kelola.pay.rincian')
@@ -17,7 +18,12 @@
                             class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50">
                             <span wire:loading.remove wire:target="redeem">Redeem</span>
                             <span wire:loading wire:target="redeem">
-                                <svg class="animate-spin w-4 h-4 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                                <svg class="animate-spin w-4 h-4 inline" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                </svg>
                             </span>
                         </button>
                     </div>
@@ -44,7 +50,12 @@
                 <button wire:click="checkOut" wire:loading.attr="disabled" wire:target="checkOut"
                     class="w-full mt-4 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                     <i data-lucide="credit-card" class="w-5 h-5" wire:loading.remove wire:target="checkOut"></i>
-                    <svg wire:loading wire:target="checkOut" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                    <svg wire:loading wire:target="checkOut" class="animate-spin w-5 h-5" fill="none"
+                        viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                            stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
                     <span wire:loading.remove wire:target="checkOut">Lanjutkan Pembayaran</span>
                     <span wire:loading wire:target="checkOut">Memproses...</span>
                 </button>
@@ -54,13 +65,15 @@
         {{-- Kolom Kanan: Form & Metode Pembayaran --}}
         <div class="lg:col-span-2 lg:order-1 space-y-6">
             {{-- Informasi Pembeli --}}
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <div
+                class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
                 <h3 class="text-lg font-semibold text-slate-800 dark:text-white mb-4">Informasi Pembeli</h3>
                 @include('livewire.dashboard.kelola.pay.pembeli')
             </div>
 
             {{-- Metode Pembayaran --}}
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <div
+                class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
                 <h3 class="text-lg font-semibold text-slate-800 dark:text-white mb-4">
                     <i data-lucide="zap" class="w-5 h-5 inline-block text-amber-500"></i>
                     Pembayaran Otomatis

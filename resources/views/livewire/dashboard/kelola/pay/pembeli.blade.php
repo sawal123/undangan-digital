@@ -9,7 +9,10 @@
                    @error('nama') border-rose-400 bg-rose-50 dark:bg-rose-900/10 @else border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 @enderror
                    text-slate-800 dark:text-slate-200"
             placeholder="Nama lengkap">
-        @error('nama') <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> {{ $message }}</p> @enderror
+        @error('nama')
+            <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle"
+                    class="w-3.5 h-3.5"></i> {{ $message }}</p>
+        @enderror
     </div>
 
     {{-- Email --}}
@@ -22,7 +25,10 @@
                    @error('email') border-rose-400 bg-rose-50 dark:bg-rose-900/10 @else border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 @enderror
                    text-slate-800 dark:text-slate-200"
             placeholder="contoh@email.com">
-        @error('email') <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> {{ $message }}</p> @enderror
+        @error('email')
+            <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle"
+                    class="w-3.5 h-3.5"></i> {{ $message }}</p>
+        @enderror
     </div>
 
     {{-- WhatsApp --}}
@@ -35,6 +41,9 @@
                    @error('wa') border-rose-400 bg-rose-50 dark:bg-rose-900/10 @else border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 @enderror
                    text-slate-800 dark:text-slate-200"
             placeholder="0812xxxxxxxx">
-        @error('wa') <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> {{ $message }}</p> @enderror
+        @error('wa')
+            <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle"
+                    class="w-3.5 h-3.5"></i> {{ $message }}</p>
+        @enderror
     </div>
 </div>
