@@ -1,23 +1,40 @@
-<div class="mb-3">
-    <label for="text" class="form-label">Nama <span class="text-danger">*</span></label>
-    <input type="text" class="form-control" wire:model='nama' id="text" placeholder="Hilgers">
-    <div class="invalid-feedback">
-        Please enter a valid text address for shipping updates.
+<div class="space-y-4">
+    {{-- Nama --}}
+    <div>
+        <label for="nama" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            Nama <span class="text-rose-500">*</span>
+        </label>
+        <input type="text" id="nama" wire:model="nama"
+            class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors
+                   @error('nama') border-rose-400 bg-rose-50 dark:bg-rose-900/10 @else border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 @enderror
+                   text-slate-800 dark:text-slate-200"
+            placeholder="Nama lengkap">
+        @error('nama') <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> {{ $message }}</p> @enderror
     </div>
-</div>
-<div class="mb-3">
-    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-    <input type="email" class="form-control" wire:model='email' id="email"
-        placeholder="you@example.com">
-    <div class="invalid-feedback">
-        Please enter a valid email address for shipping updates.
+
+    {{-- Email --}}
+    <div>
+        <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            Email <span class="text-rose-500">*</span>
+        </label>
+        <input type="email" id="email" wire:model="email"
+            class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors
+                   @error('email') border-rose-400 bg-rose-50 dark:bg-rose-900/10 @else border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 @enderror
+                   text-slate-800 dark:text-slate-200"
+            placeholder="contoh@email.com">
+        @error('email') <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> {{ $message }}</p> @enderror
     </div>
-</div>
-<div class="mb-3">
-    <label for="number" class="form-label">WhatsApp <span class="text-danger">*</span></label>
-    <input type="number" class="form-control" wire:model='wa' id="number"
-        placeholder="08327467****">
-    <div class="invalid-feedback">
-        Please enter a valid number address for shipping updates.
+
+    {{-- WhatsApp --}}
+    <div>
+        <label for="wa" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            WhatsApp <span class="text-rose-500">*</span>
+        </label>
+        <input type="tel" id="wa" wire:model="wa"
+            class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors
+                   @error('wa') border-rose-400 bg-rose-50 dark:bg-rose-900/10 @else border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 @enderror
+                   text-slate-800 dark:text-slate-200"
+            placeholder="0812xxxxxxxx">
+        @error('wa') <p class="text-xs text-rose-500 mt-1 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> {{ $message }}</p> @enderror
     </div>
 </div>

@@ -10,13 +10,14 @@ class Tunai extends Component
 {
     public $dataId;
 
-    public function mount($dataId = null)
+    public function mount($id = null)
     {
-        $this->dataId = $dataId;
-        // Authorize: pastikan data milik user yang login
+        $this->dataId = $id;
+        // Authorize: pastikan data milik user yang login, query by UID
         Data::query()
             ->where('user_id', Auth::id())
-            ->findOrFail((int) $this->dataId);
+            ->where('uid', $this->dataId)
+            ->firstOrFail();
     }
 
     public function render()

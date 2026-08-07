@@ -55,6 +55,7 @@ class Pay extends Component
         $this->paymentGateway = PaySetting::where('isActive', true)->findOrFail($id);
         $this->paymentGatewayId = $this->paymentGateway->id;
         $this->manual = $this->paymentGateway->category;
+        $this->channel = $this->paymentGateway->midtrans_code;
         $amounts = app(PaymentCalculator::class)->calculate($this->code ?: null, $this->paymentGateway);
         $this->harga = $amounts['base_price'];
         $this->promo = $amounts['discount_amount'];
@@ -65,6 +66,12 @@ class Pay extends Component
     public function redeem()
     {
         $this->authorizeInvitation();
+
+        // Kode promo tidak wajib — abaikan jika kosong
+        if (empty(trim($this->code ?? ''))) {
+            return;
+        }
+
         if (! $this->paymentGatewayId) {
             $this->promo = 0;
             $this->total = $this->harga;
@@ -93,9 +100,19 @@ class Pay extends Component
     public function checkOut()
     {
         $this->validate([
-            'dataId' => 'required|integer',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'wa' => 'required|numeric|digits_between:9,15',
             'paymentGatewayId' => 'required|integer|exists:pay_settings,id',
             'channel' => 'nullable|string|max:50',
+        ], [
+            'nama.required' => 'Nama pembeli wajib diisi.',
+            'email.required' => 'Email pembeli wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'wa.required' => 'Nomor WhatsApp wajib diisi.',
+            'wa.numeric' => 'Nomor WhatsApp harus berupa angka.',
+            'wa.digits_between' => 'Nomor WhatsApp harus 9-15 digit.',
+            'paymentGatewayId.required' => 'Pilih metode pembayaran terlebih dahulu.',
         ]);
 
         $data = $this->authorizeInvitation();
@@ -131,7 +148,7 @@ class Pay extends Component
         });
 
         if ($paymentMethod->category === 'manual') {
-            return redirect()->route('dashboard.tunai', $data->uid);
+            return $this->redirectRoute('dashboard.tunai', ['id' => $data->uid]);
         }
 
         Config::$serverKey = config('midtrans.serverKey');
@@ -165,19 +182,19 @@ class Pay extends Component
             ]);
 
             // redirect to payment gateway midtrans
-            return redirect()->away($paymentUrl);
+            return $this->redirect($paymentUrl);
         } catch (\Exception $e) {
             report($e);
             session()->flash('message', 'Gagal membuat pembayaran Midtrans. Silakan coba lagi.');
         }
 
-        return redirect()->back();
+        return $this->redirect(request()->header('Referer'));
     }
 
-    public function mount($dataId = null)
+    public function mount($id = null)
     {
-        if ($dataId !== null) {
-            $this->dataId = $dataId;
+        if ($id !== null) {
+            $this->dataId = $id;
         }
 
         $this->authorizeInvitation();
@@ -213,6 +230,7 @@ class Pay extends Component
     {
         return Data::query()
             ->where('user_id', Auth::id())
-            ->findOrFail((int) $this->dataId);
+            ->where('uid', $this->dataId)
+            ->firstOrFail();
     }
 }

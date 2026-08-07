@@ -1,22 +1,22 @@
-<div class="row row-cols-auto">
-    @foreach ($pay as $item)
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+    @forelse ($pay as $item)
         @if ($item->category === 'manual')
-            <div class="col-4 mb-2">
-                <div class="border border-red rounded rad" wire:click='ifee({{ $item->id }})'>
-                    <input type="radio" class="btn-check" id="pay{{ $item->id }}" name="channel"
-                        value="{{ $item->midtrans_code }}" wire:model.lazy="channel">
-                    <label for="pay{{ $item->id }}"
-                        class="btn btn-outline btn-outline-dashed btn-outline-default d-flex align-items-center p-3 mb-0">
-                        <div class="symbol symbol-50px me-3 overflow-hidden">
-                            <img src="{{ asset('storage/' . $item->image) }}" width="50" height="50"
-                                style="object-fit: cover" alt="Logo {{ $item->bank }}">
-                        </div>
-                        <div class="text-start">
-                            <span class="fw-bold text-dark fs-5">{{ $item->bank }}</span>
-                        </div>
-                    </label>
+            <label for="payManual{{ $item->id }}"
+                class="relative flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all
+                       {{ $paymentGatewayId == $item->id ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' : 'border-slate-200 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500' }}"
+                wire:click="ifee({{ $item->id }})">
+                <input type="radio" id="payManual{{ $item->id }}" name="channel" value="{{ $item->midtrans_code }}"
+                    wire:model.lazy="channel" class="sr-only">
+                <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white dark:bg-slate-600">
+                    <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover" alt="{{ $item->bank }}">
                 </div>
-            </div>
+                <div class="text-left min-w-0">
+                    <p class="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{{ $item->bank }}</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500">Manual</p>
+                </div>
+            </label>
         @endif
-    @endforeach
+    @empty
+        <p class="text-sm text-slate-400 col-span-full py-4 text-center">Tidak ada metode pembayaran manual.</p>
+    @endforelse
 </div>
