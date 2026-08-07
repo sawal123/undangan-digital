@@ -223,6 +223,8 @@ class Kisah extends Component
         return view('livewire.dashboard.kelola.kisah', [
             'kisahCInta' => $kisahCinta,
             'kisahCinta' => $kisahCinta,
+        ])->layout('components.layouts.user-new', [
+            'headerTitle' => 'Kisah Cinta',
         ]);
     }
 }

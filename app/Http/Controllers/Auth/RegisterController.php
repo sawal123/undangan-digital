@@ -42,8 +42,8 @@ class RegisterController extends Controller
      */
     public function store(Request $request, TurnstileVerifier $turnstile, AuthActivityLogger $activityLogger)
     {
-        $hourKey = 'register-ip-hour:'.$request->ip();
-        $dayKey = 'register-ip-day:'.$request->ip();
+        $hourKey = 'register-ip-hour:' . $request->ip();
+        $dayKey = 'register-ip-day:' . $request->ip();
 
         if (
             RateLimiter::tooManyAttempts($hourKey, (int) config('security.register_per_ip_hour', 3))
@@ -117,7 +117,7 @@ class RegisterController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect()->route('verification.notice');
+            return redirect()->route('dashboard.index');
         } catch (ValidationException $e) {
             // Kembalikan pesan error validasi unik untuk email
             return redirect()->back()->with('message', 'Email tersebut sudah terdaftar, gunakan email yang lain.');

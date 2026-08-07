@@ -112,7 +112,9 @@ class Pria extends Component
     {
         $this->authorizeInvitation();
 
-        return view('livewire.dashboard.kelola.pria');
+        return view('livewire.dashboard.kelola.pria')->layout('components.layouts.user-new', [
+            'headerTitle' => 'Data Mempelai Pria',
+        ]);
     }
 
     private function authorizeInvitation(): Data

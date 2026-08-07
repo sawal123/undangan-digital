@@ -209,6 +209,8 @@ class Tamu extends Component
 
         return view('livewire.dashboard.kelola.tamu', [
             'tamu' => $tamu,
+        ])->layout('components.layouts.user-new', [
+            'headerTitle' => 'Daftar Tamu',
         ]);
     }
 }
