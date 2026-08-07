@@ -103,6 +103,7 @@ Route::middleware(['auth', 'not.suspended', 'security.admin.access', 'role:Owner
     Route::get('/security', \App\Livewire\AdminDemo\SecurityMonitoringDemo::class)->name('security');
     Route::get('/animation', \App\Livewire\AdminDemo\AnimationDemo::class)->name('animation');
     Route::get('/fonts', \App\Livewire\AdminDemo\FontsDemo::class)->name('fonts');
+    Route::get('/music', \App\Livewire\AdminDemo\MusicDemo::class)->name('music');
     Route::get('/cetak', \App\Livewire\AdminDemo\CetakDemo::class)->name('cetak');
     Route::get('/system-setting', \App\Livewire\AdminDemo\SystemSettingDemo::class)->name('system.setting');
     Route::get('/demo/{demo}', [TemaController::class, 'temademo'])->name('temademo');
