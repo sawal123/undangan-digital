@@ -50,21 +50,21 @@
         </div>
 
         <div class="flex flex-col sm:flex-row gap-4">
-            @if ($gambar)
+            @if ($newImage || $existingImage)
                 <div class="flex-shrink-0">
-                    @if (is_string($gambar))
-                        <img src="{{ $gambar }}" class="w-24 h-24 object-cover rounded-xl border border-slate-200 dark:border-slate-800" alt="Preview Image">
-                    @else
-                        <img src="{{ $gambar->temporaryUrl() }}" class="w-24 h-24 object-cover rounded-xl border border-slate-200 dark:border-slate-800" alt="Preview Image">
+                    @if ($newImage)
+                        <img src="{{ $newImage->temporaryUrl() }}" class="w-24 h-24 object-cover rounded-xl border border-slate-200 dark:border-slate-800" alt="Preview Image">
+                    @elseif ($existingImage)
+                        <img src="{{ $existingImage }}" class="w-24 h-24 object-cover rounded-xl border border-slate-200 dark:border-slate-800" alt="Preview Image">
                     @endif
                 </div>
             @endif
             <div class="flex-1">
                 <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Gambar <span class="text-rose-500">*</span></label>
-                <input id="gambar" name="gambar" wire:model="gambar" type="file" 
+                <input id="gambar" name="gambar" wire:model="newImage" type="file" 
                     class="w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900/30 dark:file:text-indigo-400 dark:hover:file:bg-indigo-900/50 transition-all">
-                @error('gambar') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
-                <div wire:loading wire:target="gambar" class="mt-2 text-xs text-indigo-600 dark:text-indigo-400">Uploading...</div>
+                @error('newImage') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                <div wire:loading wire:target="newImage" class="mt-2 text-xs text-indigo-600 dark:text-indigo-400">Uploading...</div>
             </div>
         </div>
 

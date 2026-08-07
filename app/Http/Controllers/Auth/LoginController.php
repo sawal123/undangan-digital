@@ -93,10 +93,6 @@ class LoginController extends Controller
         }
 
         if (auth()->user()->hasRole('User')) {
-            if (! auth()->user()->hasVerifiedEmail()) {
-                return redirect()->route('verification.notice');
-            }
-
             $data = Data::where('user_id', Auth::user()->id)->latest()->first();
 
             if ($data) {

@@ -45,6 +45,13 @@
         
                         <button class="btn btn-primary w-100" type="submit">Register</button>
 
+                        <div class="mt-3">
+                            <p class="text-center text-muted mb-3">atau</p>
+                            <a href="{{ route('auth.google') }}" class="btn btn-outline-secondary w-100" style="border: 1px solid #e0e0e0;">
+                                <i class="fab fa-google me-2"></i> Register dengan Google
+                            </a>
+                        </div>
+
                         <div class="col-12 text-center mt-3">
                             <p class="mb-0 mt-3"><small class="text-dark me-2">Sudah Punya Akun ?</small> <a href="{{route('login')}}" wire:navigate class="text-dark fw-bold">Sign in</a></p>
                         </div><!--end col-->

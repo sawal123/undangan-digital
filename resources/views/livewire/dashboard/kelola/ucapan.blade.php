@@ -103,7 +103,7 @@
 
     @if($ucapan->hasPages())
         <div class="mt-6">
-            {{ $ucapan->links() }}
+            {{ $ucapan->links('vendor.pagination.tailwind') }}
         </div>
     @endif
 

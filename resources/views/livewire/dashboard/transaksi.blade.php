@@ -83,7 +83,7 @@
         </div>
         @if($transactions->hasPages())
             <div class="p-6 border-t border-slate-50 dark:border-slate-800">
-                {{ $transactions->links() }}
+                {{ $transactions->links('vendor.pagination.tailwind') }}
             </div>
         @endif
     </div>

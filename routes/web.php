@@ -55,7 +55,7 @@ Route::get('/u/{slug}/{tamu?}', [TemaController::class, 'visit'])->name('visit')
 Route::post('u/savedoa', [TemaController::class, 'saveDoa'])->middleware('throttle:10,1')->name('savedoa');
 
 // Role User
-Route::middleware(['auth', 'not.suspended', 'verified', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
+Route::middleware(['auth', 'not.suspended', 'role:User', 'setup.complete'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
     Route::get('/add-undangan/{id}', [SetupController::class, 'add'])->name('add');
     Route::resource('data', DataController::class)->only(['store']);

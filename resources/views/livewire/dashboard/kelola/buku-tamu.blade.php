@@ -112,7 +112,7 @@
         </div>
         @if($data->hasPages())
             <div class="p-6 border-t border-slate-50 dark:border-slate-800">
-                {{ $data->links() }}
+                {{ $data->links('vendor.pagination.tailwind') }}
             </div>
         @endif
     </div>

@@ -114,7 +114,7 @@
         </div>
         @if($tamu->hasPages())
             <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800">
-                {{ $tamu->links() }}
+                {{ $tamu->links('vendor.pagination.tailwind') }}
             </div>
         @endif
     </div>
