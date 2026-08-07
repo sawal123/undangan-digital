@@ -112,7 +112,3 @@
         }
     });
 </script>
-            </div>
-        @endforelse
-    </div>
-</div>
