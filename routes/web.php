@@ -79,7 +79,7 @@ Route::middleware(['auth', 'not.suspended', 'role:User', 'setup.complete'])->pre
     Route::get('/kelola/{id}/setting', \App\Livewire\DashboardDemo\Kelola\Setting::class)->name('undangan.setting');
     Route::get('/kelola/{id}/buku-tamu', \App\Livewire\DashboardDemo\Kelola\BukuTamu::class)->name('undangan.bukutamu');
     Route::get('/kelola/{id}/tema', \App\Livewire\DashboardDemo\Kelola\Tema::class)->name('undangan.tema');
-    Route::get('/demo/{demo}/{id}', [TemaController::class, 'demo'])->name('demo');
+    Route::get('/demo/{token}', [TemaController::class, 'demo'])->name('demo');
     Route::get('/pay/{id}', [PayController::class, 'index'])->name('pay');
 
     Route::get('/midtrans/finish', [MidtransController::class, 'finishRedirect']);

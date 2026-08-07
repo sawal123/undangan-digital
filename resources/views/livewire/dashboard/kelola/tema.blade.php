@@ -56,7 +56,7 @@
                 // $previewImage = $fallbackImage;
                 // }
             @endphp
-            <div
+            <div wire:key="theme-{{ $item->id }}"
                 class="group relative bg-white dark:bg-slate-900 rounded-3xl border {{ $isSelected ? 'border-indigo-600 ring-2 ring-indigo-500/20' : 'border-slate-200 dark:border-slate-800 shadow-sm' }} overflow-hidden hover:shadow-xl transition-all duration-300">
                 <!-- Selection Badge -->
                 @if ($isSelected)
@@ -78,7 +78,7 @@
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
                         <div class="flex gap-2">
-                            <a href="{{ route('dashboard.demo', ['demo' => Crypt::encryptString($item->path), 'id' => $data->uid]) }}"
+                            <a href="{{ $this->previewUrl($item->path) }}"
                                 target="_blank"
                                 class="flex-1 py-2 bg-white/20 backdrop-blur-md text-white text-xs font-bold rounded-xl hover:bg-white/40 transition-colors flex items-center justify-center gap-2">
                                 <i data-lucide="eye" class="w-4 h-4"></i> Demo
@@ -96,7 +96,7 @@
                                 {{ $item->category->category ?? 'Umum' }}</p>
                         </div>
                         @if ($canPreview)
-                            <a href="{{ route('dashboard.demo', ['demo' => Crypt::encryptString($item->path), 'id' => $data->uid]) }}" target="_blank" class="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors" title="Lihat Preview">
+                            <a href="{{ $this->previewUrl($item->path) }}" target="_blank" class="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors" title="Lihat Preview">
                                 <i data-lucide="external-link" class="w-4 h-4"></i>
                             </a>
                         @endif

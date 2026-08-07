@@ -25,12 +25,20 @@ class TemaController extends Controller
         return Data::where('slug', $slug)->first();
     }
 
-    public function demo($demo, $id = null)
+    public function demo($token)
     {
         try {
-            $temaPath = Crypt::decryptString($demo);
+            $payload = json_decode(Crypt::decryptString($token), true);
 
-            // Menggabungkan pencarian dan pemuatan relasi menjadi 1 kueri efisien
+            if (! is_array($payload) || ! isset($payload['path'], $payload['data_id'], $payload['user_id'])) {
+                return abort(404, 'Tema atau data tidak ditemukan.');
+            }
+
+            // Token dibuat khusus untuk pemilik data; tolak jika diakses user lain.
+            if (! auth()->check() || (int) $payload['user_id'] !== (int) auth()->id()) {
+                return abort(403, 'Anda tidak memiliki akses untuk melihat preview ini.');
+            }
+
             $data = Data::with([
                 'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound',
                 'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah',
@@ -38,18 +46,13 @@ class TemaController extends Controller
                 'thumbnailWas', 'teksUndangan', 'coverUndangan',
                 'setting', 'qoute', 'teksPenutup', 'ucapan.tamu',
             ])
-                ->where('uid', $id)
-                ->when(auth()->check() && auth()->user()->hasRole('User'), fn ($query) => $query->where('user_id', auth()->id()))
+                ->where('id', $payload['data_id'])
+                ->where('user_id', auth()->id())
                 ->firstOrFail();
-
-            // Cek apakah undangan bisa di-preview (selalu true untuk owner, kepemilikan sudah divalidasi di atas)
-            if (!$data->canBePreviewed()) {
-                return abort(403, 'Undangan belum diaktifkan untuk di-preview.');
-            }
 
             $preparedData = $this->prepareInvitationData($data, 'Nama Tamu (Contoh)');
 
-            return view($temaPath, $preparedData);
+            return view($payload['path'], $preparedData);
         } catch (\Exception $e) {
             \Log::error('Error saat demo tema: '.$e->getMessage());
 

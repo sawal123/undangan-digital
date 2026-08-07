@@ -5,6 +5,7 @@ namespace App\Livewire\DashboardDemo\Kelola;
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
 use App\Models\Theme;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Crypt;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -27,6 +28,18 @@ class Tema extends Component
         $this->canPreview = $data->canBePreviewed();
         // Public link perlu pembayaran/premium
         $this->canShareInvitation = $data->canBeShared();
+    }
+
+    public function previewUrl(string $themePath): string
+    {
+        // Token mengikat path tema, data, dan pemilik agar preview hanya bisa dibuka oleh user itu sendiri
+        $token = Crypt::encryptString(json_encode([
+            'path' => $themePath,
+            'data_id' => $this->dataId,
+            'user_id' => auth()->id(),
+        ]));
+
+        return route('dashboard.demo', ['token' => $token]);
     }
 
     public function choose(int $id): void
