@@ -13,6 +13,22 @@ class Index extends Component
 {
     use WithPagination;
 
+    public function togglePreview(int $dataId): void
+    {
+        $data = Data::query()
+            ->where('user_id', Auth::id())
+            ->findOrFail($dataId);
+
+        // Toggle preview/active status
+        $data->update(['isActive' => !$data->isActive]);
+
+        $message = $data->isActive 
+            ? 'Preview diaktifkan! Anda sekarang bisa melihat preview tema dengan data anda sendiri.'
+            : 'Preview dinonaktifkan.';
+        
+        session()->flash('message', $message);
+    }
+
     public function render(): View
     {
         $dataUndangan = Data::query()
