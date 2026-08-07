@@ -42,7 +42,7 @@ class TemaController extends Controller
                 ->when(auth()->check() && auth()->user()->hasRole('User'), fn ($query) => $query->where('user_id', auth()->id()))
                 ->firstOrFail();
 
-            // Cek apakah undangan bisa di-preview (hanya cek isActive, tidak perlu pembayaran untuk preview internal)
+            // Cek apakah undangan bisa di-preview (selalu true untuk owner, kepemilikan sudah divalidasi di atas)
             if (!$data->canBePreviewed()) {
                 return abort(403, 'Undangan belum diaktifkan untuk di-preview.');
             }

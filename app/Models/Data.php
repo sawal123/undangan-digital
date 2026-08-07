@@ -50,10 +50,9 @@ class Data extends Model
 
     public function canBePreviewed(): bool
     {
-        // Internal preview (demo) dapat diakses jika:
-        // 1. Undangan sudah diaktifkan (isActive)
-        // Tidak perlu pembayaran untuk preview internal
-        return $this->isActive === true;
+        // Preview internal (demo dengan data sendiri) selalu diizinkan untuk owner,
+        // tanpa syarat aktivasi/pembayaran. Kepemilikan sudah divalidasi di controller/component.
+        return true;
     }
 
     public function scopeOwnedBy($query, int $userId)

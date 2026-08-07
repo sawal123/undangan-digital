@@ -43,18 +43,12 @@
                                 <span class="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-wider">
                                     {{ $item->eventType->name ?? 'Pernikahan' }}
                                 </span>
-                                @if($item->isActive)
-                                    @if($canShareInvitation)
-                                        <span class="px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
-                                            <i data-lucide="crown" class="w-3 h-3"></i> Premium
-                                        </span>
-                                    @else
-                                        <span class="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
-                                            <i data-lucide="eye" class="w-3 h-3"></i> Preview Aktif
-                                        </span>
-                                    @endif
+                                @if($canShareInvitation)
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                                        <i data-lucide="crown" class="w-3 h-3"></i> Premium
+                                    </span>
                                 @else
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest">Belum Aktif</span>
+                                    <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">Free</span>
                                 @endif
                             </div>
                         </div>
@@ -68,22 +62,10 @@
                                 <i data-lucide="clock" class="w-4 h-4 mr-2"></i> Sedang Diproses
                             </a>
                         @else
-                            {{-- Preview Toggle Button --}}
-                            @if ($invitationUid)
-                                <button wire:click="togglePreview({{ $item->id }})" wire:loading.attr="disabled" wire:target="togglePreview({{ $item->id }})"
-                                    class="inline-flex items-center px-4 py-2 {{ $item->isActive ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50' }} text-sm font-semibold rounded-xl border {{ $item->isActive ? 'border-emerald-100 dark:border-emerald-800' : 'border-emerald-100 dark:border-emerald-800' }} transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
-                                    <i wire:loading.remove wire:target="togglePreview({{ $item->id }})" data-lucide="{{ $item->isActive ? 'eye-off' : 'eye' }}" class="w-4 h-4 mr-2"></i>
-                                    <i wire:loading wire:target="togglePreview({{ $item->id }})" data-lucide="loader-2" class="w-4 h-4 mr-2 animate-spin"></i>
-                                    <span wire:loading.remove wire:target="togglePreview({{ $item->id }})">{{ $item->isActive ? 'Nonaktifkan Preview' : 'Aktifkan Preview' }}</span>
-                                    <span wire:loading wire:target="togglePreview({{ $item->id }})" class="hidden">{{ $item->isActive ? 'Menonaktifkan' : 'Mengaktifkan' }}...</span>
-                                </button>
-                            @endif
-
-                            {{-- Premium Link/Button --}}
                             @if (!$canShareInvitation && $invitationUid)
                                 <a href="{{ route('dashboard.pay', $invitationUid) }}" wire:navigate
-                                    class="inline-flex items-center px-4 py-2 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-sm font-semibold rounded-xl border border-amber-100 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors">
-                                    <i data-lucide="zap" class="w-4 h-4 mr-2 text-amber-500"></i> Aktifkan Premium
+                                    class="inline-flex items-center px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-sm font-semibold rounded-xl border border-emerald-100 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors">
+                                    <i data-lucide="zap" class="w-4 h-4 mr-2 text-emerald-500"></i> Aktifkan Premium
                                 </a>
                             @endif
                         @endif
