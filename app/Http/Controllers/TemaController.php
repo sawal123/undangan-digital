@@ -42,6 +42,11 @@ class TemaController extends Controller
                 ->when(auth()->check() && auth()->user()->hasRole('User'), fn ($query) => $query->where('user_id', auth()->id()))
                 ->firstOrFail();
 
+            // Cek apakah undangan bisa di-preview (hanya cek isActive, tidak perlu pembayaran untuk preview internal)
+            if (!$data->canBePreviewed()) {
+                return abort(403, 'Undangan belum diaktifkan untuk di-preview.');
+            }
+
             $preparedData = $this->prepareInvitationData($data, 'Nama Tamu (Contoh)');
 
             return view($temaPath, $preparedData);
@@ -69,7 +74,7 @@ class TemaController extends Controller
             ])->where('slug', $slug)->firstOrFail();
 
             if (! $data->canBeShared()) {
-                return abort(403, 'Undangan belum aktif dan belum bisa dibagikan.');
+                return abort(403, 'Undangan belum aktif dan belum bisa dibagikan. Silakan upgrade ke premium untuk membagikan undangan ke tamu.');
             }
 
             // Validasi theme

@@ -28,8 +28,8 @@
         <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-sm flex items-start gap-3">
             <i data-lucide="lock" class="w-5 h-5 mt-0.5"></i>
             <div>
-                <p class="font-bold">Link undangan belum bisa dibagikan.</p>
-                <p class="mt-1 text-amber-700 dark:text-amber-400">Aktifkan undangan terlebih dahulu sebelum mengirim WhatsApp atau menyalin link tamu.</p>
+                <p class="font-bold">Link undangan belum bisa dibagikan ke publik.</p>
+                <p class="mt-1 text-amber-700 dark:text-amber-400">Upgrade ke premium untuk membagikan link undangan melalui WhatsApp atau copy link ke tamu anda.</p>
             </div>
         </div>
     @endunless

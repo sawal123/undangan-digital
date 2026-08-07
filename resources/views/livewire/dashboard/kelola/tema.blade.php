@@ -22,12 +22,22 @@
         </div>
     @endif
 
-    @unless ($canShareInvitation)
+    @unless ($canPreview)
         <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-sm flex items-start gap-3">
             <i data-lucide="lock" class="w-5 h-5 mt-0.5"></i>
             <div>
-                <p class="font-bold">Review belum bisa dibuka.</p>
-                <p class="mt-1 text-amber-700 dark:text-amber-400">Aktifkan undangan terlebih dahulu untuk review dengan data user.</p>
+                <p class="font-bold">Preview tema belum bisa dibuka.</p>
+                <p class="mt-1 text-amber-700 dark:text-amber-400">Aktifkan undangan terlebih dahulu untuk melihat preview dengan data anda.</p>
+            </div>
+        </div>
+    @endunless
+
+    @unless ($canShareInvitation)
+        <div class="p-4 rounded-2xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-sm flex items-start gap-3">
+            <i data-lucide="zap" class="w-5 h-5 mt-0.5"></i>
+            <div>
+                <p class="font-bold">Link undangan belum bisa dibagikan ke publik.</p>
+                <p class="mt-1 text-blue-700 dark:text-blue-400">Upgrade ke premium untuk membagikan link undangan ke tamu anda. Namun, anda tetap dapat melihat preview dengan data anda sendiri.</p>
             </div>
         </div>
     @endunless

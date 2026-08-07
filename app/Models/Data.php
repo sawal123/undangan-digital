@@ -36,6 +36,23 @@ class Data extends Model
 
     public function canBeShared(): bool
     {
+        // Public link dapat di-share hanya jika:
+        // 1. Undangan sudah diaktifkan (isActive)
+        // 2. User sudah membayar/premium (ada transaction dengan status success/settlement)
+        if (!$this->isActive) {
+            return false;
+        }
+
+        return (bool) $this->transaction()
+            ->whereIn('payment_status', ['SUCCESS', 'SETTLEMENT'])
+            ->exists();
+    }
+
+    public function canBePreviewed(): bool
+    {
+        // Internal preview (demo) dapat diakses jika:
+        // 1. Undangan sudah diaktifkan (isActive)
+        // Tidak perlu pembayaran untuk preview internal
         return $this->isActive === true;
     }
 

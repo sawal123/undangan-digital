@@ -15,12 +15,17 @@ class Tema extends Component
     #[Locked]
     public int $dataId;
 
+    public bool $canPreview = false;
+
     public bool $canShareInvitation = false;
 
     public function mount(string $id): void
     {
         $data = $this->ownedInvitationByUid($id);
         $this->dataId = $data->id;
+        // Internal preview tidak perlu pembayaran
+        $this->canPreview = $data->canBePreviewed();
+        // Public link perlu pembayaran/premium
         $this->canShareInvitation = $data->canBeShared();
     }
 
@@ -53,7 +58,7 @@ class Tema extends Component
         $data = $this->ownedInvitationById($this->dataId);
 
         if (!$data?->canBeShared()) {
-            session()->flash('error', 'Undangan belum aktif, review dengan data pengantin belum bisa dibuka.');
+            session()->flash('error', 'Link publik belum bisa dibagikan. Silakan upgrade ke premium untuk membagikan undangan.');
             return;
         }
 
@@ -68,6 +73,9 @@ class Tema extends Component
     public function render(): View
     {
         $data = $this->ownedInvitationById($this->dataId, ['eventType']);
+        // Internal preview tidak perlu pembayaran
+        $this->canPreview = $data?->canBePreviewed() ?? false;
+        // Public link perlu pembayaran/premium
         $this->canShareInvitation = $data?->canBeShared() ?? false;
 
         $themes = Theme::with(['category', 'eventType'])
