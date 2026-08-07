@@ -58,8 +58,10 @@
                         @endif
                     </div>
                     <button wire:click="save" wire:loading.attr="disabled" wire:target="save" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-indigo-200 dark:shadow-none flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
-                        <span wire:loading.remove wire:target="save" class="inline-flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Simpan Metode</span>
-                        <span wire:loading.flex wire:target="save" class="hidden items-center gap-2"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...</span>
+                        <i wire:loading.remove wire:target="save" data-lucide="save" class="w-4 h-4"></i>
+                        <i wire:loading wire:target="save" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                        <span wire:loading.remove wire:target="save">Simpan Metode</span>
+                        <span wire:loading.flex wire:target="save" class="hidden">Menyimpan...</span>
                     </button>
                 </div>
             </div>
@@ -127,3 +129,13 @@
         </div>
     </x-ui.modal>
 </div>
+
+ 
+ < s c r i p t > 
+         d o c u m e n t . a d d E v e n t L i s t e n e r ( ' l i v e w i r e : u p d a t e d ' ,   ( )   = >   { 
+                 i f   ( t y p e o f   l u c i d e   ! = =   ' u n d e f i n e d ' )   { 
+                         l u c i d e . c r e a t e I c o n s ( ) ; 
+                 } 
+         } ) ; 
+ < / s c r i p t >  
+ 
