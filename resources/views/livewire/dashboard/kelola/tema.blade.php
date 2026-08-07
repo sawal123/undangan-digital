@@ -125,13 +125,14 @@
 
 <script>
     document.addEventListener('livewire:initialized', () => {
-        // Initialize Lucide icons after each Livewire update
-        document.addEventListener('livewire:updated', () => {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
+        Livewire.hook('morph.updated', ({ el }) => {
+            if (typeof lucide === 'undefined') {
+                return;
             }
+
+            lucide.createIcons({ nodes: [el] });
         });
-        
+
         Livewire.on('open-new-tab', (event) => {
             const url = event.url || event[0]?.url;
             if (url) {
