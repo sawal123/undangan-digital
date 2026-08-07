@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\AuthActivityLogger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Spatie\Permission\Models\Role;
 
@@ -96,6 +97,12 @@ class GoogleAuthController extends Controller
 
             return redirect()->route('dashboard.index');
         } catch (\Exception $e) {
+            Log::error('Google OAuth callback error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return redirect()->route('login')
                 ->with('error', 'Terjadi kesalahan saat login dengan Google. Silakan coba lagi.');
         }
