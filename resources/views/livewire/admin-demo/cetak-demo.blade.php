@@ -46,7 +46,7 @@
             <tr class="table-row-hover transition-colors">
                 <td class="px-5 py-3.5">
                     <div class="flex items-center gap-3">
-                        @php $imgs = json_decode($item->gambar, true); @endphp
+                        @php $imgs = is_array($item->gambar) ? $item->gambar : (json_decode($item->gambar, true) ?: []); @endphp
                         @if(!empty($imgs))
                             <img src="{{ Storage::url($imgs[0]) }}" class="w-12 h-12 rounded-lg object-cover shadow-sm" alt="{{ $item->nama }}">
                         @else
