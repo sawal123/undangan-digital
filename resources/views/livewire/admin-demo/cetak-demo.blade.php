@@ -56,7 +56,7 @@
                         @endif
                         <div>
                             <p class="font-bold text-slate-800 dark:text-white">{{ $item->nama }}</p>
-                            <p class="text-xs text-slate-500 line-clamp-1">{{ $item->deskripsi }}</p>
+                            <p class="text-xs text-slate-500 line-clamp-1">{{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi ?? ''), 80) }}</p>
                         </div>
                     </div>
                 </td>
@@ -137,7 +137,10 @@
 
             <div class="w-full">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Deskripsi</label>
-                <textarea wire:model="deskripsi" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                <div wire:ignore x-data="cetakDeskripsiEditor(@js($deskripsi))" x-init="init()">
+                    <textarea id="cetak-deskripsi-editor" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm"></textarea>
+                </div>
+                @error('deskripsi') <span class="text-xs text-rose-500 mt-1">{{ $message }}</span> @enderror
             </div>
 
             <div class="w-full">
@@ -181,3 +184,45 @@
         </div>
     </x-ui.modal>
 </div>
+
+<script>
+    function cetakDeskripsiEditor(initialContent) {
+        return {
+            editor: null,
+            init() {
+                const textarea = this.$el.querySelector('#cetak-deskripsi-editor');
+
+                const create = () => {
+                    ClassicEditor.create(textarea).then((editor) => {
+                        this.editor = editor;
+                        editor.setData(initialContent || '');
+                        editor.model.document.on('change:data', () => {
+                            @this.set('deskripsi', editor.getData());
+                        });
+                    }).catch((error) => console.error('CKEditor error:', error));
+                };
+
+                if (window.ClassicEditor) {
+                    create();
+                } else {
+                    let script = document.getElementById('ckeditor-cdn-script');
+                    if (!script) {
+                        script = document.createElement('script');
+                        script.id = 'ckeditor-cdn-script';
+                        script.src = 'https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js';
+                        document.head.appendChild(script);
+                    }
+                    script.addEventListener('load', create, { once: true });
+                }
+
+                // Sinkronkan ulang isi editor saat modal dibuka untuk Tambah/Edit produk lain
+                Livewire.on('set-editor-content', (event) => {
+                    const content = event.content ?? event[0]?.content ?? '';
+                    if (this.editor) {
+                        this.editor.setData(content || '');
+                    }
+                });
+            },
+        };
+    }
+</script>
