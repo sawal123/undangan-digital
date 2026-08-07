@@ -115,11 +115,11 @@
         </div>
 
         <div class="w-full h-[750px] flex flex-col justify-center items-center bg-cover bg-center bg-local relative"
-            id="bottom" style="background-image: url('{{ asset('storage/' . $thumbnailWa->thumbnail) }}');">
+            id="bottom" style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}');">
             <div class="absolute bg-black opacity-50 inset-0 w-full h-full z-0"></div>
             <div class="flex flex-col justify-center items-center p-2 bg-white shadow-md z-10">
                 <div class="aspect-[5/7] w-44 h-auto">
-                    <img src="{{ asset('storage/' . $thumbnailWa->thumbnail) }}" alt=""
+                    <img src="{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}" alt=""
                         class="object-cover w-full h-full">
                 </div>
             </div>

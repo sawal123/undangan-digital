@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta property="og:title" content="{{ $data->title }}" />
-    <meta property="og:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta property="og:image" content="{{ asset('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:description" content="Deskripsi singkat undangan." />
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -16,7 +16,7 @@
     <!-- WhatsApp Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $data->title }}">
-    <meta name="twitter:image" content="{{ asset('storage/' . $data->thumbnailWas->thumbnail) }}">
+    <meta name="twitter:image" content="{{ asset('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <title>{{ $data->title }}</title>
 
     <link rel="stylesheet" href="{{ asset('tema/whitepre/assets/aos/dist/aos.css') }}">

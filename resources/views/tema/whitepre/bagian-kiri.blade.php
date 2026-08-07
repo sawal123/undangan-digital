@@ -1,7 +1,7 @@
 <div class=" lg:w-3/5 md:h-screen lg:fixed z-20">
     <!-- opening  -->
     <div class="z-50 w-full h-full brightness-50 contrast-100	saturate-100"
-      style="background-image: url('{{ asset('storage/'. $thumbnailWa->thumbnail) }}'); background-size: cover; background-position: center;"></div>
+      style="background-image: url('{{ asset('storage/'. ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}'); background-size: cover; background-position: center;"></div>
     <h1 class="absolute bottom-12 left-14 text-[50px] text-white  font-great_vibes hidden lg:block">{{ $data->wanita->nama_panggilan }} <span
         class=" text-[25px]" > & </span> {{ $data->pria->nama_panggilan }}</h1>
 
