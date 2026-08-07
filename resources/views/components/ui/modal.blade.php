@@ -30,7 +30,7 @@
                     {{ $title }}
                 </h3>
 
-                <div class="modal-content text-slate-600 dark:text-slate-300">
+                <div class="ui-modal-content text-slate-600 dark:text-slate-300">
                     {{ $slot }}
                 </div>
             </div>
