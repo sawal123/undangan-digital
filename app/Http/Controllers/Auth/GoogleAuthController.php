@@ -13,9 +13,7 @@ use Spatie\Permission\Models\Role;
 
 class GoogleAuthController extends Controller
 {
-    public function __construct(private AuthActivityLogger $activityLogger)
-    {
-    }
+    public function __construct(private AuthActivityLogger $activityLogger) {}
 
     /**
      * Redirect to Google OAuth
@@ -73,7 +71,7 @@ class GoogleAuthController extends Controller
             // Create new user
             $newUser = DB::transaction(function () use ($googleUser) {
                 $roleUser = Role::firstOrCreate(['name' => 'User']);
-                
+
                 $user = User::create([
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
@@ -81,7 +79,7 @@ class GoogleAuthController extends Controller
                     'avatar' => $googleUser->getAvatar() ?? 'images/default-avatar.png',
                     'password' => bcrypt(str()->random(32)), // Random password since using OAuth
                 ]);
-                
+
                 $user->assignRole($roleUser);
 
                 return $user;

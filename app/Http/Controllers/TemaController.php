@@ -40,11 +40,28 @@ class TemaController extends Controller
             }
 
             $data = Data::with([
-                'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound',
-                'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah',
-                'kisah.image', 'dataFont.titleFont', 'dataFont.subFont',
-                'thumbnailWas', 'teksUndangan', 'coverUndangan',
-                'setting', 'qoute', 'teksPenutup', 'ucapan.tamu',
+                'pria',
+                'wanita',
+                'birthdayProfile',
+                'eventDetail',
+                'acara',
+                'galery',
+                'sound',
+                'FiturUcapan',
+                'streaming',
+                'kado.giftPay',
+                'fiturKado',
+                'imageKisah',
+                'kisah.image',
+                'dataFont.titleFont',
+                'dataFont.subFont',
+                'thumbnailWas',
+                'teksUndangan',
+                'coverUndangan',
+                'setting',
+                'qoute',
+                'teksPenutup',
+                'ucapan.tamu',
             ])
                 ->where('id', $payload['data_id'])
                 ->where('user_id', auth()->id())
@@ -54,7 +71,7 @@ class TemaController extends Controller
 
             return view($payload['path'], $preparedData);
         } catch (\Exception $e) {
-            \Log::error('Error saat demo tema: '.$e->getMessage());
+            \Log::error('Error saat demo tema: ' . $e->getMessage());
 
             return abort(404, 'Tema atau data tidak ditemukan.');
         }
@@ -69,11 +86,30 @@ class TemaController extends Controller
     {
         try {
             $data = Data::with([
-                'theme', 'eventType', 'pria', 'wanita', 'birthdayProfile', 'eventDetail', 'acara', 'galery', 'sound',
-                'FiturUcapan', 'streaming', 'kado.giftPay', 'fiturKado', 'imageKisah',
-                'kisah.image', 'dataFont.titleFont', 'dataFont.subFont',
-                'thumbnailWas', 'teksUndangan', 'coverUndangan',
-                'setting', 'qoute', 'teksPenutup', 'ucapan.tamu',
+                'theme',
+                'eventType',
+                'pria',
+                'wanita',
+                'birthdayProfile',
+                'eventDetail',
+                'acara',
+                'galery',
+                'sound',
+                'FiturUcapan',
+                'streaming',
+                'kado.giftPay',
+                'fiturKado',
+                'imageKisah',
+                'kisah.image',
+                'dataFont.titleFont',
+                'dataFont.subFont',
+                'thumbnailWas',
+                'teksUndangan',
+                'coverUndangan',
+                'setting',
+                'qoute',
+                'teksPenutup',
+                'ucapan.tamu',
             ])->where('slug', $slug)->firstOrFail();
 
             if (! $data->canBeShared()) {
@@ -93,7 +129,7 @@ class TemaController extends Controller
         } catch (ModelNotFoundException $e) {
             return abort(404, 'Undangan tidak ditemukan.');
         } catch (\Exception $e) {
-            \Log::error('Error saat visit undangan: '.$e->getMessage());
+            \Log::error('Error saat visit undangan: ' . $e->getMessage());
             session()->flash('error', 'Terjadi kesalahan, silakan coba lagi.');
 
             return redirect()->back();
@@ -111,17 +147,28 @@ class TemaController extends Controller
         $ta = $tamu ? $data->tamu()->where('kode', $tamu)->first() : null;
 
         $hari = [
-            'Sunday' => 'Minggu', 'Monday' => 'Senin',
-            'Tuesday' => 'Selasa', 'Wednesday' => 'Rabu',
-            'Thursday' => 'Kamis',  'Friday' => 'Jumat',
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
             'Saturday' => 'Sabtu',
         ];
 
         $bulan = [
-            'Jan' => 'Januari', 'Feb' => 'Februari', 'Mar' => 'Maret',
-            'Apr' => 'April',   'May' => 'Mei',      'Jun' => 'Juni',
-            'Jul' => 'Juli',    'Aug' => 'Agustus',  'Sep' => 'September',
-            'Oct' => 'Oktober', 'Nov' => 'November', 'Dec' => 'Desember',
+            'Jan' => 'Januari',
+            'Feb' => 'Februari',
+            'Mar' => 'Maret',
+            'Apr' => 'April',
+            'May' => 'Mei',
+            'Jun' => 'Juni',
+            'Jul' => 'Juli',
+            'Aug' => 'Agustus',
+            'Sep' => 'September',
+            'Oct' => 'Oktober',
+            'Nov' => 'November',
+            'Dec' => 'Desember',
         ];
 
         $video = $data->galery->pluck('video')->filter()->toArray();
@@ -185,7 +232,6 @@ class TemaController extends Controller
                     'nama' => 'Nama tidak boleh kosong.',
                 ])->withInput();
             }
-
         }
 
         $doa = DB::transaction(function () use ($data, $tamu, $isPublicActive, $va, &$addTamu) {

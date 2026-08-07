@@ -30,8 +30,8 @@ class LoginController extends Controller
     public function login(LoginRequest $request, AuthActivityLogger $activityLogger, TurnstileVerifier $turnstile)
     {
         $email = Str::lower((string) $request->input('email'));
-        $ipKey = 'login-ip:'.$request->ip();
-        $emailIpKey = 'login-email-ip:'.$email.'|'.$request->ip();
+        $ipKey = 'login-ip:' . $request->ip();
+        $emailIpKey = 'login-email-ip:' . $email . '|' . $request->ip();
         $message = 'Email atau kata sandi tidak sesuai.';
 
         if (

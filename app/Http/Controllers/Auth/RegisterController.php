@@ -42,8 +42,8 @@ class RegisterController extends Controller
      */
     public function store(Request $request, TurnstileVerifier $turnstile, AuthActivityLogger $activityLogger)
     {
-        $hourKey = 'register-ip-hour:'.$request->ip();
-        $dayKey = 'register-ip-day:'.$request->ip();
+        $hourKey = 'register-ip-hour:' . $request->ip();
+        $dayKey = 'register-ip-day:' . $request->ip();
 
         if (
             RateLimiter::tooManyAttempts($hourKey, (int) config('security.register_per_ip_hour', 3))

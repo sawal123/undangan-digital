@@ -4,7 +4,8 @@
     <div class="absolute inset-0 swiper mySwiper h-full w-full">
         @if ($poto == null)
             <div class="swiper-slide bg-local bg-cover bg-center object-cover brightness-50 contrast-100 "
-                style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}');"></div>
+                style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}');">
+            </div>
         @else
             <div class="swiper-wrapper w-full h-full">
                 <div class="swiper-slide bg-local bg-cover bg-center object-contain brightness-50 contrast-100"
