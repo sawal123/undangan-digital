@@ -173,6 +173,15 @@ class Pay extends Component
             ],
         ];
 
+        // Jika pembayaran via bank transfer, arahkan langsung ke bank spesifik
+        $bankTransferCodes = ['bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'other_va'];
+        if (in_array($paymentMethod->midtrans_code, $bankTransferCodes)) {
+            $bankName = str_replace('_va', '', $paymentMethod->midtrans_code);
+            $midtrans_params['bank_transfer'] = [
+                'bank' => $bankName,
+            ];
+        }
+
         // link snap payment_url
         try {
             $paymentUrl = Snap::createTransaction($midtrans_params)->redirect_url;
