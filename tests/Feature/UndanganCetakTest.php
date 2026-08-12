@@ -11,16 +11,27 @@ class UndanganCetakTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function getDefaultData(array $merge = [])
+    {
+        return array_merge([
+            'stok' => 100,
+            'terjual' => 0,
+            'harga' => 1500,
+            'promo' => 0,
+            'favorite' => 0,
+            'deskripsi' => 'Test',
+            'gambar' => '[]',
+        ], $merge);
+    }
+
     public function test_create_dengan_jenis_id_berhasil()
     {
         $jenis = JenisUdangan::create(['jenis' => 'Softcover']);
 
-        $undangan = UndanganCetak::create([
+        $undangan = UndanganCetak::create($this->getDefaultData([
             'nama' => 'Undangan A',
             'jenis_id' => $jenis->id,
-            'stok' => 100,
-            'harga' => 1500,
-        ]);
+        ]));
 
         $this->assertEquals($jenis->id, $undangan->jenis_id);
         $this->assertDatabaseHas('undangan_cetaks', [
@@ -34,12 +45,10 @@ class UndanganCetakTest extends TestCase
         $jenis1 = JenisUdangan::create(['jenis' => 'Softcover']);
         $jenis2 = JenisUdangan::create(['jenis' => 'Hardcover']);
 
-        $undangan = UndanganCetak::create([
+        $undangan = UndanganCetak::create($this->getDefaultData([
             'nama' => 'Undangan A',
             'jenis_id' => $jenis1->id,
-            'stok' => 100,
-            'harga' => 1500,
-        ]);
+        ]));
 
         $undangan->update(['jenis_id' => $jenis2->id]);
 
@@ -49,12 +58,10 @@ class UndanganCetakTest extends TestCase
     public function test_search_nama_jenis_berhasil()
     {
         $jenis = JenisUdangan::create(['jenis' => 'Rustic Theme']);
-        UndanganCetak::create([
+        UndanganCetak::create($this->getDefaultData([
             'nama' => 'Undangan A',
             'jenis_id' => $jenis->id,
-            'stok' => 100,
-            'harga' => 1500,
-        ]);
+        ]));
 
         $searchTerm = 'Rustic';
         $results = UndanganCetak::whereHas('jenisUndangan', function ($q) use ($searchTerm) {
@@ -67,12 +74,10 @@ class UndanganCetakTest extends TestCase
     public function test_listing_tidak_bergantung_pada_kolom_jenis()
     {
         $jenis = JenisUdangan::create(['jenis' => 'Softcover']);
-        UndanganCetak::create([
+        UndanganCetak::create($this->getDefaultData([
             'nama' => 'Undangan A',
             'jenis_id' => $jenis->id,
-            'stok' => 100,
-            'harga' => 1500,
-        ]);
+        ]));
 
         $results = UndanganCetak::with('jenisUndangan')->get();
         $this->assertTrue($results->first()->relationLoaded('jenisUndangan'));
@@ -84,19 +89,16 @@ class UndanganCetakTest extends TestCase
         $jenis1 = JenisUdangan::create(['jenis' => 'Softcover']);
         $jenis2 = JenisUdangan::create(['jenis' => 'Hardcover']);
 
-        UndanganCetak::create([
+        UndanganCetak::create($this->getDefaultData([
             'nama' => 'Undangan 1',
             'jenis_id' => $jenis1->id,
-            'stok' => 100,
-            'harga' => 1500,
-        ]);
+        ]));
 
-        UndanganCetak::create([
+        UndanganCetak::create($this->getDefaultData([
             'nama' => 'Undangan 2',
             'jenis_id' => $jenis2->id,
-            'stok' => 100,
             'harga' => 2000,
-        ]);
+        ]));
 
         $request = new \Illuminate\Http\Request();
         $request->merge(['jenis_id' => $jenis1->id]);
