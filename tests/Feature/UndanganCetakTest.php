@@ -111,4 +111,36 @@ class UndanganCetakTest extends TestCase
         $this->assertCount(1, $data['data']['data']);
         $this->assertEquals('Undangan 1', $data['data']['data'][0]['nama']);
     }
+
+    public function test_api_jenis_undangan_berhasil_dengan_api_key_valid()
+    {
+        JenisUdangan::create(['jenis' => 'Zebra']);
+        JenisUdangan::create(['jenis' => 'Alpha']);
+
+        config(['services.api.key' => 'test-key']);
+        $apiKey = 'test-key';
+
+        $responseWithoutKey = $this->getJson('/api/v1/jenis-undangan');
+        $responseWithoutKey->assertStatus(401);
+
+        $response = $this->withHeaders([
+            'X-API-Key' => $apiKey
+        ])->getJson('/api/v1/jenis-undangan');
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'success',
+            'message',
+            'data' => [
+                '*' => [
+                    'id',
+                    'jenis'
+                ]
+            ]
+        ]);
+
+        $data = $response->json('data');
+        $this->assertEquals('Alpha', $data[0]['jenis']);
+        $this->assertEquals('Zebra', $data[1]['jenis']);
+    }
 }
