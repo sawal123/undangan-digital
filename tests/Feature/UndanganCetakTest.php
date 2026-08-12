@@ -117,24 +117,11 @@ class UndanganCetakTest extends TestCase
         JenisUdangan::create(['jenis' => 'Zebra']);
         JenisUdangan::create(['jenis' => 'Alpha']);
 
-        // Test with API Key (middleware api.key checks for Bearer token or api_key query param usually)
-        // Since we are just testing the endpoint structure and ordering here, 
-        // we can test the controller method directly to bypass middleware in this simple test,
-        // OR we can make an actual HTTP request. Assuming api.key uses 'api_key' param or similar,
-        // let's just make a JSON request. If we need to pass middleware, we should set the config/api key.
-        // But since this is a feature test, let's call the endpoint.
-        // Wait, the instruction says "Request tanpa API key tetap ditolak oleh middleware yang sudah ada".
-        // Let's first test the response without API key.
+        config(['services.api.key' => 'test-key']);
+        $apiKey = 'test-key';
+
         $responseWithoutKey = $this->getJson('/api/v1/jenis-undangan');
         $responseWithoutKey->assertStatus(401);
-
-        // To test with valid key, we need to know how 'api.key' middleware works. 
-        // We'll mock the middleware or get the key from config.
-        $apiKey = config('services.api.key');
-        if (empty($apiKey)) {
-            config(['services.api.key' => 'test-key']);
-            $apiKey = 'test-key';
-        }
 
         $response = $this->withHeaders([
             'X-API-Key' => $apiKey
@@ -152,7 +139,6 @@ class UndanganCetakTest extends TestCase
             ]
         ]);
 
-        // Check if data is ordered by 'jenis' asc
         $data = $response->json('data');
         $this->assertEquals('Alpha', $data[0]['jenis']);
         $this->assertEquals('Zebra', $data[1]['jenis']);
