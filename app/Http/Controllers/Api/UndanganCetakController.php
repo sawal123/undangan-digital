@@ -16,16 +16,16 @@ class UndanganCetakController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = UndanganCetak::query();
+        $query = UndanganCetak::query()->with('jenisUndangan');
 
         // Pencarian berdasarkan nama
         if ($search = $request->query('search')) {
             $query->where('nama', 'like', "%{$search}%");
         }
 
-        // Filter berdasarkan jenis
-        if ($jenis = $request->query('jenis')) {
-            $query->where('jenis', $jenis);
+        // Filter berdasarkan jenis_id
+        if ($jenis_id = $request->query('jenis_id')) {
+            $query->where('jenis_id', $jenis_id);
         }
 
         // Filter favorite
@@ -46,7 +46,7 @@ class UndanganCetakController extends Controller
         // Urutkan
         $sortBy = $request->query('sort_by', 'id');
         $sortDir = $request->query('sort_dir', 'desc');
-        $allowedSorts = ['id', 'nama', 'jenis', 'harga', 'promo', 'stok', 'terjual', 'favorite', 'created_at'];
+        $allowedSorts = ['id', 'nama', 'harga', 'promo', 'stok', 'terjual', 'favorite', 'created_at'];
         if (in_array($sortBy, $allowedSorts)) {
             $query->orderBy($sortBy, $sortDir === 'asc' ? 'asc' : 'desc');
         }
@@ -75,7 +75,7 @@ class UndanganCetakController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
-            'jenis' => 'required|string|max:255',
+            'jenis_id' => 'required|exists:jenis_udangans,id',
             'stok' => 'required|integer|min:0',
             'terjual' => 'nullable|integer|min:0',
             'harga' => 'required|integer|min:0',
@@ -128,7 +128,7 @@ class UndanganCetakController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $undangan = UndanganCetak::find($id);
+        $undangan = UndanganCetak::with('jenisUndangan')->find($id);
 
         if (!$undangan) {
             return response()->json([
@@ -162,7 +162,7 @@ class UndanganCetakController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nama' => 'sometimes|string|max:255',
-            'jenis' => 'sometimes|string|max:255',
+            'jenis_id' => 'sometimes|exists:jenis_udangans,id',
             'stok' => 'sometimes|integer|min:0',
             'terjual' => 'sometimes|integer|min:0',
             'harga' => 'sometimes|integer|min:0',

@@ -12,7 +12,7 @@ class UndanganCetak extends Model
 
     protected $fillable = [
         'nama',
-        'jenis',
+        'jenis_id',
         'stok',
         'terjual',
         'harga',
@@ -29,6 +29,11 @@ class UndanganCetak extends Model
         'harga' => 'integer',
         'promo' => 'integer',
     ];
+
+    public function jenisUndangan()
+    {
+        return $this->belongsTo(JenisUdangan::class, 'jenis_id');
+    }
 
     /**
      * Get primary thumbnail URL with safe fallback.

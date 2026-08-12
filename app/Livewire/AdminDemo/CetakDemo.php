@@ -20,7 +20,7 @@ class CetakDemo extends Component
 
     public string $nama = '';
 
-    public string $jenis = '';
+    public ?int $jenis_id = null;
 
     public string $stok = '';
 
@@ -54,11 +54,14 @@ class CetakDemo extends Component
     public function render()
     {
         $undanganData = UndanganCetak::query()
+            ->with('jenisUndangan')
             ->when(!empty(trim($this->search)), function ($query) {
                 $searchTerm = '%' . trim($this->search) . '%';
                 $query->where(function ($sub) use ($searchTerm) {
                     $sub->where('nama', 'like', $searchTerm)
-                        ->orWhere('jenis', 'like', $searchTerm)
+                        ->orWhereHas('jenisUndangan', function ($q) use ($searchTerm) {
+                            $q->where('jenis', 'like', $searchTerm);
+                        })
                         ->orWhere('harga_modal', 'like', $searchTerm)
                         ->orWhere('ukuran_opp', 'like', $searchTerm);
                 });
@@ -75,7 +78,7 @@ class CetakDemo extends Component
     public function resetInput(): void
     {
         $this->nama = '';
-        $this->jenis = '';
+        $this->jenis_id = null;
         $this->stok = '';
         $this->terjual = '0';
         $this->harga = '';
@@ -94,7 +97,7 @@ class CetakDemo extends Component
     {
         $this->validate([
             'nama' => 'required|string|max:255',
-            'jenis' => 'required|string|max:255',
+            'jenis_id' => 'required|exists:jenis_udangans,id',
             'stok' => 'required|numeric|min:0',
             'harga' => 'required|numeric|min:0',
             'harga_modal' => 'nullable|numeric|min:0',
@@ -117,7 +120,7 @@ class CetakDemo extends Component
             DB::transaction(function () use ($thumbnailPaths) {
                 UndanganCetak::create([
                     'nama' => trim($this->nama),
-                    'jenis' => trim($this->jenis),
+                    'jenis_id' => $this->jenis_id,
                     'stok' => (int) $this->stok,
                     'terjual' => (int) ($this->terjual ?: 0),
                     'harga' => (int) $this->harga,
@@ -146,7 +149,7 @@ class CetakDemo extends Component
         $u = UndanganCetak::findOrFail($id);
         $this->undangan_id = $u->id;
         $this->nama = $u->nama;
-        $this->jenis = $u->jenis;
+        $this->jenis_id = $u->jenis_id;
         $this->stok = (string) $u->stok;
         $this->terjual = (string) $u->terjual;
         $this->harga = (string) $u->harga;
@@ -168,7 +171,7 @@ class CetakDemo extends Component
 
         $this->validate([
             'nama' => 'required|string|max:255',
-            'jenis' => 'required|string|max:255',
+            'jenis_id' => 'required|exists:jenis_udangans,id',
             'stok' => 'required|numeric|min:0',
             'harga' => 'required|numeric|min:0',
             'harga_modal' => 'nullable|numeric|min:0',
@@ -182,7 +185,7 @@ class CetakDemo extends Component
 
         $data = [
             'nama' => trim($this->nama),
-            'jenis' => trim($this->jenis),
+            'jenis_id' => $this->jenis_id,
             'stok' => (int) $this->stok,
             'terjual' => (int) ($this->terjual ?: 0),
             'harga' => (int) $this->harga,

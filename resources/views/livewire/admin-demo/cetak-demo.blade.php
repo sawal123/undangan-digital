@@ -68,7 +68,7 @@
                 <td class="px-5 py-3.5">
                     <span
                         class="px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-md text-xs font-medium">
-                        {{ $item->jenis }}
+                        {{ $item->jenisUndangan?->jenis ?? '-' }}
                     </span>
                 </td>
                 <td class="px-5 py-3.5 text-slate-600 dark:text-slate-400 text-sm">
@@ -127,14 +127,14 @@
                 <div class="w-full">
                     <label
                         class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Jenis</label>
-                    <select wire:model="jenis"
+                    <select wire:model="jenis_id"
                         class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
                         <option value="">Pilih Jenis</option>
                         @foreach ($categories as $cat)
-                            <option value="{{ $cat->jenis }}">{{ $cat->jenis }}</option>
+                            <option value="{{ $cat->id }}">{{ $cat->jenis }}</option>
                         @endforeach
                     </select>
-                    @error('jenis')
+                    @error('jenis_id')
                         <span class="text-xs text-rose-500 mt-1">{{ $message }}</span>
                     @enderror
                 </div>
