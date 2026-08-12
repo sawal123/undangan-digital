@@ -113,11 +113,14 @@ class Cetak extends Component
     private function productsQuery(): Builder
     {
         return UndanganCetak::query()
+            ->with('jenisUndangan')
             ->when(!empty(trim($this->search)), function (Builder $query): void {
                 $searchTerm = '%' . trim($this->search) . '%';
                 $query->where(function (Builder $sub) use ($searchTerm): void {
                     $sub->where('nama', 'like', $searchTerm)
-                        ->orWhere('jenis', 'like', $searchTerm)
+                        ->orWhereHas('jenisUndangan', function ($q) use ($searchTerm) {
+                            $q->where('jenis', 'like', $searchTerm);
+                        })
                         ->orWhere('harga', 'like', $searchTerm);
                 });
             })

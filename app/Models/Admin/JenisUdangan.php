@@ -9,4 +9,9 @@ class JenisUdangan extends Model
 {
     use HasFactory;
     protected $fillable = ['jenis'];
+
+    public function undanganCetaks()
+    {
+        return $this->hasMany(UndanganCetak::class, 'jenis_id');
+    }
 }

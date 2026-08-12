@@ -157,7 +157,7 @@
                                     <!-- Category Badge -->
                                     <div class="absolute top-3 left-3 pointer-events-none">
                                         <span class="inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-700 shadow-sm border border-slate-200/60 backdrop-blur-md">
-                                            <i class="fas fa-tag text-[10px] text-rose-500"></i> {{ $item->jenis }}
+                                            <i class="fas fa-tag text-[10px] text-rose-500"></i> {{ $item->jenisUndangan?->jenis ?? '-' }}
                                         </span>
                                     </div>
                                 </div>
