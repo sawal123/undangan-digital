@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UndanganCetakController;
+use App\Http\Controllers\Api\JenisUndanganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,4 +32,7 @@ Route::middleware(['api.key'])->prefix('v1')->name('api.v1.')->group(function ()
     // Hapus gambar tertentu dari undangan cetak
     Route::delete('undangan-cetak/{id}/gambar/{imageIndex}', [UndanganCetakController::class, 'deleteImage'])
         ->name('undangan-cetak.delete-image');
+
+    // Jenis Undangan
+    Route::get('jenis-undangan', [JenisUndanganController::class, 'index'])->name('jenis-undangan.index');
 });
