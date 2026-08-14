@@ -566,12 +566,12 @@
         </footer>
     </div>
 
-    @if ($data->sound?->isActive && $data->sound?->sound)
+    @if ($data->sound?->isActive && $data->sound?->sound && $data->sound?->sound !== 'null')
         <div id="musicToggle"
             class="fixed bottom-24 right-4 z-50 bg-black/40 backdrop-blur-md p-3 rounded-full border border-gold/50 cursor-pointer">
             <i class="fas fa-music gold-text text-xl"></i>
         </div>
-        <audio id="bgAudio" loop src="{{ $storageUrl($data->sound->sound) }}" preload="auto"></audio>
+        @include('tema.partials.music', ['data' => $data])
     @endif
 
     <div
@@ -622,37 +622,15 @@
             setInterval(updateCountdown, 1000);
             updateCountdown();
 
-            const audio = document.getElementById("bgAudio");
-            const musicBtn = document.getElementById("musicToggle");
-            let isPlaying = false;
-            if (musicBtn && audio) {
-                musicBtn.addEventListener("click", () => {
-                    if (isPlaying) {
-                        audio.pause();
-                        musicBtn.innerHTML = '<i class="fas fa-music gold-text text-xl"></i>';
-                    } else {
-                        audio.play().catch(() => {});
-                        musicBtn.innerHTML = '<i class="fas fa-pause gold-text text-xl"></i>';
-                    }
-                    isPlaying = !isPlaying;
-                });
-            }
-
             const cover = document.getElementById("coverScreen");
             const main = document.getElementById("mainContent");
             document.getElementById("openInvitationBtn").addEventListener("click", () => {
+                if (window.musicPlayer) window.musicPlayer.play();
                 cover.style.opacity = "0";
                 setTimeout(() => {
                     cover.style.display = "none";
                     main.classList.remove("hidden");
                     document.body.style.overflow = "auto";
-                    if (audio) {
-                        audio.play().then(() => {
-                            isPlaying = true;
-                            if (musicBtn) musicBtn.innerHTML =
-                                '<i class="fas fa-pause gold-text text-xl"></i>';
-                        }).catch(() => {});
-                    }
                 }, 700);
             });
 

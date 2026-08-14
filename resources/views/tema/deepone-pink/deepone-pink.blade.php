@@ -619,8 +619,8 @@
 
         <div class="main-content" id="mainContent">
             <section id="heroSection" class="hero-bg-section" style="padding-top: 56px;">
-                <div class="couple-names-hero">{{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai') }} <span
-                        style="font-weight:400">&amp;</span>
+                <div class="couple-names-hero">{{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai') }}
+                    <span style="font-weight:400">&amp;</span>
                     {{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai') }}</div>
                 <div class="hero-date">{{ $eventDateText }}</div>
                 <div class="floral-divider"><span>*</span><span>+</span><span>*</span></div>
@@ -814,7 +814,8 @@
                                     @if ($item->balas)
                                         <div
                                             style="margin-top:10px; background:#fff; border-radius:18px; padding:10px; font-size:0.9rem;">
-                                            <strong>Balasan:</strong> {{ $item->balas }}</div>
+                                            <strong>Balasan:</strong> {{ $item->balas }}
+                                        </div>
                                     @endif
                                 </div>
                             @empty
@@ -842,13 +843,11 @@
             </section>
         </div>
 
-        @if ($data->sound?->isActive && $data->sound?->sound)
+        @if ($data->sound?->isActive && $data->sound?->sound && $data->sound?->sound !== 'null')
             <div class="floating-music" id="musicToggle">
                 <i class="fas fa-music" id="musicIcon"></i>
             </div>
-            <audio id="bgMusic" loop preload="auto">
-                <source src="{{ $storageUrl($data->sound->sound) }}" type="audio/mpeg">
-            </audio>
+            @include('tema.partials.music', ['data' => $data])
         @endif
 
         <div class="bottom-nav" id="bottomNav">
@@ -873,10 +872,6 @@
 
     <script>
         (function() {
-            let musicPlaying = false;
-            const audio = document.getElementById('bgMusic');
-            const musicIcon = document.getElementById('musicIcon');
-
             function setText(id, value) {
                 const element = document.getElementById(id);
                 if (element) element.innerText = String(value).padStart(2, '0');
@@ -901,36 +896,16 @@
             setInterval(updateCountdown, 1000);
             updateCountdown();
 
-            const musicToggle = document.getElementById('musicToggle');
-            if (musicToggle && audio) {
-                musicToggle.addEventListener('click', () => {
-                    if (musicPlaying) {
-                        audio.pause();
-                        musicIcon.className = 'fas fa-music';
-                        musicPlaying = false;
-                    } else {
-                        audio.play().catch(() => {});
-                        musicIcon.className = 'fas fa-pause';
-                        musicPlaying = true;
-                    }
-                });
-            }
-
             const cover = document.getElementById('coverScreen');
             const main = document.getElementById('mainContent');
             document.getElementById('openInvitationBtn').addEventListener('click', () => {
+                if (window.musicPlayer) window.musicPlayer.play();
                 cover.style.opacity = '0';
                 setTimeout(() => {
                     cover.style.display = 'none';
                     main.classList.add('show');
                     window.scrollTo(0, 0);
                 }, 600);
-                if (audio) {
-                    audio.play().then(() => {
-                        musicPlaying = true;
-                        if (musicIcon) musicIcon.className = 'fas fa-pause';
-                    }).catch(() => {});
-                }
             });
 
             const navItems = document.querySelectorAll('.nav-item');
