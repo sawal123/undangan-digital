@@ -10,10 +10,11 @@
         <h2 class="text-lg font-bold text-gray-800 mb-4">Kado</h2>
         <p class="text-gray-600 mb-4">Berikut adalah informasi untuk mengirimkan kado atau hadiah secara online atau
             melalui pengiriman fisik:</p>
-            @foreach ($data->kado as $index => $kado)
+        @foreach ($data->kado as $index => $kado)
             <ul class="text-left text-gray-700 mb-6 flex flex-col items-center text-sm">
                 <li class="mb-2"><strong>{{ $kado->namaPay }}</strong></li>
-                <li class="mb-2 text-center"><img src="{{ asset('storage/' . $kado->giftPay->icon) }}" alt="" class="w-32"></li>
+                <li class="mb-2 text-center"><img src="{{ asset('storage/' . ($kado->giftPay?->icon ?? '')) }}"
+                        alt="" class="w-32"></li>
                 <li class="nomor-rekening">{{ $kado->nomorPay }}</li>
                 <li class="my-2">
                     <button onclick="salinTeks(this)"
@@ -23,14 +24,14 @@
                 </li>
             </ul>
             @if ($kado->qris)
-            <ul class="text-left text-gray-700 mb-6 flex flex-col items-center  text-sm relative ">
-                <li class="mb-2"><strong>Kasih Hadiah Pakai QRIS</strong></li>
-                <li class="mb-2 text-center"><img src="{{ asset('storage/' . $kado->qris) }}" alt=""
-                        class="w-32"></li>
-            </ul>
-        @endif
-    @endforeach
-      
+                <ul class="text-left text-gray-700 mb-6 flex flex-col items-center  text-sm relative ">
+                    <li class="mb-2"><strong>Kasih Hadiah Pakai QRIS</strong></li>
+                    <li class="mb-2 text-center"><img src="{{ asset('storage/' . $kado->qris) }}" alt=""
+                            class="w-32"></li>
+                </ul>
+            @endif
+        @endforeach
+
         <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
             onclick="toggleModal()">Tutup</button>
     </div>

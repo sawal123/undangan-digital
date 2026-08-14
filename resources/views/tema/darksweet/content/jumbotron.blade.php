@@ -8,12 +8,18 @@
             </div>
         @else
             <div class="swiper-wrapper w-full h-full">
-                <div class="swiper-slide bg-local bg-cover bg-center object-contain brightness-50 contrast-100"
-                    style="background-image: url('{{ asset('storage/' . $poto[0]) }}');"></div>
-                <div class="swiper-slide bg-local bg-cover bg-origin-content bg-center object-cover brightness-50 contrast-100 "
-                    style="background-image: url('{{ asset('storage/' . $poto[1]) }}');"></div>
-                <div class="swiper-slide bg-local bg-cover bg-center object-cover brightness-50 contrast-100 "
-                    style="background-image: url('{{ asset('storage/' . $poto[2]) }}');"></div>
+                @if (isset($poto[0]))
+                    <div class="swiper-slide bg-local bg-cover bg-center object-contain brightness-50 contrast-100"
+                        style="background-image: url('{{ asset('storage/' . $poto[0]) }}');"></div>
+                @endif
+                @if (isset($poto[1]))
+                    <div class="swiper-slide bg-local bg-cover bg-origin-content bg-center object-cover brightness-50 contrast-100 "
+                        style="background-image: url('{{ asset('storage/' . $poto[1]) }}');"></div>
+                @endif
+                @if (isset($poto[2]))
+                    <div class="swiper-slide bg-local bg-cover bg-center object-cover brightness-50 contrast-100 "
+                        style="background-image: url('{{ asset('storage/' . $poto[2]) }}');"></div>
+                @endif
             </div>
         @endif
 
@@ -28,8 +34,8 @@
             <p class=" text-shadow text-center text-white " data-aos="zoom-in-up" data-aos-duration="2000">
                 Invitation From</p>
             <h1 class=" text-shadow text-white text-4xl font-bold text-center " data-aos="zoom-in-up"
-                data-aos-duration="3000">{{ $data->pria->nama_panggilan }} &
-                {{ $data->wanita->nama_panggilan }}</h1>
+                data-aos-duration="3000">{{ $data->pria?->nama_panggilan ?? '' }} &
+                {{ $data->wanita?->nama_panggilan ?? '' }}</h1>
         </div>
         @include('tema.darksweet.content.countdown')
     </div>

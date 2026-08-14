@@ -1,4 +1,4 @@
-@if ($data->sound->isActive)
+@if ($data->sound?->isActive)
     <div class="position-fixed d-flex flex-column z-3"
         style="right: -35px; top: 400px; gap: 70px; z-index: 1; height: 100px; ">
         <button type="button" class="btn text-white" data-bs-toggle="modal" data-bs-target="#musicModal" id="link"
@@ -20,9 +20,9 @@
             </div>
             <div class="modal-body">
 
-                <iframe id="videoFrame" width="100%" height="315"
-                    src=""
-                    data-video-url="@if($data->sound->isActive ){{ $data->sound->sound }}@endif" data-video-start="@if($data->sound->isActive ){{ $data->sound->start }}@endif"
+                <iframe id="videoFrame" width="100%" height="315" src=""
+                    data-video-url="@if ($data->sound?->isActive) {{ $data->sound?->sound }} @endif"
+                    data-video-start="@if ($data->sound?->isActive) {{ $data->sound?->start }} @endif"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -35,11 +35,11 @@
             </div>
 
             <div class="modal-footer">
-                <a href="{{$data->sound->sound}}" class="btn btn-danger px-5"><i class="fa-brands fa-youtube mx-1"></i>Subscribe
+                <a href="{{ $data->sound?->sound ?? '#' }}" class="btn btn-danger px-5"><i
+                        class="fa-brands fa-youtube mx-1"></i>Subscribe
                     Youtube</a>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-

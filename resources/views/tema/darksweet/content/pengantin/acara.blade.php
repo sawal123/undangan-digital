@@ -1,6 +1,6 @@
 <div class="w-full mt-5 flex flex-col justify-center items-center px-3 ">
     <h1 class="text-3xl font-bold ">Save The Date Acara</h1>
-    <p class="text-center">{{ $data->teksUndangan->acara }}</p>
+    <p class="text-center">{{ $data->teksUndangan?->acara ?? '' }}</p>
 
     <!-- CARD 1 -->
     @foreach ($data->acara as $item)
@@ -20,14 +20,16 @@
                         class="flex items-center w-4/5 mt-6 bg-gradient-to-r from-white to-transparent h-[92px] gap-4 pl-4">
                         <div class="text-6xl font-bold items-center flex h-full text-center border-r border-black pr-4"
                             data-aos="fade-up" data-aos-duration="3000">
-                            {{ date('d', strtotime($item->date)) }} {{-- Tanggal (04) --}}
+                            {{ $item->date ? date('d', strtotime($item->date)) : '-' }} {{-- Tanggal (04) --}}
                         </div>
                         <div class="text-left font-semibold">
                             <p class="" data-aos="fade-up" data-aos-duration="3000">
-                                {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }} {{-- Nama Hari (Kami/Kamis) --}}
+                                {{ $item->date ? \Carbon\Carbon::parse($item->date)->translatedFormat('l') : '' }}
+                                {{-- Nama Hari (Kami/Kamis) --}}
                             </p>
                             <p class="" data-aos="fade-up" data-aos-duration="3000">
-                                {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }} {{-- Bulan & Tahun (Maret 2025) --}}
+                                {{ $item->date ? \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') : '' }}
+                                {{-- Bulan & Tahun (Maret 2025) --}}
                             </p>
                         </div>
                     </div>

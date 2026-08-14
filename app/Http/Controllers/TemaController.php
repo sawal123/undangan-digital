@@ -139,7 +139,7 @@ class TemaController extends Controller
     protected function prepareInvitationData($data, $tamu = null)
     {
         // Pengambilan koleksi acara yang lebih handal
-        $acara = $data->acara->get(1) ?? $data->acara->first();
+        $acara = $data->acara?->get(1) ?? $data->acara?->first();
 
         $thumbnailWa = $data->thumbnailWas;
 
@@ -171,14 +171,14 @@ class TemaController extends Controller
             'Dec' => 'Desember',
         ];
 
-        $video = $data->galery->pluck('video')->filter()->toArray();
-        $poto = $data->galery->pluck('poto')->filter()->toArray();
+        $video = $data->galery->pluck('video')->filter()->values()->toArray();
+        $poto = $data->galery->pluck('poto')->filter()->values()->toArray();
 
         return [
             'data' => $data,
             'hari' => $hari,
             'bulan' => $bulan,
-            'tamu' => $ta->nama ?? $tamu ?? 'Tamu Undangan',
+            'tamu' => $ta?->nama ?? $tamu ?? 'Tamu Undangan',
             'video' => $video,
             'poto' => $poto,
             'kode' => $tamu,

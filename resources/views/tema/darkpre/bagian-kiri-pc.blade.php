@@ -2,8 +2,10 @@
     <div class="z-50 w-full h-full brightness-50 contrast-100	saturate-100"
         style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}'); background-size: cover; background-position: center;">
     </div>
-    <h1 class="hidden lg:block absolute bottom-12 left-14 text-[50px] text-white ">{{ $data->wanita->nama_panggilan }}
-        <span class=" text-[25px]"> & </span> {{ $data->pria->nama_panggilan }}</h1>
+    <h1 class="hidden lg:block absolute bottom-12 left-14 text-[50px] text-white ">
+        {{ $data->wanita?->nama_panggilan ?? '' }}
+        <span class=" text-[25px]"> & </span> {{ $data->pria?->nama_panggilan ?? '' }}
+    </h1>
     <!-- music -->
     @include('tema.darkpre.content.music')
     <!-- music -->

@@ -15,16 +15,24 @@
         $eventDate = $firstEvent?->date ? Carbon::parse($firstEvent->date) : null;
         $eventTime = $firstEvent?->jam_start ?: '00:00';
         $eventDateText = $eventDate ? $eventDate->translatedFormat('l, d F Y') : 'Tanggal acara';
-        $countdownDate = $eventDate ? Carbon::parse($firstEvent->date . ' ' . $eventTime)->format('Y-m-d\TH:i:s') : now()->format('Y-m-d\TH:i:s');
-        $storageUrl = fn ($path) => $path ? asset('storage/' . ltrim($path, '/')) : null;
-        $coverImage = $storageUrl($data->coverUndangan?->cover_satu)
-            ?? (count($poto ?? []) ? $storageUrl($poto[0]) : null)
-            ?? 'https://images.pexels.com/photos/2253870/pexels-photo-2253870.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
-        $heroImage = $storageUrl($data->coverUndangan?->cover_dua)
-            ?? (count($poto ?? []) > 1 ? $storageUrl($poto[1]) : null)
-            ?? 'https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
-        $priaImage = $storageUrl($pria?->image) ?? 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=600';
-        $wanitaImage = $storageUrl($wanita?->image) ?? 'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=600';
+        $countdownDate = $eventDate
+            ? Carbon::parse($firstEvent->date . ' ' . $eventTime)->format('Y-m-d\TH:i:s')
+            : now()->format('Y-m-d\TH:i:s');
+        $storageUrl = fn($path) => $path ? asset('storage/' . ltrim($path, '/')) : null;
+        $coverImage =
+            $storageUrl($data->coverUndangan?->cover_satu) ??
+            ((count($poto ?? []) ? $storageUrl($poto[0]) : null) ??
+                'https://images.pexels.com/photos/2253870/pexels-photo-2253870.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+        $heroImage =
+            $storageUrl($data->coverUndangan?->cover_dua) ??
+            ((count($poto ?? []) > 1 ? $storageUrl($poto[1]) : null) ??
+                'https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+        $priaImage =
+            $storageUrl($pria?->image) ??
+            'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=600';
+        $wanitaImage =
+            $storageUrl($wanita?->image) ??
+            'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=600';
         $coupleNames = ($pria?->nama_panggilan ?? 'Mempelai') . ' & ' . ($wanita?->nama_panggilan ?? 'Mempelai');
         $pageTitle = ($data->setting?->acara ?? 'The Wedding Of') . ' ' . $coupleNames;
     @endphp
@@ -41,7 +49,9 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         * {
             font-family: 'Poppins', sans-serif;
@@ -264,7 +274,9 @@
 <body class="text-[#f5e6c4]">
     <div id="flowerContainer"></div>
 
-    <div id="coverScreen" class="fixed inset-0 z-[2000] flex items-center justify-center bg-cover bg-center transition-all duration-700" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('{{ $coverImage }}');">
+    <div id="coverScreen"
+        class="fixed inset-0 z-[2000] flex items-center justify-center bg-cover bg-center transition-all duration-700"
+        style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('{{ $coverImage }}');">
         <div class="glass-card rounded-[48px] p-6 w-11/12 max-w-sm text-center backdrop-blur-md">
             <i class="fas fa-crown gold-text text-3xl mb-2"></i>
             <p class="text-sm uppercase tracking-wider gold-text">{{ $data->setting?->acara ?? 'The Wedding Of' }}</p>
@@ -274,17 +286,21 @@
                 <i class="fas fa-envelope-open-text mr-2"></i> Kepada Yth. Bapak/Ibu/Saudara/i<br>
                 <span class="font-semibold">{{ $tamu }}</span>
             </div>
-            <button id="openInvitationBtn" class="btn-gold text-black font-bold py-3 px-8 rounded-full shadow-lg w-full">Buka Undangan</button>
+            <button id="openInvitationBtn"
+                class="btn-gold text-black font-bold py-3 px-8 rounded-full shadow-lg w-full">Buka Undangan</button>
         </div>
     </div>
 
     <div id="mainContent" class="max-w-md mx-auto relative hidden pb-24">
-        <div class="relative h-96 w-full rounded-b-3xl overflow-hidden shadow-xl scroll-reveal parallax-bg" id="hero" style="background-image: url('{{ $heroImage }}'); background-position: center 30%;">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-6">
+        <div class="relative h-96 w-full rounded-b-3xl overflow-hidden shadow-xl scroll-reveal parallax-bg"
+            id="hero" style="background-image: url('{{ $heroImage }}'); background-position: center 30%;">
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-6">
                 <h1 class="font-serif text-4xl font-bold gold-text">{{ $coupleNames }}</h1>
                 <p class="text-white/90">{{ $eventDateText }}</p>
                 <div class="flex gap-2 mt-2">
-                    <span class="text-xs bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">{{ $data->setting?->acara ?? 'Pernikahan' }}</span>
+                    <span
+                        class="text-xs bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">{{ $data->setting?->acara ?? 'Pernikahan' }}</span>
                 </div>
             </div>
         </div>
@@ -292,15 +308,29 @@
         <div class="px-5 py-8 scroll-reveal">
             <div class="glass-card rounded-2xl p-5 text-center">
                 <i class="fas fa-quote-left gold-text text-2xl mb-2"></i>
-                <p class="italic text-sm">{{ $data->qoute?->qoute ?? 'Dan di antara tanda-tanda kekuasaan-Nya, Dia menciptakan pasangan hidup untukmu agar kamu merasa tenteram.' }}</p>
+                <p class="italic text-sm">
+                    {{ $data->qoute?->qoute ?? 'Dan di antara tanda-tanda kekuasaan-Nya, Dia menciptakan pasangan hidup untukmu agar kamu merasa tenteram.' }}
+                </p>
                 @if ($data->qoute?->subtitle)
                     <p class="text-xs gold-text mt-2">{{ $data->qoute->subtitle }}</p>
                 @endif
                 <div class="grid grid-cols-4 gap-2 mt-5" id="countdownTimer" data-target="{{ $countdownDate }}">
-                    <div class="glass-card rounded-xl py-2"><span class="text-2xl font-bold gold-text" id="days">00</span><p class="text-[10px]">Hari</p></div>
-                    <div class="glass-card rounded-xl py-2"><span class="text-2xl font-bold gold-text" id="hours">00</span><p class="text-[10px]">Jam</p></div>
-                    <div class="glass-card rounded-xl py-2"><span class="text-2xl font-bold gold-text" id="minutes">00</span><p class="text-[10px]">Menit</p></div>
-                    <div class="glass-card rounded-xl py-2"><span class="text-2xl font-bold gold-text" id="seconds">00</span><p class="text-[10px]">Detik</p></div>
+                    <div class="glass-card rounded-xl py-2"><span class="text-2xl font-bold gold-text"
+                            id="days">00</span>
+                        <p class="text-[10px]">Hari</p>
+                    </div>
+                    <div class="glass-card rounded-xl py-2"><span class="text-2xl font-bold gold-text"
+                            id="hours">00</span>
+                        <p class="text-[10px]">Jam</p>
+                    </div>
+                    <div class="glass-card rounded-xl py-2"><span class="text-2xl font-bold gold-text"
+                            id="minutes">00</span>
+                        <p class="text-[10px]">Menit</p>
+                    </div>
+                    <div class="glass-card rounded-xl py-2"><span class="text-2xl font-bold gold-text"
+                            id="seconds">00</span>
+                        <p class="text-[10px]">Detik</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -308,20 +338,30 @@
         <div class="px-5 py-4 scroll-reveal" id="couple">
             <h2 class="font-serif text-2xl font-bold text-center gold-text mb-6">Mempelai</h2>
             <div class="glass-card rounded-3xl p-5 text-center mb-6">
-                <img src="{{ $priaImage }}" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3" alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
-                <h3 class="font-serif text-xl font-semibold">{{ $pria?->nama_lengkap ?? $pria?->nama_panggilan ?? 'Mempelai Pria' }}</h3>
+                <img src="{{ $priaImage }}"
+                    class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3"
+                    alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                <h3 class="font-serif text-xl font-semibold">
+                    {{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai Pria') }}</h3>
                 <p class="text-sm opacity-80">{{ $pria?->deskripsi ?? 'Mempelai pria' }}</p>
                 @if ($pria?->instagram)
-                    <a href="https://instagram.com/{{ ltrim($pria->instagram, '@') }}" target="_blank" class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i> {{ $pria->instagram }}</a>
+                    <a href="https://instagram.com/{{ ltrim($pria->instagram, '@') }}" target="_blank"
+                        class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i>
+                        {{ $pria->instagram }}</a>
                 @endif
             </div>
             <div class="text-center gold-text text-2xl my-2">&amp;</div>
             <div class="glass-card rounded-3xl p-5 text-center mt-2">
-                <img src="{{ $wanitaImage }}" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3" alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
-                <h3 class="font-serif text-xl font-semibold">{{ $wanita?->nama_lengkap ?? $wanita?->nama_panggilan ?? 'Mempelai Wanita' }}</h3>
+                <img src="{{ $wanitaImage }}"
+                    class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3"
+                    alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                <h3 class="font-serif text-xl font-semibold">
+                    {{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai Wanita') }}</h3>
                 <p class="text-sm opacity-80">{{ $wanita?->deskripsi ?? 'Mempelai wanita' }}</p>
                 @if ($wanita?->instagram)
-                    <a href="https://instagram.com/{{ ltrim($wanita->instagram, '@') }}" target="_blank" class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i> {{ $wanita->instagram }}</a>
+                    <a href="https://instagram.com/{{ ltrim($wanita->instagram, '@') }}" target="_blank"
+                        class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i>
+                        {{ $wanita->instagram }}</a>
                 @endif
             </div>
         </div>
@@ -331,21 +371,42 @@
             <div class="space-y-4">
                 @foreach ($data->acara as $item)
                     @php
-                        $startDateTime = Carbon::parse($item->date . ' ' . $item->jam_start)->format('Ymd\THis\Z');
-                        $endDateTime = $item->jam_end === 'Selesai'
-                            ? Carbon::parse($item->date . ' ' . $item->jam_start)->addHours(2)->format('Ymd\THis\Z')
-                            : Carbon::parse($item->date . ' ' . $item->jam_end)->format('Ymd\THis\Z');
+                        if ($item->date) {
+                            $startDateTime = Carbon::parse($item->date . ' ' . $item->jam_start)->format('Ymd\THis\Z');
+                            $endDateTime =
+                                $item->jam_end === 'Selesai'
+                                    ? Carbon::parse($item->date . ' ' . $item->jam_start)
+                                        ->addHours(2)
+                                        ->format('Ymd\THis\Z')
+                                    : Carbon::parse($item->date . ' ' . $item->jam_end)->format('Ymd\THis\Z');
+                        } else {
+                            $startDateTime = '';
+                            $endDateTime = '';
+                        }
                     @endphp
                     <div class="glass-card rounded-2xl p-4 border-l-4 border-gold">
                         <h3 class="font-bold"><i class="fas fa-ring gold-text mr-2"></i>{{ $item->nama_acara }}</h3>
-                        <p class="text-xs mt-1"><i class="far fa-calendar-alt mr-1"></i>{{ Carbon::parse($item->date)->translatedFormat('l, d F Y') }}</p>
-                        <p class="text-xs"><i class="far fa-clock mr-1"></i>{{ $item->jam_start }} {{ $item->zona_waktu }} @if ($item->jam_end === 'Selesai') s/d Selesai @else s/d {{ $item->jam_end }} {{ $item->zona_waktu }} @endif</p>
+                        <p class="text-xs mt-1"><i
+                                class="far fa-calendar-alt mr-1"></i>{{ $item->date ? Carbon::parse($item->date)->translatedFormat('l, d F Y') : 'Tanggal belum ditentukan' }}
+                        </p>
+                        <p class="text-xs"><i class="far fa-clock mr-1"></i>{{ $item->jam_start }}
+                            {{ $item->zona_waktu }} @if ($item->jam_end === 'Selesai')
+                                s/d Selesai
+                            @else
+                                s/d {{ $item->jam_end }} {{ $item->zona_waktu }}
+                            @endif
+                        </p>
                         <p class="text-xs"><i class="fas fa-map-marker-alt mr-1"></i>{{ $item->vanue }}</p>
                         <p class="text-xs opacity-70">{{ $item->alamat }}</p>
                         <div class="flex flex-wrap gap-2 mt-2">
-                            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ urlencode($item->nama_acara) }}&dates={{ $startDateTime }}/{{ $endDateTime }}&details={{ urlencode('Jangan lewatkan acara ini') }}&location={{ urlencode($item->alamat) }}" target="_blank" class="text-gold border border-gold/50 px-3 py-1 rounded-full text-xs"><i class="fas fa-calendar-check"></i> Simpan Tanggal</a>
+                            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ urlencode($item->nama_acara) }}&dates={{ $startDateTime }}/{{ $endDateTime }}&details={{ urlencode('Jangan lewatkan acara ini') }}&location={{ urlencode($item->alamat) }}"
+                                target="_blank"
+                                class="text-gold border border-gold/50 px-3 py-1 rounded-full text-xs"><i
+                                    class="fas fa-calendar-check"></i> Simpan Tanggal</a>
                             @if ($item->maps)
-                                <a href="{{ $item->maps }}" target="_blank" class="text-gold border border-gold/50 px-3 py-1 rounded-full text-xs"><i class="fas fa-directions"></i> Petunjuk Lokasi</a>
+                                <a href="{{ $item->maps }}" target="_blank"
+                                    class="text-gold border border-gold/50 px-3 py-1 rounded-full text-xs"><i
+                                        class="fas fa-directions"></i> Petunjuk Lokasi</a>
                             @endif
                         </div>
                     </div>
@@ -353,13 +414,14 @@
             </div>
         </div>
 
-        @if ($data->kisah->count())
+        @if ($data->kisah?->count())
             <div class="px-5 py-4 scroll-reveal" id="lovestory">
                 <h2 class="font-serif text-2xl font-bold text-center gold-text mb-6">Kisah Kami</h2>
                 <div class="space-y-4">
                     @foreach ($data->kisah as $kisah)
                         <div class="glass-card rounded-2xl p-3 flex gap-3 items-center">
-                            <img src="{{ $storageUrl($kisah->image?->image) ?? $heroImage }}" class="timeline-img" alt="{{ $kisah->title }}">
+                            <img src="{{ $storageUrl($kisah->image?->image) ?? $heroImage }}" class="timeline-img"
+                                alt="{{ $kisah->title }}">
                             <div>
                                 <div class="font-semibold text-sm gold-text">{{ $kisah->title }}</div>
                                 <p class="text-xs opacity-80">{{ $kisah->deskripsi }}</p>
@@ -381,7 +443,9 @@
                 @if ($poto)
                     <div class="grid grid-cols-2 gap-3" id="galleryGrid">
                         @foreach ($poto as $po)
-                            <img src="{{ $storageUrl($po) }}" class="rounded-2xl aspect-square object-cover cursor-pointer transition hover:scale-[1.02]" alt="Galeri">
+                            <img src="{{ $storageUrl($po) }}"
+                                class="rounded-2xl aspect-square object-cover cursor-pointer transition hover:scale-[1.02]"
+                                alt="Galeri">
                         @endforeach
                     </div>
                 @endif
@@ -394,21 +458,25 @@
                 <div class="glass-card rounded-2xl p-6 text-center">
                     <i class="fas fa-video text-4xl gold-text mb-2"></i>
                     <p class="text-sm mb-4">Turut hadir secara virtual melalui siaran langsung kami.</p>
-                    <a href="{{ $data->streaming->link }}" target="_blank" class="btn-gold text-black font-semibold py-2 px-6 rounded-full inline-block">Tonton Streaming</a>
+                    <a href="{{ $data->streaming->link }}" target="_blank"
+                        class="btn-gold text-black font-semibold py-2 px-6 rounded-full inline-block">Tonton
+                        Streaming</a>
                 </div>
             </div>
         @endif
 
-        @if ($data->fiturKado?->isActive && $data->kado->isNotEmpty())
+        @if ($data->fiturKado?->isActive && $data->kado?->isNotEmpty())
             <div class="px-5 py-4 scroll-reveal" id="gift">
                 <h2 class="font-serif text-2xl font-bold text-center gold-text mb-6">Wedding Gift</h2>
-                <p class="text-center text-sm mb-4">Doa restu Anda merupakan hadiah terindah. Tanda kasih dapat disalurkan melalui:</p>
+                <p class="text-center text-sm mb-4">Doa restu Anda merupakan hadiah terindah. Tanda kasih dapat
+                    disalurkan melalui:</p>
                 <div class="space-y-4">
                     @foreach ($data->kado as $gift)
                         <div class="atm-card">
                             <div class="flex justify-between items-center">
                                 <div class="chip-icon"><i class="fas fa-credit-card"></i></div>
-                                <span class="text-[10px] gold-text">{{ $gift->giftPay?->nama_pay ?? 'WEDDING CARD' }}</span>
+                                <span
+                                    class="text-[10px] gold-text">{{ $gift->giftPay?->nama_pay ?? 'WEDDING CARD' }}</span>
                             </div>
                             <div class="font-mono text-center my-3 tracking-wider text-sm">{{ $gift->nomorPay }}</div>
                             <div class="flex justify-between text-[10px]">
@@ -420,10 +488,12 @@
                                 <span>{{ $gift->giftPay?->nama_pay ?? '-' }}</span>
                             </div>
                             @if ($gift->qris)
-                                <img src="{{ $storageUrl($gift->qris) }}" class="w-40 max-w-full mx-auto rounded-2xl mt-3" alt="QRIS">
+                                <img src="{{ $storageUrl($gift->qris) }}"
+                                    class="w-40 max-w-full mx-auto rounded-2xl mt-3" alt="QRIS">
                             @endif
                             @if ($gift->nomorPay)
-                                <button class="copy-btn-atm w-full mt-3 bg-gold/20 text-gold py-2 rounded-full text-xs" data-num="{{ $gift->nomorPay }}">Salin Nomor Rekening</button>
+                                <button class="copy-btn-atm w-full mt-3 bg-gold/20 text-gold py-2 rounded-full text-xs"
+                                    data-num="{{ $gift->nomorPay }}">Salin Nomor Rekening</button>
                             @endif
                         </div>
                     @endforeach
@@ -441,28 +511,36 @@
                         @csrf
                         <input type="hidden" name="dataId" value="{{ $data->id }}">
                         <input type="hidden" name="kode" value="{{ $kode }}">
-                        <input type="text" name="nama" placeholder="Nama Anda" value="{{ old('nama', $tamu) }}" class="w-full" required>
+                        <input type="text" name="nama" placeholder="Nama Anda"
+                            value="{{ old('nama', $tamu) }}" class="w-full" required>
                         <select name="status" class="w-full" required>
                             <option value="Datang Dong" @selected(old('status') === 'Datang Dong')>Hadir</option>
                             <option value="Ga bisa Datang Nih" @selected(old('status') === 'Ga bisa Datang Nih')>Tidak Dapat Hadir</option>
                             <option value="Diusahakan Datang Ya" @selected(old('status') === 'Diusahakan Datang Ya')>Diusahakan Hadir</option>
                         </select>
-                        <textarea rows="3" name="ucapan" placeholder="Ucapan & Doa untuk pasangan..." class="w-full rounded-2xl" required>{{ old('ucapan') }}</textarea>
-                        <button type="submit" class="btn-gold text-black font-bold py-3 rounded-full w-full">Kirim Ucapan</button>
+                        <textarea rows="3" name="ucapan" placeholder="Ucapan & Doa untuk pasangan..." class="w-full rounded-2xl"
+                            required>{{ old('ucapan') }}</textarea>
+                        <button type="submit" class="btn-gold text-black font-bold py-3 rounded-full w-full">Kirim
+                            Ucapan</button>
                     </form>
                 @else
-                    <div class="glass-card rounded-2xl p-4 text-center text-sm">Form ucapan hanya tersedia untuk tamu yang menerima tautan undangan.</div>
+                    <div class="glass-card rounded-2xl p-4 text-center text-sm">Form ucapan hanya tersedia untuk tamu
+                        yang menerima tautan undangan.</div>
                 @endif
 
                 @if ($data->FiturUcapan?->viewIsActive)
                     <div id="wishesList" class="mt-6 space-y-3">
                         @forelse ($ucapan as $item)
                             <div class="glass-card rounded-2xl p-3 wish-card">
-                                <div class="flex justify-between gap-3"><span class="font-semibold">{{ $item->tamu?->nama ?? 'Tamu' }}</span><span class="guest-badge">{{ $item->status }}</span></div>
+                                <div class="flex justify-between gap-3"><span
+                                        class="font-semibold">{{ $item->tamu?->nama ?? 'Tamu' }}</span><span
+                                        class="guest-badge">{{ $item->status }}</span></div>
                                 <p class="text-sm mt-1 italic">"{{ $item->ucapan }}"</p>
-                                <div class="text-[10px] mt-2 opacity-60"><i class="far fa-calendar"></i> {{ $item->created_at?->diffForHumans() }}</div>
+                                <div class="text-[10px] mt-2 opacity-60"><i class="far fa-calendar"></i>
+                                    {{ $item->created_at?->diffForHumans() }}</div>
                                 @if ($item->balas)
-                                    <div class="mt-3 bg-white/10 rounded-2xl p-3 text-xs"><strong>Balasan:</strong> {{ $item->balas }}</div>
+                                    <div class="mt-3 bg-white/10 rounded-2xl p-3 text-xs"><strong>Balasan:</strong>
+                                        {{ $item->balas }}</div>
                                 @endif
                             </div>
                         @empty
@@ -489,25 +567,33 @@
     </div>
 
     @if ($data->sound?->isActive && $data->sound?->sound)
-        <div id="musicToggle" class="fixed bottom-24 right-4 z-50 bg-black/40 backdrop-blur-md p-3 rounded-full border border-gold/50 cursor-pointer">
+        <div id="musicToggle"
+            class="fixed bottom-24 right-4 z-50 bg-black/40 backdrop-blur-md p-3 rounded-full border border-gold/50 cursor-pointer">
             <i class="fas fa-music gold-text text-xl"></i>
         </div>
         <audio id="bgAudio" loop src="{{ $storageUrl($data->sound->sound) }}" preload="auto"></audio>
     @endif
 
-    <div class="bottom-nav fixed bottom-0 left-0 right-0 z-50 py-2 flex justify-around items-center max-w-md mx-auto rounded-t-2xl">
-        <div class="nav-item flex flex-col items-center text-xs" data-section="hero"><i class="fas fa-home text-lg"></i><span>Home</span></div>
-        <div class="nav-item flex flex-col items-center text-xs" data-section="couple"><i class="fas fa-heart text-lg"></i><span>Pasangan</span></div>
-        <div class="nav-item flex flex-col items-center text-xs" data-section="events"><i class="fas fa-calendar text-lg"></i><span>Acara</span></div>
+    <div
+        class="bottom-nav fixed bottom-0 left-0 right-0 z-50 py-2 flex justify-around items-center max-w-md mx-auto rounded-t-2xl">
+        <div class="nav-item flex flex-col items-center text-xs" data-section="hero"><i
+                class="fas fa-home text-lg"></i><span>Home</span></div>
+        <div class="nav-item flex flex-col items-center text-xs" data-section="couple"><i
+                class="fas fa-heart text-lg"></i><span>Pasangan</span></div>
+        <div class="nav-item flex flex-col items-center text-xs" data-section="events"><i
+                class="fas fa-calendar text-lg"></i><span>Acara</span></div>
         @if ($poto || $video)
-            <div class="nav-item flex flex-col items-center text-xs" data-section="gallery"><i class="fas fa-images text-lg"></i><span>Galeri</span></div>
+            <div class="nav-item flex flex-col items-center text-xs" data-section="gallery"><i
+                    class="fas fa-images text-lg"></i><span>Galeri</span></div>
         @endif
         @if ($data->FiturUcapan?->isActive)
-            <div class="nav-item flex flex-col items-center text-xs" data-section="rsvp"><i class="fas fa-comment-dots text-lg"></i><span>Ucapan</span></div>
+            <div class="nav-item flex flex-col items-center text-xs" data-section="rsvp"><i
+                    class="fas fa-comment-dots text-lg"></i><span>Ucapan</span></div>
         @endif
     </div>
 
-    <div id="lightbox" class="lightbox"><img id="lightboxImg" src="" alt="Galeri"><span class="absolute top-5 right-5 text-white text-3xl cursor-pointer" id="closeLightbox">&times;</span></div>
+    <div id="lightbox" class="lightbox"><img id="lightboxImg" src="" alt="Galeri"><span
+            class="absolute top-5 right-5 text-white text-3xl cursor-pointer" id="closeLightbox">&times;</span></div>
 
     <script>
         (function() {
@@ -563,7 +649,8 @@
                     if (audio) {
                         audio.play().then(() => {
                             isPlaying = true;
-                            if (musicBtn) musicBtn.innerHTML = '<i class="fas fa-pause gold-text text-xl"></i>';
+                            if (musicBtn) musicBtn.innerHTML =
+                                '<i class="fas fa-pause gold-text text-xl"></i>';
                         }).catch(() => {});
                     }
                 }, 700);
@@ -572,7 +659,10 @@
             document.querySelectorAll(".nav-item").forEach(item => {
                 item.addEventListener("click", () => {
                     const el = document.getElementById(item.dataset.section);
-                    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    if (el) el.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
                 });
             });
 
@@ -602,7 +692,7 @@
                     '>': '&gt;',
                     '"': '&quot;',
                     "'": '&#039;'
-                }[char]));
+                } [char]));
             }
 
             function showWishAlert(type, message) {
@@ -671,7 +761,8 @@
                 });
             }
 
-            document.getElementById("closeLightbox").addEventListener("click", () => document.getElementById("lightbox").classList.remove("active"));
+            document.getElementById("closeLightbox").addEventListener("click", () => document.getElementById("lightbox")
+                .classList.remove("active"));
             document.getElementById("lightbox").addEventListener("click", (event) => {
                 if (event.target === document.getElementById("lightbox")) {
                     document.getElementById("lightbox").classList.remove("active");
@@ -683,7 +774,9 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) entry.target.classList.add('revealed');
                 });
-            }, { threshold: 0.15 });
+            }, {
+                threshold: 0.15
+            });
             reveals.forEach(reveal => observer.observe(reveal));
 
             function createFloatingFlowers() {

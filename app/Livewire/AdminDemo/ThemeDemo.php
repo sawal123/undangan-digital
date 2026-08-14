@@ -7,6 +7,7 @@ use App\Models\EventType;
 use App\Models\Theme;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -82,16 +83,49 @@ class ThemeDemo extends Component
         $this->dispatch('open-modal', name: 'theme-modal');
     }
 
-    public function store(): void
+    private function themeRules(): array
     {
-        $this->validate([
+        return [
             'nama' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'event_type_id' => 'required|exists:event_types,id',
-            'path' => 'required|string|max:255',
-            'demo' => 'nullable|string|max:255',
+            'path' => [
+                'required',
+                'string',
+                'max:255',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (! View::exists($value)) {
+                        $fail('Path template tidak valid atau tidak ditemukan.');
+                    }
+                },
+            ],
+            'demo' => [
+                'nullable',
+                'string',
+                'max:255',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if ($value === null || $value === '') {
+                        return;
+                    }
+
+                    if (! str_starts_with($value, 'temademo.')) {
+                        $fail('Demo harus berupa view statis di namespace temademo.');
+
+                        return;
+                    }
+
+                    if (! View::exists($value)) {
+                        $fail('Template demo tidak valid atau tidak ditemukan.');
+                    }
+                },
+            ],
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
+        ];
+    }
+
+    public function store(): void
+    {
+        $this->validate($this->themeRules());
 
         $data = [
             'nama' => $this->nama,
@@ -144,14 +178,7 @@ class ThemeDemo extends Component
             return;
         }
 
-        $this->validate([
-            'nama' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'event_type_id' => 'required|exists:event_types,id',
-            'path' => 'required|string|max:255',
-            'demo' => 'nullable|string|max:255',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
+        $this->validate($this->themeRules());
 
         $theme = Theme::findOrFail($this->theme_id);
 

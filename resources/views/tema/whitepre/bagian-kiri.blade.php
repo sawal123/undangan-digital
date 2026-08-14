@@ -4,7 +4,8 @@
         style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}'); background-size: cover; background-position: center;">
     </div>
     <h1 class="absolute bottom-12 left-14 text-[50px] text-white  font-great_vibes hidden lg:block">
-        {{ $data->wanita->nama_panggilan }} <span class=" text-[25px]"> & </span> {{ $data->pria->nama_panggilan }}</h1>
+        {{ $data->wanita?->nama_panggilan ?? '' }} <span class=" text-[25px]"> & </span>
+        {{ $data->pria?->nama_panggilan ?? '' }}</h1>
 
     <!-- music -->
     @include('tema.whitepre.content.music')

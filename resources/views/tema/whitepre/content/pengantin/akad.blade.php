@@ -1,5 +1,5 @@
 <div class="bg-orange-50 relative pt-10 pb-16 text-pink-800  section" id="date">
-    <p class="text-center my-5 p-2">{{ $data->teksUndangan->pembuka }}</p>
+    <p class="text-center my-5 p-2">{{ $data->teksUndangan?->pembuka ?? '' }}</p>
     <!-- Judul -->
 
     <h1 class="text-center text-[40px] z-50 relative font-semibold mb-6 ">
@@ -43,9 +43,17 @@
     <!-- Tanggal -->
     <div class="text-center text-[12px] text-pink-800 " id="countdown" data-aos="zoom-in" data-aos-duration="2500">
         <div>
-            {{ date('d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))) }},
-            {{ \Carbon\Carbon::parse($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))->translatedFormat('l') }}
-            {{ \Carbon\Carbon::parse($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))->translatedFormat('F Y') }}
+            @php
+                $acaraAkad = $data->acara?->get(1) ?? $data->acara?->first();
+                $acaraAkadDate = $acaraAkad?->date;
+            @endphp
+            @if ($acaraAkadDate)
+                {{ date('d', strtotime($acaraAkadDate)) }},
+                {{ \Carbon\Carbon::parse($acaraAkadDate)->translatedFormat('l') }}
+                {{ \Carbon\Carbon::parse($acaraAkadDate)->translatedFormat('F Y') }}
+            @else
+                Tanggal tidak tersedia
+            @endif
         </div>
     </div>
 
@@ -58,16 +66,19 @@
         </a>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
+                let btn = document.getElementById("googleCalendarBtn");
+                @if (isset($acara) && $acara && $acara->date)
                 let eventTitle = "Pernikahan Kami";
                 let eventDateStart = "{{ date('Ymd', strtotime($acara->date)) }}T100000Z"; // Sesuaikan jam UTC
 
                 let eventDetails = "Jangan lewatkan momen spesial kami!";
-                let eventLocation = "{{ $acara->alamat }}";
+                let eventLocation = "{{ $acara->alamat ?? '' }}";
 
                 let googleCalendarUrl =
                     `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${eventDateStart}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}&sf=true&output=xml`;
 
-                document.getElementById("googleCalendarBtn").href = googleCalendarUrl;
+                if (btn) btn.href = googleCalendarUrl;
+                @endif
             });
         </script>
     </div>
@@ -77,7 +88,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
         let eventDate = new Date(
-                "{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}"
+                "{{ ($data->acara?->get(1) ?? $data->acara?->get(0))?->date ? date('Y-m-d', strtotime(($data->acara?->get(1) ?? $data->acara?->get(0))->date)) : '2024-10-10' }}"
             )
             .getTime();
 

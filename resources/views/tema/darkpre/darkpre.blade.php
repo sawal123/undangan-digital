@@ -29,8 +29,8 @@
 
     <style>
         @if ($data->dataFont)
-            @import url('{{ $data->dataFont->titleFont->link }}');
-            @import url('{{ $data->dataFont->subFont->link }}');
+            @import url('{{ $data->dataFont?->titleFont?->link ?? '' }}');
+            @import url('{{ $data->dataFont?->subFont?->link ?? '' }}');
 
         @else
             @import url('https://fonts.googleapis.com/css2?family=Capriola&family=Oleo+Script+Swash+Caps:wght@400;700&display=swap');
@@ -41,10 +41,10 @@
         }
 
         h1 {
-            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Oleo Script Swash Caps' }}", system-ui;
+            font-family: "{{ $data->dataFont?->titleFont?->nama ?? 'Oleo Script Swash Caps' }}", system-ui;
             font-weight: 700;
             font-style: normal;
-            font-size: {{ $data->dataFont->s_title }}px !important
+            font-size: {{ $data->dataFont?->s_title ?? 40 }}px !important
         }
 
         html,
@@ -58,7 +58,7 @@
         h4,
         h5,
         h6 {
-            font-family: "{{ $data->dataFont->subFont->nama ?? 'Capriola' }}", sans-serif;
+            font-family: "{{ $data->dataFont?->subFont?->nama ?? 'Capriola' }}", sans-serif;
             font-weight: 400;
             font-style: normal;
         }
@@ -114,7 +114,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
             let eventDate = new Date(
-                "{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}"
+                "{{ ($data->acara?->get(1) ?? $data->acara?->get(0))?->date ? date('Y-m-d', strtotime(($data->acara?->get(1) ?? $data->acara?->get(0))->date)) : '2024-10-10' }}"
             ).getTime();
 
             // Update countdown setiap detik
@@ -148,16 +148,19 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            let btn = document.getElementById("googleCalendarBtn");
+            @if (isset($acara) && $acara && $acara->date)
             let eventTitle = "Pernikahan Kami";
             let eventDateStart = "{{ date('Ymd', strtotime($acara->date)) }}T100000Z"; // Sesuaikan jam UTC
 
             let eventDetails = "Jangan lewatkan momen spesial kami!";
-            let eventLocation = "{{ $acara->alamat }}";
+            let eventLocation = "{{ $acara->alamat ?? '' }}";
 
             let googleCalendarUrl =
                 `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${eventDateStart}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}&sf=true&output=xml`;
 
-            document.getElementById("googleCalendarBtn").href = googleCalendarUrl;
+            if (btn) btn.href = googleCalendarUrl;
+            @endif
         });
     </script>
 </body>
