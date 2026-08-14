@@ -104,7 +104,17 @@ class ThemeDemo extends Component
                 'string',
                 'max:255',
                 function (string $attribute, mixed $value, \Closure $fail): void {
-                    if ($value && ! View::exists($value)) {
+                    if ($value === null || $value === '') {
+                        return;
+                    }
+
+                    if (! str_starts_with($value, 'temademo.')) {
+                        $fail('Demo harus berupa view statis di namespace temademo.');
+
+                        return;
+                    }
+
+                    if (! View::exists($value)) {
                         $fail('Template demo tidak valid atau tidak ditemukan.');
                     }
                 },

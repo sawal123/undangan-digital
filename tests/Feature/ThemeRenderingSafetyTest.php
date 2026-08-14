@@ -330,18 +330,31 @@ class ThemeRenderingSafetyTest extends TestCase
             ->set('category_id', $category->id)
             ->set('event_type_id', (string) $eventTypeId)
             ->set('path', 'tema.tidak.ada')
-            ->set('demo', 'tema.darksweet.darksweet')
+            ->set('demo', 'temademo.darksweet')
             ->call('store')
             ->assertHasErrors(['path']);
 
         $this->assertDatabaseMissing('themes', ['nama' => 'Tema Baru']);
 
+        // Demo dynamic theme (tema.*) ditolak walau view-nya ada.
         Livewire::test(ThemeDemo::class)
             ->set('nama', 'Tema Baru')
             ->set('category_id', $category->id)
             ->set('event_type_id', (string) $eventTypeId)
             ->set('path', 'tema.darksweet.darksweet')
-            ->set('demo', 'tema.demo.tidak.ada')
+            ->set('demo', 'tema.darkpre.darkpre')
+            ->call('store')
+            ->assertHasErrors(['demo']);
+
+        $this->assertDatabaseMissing('themes', ['nama' => 'Tema Baru']);
+
+        // Demo temademo.* yang tidak ada tetap ditolak.
+        Livewire::test(ThemeDemo::class)
+            ->set('nama', 'Tema Baru')
+            ->set('category_id', $category->id)
+            ->set('event_type_id', (string) $eventTypeId)
+            ->set('path', 'tema.darksweet.darksweet')
+            ->set('demo', 'temademo.tidak.ada')
             ->call('store')
             ->assertHasErrors(['demo']);
 
@@ -374,13 +387,14 @@ class ThemeRenderingSafetyTest extends TestCase
             ->set('category_id', $category->id)
             ->set('event_type_id', (string) $eventTypeId)
             ->set('path', 'tema.darksweet.darksweet')
-            ->set('demo', 'tema.darkpre.darkpre')
+            ->set('demo', 'temademo.darksweet')
             ->call('store')
             ->assertHasNoErrors(['path', 'demo']);
 
         $this->assertDatabaseHas('themes', [
             'nama' => 'Tema Valid',
             'path' => 'tema.darksweet.darksweet',
+            'demo' => 'temademo.darksweet',
         ]);
     }
 }
