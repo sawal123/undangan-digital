@@ -13,9 +13,9 @@
             melalui pengiriman fisik:</p>
         @foreach ($data->kado as $index => $kado)
             <ul class="text-left text-gray-700 mb-6 flex flex-col items-center text-sm relative ">
-                <li class="mb-2 text-center"><img src="{{ asset('storage/' . $kado->giftPay->icon) }}" alt=""
-                    class="w-32"></li>
-                    <li class="mb-2"><strong>{{ $kado->namaPay }}</strong></li>
+                <li class="mb-2 text-center"><img src="{{ asset('storage/' . ($kado->giftPay?->icon ?? '')) }}"
+                        alt="" class="w-32"></li>
+                <li class="mb-2"><strong>{{ $kado->namaPay }}</strong></li>
                 <li class="nomor-rekening">{{ $kado->nomorPay }}</li>
                 <li class="my-2">
                     <button onclick="salinTeks(this)" style="border: 1px solid #313131;"

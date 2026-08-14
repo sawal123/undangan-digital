@@ -17,7 +17,7 @@
         <a href="#savethedate" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
             <i class="fa-solid fa-calendar-check text-lg md:text-2xl"></i>
         </a>
-        @if ($data->kisah->isNotEmpty())
+        @if ($data->kisah?->isNotEmpty())
             <a href="#story" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
                 <i class="fa-solid fa-history text-lg md:text-2xl"></i>
             </a>
@@ -47,7 +47,7 @@
 <!-- Youtube -->
 <div class="hidden fixed z-0 bottom-0">
     <iframe id="videoFrame" width="0" height="0"
-        src="@if ($data->sound->isActive) {{ $data->sound->sound }}?start={{ $data->sound->start }} @endif&enablejsapi=1"
+        src="@if ($data->sound?->isActive) {{ $data->sound?->sound }}?start={{ $data->sound?->start }} @endif&enablejsapi=1"
         frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
     </iframe>
 </div>

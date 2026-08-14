@@ -8,10 +8,12 @@
     <div class="bg-neutral-950 w-full p-2 ">
 
         <div class="border border-orange-200 rounded-lg border-dashed text-orange-200 p-2 italic">
-            <p class="text-center font-semibold p-10 space-y-3 lg:text-lg text-[13px]">{{ $data->qoute->title }}</p>
-            <p class="text-center font-semibold  space-y-3 lg:text-lg text-[13px]">"{{ $data->qoute->qoute }}" <br>
+            <p class="text-center font-semibold p-10 space-y-3 lg:text-lg text-[13px]">{{ $data->qoute?->title ?? '' }}
+            </p>
+            <p class="text-center font-semibold  space-y-3 lg:text-lg text-[13px]">"{{ $data->qoute?->qoute ?? '' }}"
                 <br>
-                <span class="italic">{{ $data->qoute->subtitle }}</span>
+                <br>
+                <span class="italic">{{ $data->qoute?->subtitle ?? '' }}</span>
             </p>
         </div>
     </div>

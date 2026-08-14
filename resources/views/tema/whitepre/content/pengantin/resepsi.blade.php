@@ -6,9 +6,14 @@
             <h1 class="flex justify-center text-[50px] z-50 font-semibold pt-5  ">
                 {{ $item->nama_acara }}</h1>
             <div>
-                {{ date('d', strtotime($item->date)) }},
-                {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }}
-                {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }}</div>
+                @if ($item->date)
+                    {{ date('d', strtotime($item->date)) }},
+                    {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }}
+                    {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }}
+                @else
+                    Tanggal tidak tersedia
+                @endif
+            </div>
             <div>pukul {{ $item->jam_start }} - {{ $item->jam_end }} {{ $item->zona_waktu }}</div>
             <div>{{ $item->alamat }}</div>
             <div>{{ $item->vanue }}</div>

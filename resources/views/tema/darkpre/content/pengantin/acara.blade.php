@@ -1,7 +1,8 @@
 <div class="bg-neutral-950 relative text-orange-200 px-2 pb-10 ">
     <p class="text-center  font-semibold  mb-5">{{ $data->teksUndangan?->pembuka ?? '' }}</p>
     @foreach ($data->acara as $item)
-        <div class="flex flex-col items-center border
+        <div
+            class="flex flex-col items-center border
  border-orange-200
 rounded-lg border-dashed p-4 justify-center w-full space-y-6 mt-5 text-sm">
             <!-- Judul Acara -->
@@ -12,9 +13,13 @@ rounded-lg border-dashed p-4 justify-center w-full space-y-6 mt-5 text-sm">
             <!-- Detail Acara -->
             <div class="flex flex-col items-center justify-center w-full space-y-3 font-normal pt-8 pb-8">
                 <div>
-                    {{ date('d', strtotime($item->date)) }},
-                    {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }}
-                    {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }}
+                    @if ($item->date)
+                        {{ date('d', strtotime($item->date)) }},
+                        {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }}
+                        {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }}
+                    @else
+                        Tanggal tidak tersedia
+                    @endif
                 </div>
                 <div>
                     pukul {{ $item->jam_start }} - {{ $item->jam_end }} {{ $item->zona_waktu }}

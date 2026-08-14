@@ -22,8 +22,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @if ($data->dataFont)
-            @import url('{{ $data->dataFont->titleFont->link }}');
-            @import url('{{ $data->dataFont->subFont->link }}');
+            @import url('{{ $data->dataFont?->titleFont?->link ?? '' }}');
+            @import url('{{ $data->dataFont?->subFont?->link ?? '' }}');
 
         @else
             @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
@@ -32,15 +32,15 @@
 
 
         .title {
-            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Dancing Script' }}", system-ui;
+            font-family: "{{ $data->dataFont?->titleFont?->nama ?? 'Dancing Script' }}", system-ui;
             font-optical-sizing: auto;
             font-weight: <weight>;
             font-style: normal;
-            font-size: {{ $data->dataFont->s_title }}px !important
+            font-size: {{ $data->dataFont?->s_title ?? 40 }}px !important
         }
 
         html {
-            font-family: "{{ $data->dataFont->subFont->nama ?? 'Capriola' }}";
+            font-family: "{{ $data->dataFont?->subFont?->nama ?? 'Capriola' }}";
         }
     </style>
 </head>
@@ -97,7 +97,7 @@
     <!-- Music -->
     @include('tema.standtheme.music')
     {{-- end music --}}
-    @if ($data->sound->isActive)
+    @if ($data->sound?->isActive)
         <script>
             const buka = document.getElementById('bukaModal');
             const tutup = document.getElementById('tutupModal');

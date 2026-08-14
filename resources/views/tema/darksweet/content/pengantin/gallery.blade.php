@@ -24,7 +24,7 @@
             @endforeach
         </div>
         <p class="text-sm text-center break-words text-white mt-5" data-aos="fade-up" data-aos-duration="3000">
-            {{ $data->teksUndangan->penutup }}
+            {{ $data->teksUndangan?->penutup ?? '' }}
         </p>
     </div>
 

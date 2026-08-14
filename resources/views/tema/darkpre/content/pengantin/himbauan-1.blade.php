@@ -49,12 +49,20 @@
     <!-- Tanggal -->
     <div class="text-center text-lg text-orange-200 pt-8" id="countdown">
         <div>
-            {{ date('d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))) }},
-            {{ \Carbon\Carbon::parse($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))->translatedFormat('l') }}
-            {{ \Carbon\Carbon::parse($data->acara[1]->date ?? ($data->acara[0]->date ?? 'Tanggal tidak tersedia'))->translatedFormat('F Y') }}
+            @php
+                $acaraHimbauan = $data->acara?->get(1) ?? $data->acara?->first();
+                $acaraHimbauanDate = $acaraHimbauan?->date;
+            @endphp
+            @if ($acaraHimbauanDate)
+                {{ date('d', strtotime($acaraHimbauanDate)) }},
+                {{ \Carbon\Carbon::parse($acaraHimbauanDate)->translatedFormat('l') }}
+                {{ \Carbon\Carbon::parse($acaraHimbauanDate)->translatedFormat('F Y') }}
+            @else
+                Tanggal tidak tersedia
+            @endif
         </div>
         <?php // Ambil waktu acara dalam format Unix Timestamp
-        $eventTimestamp = strtotime($data->acara[0]->date); ?>
+        $eventTimestamp = $acaraHimbauanDate ? strtotime($acaraHimbauanDate) : time(); ?>
     </div>
 
     <!-- button -->

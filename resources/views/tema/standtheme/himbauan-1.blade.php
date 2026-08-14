@@ -10,7 +10,7 @@
             Hitung Mundur</p>
         <?php
         // Ambil waktu acara dalam format Unix Timestamp
-        $eventTimestamp = strtotime($data->acara[0]->date);
+        $eventTimestamp = ($data->acara?->first())?->date ? strtotime($data->acara->first()->date) : time();
         ?>
         <!-- Kotak Hitung Mundur -->
         <div class="flex flex-row gap-4 justify-center text-white items-center mx-auto" data-aos="fade-up"

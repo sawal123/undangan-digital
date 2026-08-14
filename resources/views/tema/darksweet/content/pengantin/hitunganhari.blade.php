@@ -101,7 +101,7 @@
     <!-- Integrasi Logika Live Countdown & Link Kalender -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            @if (isset($acara) && $acara)
+            @if (isset($acara) && $acara && $acara->date)
                 let eventTitle = "Pernikahan Kami";
                 let eventDateStart = "{{ date('Ymd', strtotime($acara->date)) }}T100000Z";
                 let eventDetails = "Jangan lewatkan momen spesial kami!";
@@ -113,7 +113,10 @@
             @endif
 
             let eventDateStr =
-                "{{ $data ? date('Y-m-d', strtotime($data->acara[1]->date ?? ($data->acara[0]->date ?? ''))) : '2024-10-10' }}";
+                "{{ ($data->acara?->get(1) ?? $data->acara?->first())?->date ? date('Y-m-d', strtotime(($data->acara?->get(1) ?? $data->acara?->first())->date)) : '' }}";
+            if (!eventDateStr) {
+                eventDateStr = '2024-10-10';
+            }
             let eventDate = new Date(eventDateStr).getTime();
             let countdown = setInterval(function() {
                 let now = new Date().getTime();

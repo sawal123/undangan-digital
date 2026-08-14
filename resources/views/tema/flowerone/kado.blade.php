@@ -9,10 +9,10 @@
     @foreach ($data->kado as $kado)
         <div class="bank-info mt-2" data-aos="fade-up" data-aos-duration="1000">
             <div>
-                <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" class="object-fit-cover img-thumbnail"
+                <img src="{{ asset('storage/' . ($kado->giftPay?->icon ?? '')) }}" class="object-fit-cover img-thumbnail"
                     alt="Qris" style="width: auto%; height: 50px; " />
             </div>
-            <p style="font-size: 20px; font-weight: 800;">{{ $kado->giftPay->nama_pay }}
+            <p style="font-size: 20px; font-weight: 800;">{{ $kado->giftPay?->nama_pay ?? '' }}
             </p>
             <p>Nama Akun/Rekening <br> <span>{{ $kado->namaPay }}</span></p>
             <p class="" style="margin: 0px">
@@ -38,8 +38,8 @@
             <div class="bank-details d-flex flex-column align-items-center" data-aos="fade-up" data-aos-duration="1000">
                 <p><strong>Kasih Hadiah Pakai QRIS</strong></p>
                 <div class="bank-card mb-3 text-center">
-                    <img src="{{asset('storage/'. $kado->qris)}}" class="object-fit-cover img-thumbnail" alt="QRIS Bank BCA"
-                        style="max-width: 75%; min-width: 50%;" />
+                    <img src="{{ asset('storage/' . $kado->qris) }}" class="object-fit-cover img-thumbnail"
+                        alt="QRIS Bank BCA" style="max-width: 75%; min-width: 50%;" />
                 </div>
             </div>
         @endif

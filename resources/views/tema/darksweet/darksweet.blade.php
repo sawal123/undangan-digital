@@ -33,8 +33,8 @@
 
     <style>
         @if ($data->dataFont)
-            @import url('{{ $data->dataFont->titleFont->link ?? '' }}');
-            @import url('{{ $data->dataFont->subFont->link ?? '' }}');
+            @import url('{{ $data->dataFont?->titleFont?->link ?? '' }}');
+            @import url('{{ $data->dataFont?->subFont?->link ?? '' }}');
 
         @else
             @import url('https://fonts.googleapis.com/css2?family=Capriola&family=Oleo+Script+Swash+Caps:wght@400;700&display=swap');
@@ -49,6 +49,7 @@
             font-weight: 700;
             font-style: normal;
             font-size: {{ $data->dataFont?->s_title ?? 40 }}px !important
+        }
         }
 
         html,

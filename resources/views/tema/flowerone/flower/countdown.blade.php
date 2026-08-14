@@ -1,9 +1,9 @@
-<p class="date countdown" data-date="{{ $data ? date('Y-m-d', strtotime($data->acara[0]->date)) : '2024-10-10' }}">
-    {{ $data ? $hari[date('l', strtotime($data->acara[0]->date))] : 'Minggu' }}
+<p class="date countdown" data-date="{{ ($data->acara?->first())?->date ? date('Y-m-d', strtotime($data->acara->first()->date)) : '' }}">
+    {{ ($data->acara?->first())?->date ? ($hari[date('l', strtotime($data->acara->first()->date))] ?? date('l', strtotime($data->acara->first()->date))) : 'Minggu' }}
     <br>
-    {{ $data ? date('d', strtotime($data->acara[0]->date)) : '10' }} •
-    {{ $data ? date('m', strtotime($data->acara[0]->date)) : '10' }} •
-    {{ $data ? date('Y', strtotime($data->acara[0]->date)) : '2024' }}
+    {{ ($data->acara?->first())?->date ? date('d', strtotime($data->acara->first()->date)) : '10' }} •
+    {{ ($data->acara?->first())?->date ? date('m', strtotime($data->acara->first()->date)) : '10' }} •
+    {{ ($data->acara?->first())?->date ? date('Y', strtotime($data->acara->first()->date)) : '2024' }}
 </p>
  <!-- Countdown Display -->
  <div class="countdown d-flex justify-content-center gap-3" id="countdown">

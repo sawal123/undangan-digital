@@ -30,7 +30,7 @@
         <!--  GIFT  -->
         <div class="w-full flex flex-col justify-center items-center pt-5 bg-zinc-800 px-3" id="hadiah">
 
-            @if ($data->kado->isNotEmpty())
+            @if ($data->kado?->isNotEmpty())
                 <h1 class="text-white text-center text-3xl font-bold " data-aos="fade-up" data-aos-duration="3000">Titip
                     Hadiah
                 </h1>
@@ -49,7 +49,7 @@
                         <!-- Logo -->
                         <div class="absolute top-4 right-4 flex items-center h-8 w-20">
                             <div class="relative w-full">
-                                <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" style="height: 20px"
+                                <img src="{{ asset('storage/' . ($kado->giftPay?->icon ?? '')) }}" style="height: 20px"
                                     alt="" class="absolute inset-0 object-cover object-center">
                             </div>
                         </div>
@@ -126,8 +126,8 @@
             </div>
             <div class="w-full mx-auto mt-5 z-10">
                 <h1 class="text-white text-center text-3xl font-bold " data-aos="fade-down" data-aos-duration="3000">
-                    {{ $data->wanita->nama_panggilan }} &
-                    {{ $data->pria->nama_panggilan }}
+                    {{ $data->wanita?->nama_panggilan ?? '' }} &
+                    {{ $data->pria?->nama_panggilan ?? '' }}
                 </h1>
             </div>
             <div class="w-full mx-auto mt-5 z-10">

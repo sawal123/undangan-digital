@@ -55,8 +55,8 @@
 
     <style>
         @if ($data->dataFont)
-            @import url('{{ $data->dataFont->titleFont->link }}');
-            @import url('{{ $data->dataFont->subFont->link }}');
+            @import url('{{ $data->dataFont?->titleFont?->link ?? '' }}');
+            @import url('{{ $data->dataFont?->subFont?->link ?? '' }}');
 
         @else
             @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
@@ -65,15 +65,15 @@
 
 
         h1 {
-            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Dancing Script' }}", system-ui;
+            font-family: "{{ $data->dataFont?->titleFont?->nama ?? 'Dancing Script' }}", system-ui;
             font-weight: <weight>;
             font-style: normal;
-            font-size: {{ $data->dataFont->s_title }}px;
+            font-size: {{ $data->dataFont?->s_title ?? 40 }}px;
             color: #9e0050;
         }
 
         h3 {
-            font-family: "{{ $data->dataFont->titleFont->nama ?? 'Dancing Script' }}", system-ui;
+            font-family: "{{ $data->dataFont?->titleFont?->nama ?? 'Dancing Script' }}", system-ui;
             font-optical-sizing: auto;
             font-weight: <weight>;
             font-style: normal;
@@ -85,7 +85,7 @@
         body {
             background-color: #FFD3E9;
             /* background: linear-gradient(135deg, #f8cdda 0%, #1d2b64 100%); */
-            font-family: "{{ $data->dataFont->subFont->nama ?? 'Capriola' }}" !important;
+            font-family: "{{ $data->dataFont?->subFont?->nama ?? 'Capriola' }}" !important;
         }
 
 
@@ -241,7 +241,7 @@
                     <!-- Relationship Detail Section -->
                     <section class="relationship-section text-center">
                         <div class="relationship-text" data-aos="fade-up" data-aos-duration="1000">
-                            <p>{!! nl2br(e($data->teksUndangan->pembuka)) !!}</p>
+                            <p>{!! nl2br(e($data->teksUndangan?->pembuka ?? '')) !!}</p>
                         </div>
 
                         <div class="relationship-couple d-flex flex-column">
@@ -259,7 +259,7 @@
                     <!-- Acara -->
                     <section class="event-section text-center">
                         <h3 data-aos="fade-up" data-aos-duration="1000">Acara</h3>
-                        <p data-aos="fade-up" data-aos-duration="1000">{!! nl2br(e($data->teksUndangan->acara)) !!}</p>
+                        <p data-aos="fade-up" data-aos-duration="1000">{!! nl2br(e($data->teksUndangan?->acara ?? '')) !!}</p>
 
                         <!-- Akad Nikah Section -->
 
@@ -269,7 +269,11 @@
 
                                 {{-- Tanggal Acara --}}
                                 <p class="date">
-                                    {{ \Carbon\Carbon::parse($item->date)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+                                    @if ($item->date)
+                                        {{ \Carbon\Carbon::parse($item->date)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+                                    @else
+                                        Tanggal belum ditentukan
+                                    @endif
                                 </p>
 
                                 {{-- Waktu Acara --}}
@@ -289,17 +293,22 @@
                                 <div class="d-flex flex-row justify-content-center gap-2">
                                     @php
                                         // Format Google Calendar
-                                        $startDateTime = \Carbon\Carbon::parse(
-                                            $item->date . ' ' . $item->jam_start,
-                                        )->format('Ymd\THis\Z');
-                                        $endDateTime =
-                                            $item->jam_end === 'Selesai'
-                                                ? \Carbon\Carbon::parse($item->date . ' ' . $item->jam_start)
-                                                    ->addHours(2)
-                                                    ->format('Ymd\THis\Z') // default +2 jam
-                                                : \Carbon\Carbon::parse($item->date . ' ' . $item->jam_end)->format(
-                                                    'Ymd\THis\Z',
-                                                );
+                                        if ($item->date) {
+                                            $startDateTime = \Carbon\Carbon::parse(
+                                                $item->date . ' ' . $item->jam_start,
+                                            )->format('Ymd\THis\Z');
+                                            $endDateTime =
+                                                $item->jam_end === 'Selesai'
+                                                    ? \Carbon\Carbon::parse($item->date . ' ' . $item->jam_start)
+                                                        ->addHours(2)
+                                                        ->format('Ymd\THis\Z') // default +2 jam
+                                                    : \Carbon\Carbon::parse($item->date . ' ' . $item->jam_end)->format(
+                                                        'Ymd\THis\Z',
+                                                    );
+                                        } else {
+                                            $startDateTime = '';
+                                            $endDateTime = '';
+                                        }
                                     @endphp
 
                                     <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ urlencode($item->nama_acara) }}&dates={{ $startDateTime }}/{{ $endDateTime }}&details={{ urlencode('Jangan lewatkan acara ini') }}&location={{ urlencode($item->alamat) }}"
@@ -354,7 +363,7 @@
                                     </div>
                                     <div class="col-11 ">
                                         <div class="card-image pl-1 ">
-                                            <img src="{{ asset('storage/' . $kisah->image->image) }}"
+                                            <img src="{{ asset('storage/' . ($kisah->image?->image ?? '')) }}"
                                                 class="rounded-3 object-fit-cover" alt="Card Image" width="100%">
                                             <div class="overlay">
                                                 <div class="overlay-background"></div>
@@ -446,7 +455,7 @@
             </div>
 
             <footer class="footer mt-5 text-center mb-5">
-                <p style="margin: 0px">{{ $data->wanita->nama_panggilan }} & {{ $data->pria->nama_panggilan }} </p>
+                <p style="margin: 0px">{{ $data->wanita?->nama_panggilan ?? '' }} & {{ $data->pria?->nama_panggilan ?? '' }} </p>
                 <p style="margin: 0px">Made with ❤ somewhere in the world</p>
                 <p style="margin-bottom: 5px">Powered by Wayae Nikah</p>
             </footer>

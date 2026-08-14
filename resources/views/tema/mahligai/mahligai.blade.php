@@ -15,18 +15,31 @@
         $eventDate = $firstEvent?->date ? Carbon::parse($firstEvent->date) : null;
         $eventDateText = $eventDate ? $eventDate->translatedFormat('l, d F Y') : 'Tanggal acara';
         $eventTime = $firstEvent?->jam_start ?: '00:00';
-        $countdownDate = $eventDate ? Carbon::parse($firstEvent->date . ' ' . $eventTime)->format('Y-m-d\TH:i:s') : now()->format('Y-m-d\TH:i:s');
+        $countdownDate = $eventDate
+            ? Carbon::parse($firstEvent->date . ' ' . $eventTime)->format('Y-m-d\TH:i:s')
+            : now()->format('Y-m-d\TH:i:s');
 
-        $storageUrl = fn ($path) => $path ? asset('storage/' . ltrim($path, '/')) : null;
-        $coverImage = $storageUrl($data->coverUndangan?->cover_satu)
-            ?? (count($poto ?? []) ? $storageUrl($poto[0]) : null)
-            ?? 'https://images.pexels.com/photos/2253870/pexels-photo-2253870.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
-        $footerImage = $storageUrl($data->coverUndangan?->cover_dua)
-            ?? (count($poto ?? []) > 1 ? $storageUrl($poto[1]) : null)
-            ?? 'https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
-        $wanitaImage = $storageUrl($wanita?->image) ?? 'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=600';
-        $priaImage = $storageUrl($pria?->image) ?? 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=600';
-        $title = ($data->setting?->acara ?? 'The Wedding Of') . ' ' . ($wanita?->nama_panggilan ?? 'Mempelai') . ' & ' . ($pria?->nama_panggilan ?? 'Mempelai');
+        $storageUrl = fn($path) => $path ? asset('storage/' . ltrim($path, '/')) : null;
+        $coverImage =
+            $storageUrl($data->coverUndangan?->cover_satu) ??
+            ((count($poto ?? []) ? $storageUrl($poto[0]) : null) ??
+                'https://images.pexels.com/photos/2253870/pexels-photo-2253870.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+        $footerImage =
+            $storageUrl($data->coverUndangan?->cover_dua) ??
+            ((count($poto ?? []) > 1 ? $storageUrl($poto[1]) : null) ??
+                'https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+        $wanitaImage =
+            $storageUrl($wanita?->image) ??
+            'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=600';
+        $priaImage =
+            $storageUrl($pria?->image) ??
+            'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=600';
+        $title =
+            ($data->setting?->acara ?? 'The Wedding Of') .
+            ' ' .
+            ($wanita?->nama_panggilan ?? 'Mempelai') .
+            ' & ' .
+            ($pria?->nama_panggilan ?? 'Mempelai');
     @endphp
     <title>{{ $title }}</title>
     <meta name="robots" content="noindex, nofollow">
@@ -511,7 +524,8 @@
                             <br><strong>{{ $data->qoute->subtitle }}</strong>
                         @endif
                     @else
-                        Dan di antara tanda-tanda kekuasaan-Nya, Dia menciptakan pasangan hidup untukmu agar kamu merasa tenteram, dan menjadikan kasih sayang. (QS. Ar-Rum: 21)
+                        Dan di antara tanda-tanda kekuasaan-Nya, Dia menciptakan pasangan hidup untukmu agar kamu merasa
+                        tenteram, dan menjadikan kasih sayang. (QS. Ar-Rum: 21)
                     @endif
                 </div>
                 <div class="countdown-wrap" id="countdownTimer" data-target="{{ $countdownDate }}">
@@ -538,16 +552,23 @@
         <section id="couple">
             <div class="section-title">Mempelai</div>
             <p style="text-align:center; margin-bottom:2rem;">
-                {!! nl2br(e($data->teksUndangan?->pembuka ?? 'Dengan memohon rahmat Allah, kami mengundang Bapak/Ibu/Saudara/i dalam bahagia pernikahan kami.')) !!}
+                {!! nl2br(
+                    e(
+                        $data->teksUndangan?->pembuka ??
+                            'Dengan memohon rahmat Allah, kami mengundang Bapak/Ibu/Saudara/i dalam bahagia pernikahan kami.',
+                    ),
+                ) !!}
             </p>
             <div class="couple-card">
-                <img class="couple-photo" src="{{ $wanitaImage }}" alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                <img class="couple-photo" src="{{ $wanitaImage }}"
+                    alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
                 <h2 style="font-family:Playfair Display;">{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</h2>
                 <p>{!! nl2br(e($wanita?->deskripsi ?? '')) !!}</p>
             </div>
             <div class="ampersand">&</div>
             <div class="couple-card">
-                <img class="couple-photo" src="{{ $priaImage }}" alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                <img class="couple-photo" src="{{ $priaImage }}"
+                    alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
                 <h2 style="font-family:Playfair Display;">{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}</h2>
                 <p>{!! nl2br(e($pria?->deskripsi ?? '')) !!}</p>
             </div>
@@ -559,7 +580,10 @@
             @forelse ($data->acara as $item)
                 @php
                     $dateText = $item->date ? Carbon::parse($item->date)->translatedFormat('l, d F Y') : '-';
-                    $mapUrl = $item->maps ?: 'https://www.google.com/maps/search/?api=1&query=' . urlencode($item->alamat ?? $item->vanue ?? '');
+                    $mapUrl =
+                        $item->maps ?:
+                        'https://www.google.com/maps/search/?api=1&query=' .
+                            urlencode($item->alamat ?? ($item->vanue ?? ''));
                 @endphp
                 <div class="event-card">
                     <h3><i class="fas fa-ring event-icon"></i> {{ $item->nama_acara }}</h3>
@@ -568,7 +592,8 @@
                         <i class="far fa-clock"></i>
                         {{ $item->jam_start }} {{ $item->zona_waktu }}
                         @if ($item->jam_end)
-                            s/d {{ $item->jam_end === 'Selesai' ? 'Selesai' : $item->jam_end . ' ' . $item->zona_waktu }}
+                            s/d
+                            {{ $item->jam_end === 'Selesai' ? 'Selesai' : $item->jam_end . ' ' . $item->zona_waktu }}
                         @endif
                     </p>
                     <p><i class="fas fa-map-marker-alt"></i> {{ $item->vanue }}</p>
@@ -582,7 +607,7 @@
             @endforelse
         </section>
 
-        @if ($data->kisah->isNotEmpty())
+        @if ($data->kisah?->isNotEmpty())
             <section id="lovestory">
                 <div class="section-title">Kisah Kami</div>
                 @foreach ($data->kisah as $kisah)
@@ -602,7 +627,8 @@
                 <div class="section-title">Galeri</div>
                 @if ($video)
                     <div style="height: 250px; margin-bottom: 1rem;">
-                        <iframe src="{{ $video[0] }}" style="width:100%; height:100%; border:0; border-radius:18px;" allowfullscreen></iframe>
+                        <iframe src="{{ $video[0] }}"
+                            style="width:100%; height:100%; border:0; border-radius:18px;" allowfullscreen></iframe>
                     </div>
                 @endif
                 @if ($poto)
@@ -621,15 +647,17 @@
                 <div style="background:#fcf5ea; border-radius: 32px; padding:1.5rem; text-align:center;">
                     <i class="fas fa-video" style="font-size:2rem; color:#b88552;"></i>
                     <p style="margin: 10px 0;">Turut hadir secara virtual melalui siaran langsung kami.</p>
-                    <a class="btn-primary" href="{{ $data->streaming->link }}" target="_blank" rel="noopener">Tonton Streaming</a>
+                    <a class="btn-primary" href="{{ $data->streaming->link }}" target="_blank"
+                        rel="noopener">Tonton Streaming</a>
                 </div>
             </section>
         @endif
 
-        @if ($data->fiturKado?->isActive && $data->kado->isNotEmpty())
+        @if ($data->fiturKado?->isActive && $data->kado?->isNotEmpty())
             <section id="gift">
                 <div class="section-title">Wedding Gift</div>
-                <p style="text-align:center;">Doa restu Anda merupakan hadiah terindah. Tanda kasih dapat disalurkan melalui:</p>
+                <p style="text-align:center;">Doa restu Anda merupakan hadiah terindah. Tanda kasih dapat disalurkan
+                    melalui:</p>
                 @foreach ($data->kado as $gift)
                     <div class="gift-card">
                         <i class="fas fa-credit-card"></i>
@@ -637,7 +665,8 @@
                         <p>{{ $gift->nomorPay }}</p>
                         <p>a.n. {{ $gift->namaPay }}</p>
                         @if ($gift->qris)
-                            <img src="{{ $storageUrl($gift->qris) }}" alt="QRIS" style="width: 180px; max-width: 100%; border-radius: 18px; margin-top: 8px;">
+                            <img src="{{ $storageUrl($gift->qris) }}" alt="QRIS"
+                                style="width: 180px; max-width: 100%; border-radius: 18px; margin-top: 8px;">
                         @endif
                         @if ($gift->nomorPay)
                             <button class="copy-btn" data-num="{{ $gift->nomorPay }}">Salin Nomor</button>
@@ -664,7 +693,8 @@
                         @csrf
                         <input type="hidden" name="dataId" value="{{ $data->id }}">
                         <input type="hidden" name="kode" value="{{ $kode }}">
-                        <input type="text" name="nama" placeholder="Nama Anda" value="{{ old('nama', $tamu) }}" required>
+                        <input type="text" name="nama" placeholder="Nama Anda"
+                            value="{{ old('nama', $tamu) }}" required>
                         @error('nama')
                             <div class="error-text">{{ $message }}</div>
                         @enderror
@@ -695,7 +725,8 @@
                                     <span class="badge-hadir">{{ $item->status }}</span>
                                 </div>
                                 <p style="margin:8px 0;">"{{ $item->ucapan }}"</p>
-                                <small><i class="far fa-calendar"></i> {{ $item->created_at?->diffForHumans() }}</small>
+                                <small><i class="far fa-calendar"></i>
+                                    {{ $item->created_at?->diffForHumans() }}</small>
                                 @if ($item->balas)
                                     <div style="margin-top:10px; background:#fff; border-radius:16px; padding:10px;">
                                         <strong>Balasan:</strong> {{ $item->balas }}
@@ -746,7 +777,8 @@
 
     <div class="lightbox" id="lightbox">
         <img id="lightboxImg" src="" alt="Galeri">
-        <span style="position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer;" id="closeLightbox">&times;</span>
+        <span style="position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer;"
+            id="closeLightbox">&times;</span>
     </div>
 
     <script>
@@ -814,7 +846,10 @@
             document.querySelectorAll(".nav-item").forEach(item => {
                 item.addEventListener("click", () => {
                     const element = document.getElementById(item.getAttribute("data-section"));
-                    if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
+                    if (element) element.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
                 });
             });
 
@@ -845,7 +880,7 @@
                     '>': '&gt;',
                     '"': '&quot;',
                     "'": '&#039;'
-                }[char]));
+                } [char]));
             }
 
             function showWishAlert(type, message) {
