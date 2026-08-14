@@ -758,9 +758,9 @@
         </footer>
     </div>
 
-    @if ($data->sound?->isActive && $data->sound?->sound)
+    @if ($data->sound?->isActive && $data->sound?->sound && $data->sound?->sound !== 'null')
         <div class="music-btn" id="musicToggle"><i class="fas fa-music"></i></div>
-        <audio id="bgAudio" loop src="{{ $storageUrl($data->sound->sound) }}" preload="auto"></audio>
+        @include('tema.partials.music', ['data' => $data])
     @endif
 
     <div class="bottom-nav">
@@ -810,36 +810,15 @@
             setInterval(updateCountdown, 1000);
             updateCountdown();
 
-            const audio = document.getElementById("bgAudio");
-            const musicBtn = document.getElementById("musicToggle");
-            let isPlaying = false;
-            if (audio && musicBtn) {
-                musicBtn.addEventListener("click", () => {
-                    if (isPlaying) {
-                        audio.pause();
-                        musicBtn.innerHTML = '<i class="fas fa-music"></i>';
-                    } else {
-                        audio.play().catch(() => {});
-                        musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                    }
-                    isPlaying = !isPlaying;
-                });
-            }
-
             const cover = document.getElementById("coverScreen");
             const mainCont = document.getElementById("mainContent");
             document.getElementById("openInvitationBtn").addEventListener("click", () => {
+                if (window.musicPlayer) window.musicPlayer.play();
                 cover.classList.add("hidden-cover");
                 setTimeout(() => {
                     cover.style.display = "none";
                     mainCont.style.display = "block";
                     document.body.style.overflow = "auto";
-                    if (audio) {
-                        audio.play().then(() => {
-                            isPlaying = true;
-                            if (musicBtn) musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                        }).catch(() => {});
-                    }
                 }, 600);
             });
 

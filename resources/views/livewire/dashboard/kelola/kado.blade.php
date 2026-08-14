@@ -147,7 +147,8 @@
     <x-ui.modal name="preview-modal" title="QRIS Preview" icon="scan-line">
         <div class="p-4 flex justify-center bg-white rounded-xl mb-6">
             @if ($barcode)
-                <img src="{{ asset('storage/' . $barcode) }}" class="w-full max-w-[200px] aspect-square object-contain">
+                <img src="{{ asset('storage/' . $barcode) }}"
+                    class="w-full max-w-[200px] aspect-square object-contain">
             @else
                 <div
                     class="w-[200px] h-[200px] bg-slate-100 flex items-center justify-center text-slate-400 rounded-xl">
@@ -221,7 +222,7 @@
     </style>
 
     <script>
-        window.kadoGiftSelect = function () {
+        window.kadoGiftSelect = function() {
             return {
                 tom: null,
 
