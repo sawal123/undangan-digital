@@ -45,13 +45,18 @@
                         <label
                             class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Pilih
                             Bank / E-Wallet</label>
-                        <select wire:model.defer="giftId"
-                            class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-                            <option value="">-- Pilih --</option>
-                            @foreach ($giftPay as $pay)
-                                <option value="{{ $pay->id }}">{{ $pay->nama }}</option>
-                            @endforeach
-                        </select>
+                        <div wire:ignore x-data="kadoGiftSelect()" x-init="init()">
+                            <select x-ref="select" wire:model.defer="giftId"
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                                <option value="">-- Pilih --</option>
+                                @foreach ($giftPay as $pay)
+                                    <option value="{{ $pay->id }}">{{ $pay->nama_pay }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('giftId')
+                            <p class="text-xs font-semibold text-rose-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label
@@ -110,7 +115,7 @@
                         </div>
                         <div class="min-w-0 pr-8">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                                {{ $item->giftPay->nama ?? 'Bank' }}</h5>
+                                {{ $item->giftPay->nama_pay ?? 'Bank' }}</h5>
                             <p class="text-lg font-black text-slate-800 dark:text-white mt-1">{{ $item->nomorPay }}</p>
                             <p class="text-sm font-medium text-slate-500 dark:text-slate-400 truncate">A/N:
                                 {{ $item->namaPay }}</p>
@@ -168,15 +173,87 @@
                 Hapus</x-ui.button>
         </div>
     </x-ui.modal>
-</div>
 
- 
- < s c r i p t > 
-             d o c u m e n t . a d d E v e n t L i s t e n e r ( ' l i v e w i r e : u p d a t e d ' ,   ( )   = >   { 
-                     i f   ( t y p e o f   l u c i d e   ! = =   ' u n d e f i n e d ' )   { 
-                             l u c i d e . c r e a t e I c o n s ( ) ; 
-                     } 
-             } ) ; 
-     <  / s c r i p t > 
-         
-         
+    <style>
+        .ts-wrapper.single .ts-control {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.625rem 1rem;
+            font-size: 0.875rem;
+            color: #0f172a;
+        }
+
+        .dark .ts-wrapper.single .ts-control {
+            background-color: #0f172a;
+            border-color: #1e293b;
+            color: #f1f5f9;
+        }
+
+        .ts-wrapper .ts-control:focus {
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+        }
+
+        .ts-wrapper.single .ts-control .item {
+            color: inherit;
+        }
+
+        .ts-wrapper .ts-dropdown {
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .dark .ts-wrapper .ts-dropdown {
+            background-color: #0f172a;
+            border-color: #1e293b;
+            color: #f1f5f9;
+        }
+
+        .ts-wrapper .ts-dropdown .option.active {
+            background-color: #4f46e5;
+            color: #ffffff;
+        }
+
+        .dark .ts-wrapper .ts-dropdown .option.active {
+            background-color: #6366f1;
+            color: #ffffff;
+        }
+    </style>
+
+    <script>
+        window.kadoGiftSelect = function () {
+            return {
+                tom: null,
+
+                init() {
+                    this.$nextTick(() => {
+                        const select = this.$refs.select;
+
+                        if (!select || select.tomselect) {
+                            return;
+                        }
+
+                        this.tom = new window.TomSelect(select, {
+                            allowEmptyOption: true,
+                            placeholder: '-- Pilih --',
+                        });
+                    });
+
+                    if (this.$wire) {
+                        this.$wire.$watch('giftId', (value) => {
+                            if ((value === '' || value === null) && this.tom) {
+                                this.tom.clear(true);
+                            }
+                        });
+                    }
+                },
+            };
+        };
+
+        document.addEventListener('livewire:updated', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</div>
