@@ -97,11 +97,3 @@
         </div>
     </form>
 </div>
-
-<script>
-    document.addEventListener('livewire:updated', () => {
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    });
-</script>

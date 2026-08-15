@@ -207,7 +207,7 @@
                 </div>
             </div>
 
-            <div x-init="lucide.createIcons()" class="flex-1">
+            <div class="flex-1">
                 @if ($tab === 'library')
                     <!-- Music Library -->
                     <div
@@ -231,7 +231,7 @@
                             </div>
                         </div>
 
-                        <div class="divide-y divide-slate-50 dark:divide-slate-800" x-init="lucide.createIcons()">
+                        <div class="divide-y divide-slate-50 dark:divide-slate-800">
                             @forelse($musik as $item)
                                 @php $isSelected = $previewUrl && $selectM && $selectM->id == $item->id; @endphp
                                 <div class="p-5 flex items-center justify-between {{ $isSelected ? 'bg-indigo-50/50 dark:bg-indigo-900/20' : 'hover:bg-slate-50/80 dark:hover:bg-slate-800/30' }} transition-all group"
@@ -253,7 +253,8 @@
                                                 @endif
                                             </div>
                                             <p class="text-xs font-bold text-slate-400 mt-0.5">{{ $item->artis }}
-                                                <span class="mx-1 text-slate-300">•</span> {{ $item->category }}</p>
+                                                <span class="mx-1 text-slate-300">•</span> {{ $item->category }}
+                                            </p>
                                         </div>
                                     </div>
                                     <button wire:click="selectMusic({{ $item->id }})"
@@ -359,43 +360,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('livewire:navigated', () => {
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    });
-
-    document.addEventListener('livewire:init', () => {
-        Livewire.hook('request', ({
-            component,
-            commit,
-            respond,
-            succeed,
-            fail
-        }) => {
-            succeed(({
-                snapshot,
-                effect
-            }) => {
-                queueMicrotask(() => {
-                    if (typeof lucide !== 'undefined') {
-                        lucide.createIcons();
-                    }
-                })
-            })
-        })
-    });
-</script>t>t>
-
- 
- < s c r i p t > 
-             d o c u m e n t . a d d E v e n t L i s t e n e r ( ' l i v e w i r e : u p d a t e d ' ,   ( )   = >   { 
-                     i f   ( t y p e o f   l u c i d e   ! = =   ' u n d e f i n e d ' )   { 
-                             l u c i d e . c r e a t e I c o n s ( ) ; 
-                     } 
-             } ) ; 
-     <  / s c r i p t > 
-         
-         
