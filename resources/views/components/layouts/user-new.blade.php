@@ -225,13 +225,37 @@
 
     @livewireScripts
     <script>
-        const initIcons = () => {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        };
-        document.addEventListener('livewire:navigated', initIcons);
-        document.addEventListener('DOMContentLoaded', initIcons);
+        (() => {
+            // Inisialisasi Lucide terpusat untuk seluruh halaman dashboard.
+            const initIcons = () => {
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            };
+
+            // Initial render
+            document.addEventListener('DOMContentLoaded', initIcons);
+            document.addEventListener('livewire:navigated', initIcons);
+
+            // Jalankan ulang Lucide setelah setiap Livewire DOM morph selesai
+            // (submit, save/update, delete, toggle/switch, pagination, search,
+            // modal yang dirender ulang, dan nested component seperti Pria/Wanita).
+            const registerMorphHook = () => {
+                if (!window.Livewire || window.__lucideMorphHookRegistered) {
+                    return;
+                }
+
+                window.__lucideMorphHookRegistered = true;
+
+                window.Livewire.hook('morphed', () => {
+                    // Tunggu sampai DOM benar-benar stabil setelah morph.
+                    requestAnimationFrame(() => requestAnimationFrame(initIcons));
+                });
+            };
+
+            registerMorphHook();
+            document.addEventListener('livewire:initialized', registerMorphHook);
+        })();
     </script>
 </body>
 </html>
