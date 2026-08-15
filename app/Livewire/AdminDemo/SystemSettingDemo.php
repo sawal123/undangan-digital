@@ -69,6 +69,19 @@ class SystemSettingDemo extends Component
 
     public string $twitter_card = 'summary_large_image';
 
+    // Informasi Kontak
+    public ?string $whatsapp = null;
+
+    public ?string $email = null;
+
+    public ?string $address = null;
+
+    public ?string $instagram = null;
+
+    public ?string $facebook = null;
+
+    public ?string $tiktok = null;
+
     public function mount(): void
     {
         $setting = SystemSetting::current();
@@ -97,6 +110,13 @@ class SystemSettingDemo extends Component
         $this->twitter_description = $setting->twitter_description;
         $this->old_twitter_image = $setting->twitter_image;
         $this->twitter_card = $setting->twitter_card ?: 'summary_large_image';
+
+        $this->whatsapp = $setting->whatsapp;
+        $this->email = $setting->email;
+        $this->address = $setting->address;
+        $this->instagram = $setting->instagram;
+        $this->facebook = $setting->facebook;
+        $this->tiktok = $setting->tiktok;
     }
 
     public function render()
@@ -130,6 +150,12 @@ class SystemSettingDemo extends Component
             'twitter_description' => 'nullable|string|max:500',
             'twitter_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             'twitter_card' => 'required|string|in:summary,summary_large_image',
+            'whatsapp' => 'nullable|string|max:30|regex:/^[0-9+\-\s()]+$/',
+            'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:500',
+            'instagram' => 'nullable|string|max:255',
+            'facebook' => 'nullable|string|max:255',
+            'tiktok' => 'nullable|string|max:255',
         ]);
 
         $setting = SystemSetting::findOrFail($this->setting_id);
@@ -151,6 +177,12 @@ class SystemSettingDemo extends Component
             'twitter_title' => $this->twitter_title,
             'twitter_description' => $this->twitter_description,
             'twitter_card' => $this->twitter_card,
+            'whatsapp' => trim((string) $this->whatsapp) ?: null,
+            'email' => trim((string) $this->email) ?: null,
+            'address' => trim((string) $this->address) ?: null,
+            'instagram' => trim((string) $this->instagram) ?: null,
+            'facebook' => trim((string) $this->facebook) ?: null,
+            'tiktok' => trim((string) $this->tiktok) ?: null,
         ];
 
         // Handle file uploads safely
