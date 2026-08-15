@@ -32,6 +32,12 @@ class SystemSetting extends Model
         'twitter_description',
         'twitter_image',
         'twitter_card',
+        'whatsapp',
+        'email',
+        'address',
+        'instagram',
+        'facebook',
+        'tiktok',
     ];
 
     protected $casts = [
@@ -138,5 +144,59 @@ class SystemSetting extends Model
     public function getTwitterImageUrlAttribute(): ?string
     {
         return $this->resolveUrl($this->twitter_image, $this->og_image_url);
+    }
+
+    /**
+     * Link WhatsApp dalam format wa.me (angka saja).
+     */
+    public function getWhatsappLinkAttribute(): ?string
+    {
+        $number = preg_replace('/\D+/', '', (string) $this->whatsapp);
+
+        return $number !== '' ? 'https://wa.me/' . $number : null;
+    }
+
+    public function getInstagramLinkAttribute(): ?string
+    {
+        return $this->normalizeSocialUrl($this->instagram, 'https://instagram.com');
+    }
+
+    public function getFacebookLinkAttribute(): ?string
+    {
+        return $this->normalizeSocialUrl($this->facebook, 'https://facebook.com');
+    }
+
+    public function getTiktokLinkAttribute(): ?string
+    {
+        return $this->normalizeSocialUrl($this->tiktok, 'https://tiktok.com');
+    }
+
+    /**
+     * Normalisasi input social media menjadi URL eksternal yang valid.
+     */
+    protected function normalizeSocialUrl(?string $value, string $base): ?string
+    {
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return null;
+        }
+
+        if (preg_match('#^https?://#i', $value)) {
+            return $value;
+        }
+
+        if (str_contains($value, '/')) {
+            return 'https://' . ltrim($value, '/');
+        }
+
+        $handle = ltrim($value, '@');
+        $base = rtrim($base, '/');
+
+        if (str_contains($base, 'tiktok.com')) {
+            return $base . '/@' . $handle;
+        }
+
+        return $base . '/' . $handle;
     }
 }
