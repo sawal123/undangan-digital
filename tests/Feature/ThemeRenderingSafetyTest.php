@@ -59,10 +59,10 @@ class ThemeRenderingSafetyTest extends TestCase
         ];
     }
 
-    protected function createTheme(string $path): Theme
+    protected function createTheme(string $path, string $eventTypeKey = 'wedding'): Theme
     {
         $category = Category::factory()->create();
-        $eventTypeId = \App\Models\EventType::query()->where('key', 'wedding')->value('id');
+        $eventTypeId = \App\Models\EventType::query()->where('key', $eventTypeKey)->value('id');
 
         return Theme::create([
             'nama' => 'Tema ' . Str::afterLast($path, '.'),
@@ -74,9 +74,9 @@ class ThemeRenderingSafetyTest extends TestCase
         ]);
     }
 
-    protected function createData(string $themePath, bool $active = true): Data
+    protected function createData(string $themePath, bool $active = true, string $eventTypeKey = 'wedding'): Data
     {
-        $theme = $this->createTheme($themePath);
+        $theme = $this->createTheme($themePath, $eventTypeKey);
 
         $factory = Data::factory();
         if ($active) {
@@ -85,6 +85,7 @@ class ThemeRenderingSafetyTest extends TestCase
 
         return $factory->create([
             'theme_id' => $theme->id,
+            'event_type_id' => \App\Models\EventType::query()->where('key', $eventTypeKey)->value('id'),
             'title' => 'Undangan ' . Str::afterLast($themePath, '.'),
             'slug' => 'undangan-' . Str::lower(Str::random(8)),
         ]);
@@ -220,7 +221,7 @@ class ThemeRenderingSafetyTest extends TestCase
         return route('visit', ['slug' => $data->slug]);
     }
 
-    public function test_all_ten_themes_render_with_minimal_data(): void
+    public function test_all_twelve_themes_render_with_minimal_data(): void
     {
         foreach ($this->themePaths() as $name => $path) {
             $data = $this->createData($path);
@@ -231,7 +232,7 @@ class ThemeRenderingSafetyTest extends TestCase
         }
     }
 
-    public function test_all_ten_themes_render_with_partial_data(): void
+    public function test_all_twelve_themes_render_with_partial_data(): void
     {
         foreach ($this->themePaths() as $name => $path) {
             $data = $this->createData($path);
@@ -270,7 +271,7 @@ class ThemeRenderingSafetyTest extends TestCase
         }
     }
 
-    public function test_all_ten_themes_render_with_complete_data(): void
+    public function test_all_twelve_themes_render_with_complete_data(): void
     {
         foreach ($this->themePaths() as $name => $path) {
             $data = $this->createData($path);
@@ -382,7 +383,7 @@ class ThemeRenderingSafetyTest extends TestCase
         $category = Category::factory()->create();
         $eventTypeId = \App\Models\EventType::query()->where('key', 'wedding')->value('id');
 
-        $this->assertDatabaseCount('themes', 1); // hanya theme bawaan seeder migrasi spiderman
+        $this->assertDatabaseMissing('themes', ['nama' => 'Tema Valid']);
 
         Livewire::test(ThemeDemo::class)
             ->set('nama', 'Tema Valid')
@@ -500,5 +501,33 @@ class ThemeRenderingSafetyTest extends TestCase
             $this->assertStringContainsString('id="bgMusicFrame"', $content);
             $this->assertStringContainsString('youtube.com/embed/dQw4w9WgXcQ?start=45', $content);
         }
+    }
+
+    public function test_quinceanera_theme_is_registered_for_birthday_event_type(): void
+    {
+        $data = $this->createData('tema.quinceanera', true, 'birthday');
+
+        $this->assertSame('birthday', $data->eventType?->key);
+        $this->assertSame('tema.quinceanera', $data->theme->path);
+        $this->assertSame('birthday', $data->theme->eventType?->key);
+
+        $response = $this->get($this->visitSlug($data));
+
+        $this->assertSame(200, $response->getStatusCode(), 'Quinceanera gagal render untuk undangan birthday: ' . $response->getContent());
+        $this->assertStringContainsString('id="openInvitation"', (string) $response->getContent());
+    }
+
+    public function test_wedding_blue_theme_is_registered_for_wedding_event_type(): void
+    {
+        $data = $this->createData('tema.wedding_blue', true, 'wedding');
+
+        $this->assertSame('wedding', $data->eventType?->key);
+        $this->assertSame('tema.wedding_blue', $data->theme->path);
+        $this->assertSame('wedding', $data->theme->eventType?->key);
+
+        $response = $this->get($this->visitSlug($data));
+
+        $this->assertSame(200, $response->getStatusCode(), 'Wedding Blue gagal render untuk undangan wedding: ' . $response->getContent());
+        $this->assertStringContainsString('id="openInvitation"', (string) $response->getContent());
     }
 }

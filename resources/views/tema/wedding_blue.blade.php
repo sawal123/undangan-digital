@@ -1263,9 +1263,9 @@
                                 <input type="hidden" name="kode" value="{{ $kode }}">
                                 <div class="field"><label>Nama</label><input type="text" name="nama" required placeholder="Nama Anda" value="{{ old('nama', $tamu) }}"></div>
                                 <div class="field"><label>Kehadiran</label><select name="status" required>
-                                    <option value="Datang Dong" @selected(old('status') === 'Datang Dong')>Hadir</option>
-                                    <option value="Ga bisa Datang Nih" @selected(old('status') === 'Ga bisa Datang Nih')>Tidak dapat hadir</option>
-                                    <option value="Diusahakan Datang Ya" @selected(old('status') === 'Diusahakan Datang Ya')>Masih tentatif</option>
+                                    <option value="hadir" @selected(old('status') === 'hadir')>Hadir</option>
+                                    <option value="tidak_hadir" @selected(old('status') === 'tidak_hadir')>Tidak dapat hadir</option>
+                                    <option value="ragu" @selected(old('status') === 'ragu')>Masih tentatif</option>
                                 </select></div>
                                 <div class="field"><label>Ucapan</label><textarea name="ucapan" required placeholder="Tulis doa atau ucapan...">{{ old('ucapan') }}</textarea></div>
                                 <button class="btn" type="submit">♡ Kirim Konfirmasi</button>
@@ -1332,9 +1332,15 @@
 
     <nav class="bottom-nav" aria-label="Navigasi cepat">
         <a href="#home" title="Home">⌂</a>
-        <a href="#events" title="Acara">✦</a>
-        <a href="#gallery" title="Galeri">▣</a>
-        <a href="#rsvp" title="RSVP">♡</a>
+        @if ($data->acara->isNotEmpty())
+            <a href="#events" title="Acara">✦</a>
+        @endif
+        @if ($poto || $video)
+            <a href="#gallery" title="Galeri">▣</a>
+        @endif
+        @if ($data->FiturUcapan?->isActive)
+            <a href="#rsvp" title="RSVP">♡</a>
+        @endif
     </nav>
 
     <div class="lightbox" id="lightbox"><img id="lightboxImg" src="" alt="Galeri"><span style="position:absolute; top:20px; right:30px; color:white; font-size:32px; cursor:pointer" id="closeLightbox">&times;</span></div>
