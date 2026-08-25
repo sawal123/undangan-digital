@@ -30,6 +30,12 @@ return new class extends Migration
 
     private function registerTheme(array $theme): void
     {
+        // Jangan sentuh record yang sudah ada (mis. dibuat manual via admin):
+        // insert hanya bila path tema belum terdaftar.
+        if (DB::table('themes')->where('path', $theme['path'])->exists()) {
+            return;
+        }
+
         $eventTypeId = DB::table('event_types')->where('key', $theme['event_type_key'])->value('id');
 
         if (! $eventTypeId) {
@@ -47,23 +53,35 @@ return new class extends Migration
             ]);
         }
 
-        DB::table('themes')->updateOrInsert(
-            ['path' => $theme['path']],
-            [
-                'nama' => $theme['nama'],
-                'category_id' => $categoryId,
-                'event_type_id' => $eventTypeId,
-                'demo' => $theme['demo'],
-                'thumbnail' => null,
-                'deleted_at' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        );
+        DB::table('themes')->insert([
+            'nama' => $theme['nama'],
+            'category_id' => $categoryId,
+            'event_type_id' => $eventTypeId,
+            'path' => $theme['path'],
+            'demo' => $theme['demo'],
+            'thumbnail' => null,
+            'deleted_at' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     public function down(): void
     {
-        DB::table('themes')->whereIn('path', ['tema.quinceanera', 'tema.wedding_blue'])->delete();
+        $themeIds = DB::table('themes')
+            ->whereIn('path', ['tema.quinceanera', 'tema.wedding_blue'])
+            ->pluck('id');
+
+        if ($themeIds->isEmpty()) {
+            return;
+        }
+
+        // Lepas relasi data.theme_id dulu (FK ber-onDelete cascade):
+        // menghapus theme tanpa ini akan ikut menghapus undangan user.
+        DB::table('data')
+            ->whereIn('theme_id', $themeIds)
+            ->update(['theme_id' => null]);
+
+        DB::table('themes')->whereIn('id', $themeIds)->delete();
     }
 };
