@@ -66,22 +66,17 @@ return new class extends Migration
         ]);
     }
 
+    /**
+     * Rollback sengaja dibuat no-op (tidak destruktif).
+     *
+     * Theme adalah application data yang mungkin sudah digunakan oleh undangan
+     * user atau sudah dibuat manual sebelum migration dijalankan. Menghapus
+     * record themes pada down() berisiko merusak relasi data.theme_id dan
+     * menghapus pilihan tema pengguna, jadi migrasi ini tidak menghapus apa pun.
+     */
     public function down(): void
     {
-        $themeIds = DB::table('themes')
-            ->whereIn('path', ['tema.quinceanera', 'tema.wedding_blue'])
-            ->pluck('id');
-
-        if ($themeIds->isEmpty()) {
-            return;
-        }
-
-        // Lepas relasi data.theme_id dulu (FK ber-onDelete cascade):
-        // menghapus theme tanpa ini akan ikut menghapus undangan user.
-        DB::table('data')
-            ->whereIn('theme_id', $themeIds)
-            ->update(['theme_id' => null]);
-
-        DB::table('themes')->whereIn('id', $themeIds)->delete();
+        // no-op: jangan hapus themes, jangan ubah data.theme_id,
+        // dan jangan menghapus category/event type.
     }
 };
