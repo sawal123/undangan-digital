@@ -19,9 +19,9 @@ class ThemeMigrationRollbackSafetyTest extends TestCase
         $category = Category::factory()->create();
         $eventTypeId = EventType::query()->where('key', 'wedding')->value('id');
 
-        // Simulasikan environment "sebelum migration": hapus theme hasil migrate
-        // fresh agar path tema.wedding_blue belum terdaftar.
-        Theme::query()->where('path', 'tema.wedding_blue')->delete();
+        // Simulasikan environment "sebelum migration": hapus permanen theme
+        // hasil migrate fresh agar path tema.wedding_blue belum pernah ada.
+        Theme::query()->where('path', 'tema.wedding_blue')->forceDelete();
 
         // Theme Wedding Blue dibuat manual oleh admin, lengkap dengan thumbnail.
         $manualTheme = Theme::create([
@@ -101,5 +101,54 @@ class ThemeMigrationRollbackSafetyTest extends TestCase
         $data->refresh();
         $this->assertSame($theme->id, $data->theme_id);
         $this->assertNotNull($data->title);
+    }
+
+    public function test_up_reactivates_soft_deleted_theme_instead_of_skipping_or_duplicating(): void
+    {
+        $category = Category::factory()->create();
+        $eventTypeId = EventType::query()->where('key', 'wedding')->value('id');
+
+        // Simulasikan environment "sebelum migration": hapus permanen theme
+        // hasil migrate fresh agar path tema.wedding_blue belum pernah ada.
+        Theme::query()->where('path', 'tema.wedding_blue')->forceDelete();
+
+        // Theme Wedding Blue pernah ada, lalu di-soft-delete.
+        $softDeletedTheme = Theme::create([
+            'nama' => 'Wedding Blue (Lama)',
+            'category_id' => $category->id,
+            'event_type_id' => $eventTypeId,
+            'path' => 'tema.wedding_blue',
+            'demo' => 'temademo.wedding_blue',
+            'thumbnail' => null,
+        ]);
+        $softDeletedTheme->delete();
+
+        $this->assertNotNull($softDeletedTheme->fresh()->deleted_at);
+
+        // Undangan user masih memakai theme yang soft-deleted tersebut.
+        $data = Data::factory()->create([
+            'theme_id' => $softDeletedTheme->id,
+            'event_type_id' => $eventTypeId,
+            'title' => 'Undangan ' . Str::random(6),
+            'slug' => 'undangan-' . Str::lower(Str::random(8)),
+        ]);
+
+        // Jalankan up(): guard harus menganggap soft-deleted sebagai belum
+        // terdaftar dan mengaktifkan kembali record lama (bukan insert baru).
+        $migration = require database_path('migrations/2026_08_25_000000_seed_quinceanera_wedding_blue_themes.php');
+        $migration->up();
+
+        // Tidak ada duplikat: hanya satu theme dengan path tersebut.
+        $this->assertSame(1, Theme::query()->withTrashed()->where('path', 'tema.wedding_blue')->count());
+
+        // Record soft-deleted di-restore (deleted_at null) dengan id yang sama.
+        $this->assertDatabaseHas('themes', [
+            'id' => $softDeletedTheme->id,
+            'path' => 'tema.wedding_blue',
+            'deleted_at' => null,
+        ]);
+
+        // Undangan tetap terhubung ke theme yang sama (relasi data.theme_id aman).
+        $this->assertDatabaseHas('data', ['id' => $data->id, 'theme_id' => $softDeletedTheme->id]);
     }
 }
