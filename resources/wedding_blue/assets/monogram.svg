@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" fill="none">
+  <circle cx="110" cy="110" r="88" stroke="#c7ac77" stroke-width="2.3"/>
+  <circle cx="110" cy="110" r="77" stroke="#9eb2d7" stroke-width="1.6" stroke-dasharray="4 7"/>
+  <g stroke="#c7ac77" stroke-width="2" stroke-linecap="round">
+    <path d="M33 110h10M177 110h10M110 33v10M110 177v10"/>
+  </g>
+  <text x="110" y="102" font-size="44" text-anchor="middle" fill="#2e436c" font-family="Cormorant Garamond, serif">M</text>
+  <text x="110" y="145" font-size="44" text-anchor="middle" fill="#2e436c" font-family="Cormorant Garamond, serif">A</text>
+</svg>
