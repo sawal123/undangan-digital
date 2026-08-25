@@ -39,7 +39,7 @@ class ThemeRenderingSafetyTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Path Blade untuk seluruh 10 theme yang wajib tetap render.
+     * Path Blade untuk seluruh 12 theme yang wajib tetap render.
      */
     protected function themePaths(): array
     {
@@ -54,6 +54,8 @@ class ThemeRenderingSafetyTest extends TestCase
             'logangold' => 'tema.logangold',
             'mahligai' => 'tema.mahligai',
             'spiderman' => 'tema.spiderman.ultah-induk',
+            'quinceanera' => 'tema.quinceanera',
+            'wedding_blue' => 'tema.wedding_blue',
         ];
     }
 
