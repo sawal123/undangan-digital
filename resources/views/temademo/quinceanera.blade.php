@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7e6e4">
+<title>Mis Quince Años — Abigail</title>
+<meta name="description" content="Template undangan digital Sweet Fifteen / Quinceañera tema blush floral.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#df747a; --pink-2:#ef9ca0; --pink-3:#f8d7d7;
+  --rose:#b85c63; --paper:#fffaf6; --paper-2:#faeeeb;
+  --gold:#c6a052; --ink:#5b4042; --muted:#8b7172;
+  --shadow:0 20px 45px rgba(101,54,59,.16);
+  --radius:28px; --script:"Great Vibes",cursive;
+  --serif:"Cormorant Garamond",serif; --sans:"Montserrat",sans-serif;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:
+  radial-gradient(circle at 15% 12%,rgba(255,255,255,.7),transparent 24rem),
+  linear-gradient(135deg,#e6c7c5,#f1ddda 46%,#d9b8b6);
+  color:var(--ink);font-family:var(--serif);overflow-x:hidden}
+body.lock{overflow:hidden}
+a{color:inherit}.site{
+  position:relative;max-width:560px;margin:0 auto;background:
+  linear-gradient(rgba(255,250,246,.96),rgba(255,247,243,.98)),
+  repeating-linear-gradient(105deg,rgba(169,96,100,.035) 0 1px,transparent 1px 5px);
+  min-height:100vh;overflow:hidden;box-shadow:0 0 75px rgba(91,64,66,.25)
+}
+.progress{position:fixed;z-index:99;top:0;left:50%;transform:translateX(-50%);
+  width:min(560px,100%);height:4px;background:rgba(255,255,255,.48)}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--pink))}
+.cover{position:fixed;z-index:120;inset:0;display:grid;place-items:center;padding:20px;
+  background:linear-gradient(180deg,#f1d9d6,#d7b6b3);transition:.8s cubic-bezier(.2,.8,.2,1)}
+.cover.hide{opacity:0;visibility:hidden;transform:translateY(-4%)}
+.cover-card{position:relative;width:min(450px,100%);min-height:720px;border-radius:34px;overflow:hidden;
+  box-shadow:0 35px 90px rgba(66,33,36,.32);background:#fff7f4;display:flex;align-items:flex-end}
+.cover-card:before{content:"";position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(255,247,244,.03),rgba(255,247,244,.18) 45%,rgba(255,247,244,.94) 74%),
+  url("{{ asset('tema/quinceanera/assets/hero-abigail.jpg') }}") center 22%/cover no-repeat;transform:scale(1.03)}
+.cover-floral{position:absolute;width:250px;z-index:2;pointer-events:none}
+.cover-floral.a{left:-55px;bottom:-38px}.cover-floral.b{right:-58px;top:-38px;transform:rotate(180deg)}
+.cover-content{position:relative;z-index:3;text-align:center;width:100%;padding:44px 32px 42px}
+.kicker{font:600 11px/1.4 var(--sans);letter-spacing:.26em;text-transform:uppercase;color:var(--rose)}
+.cover h1,.hero h1,.closing h2{font:400 clamp(58px,15vw,88px)/.85 var(--script);color:#d95e66;margin:14px 0}
+.cover .guest{font:600 13px var(--sans);letter-spacing:.04em;color:var(--ink)}
+.btn{border:0;cursor:pointer;border-radius:999px;padding:15px 24px;background:linear-gradient(135deg,#df747a,#cc5e68);
+  color:white;font:600 12px var(--sans);letter-spacing:.04em;box-shadow:0 10px 20px rgba(200,83,94,.25);
+  transition:.25s ease;display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 26px rgba(200,83,94,.3)}
+.btn.alt{background:#fff;color:var(--rose);border:1px solid rgba(201,111,117,.35);box-shadow:none}
+.music{position:fixed;z-index:90;right:max(calc((100vw - 560px)/2 + 14px),14px);top:18px;width:43px;height:43px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.9);background:rgba(255,250,246,.82);backdrop-filter:blur(12px);
+  color:var(--rose);display:grid;place-items:center;box-shadow:0 8px 20px rgba(91,64,66,.13);cursor:pointer}
+.music.playing{animation:pulse 1.8s infinite}.music svg{width:18px}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(223,116,122,.11),0 8px 20px rgba(91,64,66,.13)}}
+.hero{position:relative;min-height:100svh;display:grid;align-content:center;text-align:center;padding:90px 28px 60px;
+  background:
+   linear-gradient(180deg,rgba(255,250,246,.92),rgba(255,247,243,.62) 48%,rgba(255,250,246,.98)),
+   url("{{ asset('tema/quinceanera/assets/hero-abigail.jpg') }}") center/cover no-repeat}
+.hero:after{content:"";position:absolute;inset:auto 0 0;height:150px;background:linear-gradient(transparent,#fffaf6)}
+.tiara{width:108px;margin:0 auto -8px;filter:drop-shadow(0 7px 12px rgba(184,92,99,.13))}
+.hero-copy{position:relative;z-index:2}.hero h1{font-size:82px}.hero .date{font:600 13px var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.hero p{font-size:20px;margin:12px auto 20px;max-width:360px}.heart-date{display:flex;gap:10px;justify-content:center;align-items:center;font:600 14px var(--sans);color:var(--rose)}
+.heart-date b{width:42px;height:42px;border:1px solid rgba(223,116,122,.45);border-radius:50%;display:grid;place-items:center;background:#fff8f4}
+.scroll-note{font:500 10px var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:34px}
+section{position:relative;padding:84px 24px}.soft{background:linear-gradient(180deg,#fffaf6,#f9ebe8)}
+.section-title{text-align:center;margin-bottom:34px}.section-title .small{font:600 10px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.section-title h2{font:400 52px/1 var(--script);color:var(--rose);margin:7px 0 4px}.section-title p{margin:0;color:var(--muted);font-size:16px}
+.divider{width:210px;margin:8px auto 0;display:block}.card{background:rgba(255,253,250,.91);border:1px solid rgba(198,160,82,.38);
+  border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.profile-card{padding:20px;text-align:center}.profile-img{width:180px;height:180px;border-radius:50%;object-fit:cover;border:8px solid #fff;
+  outline:1px solid rgba(198,160,82,.48);box-shadow:0 14px 28px rgba(91,64,66,.16)}
+.profile-card h3{font:400 44px var(--script);color:var(--rose);margin:14px 0 0}.profile-card p{max-width:370px;margin:8px auto 12px;font-size:17px;line-height:1.55}
+.parents{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.parent{padding:15px 10px;border-radius:18px;background:#fff7f4;border:1px solid rgba(223,116,122,.18)}
+.parent .icon{font-size:24px}.parent b{display:block;font-family:var(--sans);font-size:11px;margin-top:8px}.parent span{font-size:15px}
+.countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:20px}
+.timebox{padding:15px 6px;background:rgba(255,251,247,.92);border:1px solid rgba(198,160,82,.42);border-radius:14px}
+.timebox strong{display:block;color:#b68e32;font:500 28px var(--serif)}.timebox span{font:500 8px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.events{display:grid;gap:18px}.event{padding:26px 22px;text-align:center}.event-icon{width:58px;height:58px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;
+  background:#fff1ee;color:var(--rose);border:1px solid rgba(223,116,122,.24)}
+.event-icon svg{width:28px}.event h3{font:400 38px var(--script);color:var(--rose);margin:0}.event .meta{font:600 11px var(--sans);line-height:1.8;color:var(--ink);margin:10px 0 14px}
+.event address{font-style:normal;color:var(--muted);font-size:16px;line-height:1.45;margin-bottom:16px}
+.dress{padding:28px;text-align:center}.dress-figure{display:flex;justify-content:center;gap:24px;font-size:74px;filter:saturate(.65)}.dress h3{font:400 44px var(--script);color:var(--rose);margin:4px 0}
+.swatches{display:flex;justify-content:center;gap:10px;margin-top:18px}.swatches i{width:31px;height:31px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px rgba(80,50,52,.13)}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}.gallery figure{margin:0;border-radius:22px;overflow:hidden;min-height:180px;box-shadow:0 10px 25px rgba(91,64,66,.12)}
+.gallery figure:first-child,.gallery figure:last-child{grid-column:1/-1}.gallery img{width:100%;height:100%;object-fit:cover;display:block;transition:.6s ease}.gallery figure:hover img{transform:scale(1.045)}
+.gift{padding:28px;text-align:center}.gift .big-icon{font-size:46px}.gift h3{font:400 43px var(--script);color:var(--rose);margin:6px 0}.bank{margin:18px 0 0;padding:16px;border:1px dashed rgba(198,160,82,.58);border-radius:17px;background:#fff9f4}
+.bank b{font:700 12px var(--sans);display:block;color:var(--rose)}.bank .num{font:600 22px var(--serif);letter-spacing:.08em;margin:5px 0}.bank small{color:var(--muted)}
+.rsvp{padding:28px}.form{display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font:600 10px var(--sans);text-transform:uppercase;letter-spacing:.12em;color:var(--rose)}
+.field input,.field select,.field textarea{width:100%;border:1px solid rgba(184,92,99,.2);background:#fffaf7;border-radius:14px;padding:14px 15px;
+  font:500 13px var(--sans);outline:none;color:var(--ink)}.field textarea{min-height:100px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(223,116,122,.7);box-shadow:0 0 0 4px rgba(223,116,122,.08)}
+.messages{display:grid;gap:12px}.message{padding:17px 18px}.message .top{display:flex;align-items:center;gap:10px}.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#f6d5d4;color:var(--rose);font:700 13px var(--sans)}
+.message b{font:700 11px var(--sans)}.message small{display:block;color:var(--muted);font:500 9px var(--sans);margin-top:2px}.message p{font-size:15px;line-height:1.5;margin:10px 0 0}
+.share{padding:26px;text-align:center}.share h3{font:400 40px var(--script);color:var(--rose);margin:0 0 8px}.share-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+.closing{text-align:center;padding:100px 24px 120px;background:
+  linear-gradient(180deg,rgba(255,250,246,.97),rgba(251,236,232,.85)),
+  url("{{ asset('tema/quinceanera/assets/gallery-1.jpg') }}") center/cover no-repeat}.closing h2{font-size:78px}.closing p{font-size:18px}.mini-tiara{width:70px}
+.floral{position:absolute;width:190px;opacity:.75;pointer-events:none;z-index:0}.floral.left{left:-72px;top:20px}.floral.right{right:-72px;top:18px;transform:rotate(90deg)}
+.butterfly{position:absolute;width:58px;pointer-events:none;filter:drop-shadow(0 5px 10px rgba(184,92,99,.14))}
+.butterfly.one{right:22px;top:62px;animation:floaty 5s ease-in-out infinite}.butterfly.two{left:20px;bottom:70px;animation:floaty 6s ease-in-out infinite reverse}
+@keyframes floaty{50%{transform:translateY(-12px) rotate(5deg)}}
+.petals{position:fixed;z-index:70;inset:0;pointer-events:none;overflow:hidden;max-width:560px;margin:auto}.petal{position:absolute;top:-30px;width:12px;height:18px;border-radius:70% 30% 70% 30%;background:linear-gradient(135deg,#f3b9bd,#e6858c);opacity:.6;animation:fall linear infinite}
+@keyframes fall{to{transform:translate3d(var(--drift),110vh,0) rotate(540deg)}}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.show{opacity:1;transform:none}.reveal-left{opacity:0;transform:translateX(-34px);transition:.85s ease}.reveal-left.show{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(34px);transition:.85s ease}.reveal-right.show{opacity:1;transform:none}
+.zoom{opacity:0;transform:scale(.93);transition:.85s ease}.zoom.show{opacity:1;transform:none}
+.toast{position:fixed;z-index:150;left:50%;bottom:86px;transform:translate(-50%,20px);background:#5f4043;color:#fff;border-radius:999px;
+  padding:11px 17px;font:600 10px var(--sans);opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+.bottom-nav{position:fixed;z-index:80;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:6px;padding:7px;border-radius:999px;
+  background:rgba(255,250,246,.82);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.8);box-shadow:0 10px 28px rgba(91,64,66,.18)}
+.bottom-nav a{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;text-decoration:none;color:var(--rose);font-size:17px}.bottom-nav a:hover{background:#f6ddda}
+@media (min-width:780px){body{padding:30px 0}.site{border-radius:34px;min-height:calc(100vh - 60px)}.progress{top:30px;border-radius:999px}.music{top:48px}.bottom-nav{bottom:28px}}
+@media (max-width:390px){section{padding-left:18px;padding-right:18px}.countdown{gap:5px}.timebox strong{font-size:24px}.hero h1{font-size:70px}.cover-card{min-height:660px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.reveal,.reveal-left,.reveal-right,.zoom{opacity:1;transform:none;transition:none}.petal,.butterfly{animation:none!important}}
+</style>
+</head>
+<body class="lock">
+<div class="progress"><span id="progressBar"></span></div>
+<div class="petals" id="petalLayer"></div>
+
+<div class="cover" id="cover">
+  <div class="cover-card">
+    <img class="cover-floral a" src="{{ asset('tema/quinceanera/assets/floral-corner.svg') }}" alt="">
+    <img class="cover-floral b" src="{{ asset('tema/quinceanera/assets/floral-corner.svg') }}" alt="">
+    <div class="cover-content">
+      <div class="kicker">Mis Quince Años</div>
+      <h1>Abigail</h1>
+      <div class="guest">Kepada Yth.<br><strong id="guestName">Bapak/Ibu/Saudara/i</strong></div>
+      <p>Dengan penuh sukacita, kami mengundang Anda untuk merayakan hari istimewa bersama kami.</p>
+      <button class="btn" id="openInvitation">✉ Buka Undangan</button>
+    </div>
+  </div>
+</div>
+
+<div class="site">
+<button class="music" id="musicBtn" aria-label="Putar musik" title="Musik">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
+</button>
+<!-- Tambahkan file musik Anda ke assets/music.mp3, lalu hapus komentar pada source berikut. -->
+<audio id="bgMusic" loop preload="none"><source src="{{ asset('tema/quinceanera/assets/music.mp3') }}" type="audio/mpeg"></audio>
+
+<header class="hero" id="home">
+  <img class="floral left" src="{{ asset('tema/quinceanera/assets/floral-corner.svg') }}" alt="">
+  <img class="floral right" src="{{ asset('tema/quinceanera/assets/floral-corner.svg') }}" alt="">
+  <img class="butterfly one" src="{{ asset('tema/quinceanera/assets/butterfly.svg') }}" alt="">
+  <div class="hero-copy reveal">
+    <img class="tiara" src="{{ asset('tema/quinceanera/assets/tiara.svg') }}" alt="">
+    <div class="kicker">Aku mengundangmu ke</div>
+    <h1>Abigail</h1>
+    <div class="date">Mis Quince Años · Sweet Fifteen</div>
+    <p>Datang dan rayakan babak baru yang penuh sukacita, keluarga, persahabatan, dan kenangan indah.</p>
+    <div class="heart-date"><span>Sabtu</span><b>23</b><span>September 2028</span></div>
+    <div class="scroll-note">Scroll untuk melihat detail ↓</div>
+  </div>
+</header>
+
+<main>
+<section class="soft" id="story">
+  <img class="butterfly two" src="{{ asset('tema/quinceanera/assets/butterfly.svg') }}" alt="">
+  <div class="section-title reveal">
+    <span class="small">Hello!</span>
+    <h2>Hari Istimewaku</h2>
+    <p>Satu hari untuk merayakan tumbuh, bermimpi, dan bersyukur.</p>
+    <img class="divider" src="{{ asset('tema/quinceanera/assets/divider.svg') }}" alt="">
+  </div>
+  <div class="card profile-card zoom">
+    <img class="profile-img" src="{{ asset('tema/quinceanera/assets/profile-abigail.jpg') }}" alt="Foto Abigail">
+    <h3>Abigail</h3>
+    <p>Hari ini aku meninggalkan masa kecil untuk memulai babak baru. Terima kasih telah menjadi bagian dari perjalanan dan kenangan yang akan selalu aku simpan.</p>
+    <div class="parents">
+      <div class="parent"><div class="icon">🎩</div><b>PAPA</b><span>Fernando López</span></div>
+      <div class="parent"><div class="icon">🌷</div><b>MAMA</b><span>Laura Gómez</span></div>
+    </div>
+  </div>
+  <div class="countdown reveal" id="countdown">
+    <div class="timebox"><strong id="days">00</strong><span>Hari</span></div>
+    <div class="timebox"><strong id="hours">00</strong><span>Jam</span></div>
+    <div class="timebox"><strong id="minutes">00</strong><span>Menit</span></div>
+    <div class="timebox"><strong id="seconds">00</strong><span>Detik</span></div>
+  </div>
+</section>
+
+<section id="event">
+  <div class="section-title reveal">
+    <span class="small">Save the date</span><h2>Detail Acara</h2>
+    <p>Kehadiran Anda akan membuat hari ini semakin berarti.</p><img class="divider" src="{{ asset('tema/quinceanera/assets/divider.svg') }}" alt="">
+  </div>
+  <div class="events">
+    <article class="card event reveal-left">
+      <div class="event-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 10h6"/></svg></div>
+      <h3>Ceremony</h3><div class="meta">SABTU · 23 SEPTEMBER 2028<br>16:00 WIB</div>
+      <address>St. Maria Hall<br>Jl. Mawar Indah No. 15, Medan</address>
+      <a class="btn" href="https://maps.google.com" target="_blank" rel="noopener">⌖ Lihat Lokasi</a>
+    </article>
+    <article class="card event reveal-right">
+      <div class="event-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 4h10l-1 7a4 4 0 0 1-8 0L7 4Zm5 11v5M8 20h8M3 5h4M17 5h4"/></svg></div>
+      <h3>Reception</h3><div class="meta">SABTU · 23 SEPTEMBER 2028<br>17:30 WIB</div>
+      <address>Grand Crystal Ballroom<br>Jl. Anggrek Raya No. 23, Medan</address>
+      <a class="btn" href="https://maps.google.com" target="_blank" rel="noopener">⌖ Lihat Lokasi</a>
+    </article>
+  </div>
+</section>
+
+<section class="soft" id="dresscode">
+  <div class="section-title reveal">
+    <span class="small">Dress code</span><h2>Formal & Elegant</h2>
+    <p>Kenakan pakaian terbaik Anda dengan sentuhan warna lembut.</p>
+  </div>
+  <div class="card dress zoom">
+    <div class="dress-figure"><span>🤵🏻</span><span>👗</span></div>
+    <h3>Formal</h3><p>Blush, cream, dusty rose, champagne, dan soft taupe.</p>
+    <div class="swatches"><i style="background:#d96f78"></i><i style="background:#f4c7c9"></i><i style="background:#e8d8c8"></i><i style="background:#c7a85d"></i><i style="background:#d2c2bb"></i></div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="section-title reveal">
+    <span class="small">Memories</span><h2>Galeri Foto</h2><p>Beberapa potret untuk mengabadikan momen menuju usia lima belas.</p>
+    <img class="divider" src="{{ asset('tema/quinceanera/assets/divider.svg') }}" alt="">
+  </div>
+  <div class="gallery">
+    <figure class="reveal"><img src="{{ asset('tema/quinceanera/assets/gallery-1.jpg') }}" alt="Galeri Abigail 1"></figure>
+    <figure class="reveal-left"><img src="{{ asset('tema/quinceanera/assets/gallery-2.jpg') }}" alt="Galeri Abigail 2"></figure>
+    <figure class="reveal-right"><img src="{{ asset('tema/quinceanera/assets/gallery-3.jpg') }}" alt="Galeri Abigail 3"></figure>
+    <figure class="reveal"><img src="{{ asset('tema/quinceanera/assets/gallery-4.jpg') }}" alt="Galeri Abigail 4"></figure>
+  </div>
+</section>
+
+<section class="soft" id="gift">
+  <div class="section-title reveal">
+    <span class="small">Optional</span><h2>Gift</h2><p>Doa dan kehadiran Anda adalah hadiah terbaik.</p>
+  </div>
+  <div class="card gift zoom">
+    <div class="big-icon">🎁</div><h3>Hadiah Digital</h3>
+    <p>Bila ingin memberikan tanda kasih, Anda dapat menggunakan informasi berikut.</p>
+    <div class="bank">
+      <b>BANK BCA</b><div class="num" id="accountNumber">123 456 7890</div><small>a.n. Abigail Family</small><br><br>
+      <button class="btn alt" data-copy="1234567890">Salin Nomor Rekening</button>
+    </div>
+  </div>
+</section>
+
+<section id="rsvp">
+  <div class="section-title reveal">
+    <span class="small">RSVP & wishes</span><h2>Konfirmasi Kehadiran</h2><p>Mohon konfirmasi dan tinggalkan ucapan terbaik Anda.</p>
+    <img class="divider" src="{{ asset('tema/quinceanera/assets/divider.svg') }}" alt="">
+  </div>
+  <div class="card rsvp reveal">
+    <form class="form" id="rsvpForm">
+      <div class="field"><label>Nama</label><input id="nameInput" required placeholder="Nama Anda"></div>
+      <div class="field"><label>Kehadiran</label><select id="attendance" required><option value="">Pilih status</option><option>Hadir</option><option>Tidak dapat hadir</option><option>Masih tentatif</option></select></div>
+      <div class="field"><label>Ucapan</label><textarea id="wishInput" required placeholder="Tulis doa atau ucapan..."></textarea></div>
+      <button class="btn" type="submit">♡ Kirim Konfirmasi</button>
+    </form>
+  </div>
+</section>
+
+<section class="soft" id="messages">
+  <div class="section-title reveal"><span class="small">Guest book</span><h2>Ucapan Terbaru</h2></div>
+  <div class="messages" id="messageList">
+    <article class="card message reveal"><div class="top"><div class="avatar">ML</div><div><b>Maria López</b><small>Hadir · beberapa menit lalu</small></div></div><p>Selamat Abigail. Semoga hari spesial ini menjadi awal dari banyak mimpi indah yang terwujud. 💗</p></article>
+    <article class="card message reveal"><div class="top"><div class="avatar">AR</div><div><b>Alejandro R.</b><small>Hadir · hari ini</small></div></div><p>Semoga selalu dikelilingi orang-orang baik, bahagia, dan sukses dalam setiap langkahmu.</p></article>
+  </div>
+</section>
+
+<section id="share">
+  <div class="card share reveal">
+    <h3>Bagikan Undangan</h3><p>Kirimkan tautan undangan ini kepada keluarga dan sahabat.</p>
+    <div class="share-actions"><button class="btn" id="shareBtn">↗ Bagikan</button><button class="btn alt" id="copyLink">🔗 Salin Link</button></div>
+  </div>
+</section>
+
+<section class="closing">
+  <img class="mini-tiara reveal" src="{{ asset('tema/quinceanera/assets/tiara.svg') }}" alt="">
+  <div class="kicker reveal">Dengan penuh cinta</div><h2 class="reveal">Abigail</h2>
+  <p class="reveal">Terima kasih telah menjadi bagian dari hari yang tak terlupakan ini.</p>
+</section>
+</main>
+
+<nav class="bottom-nav" aria-label="Navigasi cepat">
+  <a href="#home" title="Beranda">⌂</a><a href="#event" title="Acara">◷</a><a href="#gallery" title="Galeri">▣</a><a href="#rsvp" title="RSVP">✉</a>
+</nav>
+</div>
+<div class="toast" id="toast">Berhasil</div>
+
+<script>
+const CONFIG = {
+  eventDate: "2028-09-23T17:30:00+07:00",
+  guestParam: "to"
+};
+const $ = s => document.querySelector(s);
+const cover = $("#cover"), openBtn = $("#openInvitation"), music = $("#bgMusic"), musicBtn = $("#musicBtn"), toast = $("#toast");
+
+const params = new URLSearchParams(location.search);
+const guest = params.get(CONFIG.guestParam);
+if (guest) $("#guestName").textContent = guest.replace(/\+/g," ");
+
+openBtn.addEventListener("click", async () => {
+  cover.classList.add("hide"); document.body.classList.remove("lock");
+  try { await music.play(); musicBtn.classList.add("playing"); } catch(e){}
+  setTimeout(() => cover.remove(), 900);
+});
+musicBtn.addEventListener("click", async () => {
+  if (music.paused){ try{ await music.play(); musicBtn.classList.add("playing"); }catch(e){ showToast("Tambahkan assets/music.mp3"); } }
+  else { music.pause(); musicBtn.classList.remove("playing"); }
+});
+
+function countdown(){
+  const diff = Math.max(0, new Date(CONFIG.eventDate) - new Date());
+  const d=Math.floor(diff/86400000), h=Math.floor(diff/3600000)%24, m=Math.floor(diff/60000)%60, s=Math.floor(diff/1000)%60;
+  $("#days").textContent=String(d).padStart(2,"0"); $("#hours").textContent=String(h).padStart(2,"0");
+  $("#minutes").textContent=String(m).padStart(2,"0"); $("#seconds").textContent=String(s).padStart(2,"0");
+}
+countdown(); setInterval(countdown,1000);
+
+const io = new IntersectionObserver(entries => entries.forEach((e,i)=>{
+  if(e.isIntersecting){ e.target.style.transitionDelay = `${Math.min(i*50,180)}ms`; e.target.classList.add("show"); io.unobserve(e.target); }
+}), {threshold:.12, rootMargin:"0px 0px -40px"});
+document.querySelectorAll(".reveal,.reveal-left,.reveal-right,.zoom").forEach(el=>io.observe(el));
+
+window.addEventListener("scroll",()=>{
+  const doc=document.documentElement, max=doc.scrollHeight-innerHeight;
+  $("#progressBar").style.width = `${max ? (scrollY/max)*100 : 0}%`;
+  document.querySelectorAll(".floral").forEach((el,i)=>{ el.style.translate = `0 ${scrollY*(i?-.025:.018)}px`; });
+},{passive:true});
+
+for(let i=0;i<15;i++){
+  const p=document.createElement("span"); p.className="petal";
+  p.style.left=Math.random()*100+"%"; p.style.animationDuration=8+Math.random()*10+"s";
+  p.style.animationDelay=-Math.random()*16+"s"; p.style.setProperty("--drift",(Math.random()*140-70)+"px");
+  p.style.transform=`scale(${.55+Math.random()*.75})`; $("#petalLayer").appendChild(p);
+}
+
+function showToast(msg){ toast.textContent=msg; toast.classList.add("show"); clearTimeout(window.__toast); window.__toast=setTimeout(()=>toast.classList.remove("show"),1800); }
+document.querySelectorAll("[data-copy]").forEach(btn=>btn.addEventListener("click",async()=>{ await navigator.clipboard.writeText(btn.dataset.copy); showToast("Nomor rekening disalin"); }));
+$("#copyLink").addEventListener("click",async()=>{ await navigator.clipboard.writeText(location.href); showToast("Link undangan disalin"); });
+$("#shareBtn").addEventListener("click",async()=>{ if(navigator.share) await navigator.share({title:document.title,text:"Undangan Sweet Fifteen Abigail",url:location.href}); else { await navigator.clipboard.writeText(location.href); showToast("Link undangan disalin"); } });
+
+$("#rsvpForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("#nameInput").value.trim(), status=$("#attendance").value, wish=$("#wishInput").value.trim();
+  const initials=name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase();
+  const article=document.createElement("article"); article.className="card message show";
+  article.innerHTML=`<div class="top"><div class="avatar">${initials}</div><div><b>${escapeHtml(name)}</b><small>${escapeHtml(status)} · baru saja</small></div></div><p>${escapeHtml(wish)}</p>`;
+  $("#messageList").prepend(article); e.target.reset(); showToast("Konfirmasi tersimpan pada demo");
+});
+function escapeHtml(v){return v.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}
+</script>
+</body>
+</html>
