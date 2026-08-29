@@ -104,6 +104,34 @@
                 </div>
             </div>
 
+            <!-- Category Filter Section -->
+            <div class="mb-8">
+                <div class="flex items-center gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    <button
+                        type="button"
+                        wire:click="selectJenis(null)"
+                        wire:loading.attr="disabled"
+                        wire:target="selectJenis"
+                        class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition {{ is_null($selectedJenis) ? 'bg-rose-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:border-rose-300 hover:text-rose-600' }}"
+                    >
+                        Semua
+                    </button>
+
+                    @foreach ($jenisOptions as $jenis)
+                        <button
+                            type="button"
+                            wire:key="jenis-{{ $jenis->id }}"
+                            wire:click="selectJenis({{ $jenis->id }})"
+                            wire:loading.attr="disabled"
+                            wire:target="selectJenis"
+                            class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition {{ $selectedJenis === $jenis->id ? 'bg-rose-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:border-rose-300 hover:text-rose-600' }}"
+                        >
+                            {{ $jenis->jenis }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
             <!-- Skeleton Loading Grid during Search -->
             <div wire:loading.grid wire:target="search" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 animate-pulse">
                 @for ($i = 0; $i < 8; $i++)
