@@ -104,8 +104,41 @@
                 </div>
             </div>
 
+            <!-- Category Filter Section -->
+            <div class="mb-8">
+                <div
+                    id="cetakCategorySlider"
+                    class="flex cursor-grab select-none items-center gap-2.5
+                           overflow-x-auto pb-1 active:cursor-grabbing
+                           [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                >
+                    <button
+                        type="button"
+                        wire:click="selectJenis(null)"
+                        wire:loading.attr="disabled"
+                        wire:target="selectJenis"
+                        class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition {{ is_null($selectedJenis) ? 'bg-rose-600 text-white border border-rose-600 shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:border-rose-300 hover:text-rose-600' }}"
+                    >
+                        Semua
+                    </button>
+
+                    @foreach ($jenisOptions as $jenis)
+                        <button
+                            type="button"
+                            wire:key="jenis-{{ $jenis->id }}"
+                            wire:click="selectJenis({{ $jenis->id }})"
+                            wire:loading.attr="disabled"
+                            wire:target="selectJenis"
+                            class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition {{ $selectedJenis === $jenis->id ? 'bg-rose-600 text-white border border-rose-600 shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:border-rose-300 hover:text-rose-600' }}"
+                        >
+                            {{ $jenis->jenis }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
             <!-- Skeleton Loading Grid during Search -->
-            <div wire:loading.grid wire:target="search" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 animate-pulse">
+            <div wire:loading.grid wire:target="search, selectJenis" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 animate-pulse">
                 @for ($i = 0; $i < 8; $i++)
                     <div class="rounded-2xl border border-slate-200/80 bg-white p-4 space-y-4">
                         <div class="aspect-[4/3] rounded-xl bg-slate-100"></div>
@@ -118,7 +151,7 @@
             </div>
 
             <!-- Product Grid -->
-            <div wire:loading.remove wire:target="search">
+            <div wire:loading.remove wire:target="search, selectJenis">
                 @if ($undangan->isEmpty())
                     <!-- Empty State -->
                     <div class="mx-auto max-w-md rounded-3xl border border-slate-200/80 bg-white p-8 text-center shadow-sm my-8">
@@ -256,6 +289,64 @@
         cetakMobileMenu.querySelectorAll('a').forEach((link) => {
             link.addEventListener('click', () => cetakMobileMenu.classList.add('hidden'));
         });
+    }
+
+    // Mouse drag-to-scroll untuk kategori (desktop) — tidak mengganggu swipe/touchpad/klik chip.
+    const cetakCategorySlider = document.getElementById('cetakCategorySlider');
+
+    if (cetakCategorySlider) {
+        let isCategoryDragging = false;
+        let categoryPointerId = null;
+        let categoryStartX = 0;
+        let categoryStartScrollLeft = 0;
+        let categoryMoved = false;
+
+        cetakCategorySlider.addEventListener('pointerdown', (event) => {
+            if (event.pointerType !== 'mouse') return;
+
+            isCategoryDragging = true;
+            categoryPointerId = event.pointerId;
+            categoryMoved = false;
+            categoryStartX = event.clientX;
+            categoryStartScrollLeft = cetakCategorySlider.scrollLeft;
+        });
+
+        cetakCategorySlider.addEventListener('pointermove', (event) => {
+            if (!isCategoryDragging || event.pointerType !== 'mouse') return;
+
+            const delta = event.clientX - categoryStartX;
+
+            if (!categoryMoved && Math.abs(delta) > 5) {
+                categoryMoved = true;
+
+                try {
+                    cetakCategorySlider.setPointerCapture(categoryPointerId);
+                } catch (error) {
+                    // Abaikan jika pointer capture gagal.
+                }
+            }
+
+            if (categoryMoved) {
+                cetakCategorySlider.scrollLeft = categoryStartScrollLeft - delta;
+            }
+        });
+
+        const stopCategoryDragging = () => {
+            isCategoryDragging = false;
+            categoryPointerId = null;
+        };
+
+        cetakCategorySlider.addEventListener('pointerup', stopCategoryDragging);
+        cetakCategorySlider.addEventListener('pointercancel', stopCategoryDragging);
+
+        // Cegah klik chip setelah drag (klik biasa tetap lanjut ke wire:click).
+        cetakCategorySlider.addEventListener('click', (event) => {
+            if (!categoryMoved) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            categoryMoved = false;
+        }, true);
     }
 
     Livewire.on('cetak-modal-opened', (event) => {

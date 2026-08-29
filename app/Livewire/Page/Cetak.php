@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Page;
 
+use App\Models\Admin\JenisUdangan;
 use App\Models\Admin\UndanganCetak;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,6 +23,8 @@ class Cetak extends Component
 
     public string $search = '';
 
+    public ?int $selectedJenis = null;
+
     public ?string $productToken = null;
 
     public ?string $mainImage = null;
@@ -40,6 +43,12 @@ class Cetak extends Component
     public function clearSearch(): void
     {
         $this->search = '';
+        $this->perPage = 8;
+    }
+
+    public function selectJenis(?int $jenisId): void
+    {
+        $this->selectedJenis = $jenisId;
         $this->perPage = 8;
     }
 
@@ -114,6 +123,9 @@ class Cetak extends Component
     {
         return UndanganCetak::query()
             ->with('jenisUndangan')
+            ->when($this->selectedJenis !== null, function (Builder $query): void {
+                $query->where('jenis_id', $this->selectedJenis);
+            })
             ->when(!empty(trim($this->search)), function (Builder $query): void {
                 $searchTerm = '%' . trim($this->search) . '%';
                 $query->where(function (Builder $sub) use ($searchTerm): void {
@@ -134,12 +146,18 @@ class Cetak extends Component
         $undangan = (clone $query)->limit($this->perPage)->get();
         $hasMore = $this->perPage < $totalResults;
 
+        $jenisOptions = JenisUdangan::query()
+            ->whereHas('undanganCetaks')
+            ->orderBy('jenis')
+            ->get();
+
         $this->dispatch('slider');
 
         return view('landingpage.cetak', [
             'undangan' => $undangan,
             'totalResults' => $totalResults,
             'hasMore' => $hasMore,
+            'jenisOptions' => $jenisOptions,
         ])->layout('layouts.landing');
     }
 
