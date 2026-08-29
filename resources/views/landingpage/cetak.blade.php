@@ -106,7 +106,12 @@
 
             <!-- Category Filter Section -->
             <div class="mb-8">
-                <div class="flex items-center gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div
+                    id="cetakCategorySlider"
+                    class="flex cursor-grab select-none items-center gap-2.5
+                           overflow-x-auto pb-1 active:cursor-grabbing
+                           [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                >
                     <button
                         type="button"
                         wire:click="selectJenis(null)"
@@ -284,6 +289,64 @@
         cetakMobileMenu.querySelectorAll('a').forEach((link) => {
             link.addEventListener('click', () => cetakMobileMenu.classList.add('hidden'));
         });
+    }
+
+    // Mouse drag-to-scroll untuk kategori (desktop) — tidak mengganggu swipe/touchpad/klik chip.
+    const cetakCategorySlider = document.getElementById('cetakCategorySlider');
+
+    if (cetakCategorySlider) {
+        let isCategoryDragging = false;
+        let categoryPointerId = null;
+        let categoryStartX = 0;
+        let categoryStartScrollLeft = 0;
+        let categoryMoved = false;
+
+        cetakCategorySlider.addEventListener('pointerdown', (event) => {
+            if (event.pointerType !== 'mouse') return;
+
+            isCategoryDragging = true;
+            categoryPointerId = event.pointerId;
+            categoryMoved = false;
+            categoryStartX = event.clientX;
+            categoryStartScrollLeft = cetakCategorySlider.scrollLeft;
+        });
+
+        cetakCategorySlider.addEventListener('pointermove', (event) => {
+            if (!isCategoryDragging || event.pointerType !== 'mouse') return;
+
+            const delta = event.clientX - categoryStartX;
+
+            if (!categoryMoved && Math.abs(delta) > 5) {
+                categoryMoved = true;
+
+                try {
+                    cetakCategorySlider.setPointerCapture(categoryPointerId);
+                } catch (error) {
+                    // Abaikan jika pointer capture gagal.
+                }
+            }
+
+            if (categoryMoved) {
+                cetakCategorySlider.scrollLeft = categoryStartScrollLeft - delta;
+            }
+        });
+
+        const stopCategoryDragging = () => {
+            isCategoryDragging = false;
+            categoryPointerId = null;
+        };
+
+        cetakCategorySlider.addEventListener('pointerup', stopCategoryDragging);
+        cetakCategorySlider.addEventListener('pointercancel', stopCategoryDragging);
+
+        // Cegah klik chip setelah drag (klik biasa tetap lanjut ke wire:click).
+        cetakCategorySlider.addEventListener('click', (event) => {
+            if (!categoryMoved) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            categoryMoved = false;
+        }, true);
     }
 
     Livewire.on('cetak-modal-opened', (event) => {
