@@ -75,7 +75,7 @@ class CetakDemo extends Component
         ])->layout('components.layouts.admin-new');
     }
 
-    public function resetInput(): void
+    public function resetForm(): void
     {
         $this->nama = '';
         $this->jenis_id = null;
@@ -90,6 +90,11 @@ class CetakDemo extends Component
         $this->undangan_id = null;
         $this->isEdit = false;
         $this->resetValidation();
+    }
+
+    public function openCreateModal(): void
+    {
+        $this->resetForm();
         $this->dispatch('open-modal', name: 'cetak-modal');
     }
 
@@ -134,7 +139,7 @@ class CetakDemo extends Component
             });
 
             session()->flash('message', 'Undangan cetak berhasil dibuat.');
-            $this->resetInput();
+            $this->resetForm();
             $this->dispatch('close-modal', name: 'cetak-modal');
         } catch (\Throwable $e) {
             foreach ($thumbnailPaths as $path) {
@@ -212,7 +217,7 @@ class CetakDemo extends Component
             });
 
             session()->flash('message', 'Undangan cetak berhasil diperbarui.');
-            $this->resetInput();
+            $this->resetForm();
             $this->dispatch('close-modal', name: 'cetak-modal');
         } catch (\Throwable $e) {
             foreach ($newUploadedPaths as $path) {
