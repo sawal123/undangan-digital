@@ -156,7 +156,7 @@
                 <label
                     class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Deskripsi</label>
                 <div wire:ignore wire:key="cetak-deskripsi-editor" class="cetak-description-editor"
-                    x-data="cetakDeskripsiEditor()" x-init="init()">
+                    x-data="cetakDeskripsiEditor()">
                     <textarea x-ref="textarea" rows="3"></textarea>
                 </div>
                 @error('deskripsi')
@@ -269,6 +269,14 @@
                     };
 
                     const createEditor = () => {
+                        // Defensive: if another init() closure already created an
+                        // instance on this textarea, adopt it instead of creating
+                        // a second editor (prevents duplicated toolbar).
+                        if (textarea.ckeditorInstance) {
+                            editor = textarea.ckeditorInstance;
+                            setEditorContent(@this.get('deskripsi'));
+                            return;
+                        }
                         if (editor) {
                             // Reuse instance, just sync content from Livewire
                             setEditorContent(@this.get('deskripsi'));
