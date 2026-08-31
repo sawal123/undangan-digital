@@ -448,4 +448,93 @@ class UndanganCetakTest extends TestCase
         $this->assertStringContainsString('/storage/undangan-cetak/', $data['thumbnail_url']);
         $this->assertCount(1, $data['image_urls']);
     }
+
+    // ---------------------------------------------------------------------
+    // Regression: deskripsi NOT NULL di DB vs nullable di API.
+    // ConvertEmptyStringsToNull mengubah '' menjadi null, sehingga update
+    // yang sebelumnya gagal (SQLSTATE 1048) harus dinormalisasi menjadi ''.
+    // ---------------------------------------------------------------------
+
+    public function test_api_update_multipart_gambar_dan_deskripsi_kosong_berhasil()
+    {
+        Storage::fake('public');
+        $undangan = $this->makeUndangan();
+
+        $response = $this->withHeaders($this->apiHeaders())->post("/api/v1/undangan-cetak/{$undangan->id}", [
+            '_method' => 'PUT',
+            'nama' => 'Undangan Deskripsi Kosong',
+            'deskripsi' => '',
+            'gambar' => [UploadedFile::fake()->image('baru.jpg', 100, 100)],
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+
+        $undangan->refresh();
+        $this->assertSame('', $undangan->deskripsi);
+        $this->assertCount(1, $undangan->gambar);
+        $this->assertStringStartsWith('undangan-cetak/', $undangan->gambar[0]);
+        Storage::disk('public')->assertExists($undangan->gambar[0]);
+    }
+
+    public function test_api_update_multipart_deskripsi_null_berhasil()
+    {
+        Storage::fake('public');
+        $undangan = $this->makeUndangan();
+
+        $response = $this->withHeaders($this->apiHeaders())->post("/api/v1/undangan-cetak/{$undangan->id}", [
+            '_method' => 'PUT',
+            'deskripsi' => null,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+
+        $this->assertSame('', $undangan->refresh()->deskripsi);
+    }
+
+    public function test_api_update_tanpa_gambar_deskripsi_kosong_berhasil()
+    {
+        Storage::fake('public');
+        $undangan = $this->makeUndangan();
+
+        $response = $this->withHeaders($this->apiHeaders())->putJson("/api/v1/undangan-cetak/{$undangan->id}", [
+            'nama' => 'Tanpa Gambar Deskripsi Kosong',
+            'deskripsi' => '',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+
+        $undangan->refresh();
+        $this->assertEquals('Tanpa Gambar Deskripsi Kosong', $undangan->nama);
+        $this->assertSame('', $undangan->deskripsi);
+    }
+
+    public function test_api_create_deskripsi_kosong_dengan_gambar_berhasil()
+    {
+        Storage::fake('public');
+        $jenis = JenisUdangan::create(['jenis' => 'Softcover']);
+
+        $response = $this->withHeaders($this->apiHeaders())->post('/api/v1/undangan-cetak', [
+            'nama' => 'Undangan Baru Deskripsi Kosong',
+            'jenis_id' => $jenis->id,
+            'stok' => 10,
+            'harga' => 1000,
+            'deskripsi' => '',
+            'gambar' => [UploadedFile::fake()->image('cover.jpg')],
+        ]);
+
+        $response->assertStatus(201);
+        $data = $response->json('data');
+        $this->assertSame('', $data['deskripsi']);
+        $this->assertCount(1, $data['gambar']);
+        $this->assertStringStartsWith('undangan-cetak/', $data['gambar'][0]);
+        Storage::disk('public')->assertExists($data['gambar'][0]);
+
+        $this->assertDatabaseHas('undangan_cetaks', [
+            'id' => $data['id'],
+            'deskripsi' => '',
+        ]);
+    }
 }
