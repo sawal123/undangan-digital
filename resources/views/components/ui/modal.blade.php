@@ -1,16 +1,17 @@
 @props(['name', 'title', 'icon' => 'info', 'maxWidth' => 'md'])
 
-<div x-data="{ show: false }" x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
-    x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false">
-    <template x-teleport="body">
-        <div x-show="show" x-on:keydown.escape.window="show = false"
+<div>
+    <div x-data="{ show: false }" x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
+        x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false"
+        :data-modal-open="show ? '{{ $name }}' : null">
+        <div x-show="show" x-on:keydown.escape.window="show = false; $dispatch('close-modal', { name: '{{ $name }}' })"
             class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300"
             style="display: none;" x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0">
             <!-- Modal Backdrop -->
-            <div class="absolute inset-0" x-on:click="show = false"></div>
+            <div class="absolute inset-0" x-on:click="show = false; $dispatch('close-modal', { name: '{{ $name }}' })"></div>
 
             <!-- Modal Card -->
             <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-{{ $maxWidth }} max-h-[85vh] flex flex-col relative z-10 border border-slate-200 dark:border-slate-700 overflow-hidden"
@@ -19,7 +20,7 @@
                 x-transition:enter-end="opacity-100 scale-100 translate-y-0">
                 <!-- Modal Header (sticky) -->
                 <div class="px-6 pt-6 pb-3 flex-shrink-0">
-                    <button x-on:click="show = false"
+                    <button x-on:click="show = false; $dispatch('close-modal', { name: '{{ $name }}' })"
                         class="absolute top-4 right-4 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 transition-colors z-10">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
@@ -40,5 +41,5 @@
                 </div>
             </div>
         </div>
-    </template>
+    </div>
 </div>

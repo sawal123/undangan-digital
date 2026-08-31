@@ -1,5 +1,6 @@
-<div x-data="{ deleteId: null, deleteMethod: 'delete' }"
-    @set-delete.window="deleteId = $event.detail.id; deleteMethod = $event.detail.method || 'delete'">
+<div>
+    <div x-data="{ deleteId: null, deleteMethod: 'delete' }"
+        @set-delete.window="deleteId = $event.detail.id; deleteMethod = $event.detail.method || 'delete'">
     <div class="mb-6 flex justify-between items-center">
         <div>
             <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Undangan Cetak</h2>
@@ -10,7 +11,7 @@
                 x-on:click="$dispatch('open-modal', { name: 'category-modal' })">
                 Kategori
             </x-ui.button>
-            <x-ui.button variant="primary" icon="plus" wire:click="resetInput" loadingTarget="resetInput"
+            <x-ui.button variant="primary" icon="plus" wire:click="openCreateModal" loadingTarget="openCreateModal"
                 loadingText="Memuat...">
                 Tambah Produk
             </x-ui.button>
@@ -155,7 +156,7 @@
                 <label
                     class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Deskripsi</label>
                 <div wire:ignore wire:key="cetak-deskripsi-editor" class="cetak-description-editor"
-                    x-data="cetakDeskripsiEditor()" x-init="init()">
+                    x-data="cetakDeskripsiEditor()">
                     <textarea x-ref="textarea" rows="3"></textarea>
                 </div>
                 @error('deskripsi')
@@ -219,10 +220,32 @@
     <script>
         function cetakDeskripsiEditor() {
             return {
-                editor: null,
+                // NOTE: CKEditor instance and sync flag live in the init()
+                // closure, NOT as Alpine-reactive properties. Alpine proxies
+                // x-data properties, and proxying the CKEditor instance
+                // breaks its internals (getData()/setData() throw), which
+                // prevented the editor from ever syncing its content.
+                handleOpenModal: null,
+                handleCloseModal: null,
+                handleSetEditorContent: null,
                 init() {
+                    let editor = null;
+                    let syncingFromLivewire = false;
                     const self = this;
                     const textarea = this.$refs.textarea;
+
+                    const setEditorContent = (content) => {
+                        if (!editor) {
+                            return;
+                        }
+                        content = content || '';
+                        if (editor.getData() === content) {
+                            return;
+                        }
+                        syncingFromLivewire = true;
+                        editor.setData(content);
+                        syncingFromLivewire = false;
+                    };
 
                     const loadScript = (callback) => {
                         if (window.ClassicEditor) {
@@ -246,35 +269,47 @@
                     };
 
                     const createEditor = () => {
-                        if (self.editor) {
-                            // Already exists, just sync content from Livewire
-                            const desc = @this.get('deskripsi');
-                            self.editor.setData(desc || '');
+                        // Defensive: if another init() closure already created an
+                        // instance on this textarea, adopt it instead of creating
+                        // a second editor (prevents duplicated toolbar).
+                        if (textarea.ckeditorInstance) {
+                            editor = textarea.ckeditorInstance;
+                            setEditorContent(@this.get('deskripsi'));
+                            return;
+                        }
+                        if (editor) {
+                            // Reuse instance, just sync content from Livewire
+                            setEditorContent(@this.get('deskripsi'));
+                            return;
+                        }
+                        if (textarea._ckeditorInitializing) {
+                            // Already being initialized; avoid double create
                             return;
                         }
 
+                        textarea._ckeditorInitializing = true;
                         loadScript(() => {
-                            // Guard against double-init
-                            if (self.editor || textarea._ckeditorInstance || textarea._ckeditorInitializing) {
-                                if (textarea._ckeditorInstance) {
-                                    self.editor = textarea._ckeditorInstance;
-                                    self.editor.setData(@this.get('deskripsi') || '');
-                                }
+                            if (editor) {
+                                setEditorContent(@this.get('deskripsi'));
                                 return;
                             }
 
-                            textarea._ckeditorInitializing = true;
-                            ClassicEditor.create(textarea).then((editor) => {
-                                self.editor = editor;
-                                textarea._ckeditorInstance = editor;
+                            ClassicEditor.create(textarea).then((instance) => {
+                                editor = instance;
+                                textarea.ckeditorInstance = instance;
                                 textarea._ckeditorInitializing = false;
 
-                                editor.model.document.on('change:data', () => {
-                                    @this.set('deskripsi', editor.getData());
+                                instance.model.document.on('change:data', () => {
+                                    if (syncingFromLivewire) {
+                                        return;
+                                    }
+                                    @this.set('deskripsi', instance.getData());
                                 });
 
-                                const desc = @this.get('deskripsi');
-                                editor.setData(desc || '');
+                                // Initial sync from Livewire (guard against feedback loop)
+                                syncingFromLivewire = true;
+                                instance.setData(@this.get('deskripsi') || '');
+                                syncingFromLivewire = false;
                             }).catch((error) => {
                                 textarea._ckeditorInitializing = false;
                                 console.error('CKEditor error:', error);
@@ -282,34 +317,66 @@
                         });
                     };
 
-                    const destroyEditor = () => {
-                        if (self.editor) {
-                            try {
-                                self.editor.destroy();
-                            } catch (e) {
-                                // Editor might already be destroyed
-                            }
-                            self.editor = null;
-                            if (textarea) {
-                                textarea._ckeditorInstance = null;
-                                textarea._ckeditorInitializing = false;
-                            }
-                        }
-                    };
-
-                    // Create editor when modal opens
-                    window.addEventListener('open-modal', (e) => {
+                    // Listen for modal open/close once. Handlers are stored so they can
+                    // be removed when this Alpine component is destroyed.
+                    this.handleOpenModal = (e) => {
                         if (e.detail?.name === 'cetak-modal') {
                             createEditor();
                         }
-                    });
-
-                    // Destroy editor when modal closes
-                    window.addEventListener('close-modal', (e) => {
+                    };
+                    this.handleCloseModal = (e) => {
+                        // Editor instance is reused on next open; no destroy needed.
                         if (e.detail?.name === 'cetak-modal') {
-                            destroyEditor();
+                            setEditorContent(@this.get('deskripsi'));
                         }
-                    });
+                    };
+                    // Sync editor content directly from Livewire (server-dispatched
+                    // with the exact description value). This avoids reading stale
+                    // reactive state when the modal opens for edit.
+                    this.handleSetEditorContent = (e) => {
+                        const content = e.detail?.content ?? '';
+                        if (editor) {
+                            setEditorContent(content);
+                        } else {
+                            // Editor not created yet; pre-fill the textarea so
+                            // CKEditor uses it as initial data on create.
+                            textarea.value = content;
+                        }
+                    };
+                    window.addEventListener('open-modal', this.handleOpenModal);
+                    window.addEventListener('close-modal', this.handleCloseModal);
+                    window.addEventListener('set-editor-content', this.handleSetEditorContent);
+
+                    // Create the editor immediately if the modal is already open
+                    // (e.g. Livewire navigation re-renders the component).
+                    if (document.querySelector('[data-modal-open="cetak-modal"]')) {
+                        createEditor();
+                    }
+                },
+                destroy() {
+                    if (this.handleOpenModal) {
+                        window.removeEventListener('open-modal', this.handleOpenModal);
+                    }
+                    if (this.handleCloseModal) {
+                        window.removeEventListener('close-modal', this.handleCloseModal);
+                    }
+                    if (this.handleSetEditorContent) {
+                        window.removeEventListener('set-editor-content', this.handleSetEditorContent);
+                    }
+                    const textarea = this.$refs?.textarea;
+                    if (textarea) {
+                        textarea._ckeditorInitializing = false;
+                    }
+                    // The editor instance lives in the init() closure; destroy it
+                    // by looking it up on the textarea if still present.
+                    if (textarea && textarea.ckeditorInstance) {
+                        try {
+                            textarea.ckeditorInstance.destroy();
+                        } catch (e) {
+                            // Editor might already be destroyed
+                        }
+                        textarea.ckeditorInstance = null;
+                    }
                 },
             };
         }
@@ -340,4 +407,5 @@
             border-color: #334155;
         }
     </style>
+    </div>
 </div>
