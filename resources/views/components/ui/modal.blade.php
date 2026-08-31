@@ -1,9 +1,9 @@
 @props(['name', 'title', 'icon' => 'info', 'maxWidth' => 'md'])
 
-<div x-data="{ show: false }" x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
-    x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false"
-    :data-modal-open="show ? '{{ $name }}' : null">
-    <template x-teleport="body">
+<div>
+    <div x-data="{ show: false }" x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
+        x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false"
+        :data-modal-open="show ? '{{ $name }}' : null">
         <div x-show="show" x-on:keydown.escape.window="show = false; $dispatch('close-modal', { name: '{{ $name }}' })"
             class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300"
             style="display: none;" x-transition:enter="transition ease-out duration-300"
@@ -41,5 +41,5 @@
                 </div>
             </div>
         </div>
-    </template>
+    </div>
 </div>

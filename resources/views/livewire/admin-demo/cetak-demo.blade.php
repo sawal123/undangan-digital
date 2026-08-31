@@ -1,5 +1,6 @@
-<div x-data="{ deleteId: null, deleteMethod: 'delete' }"
-    @set-delete.window="deleteId = $event.detail.id; deleteMethod = $event.detail.method || 'delete'">
+<div>
+    <div x-data="{ deleteId: null, deleteMethod: 'delete' }"
+        @set-delete.window="deleteId = $event.detail.id; deleteMethod = $event.detail.method || 'delete'">
     <div class="mb-6 flex justify-between items-center">
         <div>
             <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Undangan Cetak</h2>
@@ -219,25 +220,32 @@
     <script>
         function cetakDeskripsiEditor() {
             return {
-                editor: null,
-                syncingFromLivewire: false,
+                // NOTE: CKEditor instance and sync flag live in the init()
+                // closure, NOT as Alpine-reactive properties. Alpine proxies
+                // x-data properties, and proxying the CKEditor instance
+                // breaks its internals (getData()/setData() throw), which
+                // prevented the editor from ever syncing its content.
                 handleOpenModal: null,
                 handleCloseModal: null,
-                syncEditorContent() {
-                    if (!this.editor) {
-                        return;
-                    }
-                    const desc = @this.get('deskripsi') || '';
-                    if (this.editor.getData() === desc) {
-                        return;
-                    }
-                    this.syncingFromLivewire = true;
-                    this.editor.setData(desc);
-                    this.syncingFromLivewire = false;
-                },
+                handleSetEditorContent: null,
                 init() {
+                    let editor = null;
+                    let syncingFromLivewire = false;
                     const self = this;
                     const textarea = this.$refs.textarea;
+
+                    const setEditorContent = (content) => {
+                        if (!editor) {
+                            return;
+                        }
+                        content = content || '';
+                        if (editor.getData() === content) {
+                            return;
+                        }
+                        syncingFromLivewire = true;
+                        editor.setData(content);
+                        syncingFromLivewire = false;
+                    };
 
                     const loadScript = (callback) => {
                         if (window.ClassicEditor) {
@@ -261,9 +269,9 @@
                     };
 
                     const createEditor = () => {
-                        if (self.editor) {
+                        if (editor) {
                             // Reuse instance, just sync content from Livewire
-                            self.syncEditorContent();
+                            setEditorContent(@this.get('deskripsi'));
                             return;
                         }
                         if (textarea._ckeditorInitializing) {
@@ -273,26 +281,27 @@
 
                         textarea._ckeditorInitializing = true;
                         loadScript(() => {
-                            if (self.editor) {
-                                self.syncEditorContent();
+                            if (editor) {
+                                setEditorContent(@this.get('deskripsi'));
                                 return;
                             }
 
-                            ClassicEditor.create(textarea).then((editor) => {
-                                self.editor = editor;
+                            ClassicEditor.create(textarea).then((instance) => {
+                                editor = instance;
+                                textarea.ckeditorInstance = instance;
                                 textarea._ckeditorInitializing = false;
 
-                                editor.model.document.on('change:data', () => {
-                                    if (self.syncingFromLivewire) {
+                                instance.model.document.on('change:data', () => {
+                                    if (syncingFromLivewire) {
                                         return;
                                     }
-                                    @this.set('deskripsi', editor.getData());
+                                    @this.set('deskripsi', instance.getData());
                                 });
 
                                 // Initial sync from Livewire (guard against feedback loop)
-                                self.syncingFromLivewire = true;
-                                editor.setData(@this.get('deskripsi') || '');
-                                self.syncingFromLivewire = false;
+                                syncingFromLivewire = true;
+                                instance.setData(@this.get('deskripsi') || '');
+                                syncingFromLivewire = false;
                             }).catch((error) => {
                                 textarea._ckeditorInitializing = false;
                                 console.error('CKEditor error:', error);
@@ -310,11 +319,25 @@
                     this.handleCloseModal = (e) => {
                         // Editor instance is reused on next open; no destroy needed.
                         if (e.detail?.name === 'cetak-modal') {
-                            self.syncEditorContent();
+                            setEditorContent(@this.get('deskripsi'));
+                        }
+                    };
+                    // Sync editor content directly from Livewire (server-dispatched
+                    // with the exact description value). This avoids reading stale
+                    // reactive state when the modal opens for edit.
+                    this.handleSetEditorContent = (e) => {
+                        const content = e.detail?.content ?? '';
+                        if (editor) {
+                            setEditorContent(content);
+                        } else {
+                            // Editor not created yet; pre-fill the textarea so
+                            // CKEditor uses it as initial data on create.
+                            textarea.value = content;
                         }
                     };
                     window.addEventListener('open-modal', this.handleOpenModal);
                     window.addEventListener('close-modal', this.handleCloseModal);
+                    window.addEventListener('set-editor-content', this.handleSetEditorContent);
 
                     // Create the editor immediately if the modal is already open
                     // (e.g. Livewire navigation re-renders the component).
@@ -329,17 +352,22 @@
                     if (this.handleCloseModal) {
                         window.removeEventListener('close-modal', this.handleCloseModal);
                     }
-                    if (this.editor) {
-                        try {
-                            this.editor.destroy();
-                        } catch (e) {
-                            // Editor might already be destroyed
-                        }
-                        this.editor = null;
+                    if (this.handleSetEditorContent) {
+                        window.removeEventListener('set-editor-content', this.handleSetEditorContent);
                     }
                     const textarea = this.$refs?.textarea;
                     if (textarea) {
                         textarea._ckeditorInitializing = false;
+                    }
+                    // The editor instance lives in the init() closure; destroy it
+                    // by looking it up on the textarea if still present.
+                    if (textarea && textarea.ckeditorInstance) {
+                        try {
+                            textarea.ckeditorInstance.destroy();
+                        } catch (e) {
+                            // Editor might already be destroyed
+                        }
+                        textarea.ckeditorInstance = null;
                     }
                 },
             };
@@ -371,4 +399,5 @@
             border-color: #334155;
         }
     </style>
+    </div>
 </div>

@@ -5,19 +5,18 @@
     x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
     x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false"
 >
-    <template x-teleport="body">
-        <div 
-            x-show="show"
-            x-on:keydown.escape.window="show = false"
-            class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300"
-            style="display: none;"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-        >
+    <div 
+        x-show="show"
+        x-on:keydown.escape.window="show = false"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300"
+        style="display: none;"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    >
             <!-- Modal Backdrop -->
             <div class="absolute inset-0" x-on:click="show = false"></div>
         
@@ -49,5 +48,5 @@
                 </div>
             </div>
         </div>
-    </template>
+    </div>
 </div>

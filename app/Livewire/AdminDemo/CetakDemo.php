@@ -95,6 +95,7 @@ class CetakDemo extends Component
     public function openCreateModal(): void
     {
         $this->resetForm();
+        $this->dispatch('set-editor-content', content: '');
         $this->dispatch('open-modal', name: 'cetak-modal');
     }
 
@@ -165,6 +166,7 @@ class CetakDemo extends Component
         $this->thumbnails = [];
         $this->isEdit = true;
         $this->resetValidation();
+        $this->dispatch('set-editor-content', content: $this->deskripsi);
         $this->dispatch('open-modal', name: 'cetak-modal');
     }
 
