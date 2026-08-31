@@ -104,6 +104,10 @@ class UndanganCetakController extends Controller
 
         $data = $validator->validated();
 
+        // Kolom DB deskripsi NOT NULL sedangkan API mengizinkan null
+        // (ConvertEmptyStringsToNull mengubah '' menjadi null).
+        $data = $this->normalizeDeskripsi($data);
+
         // Simpan SEMUA file baru terlebih dahulu. Jika gagal, tidak ada
         // record yang dibuat dan file yang sudah terlanjur tersimpan dibersihkan.
         try {
@@ -129,7 +133,7 @@ class UndanganCetakController extends Controller
         } catch (Throwable $e) {
             // DB gagal -> bersihkan file yang barusan di-upload.
             $this->deleteFilesQuietly($imagePaths);
-            $this->logUploadFailure($e, null, $request);
+            $this->logDbFailure($e, null);
 
             return response()->json([
                 'success' => false,
@@ -214,6 +218,10 @@ class UndanganCetakController extends Controller
         $data = $validator->validated();
         unset($data['hapus_gambar_lama']);
 
+        // Kolom DB deskripsi NOT NULL sedangkan API mengizinkan null
+        // (ConvertEmptyStringsToNull mengubah '' menjadi null).
+        $data = $this->normalizeDeskripsi($data);
+
         $oldImages = $this->decodeGambar($undangan->gambar);
         $hapusGambarLama = (bool) ($request->input('hapus_gambar_lama', false));
 
@@ -245,7 +253,7 @@ class UndanganCetakController extends Controller
         } catch (Throwable $e) {
             // DB gagal -> bersihkan file baru agar tidak meninggalkan file yatim.
             $this->deleteFilesQuietly($newPaths);
-            $this->logUploadFailure($e, $undangan->id, $request);
+            $this->logDbFailure($e, $undangan->id);
 
             return response()->json([
                 'success' => false,
@@ -400,6 +408,22 @@ class UndanganCetakController extends Controller
     }
 
     /**
+     * Normalisasi deskripsi sebelum disimpan: kolom DB NOT NULL sedangkan API
+     * mengizinkan null (ConvertEmptyStringsToNull mengubah '' menjadi null).
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function normalizeDeskripsi(array $data): array
+    {
+        if (array_key_exists('deskripsi', $data) && $data['deskripsi'] === null) {
+            $data['deskripsi'] = '';
+        }
+
+        return $data;
+    }
+
+    /**
      * Baca kolom gambar menjadi array, kompatibel dengan data legacy.
      *
      * Kolom gambar ber-cast `array`, jadi umumnya sudah berupa array. Data lama
@@ -479,5 +503,17 @@ class UndanganCetakController extends Controller
         }
 
         Log::error('Gagal mengunggah gambar undangan cetak.', $context);
+    }
+
+    /**
+     * Log kegagalan penyimpanan database dengan konteks aman (tanpa API key /
+     * data sensitif). Terpisah dari log upload karena error DB bukan upload.
+     */
+    private function logDbFailure(Throwable $e, ?int $undanganId): void
+    {
+        Log::error('Gagal menyimpan undangan cetak.', [
+            'undangan_id' => $undanganId,
+            'error' => $e->getMessage(),
+        ]);
     }
 }
