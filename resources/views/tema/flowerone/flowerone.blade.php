@@ -17,18 +17,12 @@
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta property="og:image" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
-    <meta property="og:image:secure_url" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
-    <meta property="og:image:width" content="664">
-    <meta property="og:image:height" content="664">
-    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
-
-
+    @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title])
     <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-        <meta itemprop="url" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
+        <meta itemprop="url" content="{{ $data->thumbnailWas?->thumbnail ? secure_asset('storage/' . ltrim($data->thumbnailWas->thumbnail, '/')) : secure_asset('images/default-invitation.png') }}">
     </div>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('tema/flowerone/assets/bootstrap/css/bootstrap.min.css') }}">

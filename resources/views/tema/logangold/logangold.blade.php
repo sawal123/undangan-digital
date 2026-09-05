@@ -41,11 +41,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title ?? $pageTitle }}">
-    <meta property="og:image" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
-    <meta property="og:image:secure_url" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $eventDateText }}.">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
+    @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title ?? $pageTitle])
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

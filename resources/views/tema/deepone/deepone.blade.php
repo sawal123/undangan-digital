@@ -42,11 +42,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title ?? $pageTitle }}">
-    <meta property="og:image" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
-    <meta property="og:image:secure_url" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $eventDateText }}.">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
+    @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title ?? $pageTitle])
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">

@@ -45,10 +45,10 @@
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}">
-    <meta property="og:image" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $eventDateText }}.">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
+    @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title])
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link
