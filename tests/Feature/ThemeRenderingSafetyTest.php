@@ -774,14 +774,24 @@ class ThemeRenderingSafetyTest extends TestCase
 
             $response->assertOk("Theme {$name} gagal render untuk social preview test.");
 
+            // og:image must be present and must NOT be empty /storage/
             $this->assertStringContainsString('og:image', $content, "Theme {$name} tidak punya og:image.");
             $this->assertStringNotContainsString('og:image" content="' . url('storage/') . '"', $content, "Theme {$name} og:image kosong /storage/.");
             $this->assertStringNotContainsString('og:image" content="' . secure_url('storage/') . '"', $content, "Theme {$name} og:image kosong /storage/ (secure).");
 
+            // og:image URL must be non-empty, absolute, scheme https
+            preg_match('/<meta property="og:image" content="([^"]+)"/', $content, $m);
+            $this->assertNotEmpty($m[1] ?? '', "Theme {$name} og:image URL kosong.");
+            $this->assertStringStartsWith('https://', $m[1], "Theme {$name} og:image URL tidak absolute HTTPS.");
+
+            // og:image:secure_url
             $this->assertStringContainsString('og:image:secure_url', $content, "Theme {$name} tidak punya og:image:secure_url.");
+
+            // og:image:type — thumbnail is 'thumbnail/wa.jpg' → image/jpeg
             $this->assertStringContainsString('og:image:type', $content, "Theme {$name} tidak punya og:image:type.");
-            $this->assertStringContainsString('og:image:width', $content, "Theme {$name} tidak punya og:image:width.");
-            $this->assertStringContainsString('og:image:height', $content, "Theme {$name} tidak punya og:image:height.");
+            $this->assertStringContainsString('image/jpeg', $content, "Theme {$name} og:image:type bukan image/jpeg.");
+
+            // twitter:image
             $this->assertStringContainsString('twitter:image', $content, "Theme {$name} tidak punya twitter:image.");
             $this->assertStringContainsString('summary_large_image', $content, "Theme {$name} tidak punya twitter:card.");
         }
@@ -799,7 +809,12 @@ class ThemeRenderingSafetyTest extends TestCase
             $response->assertOk();
 
             $this->assertStringContainsString('/storage/thumbnail/wa.jpg', $content, "Theme {$name} tidak menyertakan thumbnail path.");
-            $this->assertStringContainsString('https://', $content, "Theme {$name} og:image tidak absolute HTTPS.");
+
+            // Parse og:image URL and assert absolute HTTPS
+            preg_match('/<meta property="og:image" content="([^"]+)"/', $content, $m);
+            $this->assertNotEmpty($m[1] ?? '', "Theme {$name} og:image URL kosong.");
+            $this->assertStringStartsWith('https://', $m[1], "Theme {$name} og:image URL tidak absolute HTTPS.");
+            $this->assertStringContainsString('/storage/thumbnail/wa.jpg', $m[1], "Theme {$name} og:image URL tidak mengandung path thumbnail.");
         }
     }
 
@@ -839,8 +854,45 @@ class ThemeRenderingSafetyTest extends TestCase
 
             $this->assertStringNotContainsString('og:image" content="' . url('storage/') . '"', $content, "Theme {$name} broken /storage/ saat thumbnail null.");
             $this->assertStringNotContainsString('og:image" content="' . secure_url('storage/') . '"', $content, "Theme {$name} broken /storage/ (secure) saat thumbnail null.");
+            // Fallback uses default-invitation.png
             $this->assertStringContainsString('default-invitation.png', $content, "Theme {$name} tidak fallback ke default-invitation.png saat thumbnail null.");
+
+            // When thumbnail null, type should be image/png (fallback PNG)
+            $this->assertStringContainsString('og:image:type" content="image/png"', $content, "Theme {$name} fallback type bukan image/png.");
+
+            // When thumbnail null, width/height should still be present (fallback known dimensions)
+            $this->assertStringContainsString('og:image:width" content="1024"', $content, "Theme {$name} tidak punya og:image:width saat fallback.");
+            $this->assertStringContainsString('og:image:height" content="1024"', $content, "Theme {$name} tidak punya og:image:height saat fallback.");
         }
+    }
+
+    public function test_og_image_type_derived_from_thumbnail_extension(): void
+    {
+        // Test JPG extension
+        $data = $this->createData('tema.darksweet.darksweet');
+        $this->createCompleteRelations($data);
+        $response = $this->get($this->visitSlug($data));
+        $content = (string) $response->getContent();
+        $response->assertOk();
+        $this->assertStringContainsString('og:image:type" content="image/jpeg"', $content, 'Thumbnail .jpg harus menghasilkan image/jpeg.');
+
+        // Test PNG extension
+        $data2 = $this->createData('tema.standtheme.standtheme');
+        $this->createCompleteRelations($data2);
+        $data2->thumbnailWas->update(['thumbnail' => 'thumbnail/wa.png']);
+        $response2 = $this->get($this->visitSlug($data2));
+        $content2 = (string) $response2->getContent();
+        $response2->assertOk();
+        $this->assertStringContainsString('og:image:type" content="image/png"', $content2, 'Thumbnail .png harus menghasilkan image/png.');
+
+        // Test WEBP extension
+        $data3 = $this->createData('tema.flowerone.flowerone');
+        $this->createCompleteRelations($data3);
+        $data3->thumbnailWas->update(['thumbnail' => 'thumbnail/wa.webp']);
+        $response3 = $this->get($this->visitSlug($data3));
+        $content3 = (string) $response3->getContent();
+        $response3->assertOk();
+        $this->assertStringContainsString('og:image:type" content="image/webp"', $content3, 'Thumbnail .webp harus menghasilkan image/webp.');
     }
 
     public function test_guest_route_does_not_require_authentication(): void
@@ -854,9 +906,22 @@ class ThemeRenderingSafetyTest extends TestCase
         $this->assertGuest(null, 'Guest route membutuhkan autentikasi.');
     }
 
-    public function test_image_url_is_publicly_accessible(): void
+    public function test_fallback_image_exists_with_correct_format(): void
     {
-        // File fallback harus ada di public/images agar dapat diakses crawler tanpa auth.
-        $this->assertFileExists(public_path('images/default-invitation.png'));
+        $path = public_path('images/default-invitation.png');
+        $this->assertFileExists($path, 'Fallback image default-invitation.png tidak ditemukan.');
+
+        // Verify MIME metadata matches PNG
+        $info = getimagesize($path);
+        $this->assertNotFalse($info, 'Fallback image bukan file gambar yang valid.');
+        $this->assertSame('image/png', $info['mime'], 'Fallback image harus berformat PNG.');
+        $this->assertSame(1024, $info[0], 'Fallback image width harus 1024.');
+        $this->assertSame(1024, $info[1], 'Fallback image height harus 1024.');
+
+        // Verify PNG signature (binary format matches extension)
+        $fh = fopen($path, 'rb');
+        $sig = fread($fh, 8);
+        fclose($fh);
+        $this->assertSame("\x89PNG\r\n\x1a\n", $sig, 'Fallback image harus memiliki PNG signature.');
     }
 }
