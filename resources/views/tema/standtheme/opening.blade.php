@@ -8,11 +8,17 @@
         <h1 class="text-2xl font-bold mb-4 mt-2 text-center title" data-aos="fade-up" data-aos-duration="3000">Jamuan
             Syukuran</h1>
         <div class="text-center max-w-2xl  p-8 text-[12px] md:text-lg text-[#755f4B]">
+            <img src="{{ asset('storage/' . ($data->pria?->image ?? '')) }}"
+                class="w-40 h-40 mx-auto mb-4 rounded-full object-cover" alt="{{ $data->pria?->nama_lengkap ?? 'Mempelai Pria' }}"
+                data-aos="fade-up" data-aos-duration="1500">
             <p class="text-5xl mb-2 font-bold title" data-aos="fade-up" data-aos-duration="1500">
                 {{ $data->pria?->nama_lengkap ?? 'Teddy Prakarsa' }}</p>
             <p class="text-sm mb-4" data-aos="fade-up" data-aos-duration="1500">
                 {{ $data->pria?->deskripsi ?? 'Putra ke-2 Bpk. Samuel & Ibu Masuya' }}</p>
             <p class="text-lg mb-2" data-aos="fade-up" data-aos-duration="1500">&</p>
+            <img src="{{ asset('storage/' . ($data->wanita?->image ?? '')) }}"
+                class="w-40 h-40 mx-auto mb-4 rounded-full object-cover" alt="{{ $data->wanita?->nama_lengkap ?? 'Mempelai Wanita' }}"
+                data-aos="fade-up" data-aos-duration="1500">
             <p class="text-5xl
 title mb-2 font-bold " data-aos="fade-up" data-aos-duration="1500">
                 {{ $data->wanita?->nama_lengkap ?? 'Ajeng Febian' }}</p>
