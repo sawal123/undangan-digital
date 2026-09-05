@@ -1,13 +1,5 @@
-<div id="youtube-player" class="hidden invisible z-10 absolute inset-0">
-    <iframe
-    id="videoFrame"
-    width="240"
-    height="240"
-    src=""
-    title="YouTube video player"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allowfullscreen>
-  </iframe>
-</div>
+{{-- Tampilkan ikon play existing untuk state berhenti milik core. --}}
+<style>
+    #musicToggle .fa-music::before { content: '\f04b'; }
+</style>
+@include('tema.partials.music', ['data' => $data])
