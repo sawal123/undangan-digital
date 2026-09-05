@@ -643,11 +643,28 @@ class ThemeRenderingSafetyTest extends TestCase
         }
 
         if ($path === 'tema.flowerone.flowerone') {
-            $legacyCover = file_get_contents(public_path('tema/flowerone/js/cover.js'));
-            $this->assertStringContainsString('window.musicPlayer?.play()', $legacyCover);
-            $this->assertStringNotContainsString('videoFrame', $legacyCover);
-            $this->assertStringNotContainsString('youtube.com', $legacyCover);
+            $this->assertStringNotContainsString(asset('tema/flowerone/js/cover.js'), $content);
         }
+    }
+
+    public function test_flowerone_demo_keeps_its_standalone_music_controls(): void
+    {
+        $content = view('temademo.flowerone')->render();
+        $javascript = file_get_contents(public_path('tema/flowerone/js/cover.js'));
+
+        $this->assertStringContainsString(asset('tema/flowerone/js/cover.js'), $content);
+        $this->assertStringNotContainsString(asset('tema/flowerone/js/openCover.js'), $content);
+        foreach (['openCover', 'videoFrame', 'toggleButton'] as $id) {
+            $this->assertStringContainsString('id="' . $id . '"', $content);
+            $this->assertStringContainsString("document.getElementById('{$id}')", $javascript);
+        }
+        $this->assertStringNotContainsString('window.musicPlayer', $javascript);
+        $this->assertStringContainsString("openCover.addEventListener('click'", $javascript);
+        $this->assertStringContainsString("toggleButton.addEventListener('click'", $javascript);
+        $this->assertStringContainsString('videoFrame.src = "https://www.youtube.com/embed/VDbVXpJWA-k', $javascript);
+        $this->assertStringContainsString('autoplay=1', $javascript);
+        $this->assertStringContainsString('fa-pause', $javascript);
+        $this->assertStringContainsString('fa-play', $javascript);
     }
 
     public function test_quinceanera_theme_is_registered_for_birthday_event_type(): void
