@@ -759,4 +759,104 @@ class ThemeRenderingSafetyTest extends TestCase
             $this->assertStringContainsString('storage/pengantin/wanita.jpg', $content, "Theme {$name} tidak merender foto wanita.");
         }
     }
+// ──────────────────────────────────────────────
+    // SOCIAL PREVIEW / OG METADATA TESTS
+    // ──────────────────────────────────────────────
+
+    public function test_all_twelve_themes_have_social_preview_meta(): void
+    {
+        foreach ($this->themePaths() as $name => $path) {
+            $data = $this->createData($path);
+            $this->createCompleteRelations($data);
+
+            $response = $this->get($this->visitSlug($data));
+            $content = (string) $response->getContent();
+
+            $response->assertOk("Theme {$name} gagal render untuk social preview test.");
+
+            $this->assertStringContainsString('og:image', $content, "Theme {$name} tidak punya og:image.");
+            $this->assertStringNotContainsString('og:image" content="' . url('storage/') . '"', $content, "Theme {$name} og:image kosong /storage/.");
+            $this->assertStringNotContainsString('og:image" content="' . secure_url('storage/') . '"', $content, "Theme {$name} og:image kosong /storage/ (secure).");
+
+            $this->assertStringContainsString('og:image:secure_url', $content, "Theme {$name} tidak punya og:image:secure_url.");
+            $this->assertStringContainsString('og:image:type', $content, "Theme {$name} tidak punya og:image:type.");
+            $this->assertStringContainsString('og:image:width', $content, "Theme {$name} tidak punya og:image:width.");
+            $this->assertStringContainsString('og:image:height', $content, "Theme {$name} tidak punya og:image:height.");
+            $this->assertStringContainsString('twitter:image', $content, "Theme {$name} tidak punya twitter:image.");
+            $this->assertStringContainsString('summary_large_image', $content, "Theme {$name} tidak punya twitter:card.");
+        }
+    }
+
+    public function test_thumbnail_available_og_image_is_absolute_https(): void
+    {
+        foreach ($this->themePaths() as $name => $path) {
+            $data = $this->createData($path);
+            $this->createCompleteRelations($data);
+
+            $response = $this->get($this->visitSlug($data));
+            $content = (string) $response->getContent();
+
+            $response->assertOk();
+
+            $this->assertStringContainsString('/storage/thumbnail/wa.jpg', $content, "Theme {$name} tidak menyertakan thumbnail path.");
+            $this->assertStringContainsString('https://', $content, "Theme {$name} og:image tidak absolute HTTPS.");
+        }
+    }
+
+    public function test_og_image_secure_url_matches_image_url(): void
+    {
+        $data = $this->createData('tema.darksweet.darksweet');
+        $this->createCompleteRelations($data);
+
+        $response = $this->get($this->visitSlug($data));
+        $content = (string) $response->getContent();
+
+        $response->assertOk();
+
+        preg_match('/<meta property="og:image" content="([^"]+)"/', $content, $imageMatch);
+        preg_match('/<meta property="og:image:secure_url" content="([^"]+)"/', $content, $secureMatch);
+
+        $this->assertNotEmpty($imageMatch, 'og:image tidak ditemukan.');
+        $this->assertNotEmpty($secureMatch, 'og:image:secure_url tidak ditemukan.');
+        $this->assertSame($imageMatch[1], $secureMatch[1], 'og:image:secure_url harus sama dengan og:image.');
+    }
+
+    public function test_thumbnail_null_does_not_produce_broken_storage_url(): void
+    {
+        foreach ($this->themePaths() as $name => $path) {
+            $data = $this->createData($path);
+            $this->createCompleteRelations($data);
+
+            if ($data->thumbnailWas) {
+                $data->thumbnailWas->delete();
+                $data->unsetRelation('thumbnailWas');
+            }
+
+            $response = $this->get($this->visitSlug($data));
+            $content = (string) $response->getContent();
+
+            $response->assertOk();
+
+            $this->assertStringNotContainsString('og:image" content="' . url('storage/') . '"', $content, "Theme {$name} broken /storage/ saat thumbnail null.");
+            $this->assertStringNotContainsString('og:image" content="' . secure_url('storage/') . '"', $content, "Theme {$name} broken /storage/ (secure) saat thumbnail null.");
+            $this->assertStringContainsString('default-invitation.png', $content, "Theme {$name} tidak fallback ke default-invitation.png saat thumbnail null.");
+        }
+    }
+
+    public function test_guest_route_does_not_require_authentication(): void
+    {
+        $data = $this->createData('tema.darksweet.darksweet');
+        $this->createCompleteRelations($data);
+
+        $response = $this->get($this->visitSlug($data));
+
+        $response->assertOk();
+        $this->assertGuest(null, 'Guest route membutuhkan autentikasi.');
+    }
+
+    public function test_image_url_is_publicly_accessible(): void
+    {
+        // File fallback harus ada di public/images agar dapat diakses crawler tanpa auth.
+        $this->assertFileExists(public_path('images/default-invitation.png'));
+    }
 }

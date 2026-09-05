@@ -6,16 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta property="og:title" content="{{ $data->title }}" />
-    <meta property="og:image" content="{{ asset('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+    <meta property="og:description" content="Deskripsi singkat undangan." />
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
-
-    <!-- WhatsApp Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $data->title }}">
-    <meta name="twitter:image" content="{{ asset('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
+    @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title])
     <title>{{ $data->title }}</title>
     <link href="{{ asset('tema/standtheme/output.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('tema/standtheme/assets/aos/dist/aos.css') }}">

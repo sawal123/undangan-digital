@@ -38,10 +38,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title ?? $pageTitle }}">
-    <meta property="og:image" content="{{ $storageUrl($data->thumbnailWas?->thumbnail) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $eventDateText }}.">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
+    @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title ?? $pageTitle])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link

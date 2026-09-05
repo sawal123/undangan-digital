@@ -14,14 +14,10 @@
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:site_name" content="Wayae Nikah">
     <meta property="og:title" content="{{ $data->title }}" />
-    <meta property="og:image" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
-    <meta property="og:image:secure_url" content="{{ url('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}">
     <meta property="og:description" content="Acara akan dilaksanakan pada {{ $tanggalAcara }}." />
-    <meta property="og:image:width" content="664">
-    <meta property="og:image:height" content="664">
-    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:type" content="website" />
+    @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title])
     <title>{{ $data->setting?->acara ?? 'The Wedding' }} {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}</title>
 
 

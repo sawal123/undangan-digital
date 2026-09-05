@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="{{ $data->title ?? 'Birthday' }}" />
+    <meta property="og:description" content="Undangan ulang tahun WayaeNikah." />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:type" content="website" />
+    @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title ?? 'Birthday'])
+    <!-- END social preview meta -->
     <!-- START Swiper css -->
 
 
