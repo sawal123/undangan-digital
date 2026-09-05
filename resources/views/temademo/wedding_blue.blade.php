@@ -71,7 +71,7 @@ a{color:inherit}
   url("{{ asset('tema/wedding_blue/assets/hero-couple.png') }}") center 18%/cover no-repeat}
 .hero:after{content:"";position:absolute;inset:auto 0 0;height:150px;background:linear-gradient(transparent,var(--paper))}
 .hero-floral{position:absolute;width:180px;opacity:.9;pointer-events:none;z-index:1}.hero-floral.left{left:-64px;top:68px}.hero-floral.right{right:-64px;bottom:80px;transform:rotate(180deg)}
-.hero-copy{position:relative;z-index:2}.hero p{font-size:20px;max-width:390px;margin:12px auto 20px}.hero h1{font-size:86px}
+.hero-copy{position:relative;z-index:2;text-shadow:0 1px 2px rgba(255,255,255,.98),0 0 10px rgba(255,255,255,.88),0 0 22px rgba(255,255,255,.72)}.hero p{font-size:20px;max-width:390px;margin:12px auto 20px}.hero h1{font-size:86px}
 .couple-line{display:flex;justify-content:center;align-items:center;gap:12px;font:600 14px var(--sans);letter-spacing:.08em;color:var(--navy2);text-transform:uppercase;flex-wrap:wrap}
 .couple-line:before,.couple-line:after{content:"";width:38px;height:1px;background:var(--gold)}
 .scroll-note{font:600 10px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:34px}
