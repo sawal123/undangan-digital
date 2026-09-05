@@ -457,18 +457,20 @@ class ThemeRenderingSafetyTest extends TestCase
 
     public function test_music_themes_render_direct_audio_url_without_storage_prefix(): void
     {
-        foreach ($this->musicThemePaths() as $name => $path) {
-            $data = $this->createData($path);
-            $this->createSound($data, 'https://cdn.example.com/lagu.mp3', 15);
+        foreach ([0, 10, 30, 60] as $start) {
+            foreach ($this->musicThemePaths() as $name => $path) {
+                $data = $this->createData($path);
+                $this->createSound($data, 'https://cdn.example.com/lagu.mp3', $start);
 
-            $response = $this->get($this->visitSlug($data));
-            $content = (string) $response->getContent();
+                $response = $this->get($this->visitSlug($data));
+                $content = (string) $response->getContent();
 
-            $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render dengan direct audio URL: " . $content);
-            $this->assertStringContainsString('id="bgMusic"', $content);
-            $this->assertStringContainsString('src="https://cdn.example.com/lagu.mp3"', $content);
-            $this->assertStringContainsString('data-start="15"', $content);
-            $this->assertStringNotContainsString('storage/https://cdn.example.com', $content);
+                $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render direct audio start {$start}: " . $content);
+                $this->assertStringContainsString('id="bgMusic"', $content);
+                $this->assertStringContainsString('src="https://cdn.example.com/lagu.mp3"', $content);
+                $this->assertStringContainsString("data-start=\"{$start}\"", $content);
+                $this->assertStringNotContainsString('storage/https://cdn.example.com', $content);
+            }
         }
     }
 
@@ -476,7 +478,7 @@ class ThemeRenderingSafetyTest extends TestCase
     {
         foreach ($this->musicThemePaths() as $name => $path) {
             $data = $this->createData($path);
-            $this->createSound($data, 'musik/lagu.mp3', 0);
+            $this->createSound($data, 'musik/lagu.mp3', 30);
 
             $response = $this->get($this->visitSlug($data));
             $content = (string) $response->getContent();
@@ -484,6 +486,7 @@ class ThemeRenderingSafetyTest extends TestCase
             $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render dengan local audio path: " . $content);
             $this->assertStringContainsString('id="bgMusic"', $content);
             $this->assertStringContainsString('/storage/musik/lagu.mp3', $content);
+            $this->assertStringContainsString('data-start="30"', $content);
         }
     }
 
@@ -503,19 +506,36 @@ class ThemeRenderingSafetyTest extends TestCase
         }
     }
 
-    public function test_music_themes_youtube_source_produces_valid_player(): void
+    public function test_music_themes_normalize_youtube_start_from_database(): void
     {
-        foreach ($this->musicThemePaths() as $name => $path) {
-            $data = $this->createData($path);
-            $this->createSound($data, 'https://youtu.be/dQw4w9WgXcQ', 45);
+        $sources = [
+            'youtu.be' => ['https://youtu.be/dQw4w9WgXcQ', 0],
+            'watch' => ['https://www.youtube.com/watch?v=dQw4w9WgXcQ', 10],
+            'embed-with-start' => ['https://www.youtube.com/embed/dQw4w9WgXcQ?start=10', 30],
+            'watch-with-start' => ['https://www.youtube.com/watch?v=dQw4w9WgXcQ&start=10', 60],
+        ];
 
-            $response = $this->get($this->visitSlug($data));
-            $content = (string) $response->getContent();
+        foreach ($sources as $sourceName => [$source, $start]) {
+            foreach ($this->musicThemePaths() as $name => $path) {
+                $data = $this->createData($path);
+                $this->createSound($data, $source, $start);
 
-            $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render dengan URL YouTube pendek: " . $content);
-            $this->assertStringNotContainsString('<audio', $content);
-            $this->assertStringContainsString('id="bgMusicFrame"', $content);
-            $this->assertStringContainsString('youtube.com/embed/dQw4w9WgXcQ?start=45', $content);
+                $response = $this->get($this->visitSlug($data));
+                $content = (string) $response->getContent();
+                $expectedEmbed = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+                $expectedQuery = $start > 0 ? "?start={$start}" : '';
+
+                $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render {$sourceName}: " . $content);
+                $this->assertStringNotContainsString('<audio', $content);
+                $this->assertStringContainsString('id="bgMusicFrame"', $content);
+                $this->assertStringContainsString("data-embed=\"{$expectedEmbed}{$expectedQuery}\"", $content);
+                $this->assertStringContainsString("src=\"{$expectedEmbed}{$expectedQuery}" . ($start > 0 ? '&amp;' : '?') . 'enablejsapi=1"', $content);
+                $this->assertStringNotContainsString('?start=' . $start . '?start=', $content);
+                $this->assertStringNotContainsString('&start=' . $start . '&start=', $content);
+                if ($sourceName === 'embed-with-start' || $sourceName === 'watch-with-start') {
+                    $this->assertStringNotContainsString('start=10&start=', $content);
+                }
+            }
         }
     }
 
