@@ -59,6 +59,22 @@ class ThemeRenderingSafetyTest extends TestCase
         ];
     }
 
+    protected function weddingThemePaths(): array
+    {
+        return [
+            'darksweet' => 'tema.darksweet.darksweet',
+            'darkpre' => 'tema.darkpre.darkpre',
+            'whitepre' => 'tema.whitepre.whitepre',
+            'flowerone' => 'tema.flowerone.flowerone',
+            'standtheme' => 'tema.standtheme.standtheme',
+            'deepone' => 'tema.deepone',
+            'deepone-pink' => 'tema.deepone-pink',
+            'logangold' => 'tema.logangold',
+            'mahligai' => 'tema.mahligai',
+            'wedding_blue' => 'tema.wedding_blue',
+        ];
+    }
+
     protected function createTheme(string $path, string $eventTypeKey = 'wedding'): Theme
     {
         $category = Category::factory()->create();
@@ -529,5 +545,20 @@ class ThemeRenderingSafetyTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode(), 'Wedding Blue gagal render untuk undangan wedding: ' . $response->getContent());
         $this->assertStringContainsString('id="openInvitation"', (string) $response->getContent());
+    }
+
+    public function test_wedding_themes_render_both_profile_images(): void
+    {
+        foreach ($this->weddingThemePaths() as $name => $path) {
+            $data = $this->createData($path);
+            $this->createCompleteRelations($data);
+
+            $response = $this->get($this->visitSlug($data));
+            $content = (string) $response->getContent();
+
+            $response->assertOk("Theme {$name} gagal render profile pasangan.");
+            $this->assertStringContainsString('storage/pengantin/pria.jpg', $content, "Theme {$name} tidak merender foto pria.");
+            $this->assertStringContainsString('storage/pengantin/wanita.jpg', $content, "Theme {$name} tidak merender foto wanita.");
+        }
     }
 }
