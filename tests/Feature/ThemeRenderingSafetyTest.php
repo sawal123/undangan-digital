@@ -424,6 +424,8 @@ class ThemeRenderingSafetyTest extends TestCase
     {
         return [
             'darksweet' => 'tema.darksweet.darksweet',
+            'darkpre' => 'tema.darkpre.darkpre',
+            'whitepre' => 'tema.whitepre.whitepre',
             'deepone' => 'tema.deepone',
             'deepone-pink' => 'tema.deepone-pink',
             'logangold' => 'tema.logangold',
@@ -458,7 +460,7 @@ class ThemeRenderingSafetyTest extends TestCase
 
     protected function assertMusicPlayerIsInactive(string $name, string $content): void
     {
-        if ($name === 'darksweet') {
+        if (in_array($name, ['darksweet', 'darkpre', 'whitepre'], true)) {
             $this->assertStringContainsString('id="musicToggle"', $content);
             $this->assertStringNotContainsString('id="bgMusic"', $content);
             $this->assertStringNotContainsString('id="bgMusicFrame"', $content);
@@ -483,6 +485,24 @@ class ThemeRenderingSafetyTest extends TestCase
         $this->assertStringContainsString('data-embed="https://www.youtube.com/embed/dQw4w9WgXcQ?start=30"', $content);
         $this->assertStringNotContainsString('id="videoFrame"', $content);
         $this->assertStringNotContainsString('start: 0', $content);
+    }
+
+    public function test_darkpre_and_whitepre_use_core_music_player(): void
+    {
+        foreach (['darkpre' => 'tema.darkpre.darkpre', 'whitepre' => 'tema.whitepre.whitepre'] as $name => $path) {
+            $data = $this->createData($path);
+            $this->createSound($data, 'https://www.youtube.com/embed/dQw4w9WgXcQ?start=10', 60);
+
+            $response = $this->get($this->visitSlug($data));
+            $content = (string) $response->getContent();
+
+            $response->assertOk();
+            $this->assertStringContainsString('id="musicToggle"', $content, "{$name} tidak merender tombol musik.");
+            $this->assertStringContainsString('id="bgMusicFrame"', $content, "{$name} tidak memakai core player.");
+            $this->assertStringContainsString('data-embed="https://www.youtube.com/embed/dQw4w9WgXcQ?start=60"', $content, "{$name} tidak memakai start database.");
+            $this->assertStringNotContainsString('id="videoFrame"', $content, "{$name} masih merender player legacy.");
+            $this->assertStringNotContainsString('data-sound=', $content, "{$name} masih merender URL construction legacy.");
+        }
     }
 
     public function test_music_themes_render_direct_audio_url_without_storage_prefix(): void
