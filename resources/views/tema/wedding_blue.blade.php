@@ -408,6 +408,10 @@
         .hero-copy {
             position: relative;
             z-index: 2;
+            text-shadow:
+                0 1px 2px rgba(255, 255, 255, .98),
+                0 0 10px rgba(255, 255, 255, .88),
+                0 0 22px rgba(255, 255, 255, .72);
         }
         .hero p {
             font-size: 20px;
@@ -519,9 +523,16 @@
             padding: 20px;
             text-align: center;
         }
+        .intro-photos {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            max-width: 390px;
+            margin: 0 auto;
+        }
         .intro-photo {
-            width: 185px;
-            height: 185px;
+            width: 100%;
+            aspect-ratio: 1;
             border-radius: 50%;
             object-fit: cover;
             border: 7px solid #fff;
@@ -1019,6 +1030,12 @@
             .names .amp {
                 display: none;
             }
+            .intro-photos {
+                gap: 12px;
+            }
+            .intro-photo {
+                border-width: 5px;
+            }
         }
         @media (prefers-reduced-motion:reduce) {
             html {
@@ -1117,7 +1134,10 @@
                     <img class="divider" src="{{ asset('tema/wedding_blue/assets/divider.svg') }}" alt="Divider">
                 </div>
                 <div class="card intro-card glow zoom">
-                    <img class="intro-photo" src="{{ $priaImage }}" alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                    <div class="intro-photos">
+                        <img class="intro-photo" src="{{ $priaImage }}" alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                        <img class="intro-photo" src="{{ $wanitaImage }}" alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                    </div>
                     <h3>{{ $coupleNames }}</h3>
                     <p>{{ $data->qoute?->subtitle ?? 'Love is not just looking at each other, but looking together in the same direction.' }}</p>
                     <div class="names">

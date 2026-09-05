@@ -530,4 +530,17 @@ class ThemeRenderingSafetyTest extends TestCase
         $this->assertSame(200, $response->getStatusCode(), 'Wedding Blue gagal render untuk undangan wedding: ' . $response->getContent());
         $this->assertStringContainsString('id="openInvitation"', (string) $response->getContent());
     }
+
+    public function test_wedding_blue_renders_both_profile_images(): void
+    {
+        $data = $this->createData('tema.wedding_blue');
+        $this->createCompleteRelations($data);
+
+        $response = $this->get($this->visitSlug($data));
+        $content = (string) $response->getContent();
+
+        $response->assertOk();
+        $this->assertStringContainsString('storage/pengantin/pria.jpg', $content);
+        $this->assertStringContainsString('storage/pengantin/wanita.jpg', $content);
+    }
 }
