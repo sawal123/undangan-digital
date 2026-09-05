@@ -36,7 +36,7 @@
         </a>
 
 
-        <button type="button" id="toggleButton"
+        <button type="button" id="musicToggle"
             class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
             <i class="fa-solid fa-music text-lg md:text-2xl"></i>
         </button>
@@ -44,10 +44,4 @@
     </div>
 </nav>
 
-<!-- Youtube -->
-<div class="hidden fixed z-0 bottom-0">
-    <iframe id="videoFrame" width="0" height="0"
-        src="@if ($data->sound?->isActive) {{ $data->sound?->sound }}?start={{ $data->sound?->start }} @endif&enablejsapi=1"
-        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-    </iframe>
-</div>
+@include('tema.partials.music', ['data' => $data])

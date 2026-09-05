@@ -423,6 +423,7 @@ class ThemeRenderingSafetyTest extends TestCase
     protected function musicThemePaths(): array
     {
         return [
+            'darksweet' => 'tema.darksweet.darksweet',
             'deepone' => 'tema.deepone',
             'deepone-pink' => 'tema.deepone-pink',
             'logangold' => 'tema.logangold',
@@ -446,13 +447,42 @@ class ThemeRenderingSafetyTest extends TestCase
             $data = $this->createData($path);
             $response = $this->get($this->visitSlug($data));
             $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render tanpa sound: " . $response->getContent());
-            $this->assertStringNotContainsString('id="musicToggle"', (string) $response->getContent());
+            $this->assertMusicPlayerIsInactive($name, (string) $response->getContent());
 
             $this->createSound($data, 'musik/lagu.mp3', 0, false);
             $response = $this->get($this->visitSlug($data));
             $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render dengan sound nonaktif: " . $response->getContent());
-            $this->assertStringNotContainsString('id="musicToggle"', (string) $response->getContent());
+            $this->assertMusicPlayerIsInactive($name, (string) $response->getContent());
         }
+    }
+
+    protected function assertMusicPlayerIsInactive(string $name, string $content): void
+    {
+        if ($name === 'darksweet') {
+            $this->assertStringContainsString('id="musicToggle"', $content);
+            $this->assertStringNotContainsString('id="bgMusic"', $content);
+            $this->assertStringNotContainsString('id="bgMusicFrame"', $content);
+
+            return;
+        }
+
+        $this->assertStringNotContainsString('id="musicToggle"', $content);
+    }
+
+    public function test_darksweet_uses_core_music_player_after_opening_cover(): void
+    {
+        $data = $this->createData('tema.darksweet.darksweet');
+        $this->createSound($data, 'https://www.youtube.com/embed/dQw4w9WgXcQ?start=10', 30);
+
+        $response = $this->get($this->visitSlug($data));
+        $content = (string) $response->getContent();
+
+        $response->assertOk();
+        $this->assertStringContainsString('id="musicToggle"', $content);
+        $this->assertStringContainsString('id="bgMusicFrame"', $content);
+        $this->assertStringContainsString('data-embed="https://www.youtube.com/embed/dQw4w9WgXcQ?start=30"', $content);
+        $this->assertStringNotContainsString('id="videoFrame"', $content);
+        $this->assertStringNotContainsString('start: 0', $content);
     }
 
     public function test_music_themes_render_direct_audio_url_without_storage_prefix(): void
