@@ -20,16 +20,11 @@
             </div>
             <div class="modal-body">
 
-                <iframe id="videoFrame" width="100%" height="315" src=""
-                    data-video-url="@if ($data->sound?->isActive) {{ $data->sound?->sound }} @endif"
-                    data-video-start="@if ($data->sound?->isActive) {{ $data->sound?->start }} @endif"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 <!-- Toggle Play/Pause button -->
                 <div class="mt-3 text-center d-flex justify-content-center">
-                    <button id="toggleButton" class="btn custom-toggle-btn rounded-circle">
-                        <i class="fa-solid fa-pause"></i>
+                    <button id="musicToggle" type="button" aria-label="Play / Pause"
+                        class="btn custom-toggle-btn rounded-circle">
+                        <i class="fa-solid fa-music"></i>
                     </button>
                 </div>
             </div>
@@ -43,3 +38,9 @@
         </div>
     </div>
 </div>
+
+{{-- Tampilkan ikon play existing untuk state berhenti milik core. --}}
+<style>
+    #musicToggle .fa-music::before { content: '\f04b'; }
+</style>
+@include('tema.partials.music', ['data' => $data])

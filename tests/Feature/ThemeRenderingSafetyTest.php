@@ -426,6 +426,9 @@ class ThemeRenderingSafetyTest extends TestCase
             'darksweet' => 'tema.darksweet.darksweet',
             'darkpre' => 'tema.darkpre.darkpre',
             'whitepre' => 'tema.whitepre.whitepre',
+            'flowerone' => 'tema.flowerone.flowerone',
+            'standtheme' => 'tema.standtheme.standtheme',
+            'spiderman' => 'tema.spiderman.ultah-induk',
             'deepone' => 'tema.deepone',
             'deepone-pink' => 'tema.deepone-pink',
             'logangold' => 'tema.logangold',
@@ -446,7 +449,7 @@ class ThemeRenderingSafetyTest extends TestCase
     public function test_music_themes_render_when_sound_missing_or_inactive(): void
     {
         foreach ($this->musicThemePaths() as $name => $path) {
-            $data = $this->createData($path);
+            $data = $this->createData($path, true, $name === 'spiderman' ? 'birthday' : 'wedding');
             $response = $this->get($this->visitSlug($data));
             $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render tanpa sound: " . $response->getContent());
             $this->assertMusicPlayerIsInactive($name, (string) $response->getContent());
@@ -455,15 +458,24 @@ class ThemeRenderingSafetyTest extends TestCase
             $response = $this->get($this->visitSlug($data));
             $this->assertSame(200, $response->getStatusCode(), "{$name} gagal render dengan sound nonaktif: " . $response->getContent());
             $this->assertMusicPlayerIsInactive($name, (string) $response->getContent());
+
+            foreach (['null', ''] as $source) {
+                $data->sound()->update(['sound' => $source, 'isActive' => true]);
+                $response = $this->get($this->visitSlug($data));
+                $response->assertOk();
+                $this->assertMusicPlayerIsInactive($name, (string) $response->getContent());
+            }
         }
     }
 
     protected function assertMusicPlayerIsInactive(string $name, string $content): void
     {
-        if (in_array($name, ['darksweet', 'darkpre', 'whitepre'], true)) {
+        $this->assertStringNotContainsString('id="bgMusic"', $content);
+        $this->assertStringNotContainsString('id="bgMusicFrame"', $content);
+        $this->assertStringNotContainsString('id="videoFrame"', $content);
+
+        if (in_array($name, ['darksweet', 'darkpre', 'whitepre', 'flowerone', 'standtheme', 'spiderman'], true)) {
             $this->assertStringContainsString('id="musicToggle"', $content);
-            $this->assertStringNotContainsString('id="bgMusic"', $content);
-            $this->assertStringNotContainsString('id="bgMusicFrame"', $content);
 
             return;
         }
@@ -509,7 +521,7 @@ class ThemeRenderingSafetyTest extends TestCase
     {
         foreach ([0, 10, 30, 60] as $start) {
             foreach ($this->musicThemePaths() as $name => $path) {
-                $data = $this->createData($path);
+                $data = $this->createData($path, true, $name === 'spiderman' ? 'birthday' : 'wedding');
                 $this->createSound($data, 'https://cdn.example.com/lagu.mp3', $start);
 
                 $response = $this->get($this->visitSlug($data));
@@ -527,7 +539,7 @@ class ThemeRenderingSafetyTest extends TestCase
     public function test_music_themes_use_storage_url_for_local_audio_path(): void
     {
         foreach ($this->musicThemePaths() as $name => $path) {
-            $data = $this->createData($path);
+            $data = $this->createData($path, true, $name === 'spiderman' ? 'birthday' : 'wedding');
             $this->createSound($data, 'musik/lagu.mp3', 30);
 
             $response = $this->get($this->visitSlug($data));
@@ -543,7 +555,7 @@ class ThemeRenderingSafetyTest extends TestCase
     public function test_music_themes_do_not_put_youtube_embed_url_into_audio_tag(): void
     {
         foreach ($this->musicThemePaths() as $name => $path) {
-            $data = $this->createData($path);
+            $data = $this->createData($path, true, $name === 'spiderman' ? 'birthday' : 'wedding');
             $this->createSound($data, 'https://www.youtube.com/embed/dQw4w9WgXcQ', 0);
 
             $response = $this->get($this->visitSlug($data));
@@ -560,6 +572,7 @@ class ThemeRenderingSafetyTest extends TestCase
     {
         $sources = [
             'youtu.be' => ['https://youtu.be/dQw4w9WgXcQ', 0],
+            'embed-with-start-reset-to-zero' => ['https://www.youtube.com/embed/dQw4w9WgXcQ?start=60', 0],
             'watch' => ['https://www.youtube.com/watch?v=dQw4w9WgXcQ', 10],
             'embed-with-start' => ['https://www.youtube.com/embed/dQw4w9WgXcQ?start=10', 30],
             'watch-with-start' => ['https://www.youtube.com/watch?v=dQw4w9WgXcQ&start=10', 60],
@@ -567,7 +580,7 @@ class ThemeRenderingSafetyTest extends TestCase
 
         foreach ($sources as $sourceName => [$source, $start]) {
             foreach ($this->musicThemePaths() as $name => $path) {
-                $data = $this->createData($path);
+                $data = $this->createData($path, true, $name === 'spiderman' ? 'birthday' : 'wedding');
                 $this->createSound($data, $source, $start);
 
                 $response = $this->get($this->visitSlug($data));
@@ -587,6 +600,71 @@ class ThemeRenderingSafetyTest extends TestCase
                 }
             }
         }
+    }
+
+    public static function remainingMusicThemes(): array
+    {
+        return [
+            'flowerone' => ['tema.flowerone.flowerone', 'tema/flowerone/js/openCover.js', 'wedding'],
+            'standtheme' => ['tema.standtheme.standtheme', 'tema/standtheme/js/modal.js', 'wedding'],
+            'spiderman' => ['tema.spiderman.ultah-induk', 'tema/spiderman/src/js/audio.js', 'birthday'],
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('remainingMusicThemes')]
+    public function test_remaining_themes_connect_cover_and_controls_to_core_music(string $path, string $script, string $eventType): void
+    {
+        $data = $this->createData($path, true, $eventType);
+        $this->createSound($data, 'https://www.youtube.com/embed/dQw4w9WgXcQ?start=10', 30);
+
+        $response = $this->get($this->visitSlug($data));
+        $response->assertOk();
+        $content = (string) $response->getContent();
+        $javascript = file_get_contents(public_path($script));
+
+        // Core binds immediately: the existing control must precede its only engine.
+        $this->assertSame(1, substr_count($content, 'id="musicToggle"'));
+        $this->assertSame(1, substr_count($content, 'id="bgMusicFrame"'));
+        $this->assertSame(1, substr_count($content, 'window.musicPlayer ='));
+        $this->assertLessThan(strpos($content, 'window.musicPlayer ='), strpos($content, 'id="musicToggle"'));
+        $this->assertStringContainsString(asset($script), $content);
+        $this->assertStringContainsString('window.musicPlayer?.play()', $javascript);
+
+        foreach (['id="videoFrame"', 'data-video-url=', 'data-video-start=', 'c2rgrqEFVKc'] as $legacy) {
+            $this->assertStringNotContainsString($legacy, $content);
+        }
+        foreach (['videoFrame', 'youtube.com', 'youtu.be', 'isPlaying', '.src ='] as $legacy) {
+            $this->assertStringNotContainsString($legacy, $javascript);
+        }
+
+        if ($path !== 'tema.standtheme.standtheme') {
+            $this->assertStringContainsString("#musicToggle .fa-music::before { content: '\\f04b'; }", $content);
+            $this->assertDoesNotMatchRegularExpression('/class="[^"]*fa-play[^"]*fa-pause|class="[^"]*fa-pause[^"]*fa-play/', $content);
+        }
+
+        if ($path === 'tema.flowerone.flowerone') {
+            $this->assertStringNotContainsString(asset('tema/flowerone/js/cover.js'), $content);
+        }
+    }
+
+    public function test_flowerone_demo_keeps_its_standalone_music_controls(): void
+    {
+        $content = view('temademo.flowerone')->render();
+        $javascript = file_get_contents(public_path('tema/flowerone/js/cover.js'));
+
+        $this->assertStringContainsString(asset('tema/flowerone/js/cover.js'), $content);
+        $this->assertStringNotContainsString(asset('tema/flowerone/js/openCover.js'), $content);
+        foreach (['openCover', 'videoFrame', 'toggleButton'] as $id) {
+            $this->assertStringContainsString('id="' . $id . '"', $content);
+            $this->assertStringContainsString("document.getElementById('{$id}')", $javascript);
+        }
+        $this->assertStringNotContainsString('window.musicPlayer', $javascript);
+        $this->assertStringContainsString("openCover.addEventListener('click'", $javascript);
+        $this->assertStringContainsString("toggleButton.addEventListener('click'", $javascript);
+        $this->assertStringContainsString('videoFrame.src = "https://www.youtube.com/embed/VDbVXpJWA-k', $javascript);
+        $this->assertStringContainsString('autoplay=1', $javascript);
+        $this->assertStringContainsString('fa-pause', $javascript);
+        $this->assertStringContainsString('fa-play', $javascript);
     }
 
     public function test_quinceanera_theme_is_registered_for_birthday_event_type(): void
