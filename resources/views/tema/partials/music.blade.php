@@ -46,6 +46,7 @@
             let frameLoaded = false;
             const audioStart = audio ? parseFloat(audio.getAttribute('data-start') || '0') || 0 : 0;
             let pendingAudioPlay = false;
+            let initialAudioSeekApplied = audioStart === 0;
 
             function setPlaying(state) {
                 playing = state;
@@ -76,6 +77,12 @@
                 audio.currentTime = Math.min(audioStart, Math.max(0, audio.duration - 0.1));
             }
 
+            function applyInitialAudioSeek() {
+                if (initialAudioSeekApplied) return;
+                seekAudioToStart();
+                initialAudioSeekApplied = true;
+            }
+
             function startAudioPlayback() {
                 const result = audio.play();
                 if (result && typeof result.then === 'function') {
@@ -102,11 +109,12 @@
                     pendingAudioPlay = true;
                     return;
                 }
-                seekAudioToStart();
+                applyInitialAudioSeek();
                 startAudioPlayback();
             }
 
             function pause() {
+                pendingAudioPlay = false;
                 if (frame) {
                     postCommand('pauseVideo');
                 } else if (audio) {
@@ -128,7 +136,7 @@
             // Hormati nilai start: mulai dari detik yang dipilih dan pertahankan loop dari titik tersebut.
             if (audio) {
                 audio.addEventListener('loadedmetadata', () => {
-                    seekAudioToStart();
+                    applyInitialAudioSeek();
                     if (pendingAudioPlay) {
                         pendingAudioPlay = false;
                         startAudioPlayback();
