@@ -339,6 +339,56 @@ class ThemeRenderingSafetyTest extends TestCase
         $this->assertStringContainsString('https://www.youtube.com/embed/sparse1', $response->getContent());
     }
 
+    /**
+     * Theme yang merupakan tema ulang tahun (birthday).
+     */
+    protected function birthdayThemePaths(): array
+    {
+        return [
+            'spiderman' => 'tema.spiderman.ultah-induk',
+            'quinceanera' => 'tema.quinceanera',
+        ];
+    }
+
+    public function test_all_twelve_themes_render_all_gallery_photos(): void
+    {
+        $birthday = $this->birthdayThemePaths();
+
+        $cases = [
+            '0 foto' => [],
+            '1 foto' => ['gallery/a.jpg'],
+            '2 foto' => ['gallery/a.jpg', 'gallery/b.jpg'],
+            '4 foto' => ['gallery/a.jpg', 'gallery/b.jpg', 'gallery/c.jpg', 'gallery/d.jpg'],
+        ];
+
+        foreach ($cases as $label => $photos) {
+            foreach ($this->themePaths() as $name => $path) {
+                $eventType = isset($birthday[$name]) ? 'birthday' : 'wedding';
+                $data = $this->createData($path, true, $eventType);
+                $this->createCompleteRelations($data);
+
+                // Kendalikan jumlah foto gallery yang tepat.
+                Model::unguard();
+                Galery::where('data_id', $data->id)->delete();
+                foreach ($photos as $photo) {
+                    Galery::create(['data_id' => $data->id, 'poto' => $photo, 'video' => null]);
+                }
+                Model::reguard();
+
+                $response = $this->get($this->visitSlug($data));
+                $content = (string) $response->getContent();
+
+                $this->assertSame(200, $response->getStatusCode(), "Theme {$name} gagal render dengan {$label}: {$content}");
+                $this->assertStringNotContainsString('Undefined array key', $content, "Theme {$name} memunculkan undefined index dengan {$label}.");
+                $this->assertStringNotContainsString('Attempt to read property', $content, "Theme {$name} memunculkan property error dengan {$label}.");
+
+                foreach ($photos as $photo) {
+                    $this->assertStringContainsString('storage/' . $photo, $content, "Theme {$name} tidak merender {$photo} pada {$label}.");
+                }
+            }
+        }
+    }
+
     public function test_theme_store_and_update_reject_invalid_view_paths(): void
     {
         $category = Category::factory()->create();
