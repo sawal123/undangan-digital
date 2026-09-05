@@ -44,6 +44,9 @@
             const icon = toggleBtn ? toggleBtn.querySelector('i') : null;
             let playing = false;
             let frameLoaded = false;
+            const audioStart = audio ? parseFloat(audio.getAttribute('data-start') || '0') || 0 : 0;
+            let pendingAudioPlay = false;
+            let initialAudioSeekApplied = audioStart === 0;
 
             function setPlaying(state) {
                 playing = state;
@@ -69,6 +72,26 @@
                 );
             }
 
+            function seekAudioToStart() {
+                if (!audio || audioStart <= 0 || !Number.isFinite(audio.duration)) return;
+                audio.currentTime = Math.min(audioStart, Math.max(0, audio.duration - 0.1));
+            }
+
+            function applyInitialAudioSeek() {
+                if (initialAudioSeekApplied) return;
+                seekAudioToStart();
+                initialAudioSeekApplied = true;
+            }
+
+            function startAudioPlayback() {
+                const result = audio.play();
+                if (result && typeof result.then === 'function') {
+                    result.then(() => setPlaying(true)).catch(() => setPlaying(false));
+                } else {
+                    setPlaying(true);
+                }
+            }
+
             function play() {
                 if (frame) {
                     if (!frameLoaded) {
@@ -82,15 +105,16 @@
                     return;
                 }
                 if (!audio) return;
-                const result = audio.play();
-                if (result && typeof result.then === 'function') {
-                    result.then(() => setPlaying(true)).catch(() => setPlaying(false));
-                } else {
-                    setPlaying(true);
+                if (audioStart > 0 && audio.readyState < HTMLMediaElement.HAVE_METADATA) {
+                    pendingAudioPlay = true;
+                    return;
                 }
+                applyInitialAudioSeek();
+                startAudioPlayback();
             }
 
             function pause() {
+                pendingAudioPlay = false;
                 if (frame) {
                     postCommand('pauseVideo');
                 } else if (audio) {
@@ -111,18 +135,17 @@
 
             // Hormati nilai start: mulai dari detik yang dipilih dan pertahankan loop dari titik tersebut.
             if (audio) {
-                const start = parseFloat(audio.getAttribute('data-start') || '0') || 0;
-                if (start > 0) {
-                    let seeked = false;
-                    audio.addEventListener('loadedmetadata', () => {
-                        if (!seeked && audio.duration > start) {
-                            seeked = true;
-                            audio.currentTime = start;
-                        }
-                    });
+                audio.addEventListener('loadedmetadata', () => {
+                    applyInitialAudioSeek();
+                    if (pendingAudioPlay) {
+                        pendingAudioPlay = false;
+                        startAudioPlayback();
+                    }
+                });
+                if (audioStart > 0) {
                     audio.addEventListener('timeupdate', () => {
                         if (audio.duration && audio.currentTime >= audio.duration - 0.4) {
-                            audio.currentTime = start;
+                            seekAudioToStart();
                         }
                     });
                 }
