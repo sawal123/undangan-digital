@@ -12,11 +12,15 @@ if (musicIcon) {
         }
     }).observe(musicIcon, { attributes: true, attributeFilter: ["class"] });
 
-    document.getElementById("musicToggle")?.addEventListener("click", () => {
-        if (musicIcon.classList.contains("fa-play")) {
-            musicIcon.classList.remove("fa-play");
-        }
-    }, true);
+    document.getElementById("musicToggle")?.addEventListener(
+        "click",
+        () => {
+            if (musicIcon.classList.contains("fa-play")) {
+                musicIcon.classList.remove("fa-play");
+            }
+        },
+        true,
+    );
 }
 
 if (openCoverButton) {
