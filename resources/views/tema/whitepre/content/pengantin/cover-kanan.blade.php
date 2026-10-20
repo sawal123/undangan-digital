@@ -1,31 +1,32 @@
-<div class="h-full w-full   relative">
-    <div class="w-full h-full z-30 brightness-75"
-      style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? '')) }}'); background-size: cover; background-position: center;"></div>
+<section id="whitepre-hero" class="whitepre-hero" aria-label="Pembuka undangan">
+    <div class="whitepre-hero-media"
+        style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}');"
+        aria-hidden="true"></div>
 
-    <div class="w-full z-50 absolute top-3">
-      <h3 class="text-center font-normal text-2xl pt-10 text-shadow">{{$data->setting?->acara ?? 'The Wedding'}}</h3>
-      <h1 class="mt-5 text-center text-[40px] font-light text-shadow">{{ $data->pria?->nama_panggilan ?? '' }} <span
-          class=" text-[25px]">&</span> {{ $data->wanita?->nama_panggilan ?? '' }}</h1>
-      @php
-          $firstAcaraDate = ($data->acara[0] ?? null)?->date;
-      @endphp
-      <p class="text-center text-[20px] text-shadow">{{ $firstAcaraDate ? date('d', strtotime($firstAcaraDate)) : '10' }}
-        {{ $firstAcaraDate ? date('m', strtotime($firstAcaraDate)) : '10' }}
-        {{ $firstAcaraDate ? date('Y', strtotime($firstAcaraDate)) : '2024' }}</p>
-    </div>
-    <!-- svg -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-full absolute bottom-0 lg:hidden block" viewBox="0 0 1440 320"><path fill="#fff7ed" fill-opacity="1" d="M0,32L48,58.7C96,85,192,139,288,138.7C384,139,480,85,576,80C672,75,768,117,864,160C960,203,1056,245,1152,234.7C1248,224,1344,160,1392,128L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
-    <!-- svg -->
+    <div class="whitepre-hero-content">
+        <p class="whitepre-hero-eyebrow" data-aos="fade-down">{{ $data->setting?->acara ?? 'The Wedding' }}</p>
+        <h1 class="whitepre-hero-title" data-aos="fade-up" data-aos-delay="120">
+            {{ $data->pria?->nama_panggilan ?? '' }}
+            <span class="text-[25px]">&amp;</span>
+            {{ $data->wanita?->nama_panggilan ?? '' }}
+        </h1>
 
-    <div class="absolute inset-x-0 flex flex-col items-center bottom-20">
-      <!-- Mouse -->
-      <div class="w-8 h-14 border-2 border-white rounded-full relative">
-        <!-- Wheel -->
-        <div
-          class="w-2 h-3 bg-orange-50 rounded-full absolute top-3 left-1/2 transform -translate-x-1/2 animate-scroll">
-        </div>
-      </div>
-      <!-- Arrow -->
-      <div class="mt-4 text-sm text-white">Scroll Kebawah</div>
+        @php
+            $firstAcaraDate = ($data->acara[0] ?? null)?->date;
+        @endphp
+        <p class="whitepre-hero-date" data-aos="fade-up" data-aos-delay="220">
+            {{ $firstAcaraDate ? date('d', strtotime($firstAcaraDate)) : '10' }}
+            . {{ $firstAcaraDate ? date('m', strtotime($firstAcaraDate)) : '10' }}
+            . {{ $firstAcaraDate ? date('Y', strtotime($firstAcaraDate)) : '2024' }}
+        </p>
     </div>
-  </div>
+
+    <div class="whitepre-scroll-cue" aria-hidden="true">
+        <div class="whitepre-scroll-mouse"></div>
+        <span>Scroll ke bawah</span>
+    </div>
+
+    <svg class="whitepre-wave" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="#fff8ef" d="M0,64L60,80C120,96,240,128,360,122.7C480,117,600,75,720,80C840,85,960,139,1080,154.7C1200,171,1320,149,1380,138.7L1440,128L1440,320L0,320Z"></path>
+    </svg>
+</section>

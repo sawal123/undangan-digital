@@ -1,9 +1,9 @@
-<div class=" lg:w-3/5 md:h-screen lg:fixed z-20">
+<aside class="whitepre-left-panel lg:w-3/5 md:h-screen lg:fixed z-20" aria-label="Panel foto undangan">
     <!-- opening  -->
-    <div class="z-50 w-full h-full brightness-50 contrast-100	saturate-100"
+    <div class="whitepre-left-image z-50 w-full h-full brightness-50 contrast-100 saturate-100"
         style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}'); background-size: cover; background-position: center;">
     </div>
-    <h1 class="absolute bottom-12 left-14 text-[50px] text-white  font-great_vibes hidden lg:block">
+    <h1 class="whitepre-left-title absolute bottom-12 left-14 text-[50px] text-white font-great_vibes hidden lg:block">
         {{ $data->wanita?->nama_panggilan ?? '' }} <span class=" text-[25px]"> & </span>
         {{ $data->pria?->nama_panggilan ?? '' }}</h1>
 
@@ -16,8 +16,8 @@
     <!-- kado -->
 
     <!-- Navbar -->
-    <div class="navbar hidden lg:block lg:absolute lg:right-8 lg:top-72 lg:w-9 h-auto bg-orange-50 rounded-full shadow-lg z-40"
-        id="navbar">
+    <nav class="whitepre-side-nav navbar hidden lg:block lg:absolute lg:right-8 lg:top-72 lg:w-9 h-auto bg-orange-50 rounded-full shadow-lg z-40"
+        id="desktop-navbar">
         <div class=" py-3 relative">
             <div class="flex flex-col justify-center items-center w-full text-pink-800 text-sm gap-3">
                 <a class="nav-link  couple flex items-center justify-start text-pink-800 hover:bg-orange-50 hover:text-black px-2 py-1 rounded-full transition duration-200"
@@ -48,7 +48,7 @@
                 </a>
             </div>
         </div>
-    </div>
+    </nav>
     <!-- Navbar -->
 
-</div>
+</aside>

@@ -37,7 +37,7 @@ function setActive(link) {
     // Menambahkan class aktif hanya pada link yang sedang aktif
     for (let i = 0; i < link.length; i++) {
         const currentSpan = link[i].querySelector("span");
-        if (currentSpan) currentSpan.classList.remove("hidden"); // Tampilkan span
+        if (currentSpan) currentSpan.classList.add("hidden"); // Navbar menggunakan ikon-only
         link[i].classList.add("bg-orange-200", "text-black", "rounded-full"); // Tambahkan kelas aktif
         link[i].classList.remove("text-orange-200");
     }
@@ -45,7 +45,8 @@ function setActive(link) {
 
 function isInViewport(element) {
     const rect = element.getBoundingClientRect();
-    return rect.top >= -5 && rect.bottom <= window.innerHeight;
+    const focusLine = window.innerHeight * 0.42;
+    return rect.top <= focusLine && rect.bottom >= focusLine;
 }
 
 // Event handler onscroll untuk window

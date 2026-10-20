@@ -1,122 +1,95 @@
-<div class="bg-orange-50 relative pt-10 pb-16 text-pink-800  section" id="date">
-    <p class="text-center my-5 p-2">{{ $data->teksUndangan?->pembuka ?? '' }}</p>
-    <!-- Judul -->
+@php
+    $acaraAkad = $data->acara?->get(1) ?? $data->acara?->first();
+    $acaraAkadDate = $acaraAkad?->date;
+@endphp
 
-    <h1 class="text-center text-[40px] z-50 relative font-semibold mb-6 ">
-        Acara Akan Diselenggarakan
-    </h1>
-    <!-- Gambar Hiasan Kiri -->
-    <div class="left-0 absolute top-10 inset-x-0 z-10">
-        <img src="{{ asset('tema/darkpre/src/img/bunga.png') }}" alt="Hiasan Bunga" class="w-20 lg:w-24  object-center">
-    </div>
-    <!-- Hari -->
-    <div class="text-center z-50 mt-4 relative ">
-        <div style="font-size: 70px" class=" font-bold" id="days">26</div>
-        <div class="text-[30px] font-semibold">HARI</div>
-    </div>
-    <!-- Timer -->
-    <div class="flex gap-2 flex-wrap justify-center text-center z-50 items-center mt-10 ">
-        <!-- Hours -->
-        <div class="flex flex-col items-center" data-aos="zoom-in-right" data-aos-duration="2000">
-            <h2 class="text-[20px] font-bold" id="hours">21</h2>
-            <p class="text-[12px] font-semibold uppercase">Hours</p>
+<section id="date" class="whitepre-section" aria-label="Hitung mundur acara">
+    <h2 class="whitepre-section-heading" data-aos="fade-up">Acara Akan Diselenggarakan</h2>
+    <p class="whitepre-section-lead">{{ $data->teksUndangan?->pembuka ?? '' }}</p>
+
+    <div class="whitepre-countdown" aria-label="Hitung mundur">
+        <div class="whitepre-countdown-item" data-aos="zoom-in">
+            <span id="days" class="whitepre-countdown-value">00</span>
+            <span class="whitepre-countdown-label">Hari</span>
         </div>
-        <!-- Divider -->
-        <div class="h-16 w-px bg-pink-800"></div>
-
-        <!-- Minutes -->
-        <div class="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="2000">
-            <h2 class="text-[20px]  font-bold" id="minutes">50</h2>
-            <p class=" text-[12px] font-semibold uppercase">Minutes</p>
+        <div class="whitepre-countdown-item" data-aos="zoom-in" data-aos-delay="100">
+            <span id="hours" class="whitepre-countdown-value">00</span>
+            <span class="whitepre-countdown-label">Jam</span>
         </div>
-
-        <!-- Divider -->
-        <div class="h-16 w-px bg-pink-800"></div>
-
-        <!-- Seconds -->
-        <div class="flex flex-col items-center" data-aos="zoom-in-left" data-aos-duration="2000">
-            <h2 class="text-[20px]  font-bold" id="seconds">5</h2>
-            <p class=" text-[12px] font-semibold uppercase">Seconds</p>
+        <div class="whitepre-countdown-item" data-aos="zoom-in" data-aos-delay="200">
+            <span id="minutes" class="whitepre-countdown-value">00</span>
+            <span class="whitepre-countdown-label">Menit</span>
+        </div>
+        <div class="whitepre-countdown-item" data-aos="zoom-in" data-aos-delay="300">
+            <span id="seconds" class="whitepre-countdown-value">00</span>
+            <span class="whitepre-countdown-label">Detik</span>
         </div>
     </div>
 
-    <!-- Tanggal -->
-    <div class="text-center text-[12px] text-pink-800 " id="countdown" data-aos="zoom-in" data-aos-duration="2500">
-        <div>
-            @php
-                $acaraAkad = $data->acara?->get(1) ?? $data->acara?->first();
-                $acaraAkadDate = $acaraAkad?->date;
-            @endphp
-            @if ($acaraAkadDate)
-                {{ date('d', strtotime($acaraAkadDate)) }},
-                {{ \Carbon\Carbon::parse($acaraAkadDate)->translatedFormat('l') }}
-                {{ \Carbon\Carbon::parse($acaraAkadDate)->translatedFormat('F Y') }}
-            @else
-                Tanggal tidak tersedia
-            @endif
-        </div>
-    </div>
+    <p id="countdown" class="whitepre-date-line" data-aos="fade-up">
+        @if ($acaraAkadDate)
+            {{ date('d', strtotime($acaraAkadDate)) }},
+            {{ \Carbon\Carbon::parse($acaraAkadDate)->translatedFormat('l') }}
+            {{ \Carbon\Carbon::parse($acaraAkadDate)->translatedFormat('F Y') }}
+        @else
+            Tanggal tidak tersedia
+        @endif
+    </p>
 
-    <!-- button -->
-    <div class="text-center pt-5 ">
-        <a id="googleCalendarBtn" target="_blank">
-            <button class="rounded-full w-auto border border-orange-200 py-1 px-2 text-[13px]"><i
-                    class="fa-solid fa-calendar-days mr-2"></i>Simpan acara ke
-                kalender</button>
+    <div class="mt-6 text-center">
+        <a id="googleCalendarBtn" target="_blank" rel="noopener" class="whitepre-calendar-button">
+            <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+            Simpan acara ke kalender
         </a>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let btn = document.getElementById("googleCalendarBtn");
-                @if (isset($acara) && $acara && $acara->date)
-                let eventTitle = "Pernikahan Kami";
-                let eventDateStart = "{{ date('Ymd', strtotime($acara->date)) }}T100000Z"; // Sesuaikan jam UTC
-
-                let eventDetails = "Jangan lewatkan momen spesial kami!";
-                let eventLocation = "{{ $acara->alamat ?? '' }}";
-
-                let googleCalendarUrl =
-                    `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${eventDateStart}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}&sf=true&output=xml`;
-
-                if (btn) btn.href = googleCalendarUrl;
-                @endif
-            });
-        </script>
     </div>
-</div>
+</section>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
-        let eventDate = new Date(
-                "{{ ($data->acara?->get(1) ?? $data->acara?->get(0))?->date ? date('Y-m-d', strtotime(($data->acara?->get(1) ?? $data->acara?->get(0))->date)) : '2024-10-10' }}"
-            )
-            .getTime();
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarButton = document.getElementById('googleCalendarBtn');
+        const eventDateValue = @json($acaraAkadDate ? date('Y-m-d', strtotime($acaraAkadDate)) : null);
 
-        // Update countdown setiap detik
-        let countdown = setInterval(function() {
-            let now = new Date().getTime();
-            let distance = eventDate - now;
+        if (calendarButton && eventDateValue) {
+            const eventDateStart = eventDateValue.replaceAll('-', '') + 'T100000Z';
+            const eventTitle = @json($acaraAkad?->nama_acara ?? 'Pernikahan Kami');
+            const eventDetails = @json('Jangan lewatkan momen spesial kami!');
+            const eventLocation = @json($acaraAkad?->alamat ?? '');
+            calendarButton.href =
+                `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${eventDateStart}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}&sf=true&output=xml`;
+        }
 
-            // Perhitungan waktu
-            let hari = Math.floor(distance / (1000 * 60 * 60 * 24));
-            let jam = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let menit = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            let detik = Math.floor((distance % (1000 * 60)) / 1000);
+        const eventDate = eventDateValue ? new Date(`${eventDateValue}T00:00:00`).getTime() : null;
+        const elements = {
+            days: document.getElementById('days'),
+            hours: document.getElementById('hours'),
+            minutes: document.getElementById('minutes'),
+            seconds: document.getElementById('seconds'),
+            message: document.getElementById('countdown'),
+        };
 
-            // Tampilkan hasil di elemen dengan id yang sesuai
-            document.getElementById("days").innerText = hari.toString().padStart(2, '0');
-            document.getElementById("hours").innerText = jam.toString().padStart(2, '0');
-            document.getElementById("minutes").innerText = menit.toString().padStart(2, '0');
-            document.getElementById("seconds").innerText = detik.toString().padStart(2, '0');
+        if (!eventDate || Object.values(elements).some((element) => !element)) return;
 
-            // Jika waktu habis
-            if (distance < 0) {
-                clearInterval(countdown);
-                document.getElementById("days").innerText = "00";
-                document.getElementById("hours").innerText = "00";
-                document.getElementById("minutes").innerText = "00";
-                document.getElementById("seconds").innerText = "00";
+        let countdownInterval;
+        const updateCountdown = () => {
+            const distance = eventDate - Date.now();
+            const values = {
+                days: Math.max(0, Math.floor(distance / (1000 * 60 * 60 * 24))),
+                hours: Math.max(0, Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))),
+                minutes: Math.max(0, Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))),
+                seconds: Math.max(0, Math.floor((distance % (1000 * 60)) / 1000)),
+            };
+
+            Object.entries(values).forEach(([key, value]) => {
+                elements[key].textContent = String(value).padStart(2, '0');
+            });
+
+            if (distance <= 0) {
+                elements.message.textContent = 'Hari bahagia telah tiba.';
+                clearInterval(countdownInterval);
             }
-        }, 1000);
+        };
+
+        updateCountdown();
+        countdownInterval = setInterval(updateCountdown, 1000);
     });
 </script>

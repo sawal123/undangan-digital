@@ -1,30 +1,37 @@
-<div class="bg-orange-50 relative text-pink-800 w-full h-full lg:pt-5 pt-16"
-    style="background-image: url('{{ asset('tema/whitepre/src/img/border.png') }}'); background-position: center; background-size:cover; ">
+<section id="location" class="whitepre-section" aria-label="Lokasi acara"
+    style="background-image: url('{{ asset('tema/whitepre/src/img/border.png') }}'); background-position: center; background-size: cover;">
+    <h2 class="whitepre-section-heading" data-aos="fade-up">Detail Acara</h2>
 
-    @foreach ($data->acara as $item)
-        <div class="flex flex-col items-center justify-center w-full space-y-3 font-normal text-[15px] lg:text-[10px] ">
-            <h1 class="flex justify-center text-[50px] z-50 font-semibold pt-5  ">
-                {{ $item->nama_acara }}</h1>
-            <div>
-                @if ($item->date)
-                    {{ date('d', strtotime($item->date)) }},
-                    {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }}
-                    {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }}
-                @else
-                    Tanggal tidak tersedia
+    <div class="whitepre-event-list">
+        @foreach ($data->acara as $item)
+            <article class="whitepre-event-card" data-aos="fade-up">
+                <h2>{{ $item->nama_acara }}</h2>
+                <div class="whitepre-event-details">
+                    <div>
+                        @if ($item->date)
+                            {{ date('d', strtotime($item->date)) }},
+                            {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }}
+                            {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }}
+                        @else
+                            Tanggal tidak tersedia
+                        @endif
+                    </div>
+                    <div>pukul {{ $item->jam_start }} - {{ $item->jam_end }} {{ $item->zona_waktu }}</div>
+                    @if ($item->alamat)
+                        <div>{{ $item->alamat }}</div>
+                    @endif
+                    @if ($item->vanue)
+                        <div>{{ $item->vanue }}</div>
+                    @endif
+                </div>
+
+                @if ($item->maps)
+                    <a href="{{ $item->maps }}" target="_blank" rel="noopener" class="whitepre-map-button mt-5">
+                        <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+                        Lihat lokasi
+                    </a>
                 @endif
-            </div>
-            <div>pukul {{ $item->jam_start }} - {{ $item->jam_end }} {{ $item->zona_waktu }}</div>
-            <div>{{ $item->alamat }}</div>
-            <div>{{ $item->vanue }}</div>
-        </div>
-        <!-- button -->
-        <div class="text-center pt-5 ">
-            <a href="{{ $item->maps }}"
-                class="rounded-full w-11 border border-orange-200 text-[15px] lg:text-[10px]  p-2"><i
-                    class="fa-solid fa-map-location-dot mr-2"></i>lihat lokasi</a>
-        </div>
-        {{-- <hr class="mx-2"> --}}
-    @endforeach
-
-</div>
+            </article>
+        @endforeach
+    </div>
+</section>
