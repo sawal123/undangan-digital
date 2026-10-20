@@ -1,5 +1,5 @@
-<div class="min-h-screen scroll-smooth bg-[#fffaf7] font-sans text-slate-800">
-    <header class="sticky top-0 z-30 border-b border-amber-100 bg-white/90 shadow-sm backdrop-blur-md">
+<div data-landing-page class="min-h-screen scroll-smooth bg-[#fffaf7] font-sans text-slate-800">
+    <header class="landing-navbar sticky top-0 z-30 border-b border-white/60 bg-white/55 shadow-sm backdrop-blur-xl backdrop-saturate-150">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
             <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2">
                 <i class="fas fa-ring text-2xl text-amber-600"></i>
@@ -35,7 +35,7 @@
         </div>
 
         <div id="landingMobileMenu"
-            class="hidden border-t border-amber-100 bg-white px-5 py-3 text-slate-700 md:hidden">
+            class="hidden border-t border-white/60 bg-white/65 px-5 py-3 text-slate-700 backdrop-blur-xl md:hidden">
             <div class="flex flex-col gap-2">
                 <a href="#layanan" class="py-2 transition hover:text-amber-600"><i
                         class="fas fa-envelope-open-text w-6"></i> Layanan</a>
@@ -51,7 +51,7 @@
     </header>
 
     <main>
-        <section class="relative overflow-hidden bg-gradient-to-br from-[#fff5f0] to-[#ffe9e0]">
+        <section class="landing-hero relative overflow-hidden">
             <div class="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-amber-200/30 blur-3xl">
             </div>
             <div class="pointer-events-none absolute bottom-10 right-0 h-80 w-80 rounded-full bg-rose-200/30 blur-3xl">
@@ -59,7 +59,7 @@
 
             <div class="relative z-10 mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
                 <div class="flex flex-col items-center gap-12 lg:flex-row">
-                    <div class="flex-1 text-left   sm:text-center ">
+                    <div class="flex-1 text-left   sm:text-center " data-scroll-animate>
                         <div
                             class="mb-5 inline-flex items-center rounded-full border border-white/50 bg-white/70 px-4 py-1.5 text-sm font-medium text-amber-700 shadow-sm backdrop-blur-sm">
                             <i class="fas fa-mosque mr-2"></i> Wedding Digital Solution
@@ -93,12 +93,12 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-1 justify-center">
+                    <div class="flex flex-1 justify-center" data-scroll-animate>
                         <div class="relative w-72 md:w-96">
                             <div class="absolute inset-0 rounded-full bg-amber-300/20 blur-2xl"></div>
-                            <img src="https://placehold.co/600x500/FFF2EB/D4AF37?text=Undangan+Digital&font=playfair"
-                                alt="Preview undangan digital"
-                                class="relative w-full rounded-2xl border-4 border-white/80 object-cover shadow-2xl">
+                            <img src="{{ asset('images/landing/hero-undangan-online.png') }}"
+                                alt="Mockup undangan digital di smartphone"
+                                class="relative w-full object-contain drop-shadow-2xl">
                             <div
                                 class="absolute -bottom-5 -right-5 flex items-center gap-2 rounded-xl bg-white p-3 shadow-xl">
                                 <i class="fas fa-heart text-xl text-rose-500"></i>
@@ -112,7 +112,7 @@
 
         <section id="layanan" class="bg-white py-20">
             <div class="mx-auto max-w-7xl px-5 md:px-8">
-                <div class="mx-auto mb-14 max-w-3xl text-center">
+                <div class="mx-auto mb-14 max-w-3xl text-center" data-scroll-animate>
                     <h2 class="font-display text-3xl font-bold text-slate-800 md:text-4xl">Jasa Lengkap untuk Hari
                         Bahagia</h2>
                     <div class="mx-auto mt-4 h-1 w-24 rounded-full bg-amber-400"></div>
@@ -122,7 +122,8 @@
 
                 <div class="grid gap-8 md:grid-cols-3">
                     <article
-                        class="flex h-full flex-col rounded-2xl border border-amber-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl">
+                        class="flex h-full flex-col rounded-2xl border border-amber-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl"
+                        data-scroll-animate>
                         <div class="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-amber-100">
                             <i class="fas fa-globe text-3xl text-amber-600"></i>
                         </div>
@@ -140,7 +141,8 @@
                     </article>
 
                     <article
-                        class="flex h-full flex-col rounded-2xl border border-rose-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl">
+                        class="flex h-full flex-col rounded-2xl border border-rose-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl"
+                        data-scroll-animate>
                         <div class="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-rose-100">
                             <i class="fas fa-print text-3xl text-rose-600"></i>
                         </div>
@@ -158,7 +160,8 @@
                     </article>
 
                     <article
-                        class="flex h-full flex-col rounded-2xl border border-indigo-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl">
+                        class="flex h-full flex-col rounded-2xl border border-indigo-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl"
+                        data-scroll-animate>
                         <div class="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-indigo-100">
                             <i class="fas fa-film text-3xl text-indigo-500"></i>
                         </div>
@@ -180,7 +183,7 @@
 
         <section id="fitur" class="bg-[#fefaf8] py-20">
             <div class="mx-auto max-w-7xl px-5 md:px-8">
-                <div class="mb-14 text-center">
+                <div class="mb-14 text-center" data-scroll-animate>
                     <div
                         class="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white/80 px-4 py-1.5 text-sm font-semibold text-amber-700 shadow-sm">
                         <i class="fas fa-gem text-amber-500"></i> Keunggulan Premium
@@ -194,7 +197,8 @@
                 <div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ([['icon' => 'fa-infinity', 'title' => 'Aktif Selamanya', 'text' => 'Undangan web dan animasi tidak kedaluwarsa, akses seumur hidup.', 'color' => 'text-amber-600'], ['icon' => 'fa-music', 'title' => 'Bebas Music', 'text' => 'Pilih lagu favorit, atur playlist sendiri tanpa ribet.', 'color' => 'text-amber-600'], ['icon' => 'fa-hands-praying', 'title' => 'Ucapan & Doa', 'text' => 'Tamu bisa kirim doa dan ucapan langsung di undangan.', 'color' => 'text-amber-600'], ['icon' => 'fa-gift', 'title' => 'Kado', 'text' => 'Fitur kado online, transfer via bank dan e-wallet terintegrasi.', 'color' => 'text-amber-600'], ['icon' => 'fa-whatsapp', 'title' => 'Kirim WA', 'text' => 'Kirim undangan langsung ke WhatsApp tamu, praktis dan cepat.', 'color' => 'text-green-600', 'brand' => true], ['icon' => 'fa-images', 'title' => 'Galeri Foto & Video', 'text' => 'Unggah momen prewedding, video undangan, dan cerita cinta.', 'color' => 'text-amber-600']] as $feature)
                         <article
-                            class="flex items-start gap-4 rounded-xl bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-lg">
+                            class="flex items-start gap-4 rounded-xl bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-lg"
+                            data-scroll-animate>
                             <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#fdf0e9]">
                                 <i
                                     class="{{ $feature['brand'] ?? false ? 'fab' : 'fas' }} {{ $feature['icon'] }} text-2xl {{ $feature['color'] }}"></i>
@@ -212,7 +216,8 @@
         <section id="promo" class="relative overflow-hidden py-20">
             <div class="absolute inset-0 bg-gradient-to-r from-amber-50 via-rose-50 to-amber-50 opacity-70"></div>
             <div class="relative z-10 mx-auto max-w-7xl px-5 md:px-8">
-                <div class="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-amber-100 bg-white shadow-2xl">
+                <div class="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-amber-100 bg-white shadow-2xl"
+                    data-scroll-animate>
                     <div class="grid md:grid-cols-2">
                         <div class="p-8 md:p-10">
                             <div
@@ -267,7 +272,7 @@
 
     <section class="border-t border-amber-100 bg-white py-16">
         <div class="mx-auto max-w-7xl px-5 md:px-8">
-            <div class="mb-10 text-center">
+            <div class="mb-10 text-center" data-scroll-animate>
                 <div
                     class="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-sm font-semibold text-amber-700 shadow-sm">
                     <i class="fas fa-headset text-amber-500"></i> Hubungi Kami
@@ -280,7 +285,8 @@
             <div class="grid gap-6 md:grid-cols-3">
                 @if ($contact->whatsapp_link)
                     <a href="{{ $contact->whatsapp_link }}" target="_blank" rel="noopener noreferrer"
-                        class="flex h-full flex-col items-center rounded-2xl border border-amber-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl">
+                        class="flex h-full flex-col items-center rounded-2xl border border-amber-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl"
+                        data-scroll-animate>
                         <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100">
                             <i class="fab fa-whatsapp text-2xl text-green-600"></i>
                         </div>
@@ -291,7 +297,8 @@
 
                 @if ($contact->email)
                     <a href="mailto:{{ $contact->email }}"
-                        class="flex h-full flex-col items-center rounded-2xl border border-amber-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl">
+                        class="flex h-full flex-col items-center rounded-2xl border border-amber-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl"
+                        data-scroll-animate>
                         <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-100">
                             <i class="fas fa-envelope text-2xl text-rose-500"></i>
                         </div>
@@ -302,7 +309,8 @@
 
                 @if ($contact->address)
                     <div
-                        class="flex h-full flex-col items-center rounded-2xl border border-amber-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl">
+                        class="flex h-full flex-col items-center rounded-2xl border border-amber-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-1.5 hover:shadow-xl"
+                        data-scroll-animate>
                         <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100">
                             <i class="fas fa-map-marker-alt text-2xl text-amber-600"></i>
                         </div>
@@ -360,12 +368,92 @@
                 spesialmu.</div>
         </div>
     </footer>
+    <style>
+        .landing-navbar {
+            background: linear-gradient(135deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .42));
+            -webkit-backdrop-filter: blur(18px) saturate(155%);
+            backdrop-filter: blur(18px) saturate(155%);
+            box-shadow: 0 8px 26px rgba(83, 64, 92, .1);
+        }
+
+        .landing-hero {
+            background: linear-gradient(115deg, #ffe7b3 0%, #ffd0c2 28%, #e4d2ff 55%, #ccecff 78%, #ffe7b3 100%);
+            background-size: 300% 300%;
+            animation: landing-gradient-shift 11s ease-in-out infinite alternate;
+        }
+
+        @keyframes landing-gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        [data-landing-page].scroll-animations-enabled [data-scroll-animate] {
+            opacity: 0;
+            transform: translate3d(0, 28px, 0);
+            transition: opacity 700ms ease, transform 700ms cubic-bezier(.22, 1, .36, 1);
+            transition-delay: var(--scroll-delay, 0ms);
+            will-change: opacity, transform;
+        }
+
+        [data-landing-page].scroll-animations-enabled [data-scroll-animate].is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .landing-hero {
+                animation: none;
+            }
+
+            [data-landing-page].scroll-animations-enabled [data-scroll-animate] {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
+    </style>
 </div>
 
 @script
     <script>
+        const landingPage = document.querySelector('[data-landing-page]');
         const landingMenuButton = document.getElementById('landingMenuButton');
         const landingMobileMenu = document.getElementById('landingMobileMenu');
+
+        if (landingPage) {
+            const animatedElements = landingPage.querySelectorAll('[data-scroll-animate]');
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            landingPage.classList.add('scroll-animations-enabled');
+
+            if (reducedMotion || !('IntersectionObserver' in window)) {
+                animatedElements.forEach((element) => element.classList.add('is-visible'));
+            } else {
+                const observer = new IntersectionObserver((entries, animationObserver) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) {
+                            return;
+                        }
+
+                        entry.target.classList.add('is-visible');
+                        animationObserver.unobserve(entry.target);
+                    });
+                }, {
+                    threshold: 0.12,
+                    rootMargin: '0px 0px -8% 0px',
+                });
+
+                animatedElements.forEach((element, index) => {
+                    element.style.setProperty('--scroll-delay', `${Math.min(index % 4, 3) * 70}ms`);
+                    observer.observe(element);
+                });
+            }
+        }
 
         if (landingMenuButton && landingMobileMenu) {
             landingMenuButton.addEventListener('click', () => {

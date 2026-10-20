@@ -40,6 +40,11 @@
             ($wanita?->nama_panggilan ?? 'Mempelai') .
             ' & ' .
             ($pria?->nama_panggilan ?? 'Mempelai');
+        $galleryImages = array_values(array_filter(array_map($storageUrl, $poto ?? [])));
+        $heroImages = array_slice($galleryImages, 0, 3);
+        if (empty($heroImages)) {
+            $heroImages = [$coverImage];
+        }
     @endphp
     <title>{{ $title }}</title>
     <meta name="robots" content="noindex, nofollow">
@@ -82,6 +87,44 @@
         section {
             padding: 3rem 1.5rem;
             border-bottom: 1px solid rgba(210, 180, 140, 0.2);
+        }
+
+        #hero {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            background: #fffaf2;
+        }
+
+        #hero::before {
+            content: "";
+            position: absolute;
+            inset: -35%;
+            z-index: 0;
+            background: linear-gradient(125deg, #f6cfae 0%, #d9e6ff 30%, #eed5f1 62%, #ffe8b8 100%);
+            background-size: 220% 220%;
+            opacity: 0.72;
+            animation: mahligai-hero-gradient 14s ease-in-out infinite alternate;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 1rem 0.85rem 1.25rem;
+            border-radius: 30px;
+            background: rgba(255, 254, 248, 0.86);
+            box-shadow: 0 12px 32px rgba(122, 84, 45, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        @keyframes mahligai-hero-gradient {
+            0% {
+                background-position: 0% 45%;
+            }
+
+            100% {
+                background-position: 100% 55%;
+            }
         }
 
         .section-title {
@@ -202,6 +245,106 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translate3d(0, 56px, 0) scale(0.985);
+            filter: blur(3px);
+            transition: opacity 900ms ease, transform 900ms cubic-bezier(.22, 1, .36, 1), filter 900ms ease;
+            transition-delay: var(--reveal-delay, 0ms);
+            will-change: opacity, transform, filter;
+        }
+
+        .scroll-reveal.is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+            filter: blur(0);
+        }
+
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            max-width: 390px;
+            aspect-ratio: 16 / 10;
+            margin: 1.25rem auto 1.5rem;
+            overflow: hidden;
+            border: 1px solid #ead8c5;
+            border-radius: 28px;
+            background: #f8eee2;
+            box-shadow: 0 14px 30px rgba(125, 87, 49, 0.12);
+        }
+
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: scale(1.04);
+            transition: opacity 800ms ease, transform 5s ease;
+            pointer-events: none;
+        }
+
+        .hero-slide.is-active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .hero-slide::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(50, 28, 15, 0.02), rgba(50, 28, 15, 0.18));
+        }
+
+        .hero-slide img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .hero-slider-dots {
+            position: absolute;
+            right: 0;
+            bottom: 12px;
+            left: 0;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .hero-slider-dot {
+            width: 8px;
+            height: 8px;
+            padding: 0;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: width 200ms ease, background 200ms ease;
+        }
+
+        .hero-slider-dot.is-active {
+            width: 22px;
+            background: #fff8ed;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .scroll-reveal {
+                opacity: 1;
+                transform: none;
+                filter: none;
+                transition: none;
+            }
+
+            .hero-slide {
+                transition: none;
+            }
+
+            #hero::before {
+                animation: none;
+            }
         }
 
         .music-btn {
@@ -511,12 +654,26 @@
 
     <div class="wedding-container" id="mainContent" style="display: none;">
         <section id="hero">
-            <div style="text-align:center; padding-top: 1rem;">
+            <div class="hero-content" style="text-align:center;">
                 <h1 style="font-family:'Playfair Display'; font-size:2rem; color:#a27145;">
                     {{ $wanita?->nama_panggilan ?? 'Mempelai' }} & {{ $pria?->nama_panggilan ?? 'Mempelai' }}
                 </h1>
                 <p>{{ $eventDateText }}</p>
                 <div class="floral-divider">* * *</div>
+                <div class="hero-slider" data-hero-slider aria-label="Galeri foto undangan">
+                    @foreach ($heroImages as $index => $image)
+                        <div class="hero-slide {{ $index === 0 ? 'is-active' : '' }}">
+                            <img src="{{ $image }}" alt="Foto undangan {{ $index + 1 }}">
+                        </div>
+                    @endforeach
+                    <div class="hero-slider-dots" role="tablist" aria-label="Pilih foto undangan">
+                        @foreach ($heroImages as $index => $image)
+                            <button type="button" class="hero-slider-dot {{ $index === 0 ? 'is-active' : '' }}"
+                                data-hero-dot="{{ $index }}" aria-label="Tampilkan foto {{ $index + 1 }}"
+                                aria-selected="{{ $index === 0 ? 'true' : 'false' }}"></button>
+                        @endforeach
+                    </div>
+                </div>
                 <div class="quote-text">
                     @if ($data->qoute?->qoute)
                         {!! nl2br(e($data->qoute->qoute)) !!}
@@ -783,6 +940,72 @@
 
     <script>
         (function() {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function initHeroSliders() {
+                document.querySelectorAll('[data-hero-slider]').forEach((slider) => {
+                    const slides = Array.from(slider.querySelectorAll('.hero-slide'));
+                    const dots = Array.from(slider.querySelectorAll('.hero-slider-dot'));
+                    let activeIndex = 0;
+                    let intervalId = null;
+
+                    if (!slides.length) return;
+
+                    const showSlide = (index) => {
+                        activeIndex = (index + slides.length) % slides.length;
+                        slides.forEach((slide, slideIndex) => {
+                            slide.classList.toggle('is-active', slideIndex === activeIndex);
+                        });
+                        dots.forEach((dot, dotIndex) => {
+                            const isActive = dotIndex === activeIndex;
+                            dot.classList.toggle('is-active', isActive);
+                            dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                        });
+                    };
+
+                    const restartAutoPlay = () => {
+                        if (intervalId) window.clearInterval(intervalId);
+                        if (reducedMotion || slides.length < 2) return;
+                        intervalId = window.setInterval(() => showSlide(activeIndex + 1), 4500);
+                    };
+
+                    dots.forEach((dot, dotIndex) => {
+                        dot.addEventListener('click', () => {
+                            showSlide(dotIndex);
+                            restartAutoPlay();
+                        });
+                    });
+
+                    showSlide(0);
+                    restartAutoPlay();
+                });
+            }
+
+            function setupScrollReveal() {
+                const elements = Array.from(document.querySelectorAll('#mainContent > section, #mainContent > footer'));
+                elements.forEach((element, index) => {
+                    element.classList.add('scroll-reveal');
+                    element.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
+                });
+
+                if (reducedMotion || !('IntersectionObserver' in window)) {
+                    elements.forEach((element) => element.classList.add('is-visible'));
+                    return;
+                }
+
+                const observer = new IntersectionObserver((entries, revealObserver) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
+                        entry.target.classList.add('is-visible');
+                        revealObserver.unobserve(entry.target);
+                    });
+                }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+                elements.forEach((element) => observer.observe(element));
+            }
+
+            initHeroSliders();
+
             const countdownTimer = document.getElementById("countdownTimer");
             const weddingDate = new Date(countdownTimer.getAttribute("data-target"));
 
@@ -819,6 +1042,7 @@
                     cover.style.display = "none";
                     mainCont.style.display = "block";
                     document.body.style.overflow = "auto";
+                    setupScrollReveal();
                 }, 600);
             });
 

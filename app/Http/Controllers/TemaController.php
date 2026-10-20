@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -79,7 +80,17 @@ class TemaController extends Controller
 
     public function temademo($demo)
     {
-        return view($demo);
+        // Data tema lama hanya menyimpan slug (contoh: "quinceanera"),
+        // sedangkan tema baru menyimpan nama view lengkap ("temademo.quinceanera").
+        $view = str_starts_with($demo, 'temademo.')
+            ? $demo
+            : 'temademo.' . $demo;
+
+        if (! View::exists($view)) {
+            abort(404, 'Tema demo tidak ditemukan.');
+        }
+
+        return view($view);
     }
 
     public function visit($slug, $tamu = null)
