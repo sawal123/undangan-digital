@@ -1,84 +1,31 @@
-<div class="reveal mt-10 mb-10">
-    @if ($video)
-        <div class="relative w-auto h-96 mx-4" data-aos="fade-up" data-aos-duration="1500">
-            <div class="col-12" style="height: 250px;">
-                <iframe src="{{ $video[0] }}" class="absolute top-0 left-0 w-full h-full" frameborder="0"></iframe>
-            </div>
+<section id="standHadiah" class="stand-section stand-section--soft">
+    <div class="stand-section__header" data-aos="fade-up">
+        <p class="stand-eyebrow">Tanda kasih</p>
+        <h2 class="stand-section__title">Titip Hadiah</h2>
+        <p class="stand-section__subtitle">Doa dan kehadiran Anda adalah hadiah terindah. Jika berkenan, tanda kasih dapat disampaikan melalui pilihan berikut.</p>
+    </div>
+
+    @if (!empty($video[0]))
+        <div class="stand-video" data-aos="fade-up"><iframe src="{{ $video[0] }}" title="Video pernikahan" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    @endif
+
+    @if ($data->kado?->isNotEmpty())
+        <div class="stand-gift-list">
+            @foreach ($data->kado as $kado)
+                <article class="stand-gift-card" data-aos="fade-up">
+                    <p class="stand-gift-card__bank">{{ $kado->giftPay?->nama_pay ?? 'Pembayaran' }}</p>
+                    <p class="stand-gift-card__name">{{ $kado->namaPay }}</p>
+                    <p class="stand-gift-card__number">{{ $kado->nomorPay }}</p>
+                    <button type="button" class="stand-button stand-gift-card__button" data-copy="{{ $kado->nomorPay }}"><i class="fa-regular fa-copy"></i>Salin Nomor</button>
+                </article>
+                @if ($kado->qris)
+                    <article class="stand-gift-card" data-aos="fade-up"><p class="stand-gift-card__bank">QRIS</p><p class="stand-gift-card__name">Scan untuk mengirim tanda kasih</p><img src="{{ asset('storage/' . $kado->qris) }}" alt="QRIS" style="display:block;width:min(70%,14rem);margin:1rem auto 0;border-radius:.75rem;"></article>
+                @endif
+            @endforeach
         </div>
     @endif
-</div>
 
-<div class="bg-stone-500 rounded-lg flex flex-col items-center my-2 justify-center mx-6 relative w-auto py-5 mt-6">
-    <p class="text-center text-white" data-aos="fade-up" data-aos-duration="1500">
-        Tanpa mengurangi rasa hormat, bagi yang berkenan memberikan tanda kasih, dapat disampaikan melalui
-        rekening/emoney berikut:
-    </p>
-    <hr class="my-4" />
-
-    @foreach ($data->kado as $kado)
-        <div class="max-w-sm mx-auto mt-3 bg-white shadow-lg rounded-xl overflow-hidden transform transition duration-500 hover:scale-105"
-            data-aos="fade-up" data-aos-duration="1800">
-            <div class="p-6">
-                <!-- Nama Pembayaran -->
-                <div class="text-center">
-                    <h3 class="text-2xl font-semibold text-[#755f4B]">{{ $kado->giftPay?->nama_pay ?? '' }}</h3>
-                    <p class="mt-2 text-lg font-medium text-gray-700">{{ $kado->namaPay }}</p>
-                </div>
-
-                <!-- Nomor Rekening -->
-                <div class="mt-4 text-center">
-                    <p class="text-lg text-gray-600">
-                        <span class="font-bold text-md">No.Rek/Emoney :</span><br>
-                        <span id="nomorRek" class="font-bold text-xl text-blue-600">{{ $kado->nomorPay }}</span>
-                    </p>
-                </div>
-
-                <!-- Tombol Salin -->
-                <div class="flex justify-center mt-6">
-                    <button id="copyButton" onclick="copyToClipboard()"
-                        class="p-3 py-2 bg-[#755f4B] text-white rounded-lg hover:bg-[#382a1d] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        Salin Nomor Rekening
-                    </button>
-                </div>
-            </div>
-        </div>
-    @endforeach
-
-</div>
-
-<script>
-    function copyToClipboard() {
-        // Ambil elemen nomor rekening
-        const nomorRek = document.getElementById('nomorRek').innerText;
-
-        // Buat textarea sementara untuk menyalin teks
-        const textArea = document.createElement('textarea');
-        textArea.value = nomorRek;
-        document.body.appendChild(textArea);
-
-        // Pilih dan salin teks
-        textArea.select();
-        document.execCommand('copy');
-
-        // Hapus textarea sementara
-        document.body.removeChild(textArea);
-
-        // Tampilkan alert atau perubahan status setelah berhasil menyalin
-        alert('Nomor rekening berhasil disalin!');
-    }
-</script>
-
-<!-- Daftar Nama -->
-<!-- Judul Turut Mengundang -->
-@if ($data->teksPenutup?->mengundang)
-    <div class="mt-8">
-        <h3 class="text-center text-xl mb-5 text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">Turut Mengundang
-        </h3>
-        <div class="text-center flex flex-col items-center text-sm md:text-lg space-y-2 text-[#755f4B]"
-            data-aos="fade-up" data-aos-duration="1500">
-            <p>
-                {!! nl2br(e($data->teksPenutup->mengundang)) !!}
-            </p>
-        </div>
-    </div>
-@endif
+    @if ($data->teksPenutup?->mengundang)
+        <div class="stand-quote" data-aos="fade-up">{!! nl2br(e($data->teksPenutup->mengundang)) !!}</div>
+    @endif
+</section>

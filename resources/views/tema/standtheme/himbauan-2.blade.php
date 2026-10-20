@@ -1,10 +1,4 @@
-<div class="himbauan-2 mt-10 text-[12px] md:text-lg ">
-    <div class="bg-stone-500 rounded-lg  flex flex-col items-center justify-center mx-6 relative w-auto py-5"
-        data-aos="fade-up" data-aos-duration="1500">
-        <p class="text-center text-white ">
-            <strong>7 tamu undangan</strong> merespon akan Menghadiri Acara Pernikahan, Mari kirim konfirmasi
-            kehadiran anda sekarang.
-        </p>
-        <button type="button" class="bg-yellow-600 p-2 w-auto text-white mt-2">Konfirmasi Kehadiran</button>
-    </div>
-</div>
+<section class="stand-section stand-section--brown" data-aos="fade-up">
+    <div class="stand-section__header" style="margin-bottom:1rem;"><p class="stand-eyebrow" style="color:#f1d7b0;">Kehadiran Anda</p><h2 class="stand-section__title">Sampai Jumpa</h2><p class="stand-section__subtitle">Mohon konfirmasi kehadiran dan tinggalkan doa terbaik untuk kami.</p></div>
+    <a class="stand-button stand-button--light" href="#standUcapan"><i class="fa-solid fa-comment-dots"></i>Konfirmasi Kehadiran</a>
+</section>
