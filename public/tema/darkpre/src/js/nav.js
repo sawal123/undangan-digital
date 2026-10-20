@@ -1,68 +1,49 @@
-// Mendapatkan elemen dan link berdasarkan ID dan kelas
-const home = document.getElementById("couple");
-const homeLink = document.getElementsByClassName("couple");
+const sections = [
+    { id: 'couple', className: 'couple' },
+    { id: 'date', className: 'date' },
+    { id: 'location', className: 'location' },
+    { id: 'gallery', className: 'gallery' },
+    { id: 'wishes', className: 'wishes' },
+];
 
-const detail = document.getElementById("date");
-const detailLink = document.getElementsByClassName("date");
-
-const gallery = document.getElementById("gallery");
-const galleryLink = document.getElementsByClassName("gallery");
-const reservation = document.getElementById("location");
-const reservationLink = document.getElementsByClassName("location");
-const message = document.getElementById("wishes");
-const messageLink = document.getElementsByClassName("wishes");
-
-if (!gallery) {
-    // Kalau gallery nggak ada, hapus juga semua link dengan class gallery dari DOM
-    for (let i = galleryLink.length - 1; i >= 0; i--) {
-        galleryLink[i].remove();
-    }
+if (!document.getElementById('gallery')) {
+    document.querySelectorAll('.nav-link.gallery').forEach((link) => link.remove());
 }
 
-// Fungsi untuk menambahkan class active pada link yang sesuai
-function setActive(link) {
-    const allLinks = document.getElementsByClassName("nav-link");
+function setActive(className) {
+    document.querySelectorAll('.nav-link').forEach((link) => {
+        const isActive = link.classList.contains(className);
 
-    // Menghapus class aktif dari semua link
-    for (let i = 0; i < allLinks.length; i++) {
-        const span = allLinks[i].querySelector("span");
-        if (span) span.classList.add("hidden"); // Sembunyikan span
-        allLinks[i].classList.remove(
-            "bg-orange-200",
-            "text-black",
-            "rounded-full"
-        ); // Hapus semua kelas aktif
-    }
-
-    // Menambahkan class aktif hanya pada link yang sedang aktif
-    for (let i = 0; i < link.length; i++) {
-        const currentSpan = link[i].querySelector("span");
-        if (currentSpan) currentSpan.classList.remove("hidden"); // Tampilkan span
-        link[i].classList.add("bg-orange-200", "text-black", "rounded-full"); // Tambahkan kelas aktif
-        link[i].classList.remove("text-orange-200");
-    }
+        link.classList.toggle('bg-orange-200', isActive);
+        link.classList.toggle('text-black', isActive);
+        link.classList.toggle('rounded-full', isActive);
+        link.classList.toggle('text-orange-200', !isActive);
+        link.classList.toggle('is-active', isActive);
+    });
 }
 
-function isInViewport(element) {
-    const rect = element.getBoundingClientRect();
-    return rect.top >= -5 && rect.bottom <= window.innerHeight;
-}
+const observer = new IntersectionObserver((entries) => {
+    const visibleEntry = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-// Event handler onscroll untuk window
-function safeInViewport(element) {
-    return element ? isInViewport(element) : false;
-}
+    if (!visibleEntry) return;
 
-window.onscroll = function () {
-    if (safeInViewport(home)) {
-        setActive(homeLink);
-    } else if (safeInViewport(detail)) {
-        setActive(detailLink);
-    } else if (safeInViewport(gallery)) {
-        setActive(galleryLink);
-    } else if (safeInViewport(reservation)) {
-        setActive(reservationLink);
-    } else if (safeInViewport(message)) {
-        setActive(messageLink);
-    }
-};
+    const activeSection = sections.find((section) => section.id === visibleEntry.target.id);
+    if (activeSection) setActive(activeSection.className);
+}, {
+    rootMargin: '-35% 0px -55% 0px',
+    threshold: [0.1, 0.35, 0.7],
+});
+
+sections.forEach(({ id }) => {
+    const element = document.getElementById(id);
+    if (element) observer.observe(element);
+});
+
+document.querySelectorAll('.nav-link').forEach((link) => {
+    link.addEventListener('click', () => {
+        const activeSection = sections.find((section) => link.classList.contains(section.className));
+        if (activeSection) setActive(activeSection.className);
+    });
+});

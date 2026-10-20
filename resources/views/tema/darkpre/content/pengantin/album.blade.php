@@ -1,25 +1,22 @@
-@if ($poto)
-    <div id="gallery"></div>
-    <div class=" w-full bg-neutral-950 text-orange-200  section">
-        <h1 class="text-center   z-50  font-light mb-6 py-8">Gallery Kami</h1>
-        <div class="text-center text-sm mb-10">"Pernikahan seperti mozaik yang kita buat dengan pasangan
-            kita,
-            jutaan momen kecil yang menjadi kisah cinta."</div>
+@if (!empty($poto))
+    <section id="gallery" class="darkpre-section" aria-label="Galeri foto">
+        <h2 class="darkpre-section-heading" data-aos="fade-up">Gallery Kami</h2>
+        <p class="darkpre-section-lead">
+            Pernikahan adalah kumpulan momen kecil yang tumbuh menjadi kisah cinta.
+        </p>
 
-
-        <div class="swiper mySwiper text-black pt-10 ">
-
-            <div class="swiper-wrapper ">
-                @foreach ($poto as $item)
-                    <div class="swiper-slide">
-                        <img src="{{ asset('storage/' . $item) }}" alt="Thumbnail" onclick="openModalImg(this)"
-                            class="object-cover object-center w-full h-full shadow-md cursor-pointer">
-                    </div>
-                @endforeach
+        <div class="darkpre-gallery-grid">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    @foreach ($poto as $index => $item)
+                        <div class="swiper-slide">
+                            <img src="{{ asset('storage/' . $item) }}" alt="Momen foto {{ $index + 1 }}"
+                                loading="lazy" onclick="openModalImg(this)">
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
             </div>
-
         </div>
-
-    </div>
-
+    </section>
 @endif

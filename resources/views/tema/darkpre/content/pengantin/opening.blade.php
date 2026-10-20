@@ -1,46 +1,23 @@
-<div class="bg-neutral-950 relative ">
-    <!-- card 1 -->
+<section id="couple" class="darkpre-section darkpre-couple-section" aria-label="Kedua mempelai">
+    <p class="darkpre-section-lead" data-aos="fade-down">
+        {{ $data->teksUndangan?->pembuka ?? '' }}
+    </p>
 
-    <p class="text-center text-[12px] text-orange-200 font-semibold  mb-5">{{ $data->teksUndangan?->pembuka ?? '' }}</p>
-    <div class="  justify-center">
-        <!-- card 2 -->
-        <div class="bg-neutral-950 pt-10 section" id="couple"><img
-                src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" class="w-full" alt=""></div>
-        <div class=" justify-center pt-10">
-            <div class="flex flex-row pr-12 px-4 items-center justify-end space-x-4">
-                <div class="text-orange-200 ">
-                    <h1 class="text-[50px]  font-light  text-orange-200 ">
-                        {{ $data->pria?->nama_lengkap ?? '' }} </h1>
-                    <p class="text-[16px] font-semibold">
-                        {{ $data->pria?->nama_panggilan ?? '' }} <span class="text-[12px]">(Nama
-                            Panggilan)</span></p>
-                    <p class="font-semibold text-[13px] space-y-5">
-                        {{ $data->pria?->deskripsi ?? '' }}</p>
-                </div>
-                <div class=""><img src="{{ asset('storage/' . ($data->pria?->image ?? '')) }}" alt=""
-                        class="object-cover object-center aspect-square rounded-full w-[150px] lg:w-[180px]">
-                </div>
-            </div>
+    <div class="darkpre-couple-grid">
+        <article class="darkpre-couple-card" data-aos="fade-right">
+            <img src="{{ asset('storage/' . ($data->pria?->image ?? 'images/placeholder.jpg')) }}"
+                alt="Foto {{ $data->pria?->nama_lengkap ?? 'mempelai pria' }}">
+            <h2 class="darkpre-couple-name">{{ $data->pria?->nama_lengkap ?? 'Mempelai pria' }}</h2>
+            <p class="darkpre-couple-bio">{{ $data->pria?->deskripsi ?? '' }}</p>
+        </article>
 
-        </div>
+        <div class="darkpre-couple-ampersand" aria-hidden="true">&amp;</div>
 
-        <div class="bg-neutral-950 pt-10 section" id="couple"><img
-                src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" class="w-full" alt=""></div>
-        <div class="flex flex-row pl-12 items-center justify-start space-x-4 ">
-            <div class=""><img src="{{ asset('storage/' . ($data->wanita?->image ?? '')) }}" alt=""
-                    class="object-cover object-center aspect-square rounded-full w-[150px] lg:w-[180px]">
-            </div>
-            <div class="text-orange-200">
-                <h1 class="text-[50px]  font-light  text-orange-200 ">
-                    {{ $data->wanita?->nama_lengkap ?? '' }}</h1>
-                <p class="text-[13px] font-semibold">
-                    {{ $data->wanita?->nama_panggilan ?? '' }} <span class="text-[12px]">(Nama
-                        Panggilan)</p>
-                <p class="font-semibold text-[13px] space-y-5">
-                    {{ $data->wanita?->deskripsi ?? '' }}</p>
-            </div>
-        </div>
+        <article class="darkpre-couple-card" data-aos="fade-left">
+            <img src="{{ asset('storage/' . ($data->wanita?->image ?? 'images/placeholder.jpg')) }}"
+                alt="Foto {{ $data->wanita?->nama_lengkap ?? 'mempelai wanita' }}">
+            <h2 class="darkpre-couple-name">{{ $data->wanita?->nama_lengkap ?? 'Mempelai wanita' }}</h2>
+            <p class="darkpre-couple-bio">{{ $data->wanita?->deskripsi ?? '' }}</p>
+        </article>
     </div>
-
-
-</div>
+</section>

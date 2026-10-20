@@ -1,118 +1,86 @@
 <div>
     @if ($isActive)
-    <div class="w-full  bg-neutral-950 text-orange-200 relative z-50 ">
-        <h1 class="text-center  font-light pb-6 py-8 ">Ucapan & Doa</h1>
-        <div class="flex justify-center left-0  absolute  z-10">
-            <img src="{{ asset('tema/darkpre/src/img/bunga.png') }}" alt="Hiasan Bunga" class="w-20 lg:w-32 ">
-        </div>
-
-        <!-- Gambar Hiasan Tengah -->
-        <div class="flex justify-center right-0  absolute  z-10">
-            <img src="{{ asset('tema/darkpre/src/img/bunga.png') }}" alt="Hiasan Bunga" class="w-20 lg:w-32 ">
-        </div>
-
-        @if ($viewIsActive)
-            <div class="p-6 h-[300px] rounded-lg shadow-lg space-y-5 overflow-y-auto z-50 relative ">
-                @foreach ($listUcapan as $item)
-                    <ul class=" p-4 rounded-md   h-auto  shadow-md shadow-slate-200 bg-neutral-950">
-                        <li class="text-[14px] font-semibold">
-                            <div class="flex items-center justify-between">
-                                <p>{{ $item->tamu->nama }}</p>
-                                <span
-                                    class="items-center rounded-md bg-gray px-2 py-1 text-[10px] font-medium text-white-600 inset-ring inset-ring-gray-400/20">{{ ucwords(str_replace('_', ' ', $item->status)) }}
+        <div class="darkpre-message-panel">
+            @if ($viewIsActive)
+                <div class="darkpre-message-list">
+                    @forelse ($listUcapan as $item)
+                        <article class="darkpre-message-card">
+                            <div class="flex items-center justify-between gap-3">
+                                <h3 class="text-sm font-semibold">{{ $item->tamu->nama }}</h3>
+                                <span class="rounded-full border border-orange-200/30 px-2 py-1 text-[10px] text-orange-100">
+                                    {{ ucwords(str_replace('_', ' ', $item->status)) }}
                                 </span>
                             </div>
-                        </li>
-                        <li class="text-[12px] ">
-                            <p class="card-text" style="color: #9e0050; margin: 0px">
-                                <small>
-                                    {{ $item->created_at->diffForHumans() }}
-                                    {{-- ({{ $item->created_at->format('l, d M Y') }}) --}}
-                                </small>
-                            </p>
-                        </li>
-                        <li class="mt-2 text-[12px] italic">{{ $item->ucapan }}</li>
-                        @if ($item->balas)
-                            <ol>
-                                <li class="italic">Balasan :
-                                    {{ $item->balas }}</li>
-                            </ol>
-                        @endif
-                    </ul>
-                @endforeach
-            </div>
-        @endif
-    </div>
-
-    <div class="w-full bg-neutral-950 text-orange-200 p-6 shadow-lg relative  section" id="wishes">
-        @if ($publicIsActive || (!$publicIsActive && $kode))
-        <h4 class="text-2xl font-semibold mb-4 relative z-50 ">Kirim Ucapan</h4>
-
-        @if ($success)
-            <div class="mt-2 p-3 mx-3 bg-slate-950 border-orange-200 border text-white rounded-lg">
-                {{ $message }}
-            </div>
-        @endif
-
-        @if ($error)
-            <div class="mt-2 p-3 mx-3 bg-red-500 text-white rounded-lg">
-                {{ $message }}
-            </div>
-        @endif
-        <!-- Gambar Hiasan Tengah -->
-        <div class="flex justify-center right-14  absolute  z-10">
-            <img src="{{ asset('tema/darkpre/src/img/bunga.png') }}" alt="Hiasan Bunga" class="w-20 lg:w-32 ">
+                            <p class="mt-1 text-xs text-orange-100/60">{{ $item->created_at->diffForHumans() }}</p>
+                            <p class="mt-2 text-sm italic">{{ $item->ucapan }}</p>
+                            @if ($item->balas)
+                                <p class="mt-2 border-l-2 border-orange-200/50 pl-3 text-xs italic">
+                                    Balasan: {{ $item->balas }}
+                                </p>
+                            @endif
+                        </article>
+                    @empty
+                        <div class="darkpre-message-card text-center text-sm">
+                            Belum ada ucapan. Jadilah yang pertama mengirim doa.
+                        </div>
+                    @endforelse
+                </div>
+            @endif
         </div>
-        <form wire:submit.prevent="save" class="space-y-4 relative z-50">
-            {{-- Kalau fitur ucapan tidak public, tampilkan pesan --}}
-            @unless ($publicIsActive)
-                @if (session()->has('message'))
-                    <div class="bg-blue-500 text-white p-3 rounded-md text-center">
-                        {{ session('message') }}
-                    </div>
+
+        @if ($publicIsActive || (!$publicIsActive && $kode))
+            <div id="wishes-form" class="darkpre-form-card">
+                <h2 class="darkpre-form-title">Kirim Ucapan</h2>
+                <p class="darkpre-form-intro">Tinggalkan doa dan ucapan terbaik untuk kedua mempelai.</p>
+
+                @if ($success)
+                    <div class="darkpre-form-alert" role="status">{{ $message }}</div>
                 @endif
-                <input type="hidden" wire:model="kode">
-            @endunless
+                @if ($error)
+                    <div class="darkpre-form-alert darkpre-form-alert--error" role="alert">{{ $message }}</div>
+                @endif
 
-            <input type="hidden" wire:model="dataId">
+                <form wire:submit.prevent="save" class="darkpre-wish-form">
+                    @unless ($publicIsActive)
+                        @if (session()->has('message'))
+                            <div class="darkpre-form-alert" role="status">{{ session('message') }}</div>
+                        @endif
+                        <input type="hidden" wire:model="kode">
+                    @endunless
 
-            <!-- Input Nama -->
-            <input type="text" wire:model="nama" value="{{ $tamu }}" placeholder="Nama Lengkap"
-                class="w-full p-3 rounded-md bg-slate-600 opacity-35 text-orange-200 placeholder-orange-200
-        focus:outline-none focus:ring-2 focus:ring-orange-200" />
-            @error('nama')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
+                    <input type="hidden" wire:model="dataId">
 
-            <!-- Textarea Ucapan -->
-            <textarea wire:model="ucapan" placeholder="Ucapan & Doa" rows="4"
-                class="w-full p-3 rounded-md bg-slate-600 opacity-35 text-orange-200 placeholder-orange-200
-        focus:outline-none focus:ring-2 focus:ring-orange-200"></textarea>
-            @error('ucapan')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
+                    <div>
+                        <input type="text" wire:model="nama" value="{{ $tamu }}" autocomplete="name"
+                            placeholder="Nama Lengkap" class="darkpre-form-input p-3">
+                        @error('nama')
+                            <div class="darkpre-form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-            <!-- Select Konfirmasi Kehadiran -->
-            <select wire:model="status"
-                class="w-full p-3 rounded-md bg-slate-600 opacity-35 text-orange-200 placeholder-orange-200
-        focus:outline-none focus:ring-2 focus:ring-orange-200">
-                <option value="">Konfirmasi Kehadiran</option>
-                <option value="datang">Datang Dong</option>
-                <option value="tidak_datang">Tidak Bisa Datang Nih</option>
-                <option value="diusahakan">Diusahakan Datang Ya</option>
-            </select>
-            @error('status')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
+                    <div>
+                        <textarea wire:model="ucapan" placeholder="Ucapan & Doa" rows="4"
+                            class="darkpre-form-input p-3"></textarea>
+                        @error('ucapan')
+                            <div class="darkpre-form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-            <!-- Button Kirim -->
-            <button type="submit"
-                class="w-full rounded-full bg-orange-200 text-black font-semibold p-3 hover:bg-orange-500
-        focus:outline-none focus:ring-2 focus:ring-orange-200">
-                Kirim Sekarang
-            </button>
-        </form>
+                    <div>
+                        <select wire:model="status" class="darkpre-form-input p-3">
+                            <option value="">Konfirmasi Kehadiran</option>
+                            <option value="datang">Datang Dong</option>
+                            <option value="tidak_datang">Tidak Bisa Datang Nih</option>
+                            <option value="diusahakan">Diusahakan Datang Ya</option>
+                        </select>
+                        @error('status')
+                            <div class="darkpre-form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="darkpre-submit-button p-3">Kirim Sekarang</button>
+                </form>
+            </div>
         @endif
-    </div>
     @endif
 </div>

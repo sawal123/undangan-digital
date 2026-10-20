@@ -1,57 +1,28 @@
-<style>
-
-
-    #cover-mobile::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        /* Sesuaikan transparansi */
-        z-index: 1;
-    }
-
-    #cover-mobile>* {
-        position: relative;
-        z-index: 2;
-    }
-    #open-cover {
-        position: absolute;
-        bottom: -200px
-    }
-</style>
-<div id="cover-mobile" class="h-full w-full  fixed lg:hidden block z-50 text-white"
-    style="background-image: url(' {{ asset('storage/' . ($thumbnailWa?->thumbnail ?? '')) }}'); background-size: cover; background-position: center;">
-    <div class="w-full text-shadow flex justify-center items-center flex-col">
-        <h3 class="text-center font-semibold text-2xl pt-10" data-aos="fade-down" data-aos-easing="linear"
-            data-aos-duration="1500">{{$data->setting?->acara ?? 'The Wedding'}}</h3>
-        <h1 class="mt-8 text-center text-[50px] font-light " data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom">
-            {{ $data->pria?->nama_panggilan ?? '' }}<span class=" text-[25px]"> & </span>
+<div id="cover-mobile" class="darkpre-mobile-cover fixed inset-0 z-50 text-white lg:hidden"
+    style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}'); background-position: center; background-size: cover;">
+    <div class="darkpre-hero-content">
+        <p class="darkpre-hero-eyebrow" data-aos="fade-down">{{ $data->setting?->acara ?? 'The Wedding' }}</p>
+        <h1 class="darkpre-hero-title" data-aos="fade-up" data-aos-delay="120">
+            {{ $data->pria?->nama_panggilan ?? '' }}
+            <span class="font-poppins text-[25px]">&amp;</span>
             {{ $data->wanita?->nama_panggilan ?? '' }}
         </h1>
         @php
             $firstAcaraDate = ($data->acara[0] ?? null)?->date;
         @endphp
-        <p class="text-center text-[20px]" data-aos="fade-up" data-aos-anchor-placement="bottom-bottom">
+        <p class="darkpre-hero-date" data-aos="fade-up" data-aos-delay="220">
             {{ $firstAcaraDate ? date('d', strtotime($firstAcaraDate)) : '10' }}
-            {{ $firstAcaraDate ? date('m', strtotime($firstAcaraDate)) : '10' }}
-            {{ $firstAcaraDate ? date('Y', strtotime($firstAcaraDate)) : '2024' }}
+            . {{ $firstAcaraDate ? date('m', strtotime($firstAcaraDate)) : '10' }}
+            . {{ $firstAcaraDate ? date('Y', strtotime($firstAcaraDate)) : '2024' }}
         </p>
 
-        <p style="margin-top:150px" class="text-center text-[20px]" data-aos="fade-up"
-            data-aos-anchor-placement="bottom-bottom">
-            {{ $tamu }}
-        </p>
-        <p class="text-center text-[13px]">Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i
-            untuk
-            Hadir di
-            Acara Kami.</p>
+        @if ($tamu)
+            <p class="mt-5 max-w-xs text-center text-sm text-white/85" data-aos="fade-up" data-aos-delay="300">
+                Untuk {{ $tamu }}
+            </p>
+        @endif
 
-        <button id="open-cover" style="background: #313131"
-            class=" px-4 py-2 font-semibold rounded-full  border-white border-2 animate-bounce">
+        <button id="open-cover" type="button" class="darkpre-submit-button mt-8 min-w-48">
             Buka Undangan
         </button>
     </div>

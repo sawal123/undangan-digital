@@ -57,16 +57,17 @@
             font-style: normal;
         }
     </style>
+    @include('tema.darkpre.styles')
 
 </head>
 
-<body class="relative">
+<body class="darkpre-page relative">
 
     <!-- cover mobile -->
     @include('tema.darkpre.cover-mobile')
 
     <!-- konten -->
-    <div class="flex flex-row h-screen z-10 relative">
+    <div class="darkpre-shell flex flex-row z-10 relative">
         <!-- Bagian kiri  -->
         @include('tema.darkpre.bagian-kiri-pc')
 
@@ -79,9 +80,9 @@
             <div class="relative">
                 <img id="modalImageContent" class="max-w-full max-h-screen rounded-lg shadow-xl py-11" src=""
                     alt="Modal Image" />
-                <button onclick="closeModalImg()"
+                <button onclick="closeModalImg()" aria-label="Tutup gambar"
                     class="absolute top-2 right-2 text-white bg-sky-500 hover:bg-slate-600 rounded-lg py-1 px-3 focus:outline-none">
-                    ✕
+                    &times;
                 </button>
             </div>
         </div>
@@ -90,7 +91,12 @@
     <!-- konten -->
     <script src="{{ asset('tema/darkpre/assets/aos/dist/aos.js') }}"></script>
     <script>
-        AOS.init();
+        AOS.init({
+            duration: 850,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 70
+        });
     </script>
 
     <!-- Swiper -->
@@ -102,61 +108,6 @@
     <script src="{{ asset('tema/darkpre/src/js/modal.js') }}"></script>
     <!-- audio -->
     <script src="{{ asset('tema/darkpre/src/js/audio.js') }}"></script>
-    {{-- <script src="{{ asset('tema/darkpre/src/js/setDate.js') }}"></script> --}}
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Set waktu acara (Format: YYYY-MM-DD HH:MM:SS)
-            let eventDate = new Date(
-                "{{ ($data->acara?->get(1) ?? $data->acara?->get(0))?->date ? date('Y-m-d', strtotime(($data->acara?->get(1) ?? $data->acara?->get(0))->date)) : '2024-10-10' }}"
-            ).getTime();
-
-            // Update countdown setiap detik
-            let countdown = setInterval(function() {
-                let now = new Date().getTime();
-                let distance = eventDate - now;
-
-                // Perhitungan waktu
-                let hari = Math.floor(distance / (1000 * 60 * 60 * 24));
-                let jam = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                let menit = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                let detik = Math.floor((distance % (1000 * 60)) / 1000);
-
-                // Tampilkan hasil di elemen dengan id yang sesuai
-                document.getElementById("days").innerText = hari.toString().padStart(2, '0');
-                document.getElementById("hours").innerText = jam.toString().padStart(2, '0');
-                document.getElementById("minutes").innerText = menit.toString().padStart(2, '0');
-                document.getElementById("seconds").innerText = detik.toString().padStart(2, '0');
-
-                // Jika waktu habis
-                if (distance < 0) {
-                    clearInterval(countdown);
-                    document.getElementById("days").innerText = "00";
-                    document.getElementById("hours").innerText = "00";
-                    document.getElementById("minutes").innerText = "00";
-                    document.getElementById("seconds").innerText = "00";
-                }
-            }, 1000);
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let btn = document.getElementById("googleCalendarBtn");
-            @if (isset($acara) && $acara && $acara->date)
-            let eventTitle = "Pernikahan Kami";
-            let eventDateStart = "{{ date('Ymd', strtotime($acara->date)) }}T100000Z"; // Sesuaikan jam UTC
-
-            let eventDetails = "Jangan lewatkan momen spesial kami!";
-            let eventLocation = "{{ $acara->alamat ?? '' }}";
-
-            let googleCalendarUrl =
-                `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${eventDateStart}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}&sf=true&output=xml`;
-
-            if (btn) btn.href = googleCalendarUrl;
-            @endif
-        });
-    </script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 <!-- Toggle Button -->
-<button id="musicToggle" type="button"
-    class=" fixed lg:absolute rounded-full w-10 h-10 top-10 right-2 bg-slate-400 z-50 flex items-center justify-center text-xl shadow-lg hover:bg-slate-600 transition duration-300">
+<button id="musicToggle" type="button" aria-label="Putar atau jeda musik"
+    class="darkpre-float-control darkpre-float-control--music fixed lg:absolute top-10 right-2 z-50 flex h-10 w-10 items-center justify-center rounded-full text-xl lg:right-5">
     <span id="audio-status" class="text-white">
         <i class="fa-solid fa-play"></i>
     </span>

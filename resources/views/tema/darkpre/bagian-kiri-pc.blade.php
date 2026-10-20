@@ -1,52 +1,39 @@
-<div class=" lg:w-3/5 md:h-screen lg:fixed z-50">
-    <div class="z-50 w-full h-full brightness-50 contrast-100	saturate-100"
-        style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}'); background-size: cover; background-position: center;">
-    </div>
-    <h1 class="hidden lg:block absolute bottom-12 left-14 text-[50px] text-white ">
+<aside class="darkpre-left-panel" aria-label="Panel foto undangan">
+    <div class="darkpre-left-image"
+        style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}');"></div>
+    <h2 class="darkpre-left-title">
         {{ $data->wanita?->nama_panggilan ?? '' }}
-        <span class=" text-[25px]"> & </span> {{ $data->pria?->nama_panggilan ?? '' }}
-    </h1>
-    <!-- music -->
+        <span class="font-poppins text-[25px]">&amp;</span>
+        {{ $data->pria?->nama_panggilan ?? '' }}
+    </h2>
+
     @include('tema.darkpre.content.music')
-    <!-- music -->
-
-    <!-- kado-->
     @include('tema.darkpre.content.pengantin.kado')
-    <!-- kado -->
 
-    <!-- Navbar -->
-    <div class="navbar hidden lg:block lg:absolute lg:right-8 lg:top-72 lg:w-9 h-auto bg-neutral-950 rounded-full shadow-lg z-40"
-        id="navbar">
-        <div class=" py-3 relative">
-            <div class="flex flex-col justify-center items-center w-full text-orange-200 text-sm gap-3">
-                <a class="nav-link  couple flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#couple">
+    <nav class="darkpre-side-nav navbar hidden lg:block" id="desktop-navbar" aria-label="Navigasi undangan">
+        <div>
+            <div>
+                <a aria-label="Pasangan" class="nav-link couple" href="#couple">
                     <i class="fa-regular fa-heart"></i>
-                    <span class="ml-2 hidden">couple</span>
+                    <span class="ml-2 hidden">Pasangan</span>
                 </a>
-                <a class="nav-link   date  flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#date">
+                <a aria-label="Acara" class="nav-link date" href="#date">
                     <i class="fa-regular fa-calendar"></i>
-                    <span class="ml-2 hidden">date</span>
+                    <span class="ml-2 hidden">Acara</span>
                 </a>
-                <a class="nav-link  location flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#location">
+                <a aria-label="Lokasi" class="nav-link location" href="#location">
                     <i class="fa-solid fa-map-location-dot"></i>
-                    <span class="ml-2 hidden">location</span>
+                    <span class="ml-2 hidden">Lokasi</span>
                 </a>
-                <a class="nav-link  gallery flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#gallery">
+                <a aria-label="Galeri" class="nav-link gallery" href="#gallery">
                     <i class="fa-regular fa-images"></i>
-                    <span class="ml-2 hidden">gallery</span>
+                    <span class="ml-2 hidden">Galeri</span>
                 </a>
-                <a class="nav-link  wishes flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#wishes">
+                <a aria-label="Ucapan" class="nav-link wishes" href="#wishes">
                     <i class="fa-regular fa-note-sticky"></i>
-                    <span class="ml-2 hidden">wishes</span>
+                    <span class="ml-2 hidden">Ucapan</span>
                 </a>
             </div>
         </div>
-    </div>
-    <!-- Navbar -->
-
-</div>
+    </nav>
+</aside>

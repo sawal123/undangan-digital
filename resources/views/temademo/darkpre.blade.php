@@ -1,552 +1,227 @@
 <!doctype html>
-<html>
+<html lang="id">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- START Swiper css -->
-  <link rel="stylesheet" href="{{asset('tema/darkpre/assets/swiper/swiper-bundle.min.css')}}">
-  <link href="{{asset('tema/darkpre/src/css/output.css')}}" rel="stylesheet">
-  <link rel="stylesheet" href="{{asset('tema/darkpre/src/css/style.css')}}">
-  <link rel="stylesheet" href="{{asset('tema/darkpre/src/css/gallery.css')}}">
-  <link rel="stylesheet" href="{{asset('tema/darkpre/assets/fontawesome-free/css/all.css')}}">
-  <link rel="stylesheet" href="{{asset('tema/darkpre/assets/aos/dist/aos.css')}}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darkpre — Izzah &amp; Rifki</title>
+    <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/aos/dist/aos.css') }}">
+    <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/swiper/swiper-bundle.min.css') }}">
+    <link href="{{ asset('tema/darkpre/src/css/output.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('tema/darkpre/src/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('tema/darkpre/src/css/gallery.css') }}">
+    <link rel="stylesheet" href="{{ asset('tema/darkpre/assets/fontawesome-free/css/all.css') }}">
+    @include('tema.darkpre.styles')
 </head>
 
-<body class="relative">
-
-  <!-- cover mobile -->
-  <div id="cover-mobile" class="h-full w-full font-poppins fixed lg:hidden block z-50 text-white"
-    style="background-image: url('{{asset('tema/darkpre/src/img/bg-kanan.jpg')}}'); background-size: cover; background-position: center;">
-    <div class="w-full flex justify-center items-center flex-col">
-      <h3 class="text-center font-semibold text-2xl pt-10" data-aos="fade-down" data-aos-easing="linear"
-        data-aos-duration="1500">The Wedding Of</h3>
-      <h2 class="mt-8 text-center text-[50px] font-light font-corinthia" data-aos="fade-up"
-        data-aos-anchor-placement="top-bottom">
-        Izzah <span class="font-poppins text-[25px]">&</span> Rifki
-      </h2>
-      <p class="text-center text-[20px]" data-aos="fade-up" data-aos-anchor-placement="bottom-bottom">02 . 04 . 2025</p>
-
-      <button id="open-cover"
-        class="absolute bottom-20 px-4 py-2 font-semibold rounded-full border-white border-2 animate-bounce">
-        Buka Undangan
-      </button>
-    </div>
-  </div>
-
-  <!-- konten -->
-  <div class="flex flex-row h-screen z-10 relative">
-    <!-- Bagian kiri  -->
-    <div class=" lg:w-3/5 md:h-screen lg:fixed z-20">
-      <!-- opening  -->
-      <div class="z-50 w-full h-full brightness-50 contrast-100	saturate-100"
-        style="background-image: url('{{asset('tema/darkpre/src/img/bg-kanan.jpg')}}'); background-size: cover; background-position: center;"></div>
-      <h2 class="absolute bottom-12 left-14 text-[50px] text-white font-corinthia hidden lg:block">Izzah<span
-          class="font-poppins text-[25px]"> & </span> Rifki</h2>
-      <!-- music -->
-      <div id="youtube-player" class="hidden">
-        <iframe id="videoFrame" width="560" height="315"
-          src="https://www.youtube.com/embed/sy0LqD9EA7A?si=59Ql_kVZl3TaSU3m&amp?enablejsapi=1"
-          title="YouTube video player" frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-        </iframe>
-      </div>
-      <!-- Toggle Button -->
-      <button id="audio-toggle" type="button"
-        class=" fixed lg:absolute rounded-full w-10 h-10 top-10 right-2 bg-slate-400 z-50 flex items-center justify-center text-xl shadow-lg hover:bg-slate-600 transition duration-300">
-        <span id="audio-status" class="text-white">
-          <i class="fa-solid fa-play"></i>
-        </span>
-      </button>
-      <!-- music -->
-
-      <!-- sumbangan -->
-      <button onclick="toggleModal()" type="button"
-        class="fixed lg:absolute rounded-full w-14 h-14 top-28 right-2 lg:right-5 bg-teal-400 z-50 flex items-center justify-center text-2xl shadow-lg hover:bg-teal-500 transition duration-300">
-        <i class="fa-solid fa-wallet text-white"></i>
-      </button>
-
-      <!-- Modal -->
-      <div id="infoModal"
-        class="invisible fixed inset-0 bg-black bg-opacity-50  flex items-center justify-center z-50 font-poppins">
-        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center">
-          <h2 class="text-lg font-bold text-gray-800 mb-4">Kado</h2>
-          <p class="text-gray-600 mb-4">Berikut adalah informasi untuk mengirimkan kado atau hadiah secara online atau
-            melalui pengiriman fisik:</p>
-          <ul class="text-left text-gray-700 mb-6 flex flex-col items-center text-sm">
-            <li class="mb-2"><strong>Qris</strong></li>
-            <li class="mb-2 text-center"><img src="{{asset('tema/darkpre/src/img/bg-kanan.jpg')}}" alt="" class="w-32"></li>
-            <li class="mb-2 "><strong>Nama Akun/Rekening:</strong> Eli</li>
-            <li><strong>Nomor Akun/Rekening:</strong> 085763561698</li>
-          </ul>
-          <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
-            onclick="toggleModal()">Tutup</button>
+<body class="darkpre-page">
+    <div id="cover-mobile" class="darkpre-mobile-cover fixed inset-0 z-50 text-white lg:hidden"
+        style="background-image: url('{{ asset('tema/darkpre/src/img/bg-kanan.jpg') }}'); background-position: center; background-size: cover;">
+        <div class="darkpre-hero-content">
+            <p class="darkpre-hero-eyebrow" data-aos="fade-down">The Wedding Of</p>
+            <h1 class="darkpre-hero-title" data-aos="fade-up" data-aos-delay="120">
+                Izzah <span class="font-poppins text-[25px]">&amp;</span> Rifki
+            </h1>
+            <p class="darkpre-hero-date" data-aos="fade-up" data-aos-delay="220">02 . 04 . 2025</p>
+            <button id="open-cover" type="button" class="darkpre-submit-button mt-8 min-w-48">Buka Undangan</button>
         </div>
-      </div>
-      <!-- sumbangan -->
-
-      <!-- Navbar -->
-      <div
-        class="navbar hidden lg:block lg:absolute lg:right-8 lg:top-72 lg:w-9 h-auto bg-neutral-950 rounded-full shadow-lg z-40"
-        id="navbar">
-        <div class=" py-3 relative">
-          <div class="flex flex-col justify-center items-center w-full text-orange-200 text-sm gap-3">
-            <a class="nav-link  couple flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#couple">
-              <i class="fa-regular fa-heart"></i>
-              <span class="ml-2 hidden">couple</span>
-            </a>
-            <a class="nav-link   date  flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#date">
-              <i class="fa-regular fa-calendar"></i>
-              <span class="ml-2 hidden">date</span>
-            </a>
-            <a class="nav-link  location flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#location">
-              <i class="fa-solid fa-map-location-dot"></i>
-              <span class="ml-2 hidden">location</span>
-            </a>
-            <a class="nav-link  gallery flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#gallery">
-              <i class="fa-regular fa-images"></i>
-              <span class="ml-2 hidden">gallery</span>
-            </a>
-            <a class="nav-link  wishes flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#wishes">
-              <i class="fa-regular fa-note-sticky"></i>
-              <span class="ml-2 hidden">wishes</span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <!-- Navbar -->
-
     </div>
 
-    <!-- Bagian kanan -->
-    <div class="w-full lg:w-2/5 h-full relative items-center text-white ml-auto z-10">
+    <div class="darkpre-shell flex flex-row">
+        <aside class="darkpre-left-panel" aria-label="Panel foto undangan">
+            <div class="darkpre-left-image"
+                style="background-image: url('{{ asset('tema/darkpre/src/img/bg-kiri.jpg') }}');"></div>
+            <h2 class="darkpre-left-title">Izzah <span class="font-poppins text-[25px]">&amp;</span> Rifki</h2>
 
-      <!-- opening -->
-      <div class="h-full w-full font-poppins "
-        style="background-image: url('{{asset('tema/darkpre/src/img/bg-kanan.jpg')}}'); background-size: cover; background-position: center;">
-
-        <div class="w-full " data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1500">
-          <h3 class="text-center font-normal text-2xl pt-10 ">The Wedding Of</h3>
-          <h2 class="mt-5 text-center text-[40px] font-light font-corinthia">Izzah <span
-              class="font-poppins text-[25px]">&</span>Rifki</h2>
-          <p class="text-center text-[20px]">02 . 04 . 2025</p>
-                  
-        </div>
-        <!-- svg -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-full absolute bottom-0 lg:hidden block" viewBox="0 0 1440 320">
-          <path fill="#0a0a0a" fill-opacity="1"
-            d="M0,160L48,149.3C96,139,192,117,288,138.7C384,160,480,224,576,250.7C672,277,768,267,864,224C960,181,1056,107,1152,69.3C1248,32,1344,32,1392,32L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-          </path>
-        </svg>
-        <!-- svg -->
-
-        <div class="absolute inset-x-0 flex flex-col items-center bottom-20">
-          <!-- Mouse -->
-          <div class="w-8 h-14 border-2 border-gray-500 rounded-full relative">
-            <!-- Wheel -->
-            <div
-              class="w-2 h-3 bg-white rounded-full absolute top-3 left-1/2 transform -translate-x-1/2 animate-scroll">
+            <div id="youtube-player" class="hidden" aria-hidden="true">
+                <iframe id="videoFrame" width="1" height="1"
+                    src="https://www.youtube.com/embed/sy0LqD9EA7A?enablejsapi=1" title="Musik undangan"
+                    frameborder="0" allow="autoplay"></iframe>
             </div>
-          </div>
-          <!-- Arrow -->
-          <div class="mt-4 text-sm text-white">Scroll Kebawah</div>
-        </div>
-      </div>
-      <!-- End opening -->
+            <button id="musicToggle" type="button" aria-label="Putar atau jeda musik"
+                class="darkpre-float-control darkpre-float-control--music fixed lg:absolute top-10 right-2 z-50 flex h-10 w-10 items-center justify-center rounded-full text-xl lg:right-5">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+            </button>
 
-      <!-- Kutipan Al-Qur'an -->
-      <div class="bg-neutral-950 w-full p-10 ">
+            <button onclick="toggleModal()" type="button" aria-label="Buka informasi kado"
+                class="darkpre-float-control darkpre-float-control--gift fixed lg:absolute top-28 right-2 z-50 h-14 w-14 rounded-full text-2xl lg:right-5">
+                <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+            </button>
 
-        <div class="border border-orange-200 border-dashed text-orange-200 font-poppins italic" data-aos="fade-down"
-          data-aos-easing="linear" data-aos-duration="1500">
-          <p class="text-center font-semibold p-10 space-y-3 lg:text-lg text-[13px]">"Dan Diantara tanda-tanda
-            kebesaran-Nya ialah
-            diciptakan-Nya
-            untukmu pasangan hidup dari jenismu sendiri supaya kamu mendapatkan ketenangan hati dan dijadikan-Nya kasih
-            sayang diantara kamu sesungguhnya yang demikian menjadi tanda-tanda kebesaran-Nya bagi orang-orang yang
-            berfikir" <br> <br>
-            <span>(Surat Ar-Ruum:21)</span>
-          </p>
-        </div>
-      </div>
+            <nav class="darkpre-side-nav hidden lg:block" id="desktop-navbar" aria-label="Navigasi undangan">
+                <div><div>
+                    <a aria-label="Pasangan" class="nav-link couple" href="#couple"><i class="fa-regular fa-heart"></i><span class="ml-2 hidden">Pasangan</span></a>
+                    <a aria-label="Acara" class="nav-link date" href="#date"><i class="fa-regular fa-calendar"></i><span class="ml-2 hidden">Acara</span></a>
+                    <a aria-label="Lokasi" class="nav-link location" href="#location"><i class="fa-solid fa-map-location-dot"></i><span class="ml-2 hidden">Lokasi</span></a>
+                    <a aria-label="Galeri" class="nav-link gallery" href="#gallery"><i class="fa-regular fa-images"></i><span class="ml-2 hidden">Galeri</span></a>
+                    <a aria-label="Ucapan" class="nav-link wishes" href="#wishes"><i class="fa-regular fa-note-sticky"></i><span class="ml-2 hidden">Ucapan</span></a>
+                </div></div>
+            </nav>
+        </aside>
 
-      <!-- pembatas -->
-      <div class="bg-neutral-950 pt-10 section" id="couple"><img src="{{asset('tema/darkpre/src/img/pembatas.png')}}" class="w-full" alt=""></div>
+        <main class="darkpre-content-panel relative z-10">
+            <section id="darkpre-hero" class="darkpre-hero" aria-label="Pembuka undangan">
+                <div class="darkpre-hero-media"
+                    style="background-image: url('{{ asset('tema/darkpre/src/img/bg-kanan.jpg') }}');"
+                    aria-hidden="true"></div>
+                <div class="darkpre-hero-content">
+                    <p class="darkpre-hero-eyebrow" data-aos="fade-down">The Wedding Of</p>
+                    <h1 class="darkpre-hero-title" data-aos="fade-up" data-aos-delay="120">
+                        Izzah <span class="font-poppins text-[25px]">&amp;</span> Rifki
+                    </h1>
+                    <p class="darkpre-hero-date" data-aos="fade-up" data-aos-delay="220">02 . 04 . 2025</p>
+                </div>
+                <div class="darkpre-scroll-cue" aria-hidden="true">
+                    <div class="darkpre-scroll-mouse"></div>
+                    <span>Scroll ke bawah</span>
+                </div>
+                <svg class="darkpre-wave" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+                    <path fill="#080808" d="M0,64L60,80C120,96,240,128,360,122.7C480,117,600,75,720,80C840,85,960,139,1080,154.7C1200,171,1320,149,1380,138.7L1440,128L1440,320L0,320Z"></path>
+                </svg>
+            </section>
 
-      <!-- pasangan -->
-      <div class="bg-neutral-950 relative font-corinthia">
-        <!-- card 1 -->
-        <div class="  justify-center">
-          <h2 class="text-[50px] text-center font-light text-orange-200 " data-aos="fade-down" data-aos-easing="linear"
-            data-aos-duration="1500">Izzah</h2>
-          <div class="flex flex-row pl-12 items-center justify-start space-x-4 font-poppins" data-aos="fade-down"
-            data-aos-easing="linear" data-aos-duration="2000">
-            <div class=""><img src="{{asset('tema/darkpre/src/img/izzah.jpg')}}" alt=""
-                class="object-cover object-center rounded-full w-[150px] lg:w-[180px]">
-            </div>
-            <div class="text-orange-200">
-              <p class="text-[20px] font-semibold" data-aos="fade-down" data-aos-easing="linear"
-                data-aos-duration="1500">Minhatul Izzah</p>
-              <p class="font-semibold text-[13px] space-y-5" data-aos="fade-down" data-aos-easing="linear"
-                data-aos-duration="1500">Putri dari <br> Bapak Akbar S.Kom <br> & Ibu Siti S.Pd</p>
-            </div>
-          </div>
-        </div>
+            <section class="darkpre-section" aria-label="Kutipan pernikahan">
+                <div class="darkpre-quote-card" data-aos="fade-up">
+                    <p>Dan di antara tanda-tanda kebesaran-Nya, Dia menciptakan pasangan hidup untukmu agar kamu merasa tenteram dan menjadikan kasih sayang di antara kamu.</p>
+                    <span class="mt-3 block text-sm not-italic">QS. Ar-Rum: 21</span>
+                </div>
+            </section>
 
-        <!-- card 2 -->
-        <div class=" justify-center pt-10">
-          <div class="flex flex-row pr-12 items-center justify-end space-x-4">
-            <div class="text-orange-200 font-poppins">
-              <p class="text-[20px] font-semibold" data-aos="fade-down"
-              data-aos-easing="linear"
-              data-aos-duration="1500">Minhatul Izzah</p>
-              <p class="font-semibold text-[13px] space-y-5" data-aos="fade-down"
-              data-aos-easing="linear"
-              data-aos-duration="2000">Putri dari <br> Bapak Akbar S.Kom <br> & Ibu Siti S.Pd</p>
-            </div>
-            <div class="" ><img src="{{asset('tema/darkpre/src/img/rifki.jpg')}}" alt=""
-                class="object-cover object-center rounded-full w-[150px] lg:w-[180px]" data-aos="fade-down"
-                data-aos-easing="linear" data-aos-duration="2000">
-            </div>
-          </div>
-          <h2 class="text-[50px] text-center lg:absolute lg:inset-x-0  lg:-bottom-10  font-light text-orange-200">Rifki
-          </h2>
-        </div>
-      </div>
-      <!-- pasangan -->
+            <div class="darkpre-divider" aria-hidden="true"><img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" alt=""></div>
 
-      <!-- pembatas -->
-      <div class="bg-neutral-950  section" id="date"><img src="{{asset('tema/darkpre/src/img/pembatas.png')}}" class="w-full rotate-180" alt=""></div>
+            <section id="couple" class="darkpre-section darkpre-couple-section" aria-label="Kedua mempelai">
+                <p class="darkpre-section-lead" data-aos="fade-down">Dengan penuh syukur, kami mengundang Anda untuk merayakan kisah cinta kami.</p>
+                <div class="darkpre-couple-grid">
+                    <article class="darkpre-couple-card" data-aos="fade-right">
+                        <img src="{{ asset('tema/darkpre/src/img/izzah.jpg') }}" alt="Foto Minhatul Izzah">
+                        <h2 class="darkpre-couple-name">Izzah</h2>
+                        <p class="darkpre-couple-bio">Minhatul Izzah<br>Putri dari Bapak Akbar S.Kom &amp; Ibu Siti S.Pd</p>
+                    </article>
+                    <div class="darkpre-couple-ampersand" aria-hidden="true">&amp;</div>
+                    <article class="darkpre-couple-card" data-aos="fade-left">
+                        <img src="{{ asset('tema/darkpre/src/img/rifki.jpg') }}" alt="Foto Rifki">
+                        <h2 class="darkpre-couple-name">Rifki</h2>
+                        <p class="darkpre-couple-bio">Rifki<br>Putra dari Bapak Akbar S.Kom &amp; Ibu Siti S.Pd</p>
+                    </article>
+                </div>
+            </section>
 
-      <!-- Akad -->
-      <div class="bg-neutral-950 relative pt-10 pb-16 text-orange-200  font-poppins">
-        <!-- Judul -->
-        <h2 class="text-center text-[50px] z-50 relative font-light mb-6 font-corinthia">
-          Acara Akan <br> Diselenggarakan
-        </h2>
-        <!-- Gambar Hiasan Kiri -->
-        <div class="left-0 absolute top-10 inset-x-0 z-10">
-          <img src="{{asset('tema/darkpre/src/img/bunga.png')}}" alt="Hiasan Bunga" class="w-20 lg:w-24  object-center">
-        </div>
+            <div class="darkpre-divider" aria-hidden="true"><img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" alt=""></div>
 
-        <!-- Hari -->
-        <div class="text-center z-50 mt-4 relative ">
-          <div class="text-[70px] font-bold" id="days">26</div>
-          <div class="text-[30px] font-semibold">HARI</div>
-        </div>
+            <section id="date" class="darkpre-section darkpre-event-section" aria-label="Jadwal acara">
+                <h2 class="darkpre-section-heading" data-aos="fade-up">Acara Akan Diselenggarakan</h2>
+                <div class="darkpre-countdown" aria-label="Hitung mundur acara">
+                    <div class="darkpre-countdown-item"><span id="days" class="darkpre-countdown-value">00</span><span class="darkpre-countdown-label">Hari</span></div>
+                    <div class="darkpre-countdown-item"><span id="hours" class="darkpre-countdown-value">00</span><span class="darkpre-countdown-label">Jam</span></div>
+                    <div class="darkpre-countdown-item"><span id="minutes" class="darkpre-countdown-value">00</span><span class="darkpre-countdown-label">Menit</span></div>
+                    <div class="darkpre-countdown-item"><span id="seconds" class="darkpre-countdown-value">00</span><span class="darkpre-countdown-label">Detik</span></div>
+                </div>
+                <p id="countdown" class="darkpre-date-line">Rabu, 2 April 2025</p>
+                <div class="mt-6 text-center"><a href="#" class="darkpre-calendar-button"><i class="fa-solid fa-calendar-days"></i>Simpan acara ke kalender</a></div>
+            </section>
 
-        <!-- Gambar Hiasan Tengah -->
-        <div class="flex justify-center  absolute top-32 inset-x-0 z-10">
-          <img src="{{asset('tema/darkpre/src/img/bunga.png')}}" alt="Hiasan Bunga" class="w-20 lg:w-24 rotate-180">
-        </div>
+            <section id="location" class="darkpre-section" aria-label="Detail lokasi acara">
+                <h2 class="darkpre-section-heading" data-aos="fade-up">Detail Acara</h2>
+                <div class="darkpre-event-list">
+                    <article class="darkpre-event-card" data-aos="fade-up">
+                        <h3>Akad Nikah</h3>
+                        <div class="darkpre-event-details"><div>Rabu, 2 April 2025</div><div>Pukul 09.00 WIB - selesai</div><div>Masjid Al Barokah</div></div>
+                        <a href="#" class="darkpre-map-button mt-5"><i class="fa-solid fa-map-location-dot"></i>Lihat lokasi</a>
+                    </article>
+                    <article class="darkpre-event-card" data-aos="fade-up">
+                        <h3>Resepsi</h3>
+                        <div class="darkpre-event-details"><div>Rabu, 2 April 2025</div><div>Pukul 11.00 WIB - selesai</div><div>Gedung Serbaguna</div></div>
+                        <a href="#" class="darkpre-map-button mt-5"><i class="fa-solid fa-map-location-dot"></i>Lihat lokasi</a>
+                    </article>
+                </div>
+            </section>
 
-        <!-- Timer -->
-        <div class="flex relative justify-center z-50 items-center mt-10 space-x-8">
-          <!-- Hours -->
-          <div class="flex flex-col items-center">
-            <h2 class="text-3xl font-bold" id="hours">21</h2>
-            <span class="text-sm font-semibold uppercase">Hours</span>
-          </div>
+            <section class="darkpre-section darkpre-guest-section" aria-label="Keterangan undangan">
+                <p class="darkpre-section-lead" data-aos="fade-up">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Anda berkenan hadir untuk memberikan doa restu.</p>
+                <div class="darkpre-guest-list" data-aos="fade-up"><strong>Turut Mengundang</strong><div>Keluarga Besar Sujono<br>Keluarga Besar Emence<br>Teman SMK 1 Negeri</div></div>
+            </section>
 
-          <!-- Divider -->
-          <div class="h-16 w-px bg-gray-400"></div>
+            <div class="darkpre-divider" aria-hidden="true"><img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" alt=""></div>
 
-          <!-- Minutes -->
-          <div class="flex flex-col items-center">
-            <h2 class="text-3xl font-bold" id="minutes">50</h2>
-            <span class="text-sm font-semibold uppercase">Minutes</span>
-          </div>
+            <section class="darkpre-section darkpre-story-section" aria-label="Cerita pasangan">
+                <h2 class="darkpre-section-heading" data-aos="fade-up">Story</h2>
+                <div class="swiper swiperStory">
+                    <div class="swiper-wrapper">
+                        <article class="swiper-slide darkpre-story-slide"><img src="{{ asset('tema/darkpre/src/img/gambar-1.jpg') }}" alt="Cerita pertama" onclick="openModalImg(this)"><div class="darkpre-story-line"></div><p class="darkpre-story-copy">Pertama kita bertemu di tahun baru tahun 2014</p></article>
+                        <article class="swiper-slide darkpre-story-slide"><img src="{{ asset('tema/darkpre/src/img/gambar-2.jpg') }}" alt="Cerita kedua" onclick="openModalImg(this)"><div class="darkpre-story-line"></div><p class="darkpre-story-copy">15 November 2020</p></article>
+                        <article class="swiper-slide darkpre-story-slide"><img src="{{ asset('tema/darkpre/src/img/gambar-3.jpg') }}" alt="Cerita ketiga" onclick="openModalImg(this)"><div class="darkpre-story-line"></div><p class="darkpre-story-copy">29 November 2023</p></article>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </section>
 
-          <!-- Divider -->
-          <div class="h-16 w-px bg-gray-400"></div>
+            <section id="gallery" class="darkpre-section" aria-label="Galeri foto">
+                <h2 class="darkpre-section-heading" data-aos="fade-up">Gallery Kami</h2>
+                <p class="darkpre-section-lead">Pernikahan adalah kumpulan momen kecil yang tumbuh menjadi kisah cinta.</p>
+                <div class="darkpre-gallery-grid"><div class="swiper mySwiper"><div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="{{ asset('tema/darkpre/src/img/gambar-1.jpg') }}" alt="Momen foto 1" onclick="openModalImg(this)"></div>
+                    <div class="swiper-slide"><img src="{{ asset('tema/darkpre/src/img/gambar-2.jpg') }}" alt="Momen foto 2" onclick="openModalImg(this)"></div>
+                    <div class="swiper-slide"><img src="{{ asset('tema/darkpre/src/img/gambar-3.jpg') }}" alt="Momen foto 3" onclick="openModalImg(this)"></div>
+                </div><div class="swiper-pagination"></div></div></div>
+            </section>
 
-          <!-- Seconds -->
-          <div class="flex flex-col items-center">
-            <h2 class="text-3xl font-bold" id="seconds">5</h2>
-            <span class="text-sm font-semibold uppercase">Seconds</span>
-          </div>
-        </div>
+            <section id="wishes" class="darkpre-section darkpre-wishes-section" aria-label="Ucapan dan doa">
+                <h2 class="darkpre-section-heading" data-aos="fade-up">Ucapan &amp; Doa</h2>
+                <div class="darkpre-message-list">
+                    <article class="darkpre-message-card"><strong>Andy Tengil</strong><p class="mt-1 text-xs text-orange-100/60">6 Maret 2025</p><p class="mt-2 text-sm italic">"Mantap, selamat ya!"</p></article>
+                    <article class="darkpre-message-card"><strong>Selamat Tembak Dalam Coy</strong><p class="mt-1 text-xs text-orange-100/60">6 Maret 2025</p><p class="mt-2 text-sm italic">"Selamat menempuh hidup baru."</p></article>
+                </div>
+                <div class="darkpre-form-card"><h2 class="darkpre-form-title">Kirim Ucapan</h2><p class="darkpre-form-intro">Tinggalkan doa dan ucapan terbaik untuk kedua mempelai.</p>
+                    <form action="#" class="darkpre-wish-form"><input type="text" placeholder="Nama Lengkap" class="darkpre-form-input p-3"><textarea rows="4" placeholder="Ucapan &amp; Doa" class="darkpre-form-input p-3"></textarea><select class="darkpre-form-input p-3"><option>Konfirmasi Kehadiran</option><option>Datang Dong</option><option>Tidak Bisa Datang Nih</option></select><button type="submit" class="darkpre-submit-button p-3">Kirim Sekarang</button></form>
+                </div>
+            </section>
 
-        <!-- Tanggal -->
-        <div class="text-center text-lg text-orange-200 pt-8" id="countdown">
-          Rabu, 2 April 2025
-        </div>
+            <footer class="darkpre-footer">presented by<br><span class="font-semibold">Wayae Nikah</span></footer>
 
-        <!-- button -->
-        <div class="text-center pt-8 ">
-          <a href="#" class="rounded-full w-11 border border-orange-200 p-2"><i
-              class="fa-solid fa-calendar-days mr-2"></i>Simpan acara ke kalender</a>
-        </div>
-      </div>
-      <!-- end akad -->
+            <nav class="darkpre-mobile-nav block lg:hidden" id="mobile-navbar" aria-label="Navigasi undangan"><div><div>
+                <a aria-label="Pasangan" class="nav-link couple" href="#couple"><i class="fa-regular fa-heart"></i><span class="ml-2 hidden">Pasangan</span></a>
+                <a aria-label="Acara" class="nav-link date" href="#date"><i class="fa-regular fa-calendar"></i><span class="ml-2 hidden">Acara</span></a>
+                <a aria-label="Lokasi" class="nav-link location" href="#location"><i class="fa-solid fa-map-location-dot"></i><span class="ml-2 hidden">Lokasi</span></a>
+                <a aria-label="Galeri" class="nav-link gallery" href="#gallery"><i class="fa-regular fa-images"></i><span class="ml-2 hidden">Galeri</span></a>
+                <a aria-label="Ucapan" class="nav-link wishes" href="#wishes"><i class="fa-regular fa-note-sticky"></i><span class="ml-2 hidden">Ucapan</span></a>
+            </div></div></nav>
+        </main>
 
-      <!-- pembatas -->
-      <div class="bg-neutral-950  section" id="location"><img src="{{asset('tema/darkpre/src/img/pembatas.png')}}" class="w-full" alt=""></div>
-
-      <!-- resepsi -->
-      <div class="bg-neutral-950 relative text-orange-200 pb-10 font-poppins">
-        <h2 class="flex justify-center inset-x-0 -top-14 text-[50px] z-50 absolute font-light mb-6 font-corinthia">
-          Marriage contract</h2>
-
-        <div class="flex flex-col items-center justify-center w-full space-y-3 font-normal text-sm pt-8">
-          <div>Jumat, 15 Oktober 2021</div>
-          <div>pukul 09.00 WIB - selesai</div>
-          <div>Jalan Kemuning Raya, di Masjid Al Barokah</div>
-        </div>
-
-        <!-- button -->
-        <div class="text-center pt-8 ">
-          <a href="#" class="rounded-full w-11 border border-orange-200 p-2"><i
-              class="fa-solid fa-map-location-dot mr-2"></i>lihat lokasi</a>
-        </div>
-
-        <!-- receptionis -->
-        <div class="flex flex-col items-center justify-center w-full space-y-3  pt-10  text-sm">
-          <h3 class="text-[50px] mb-5 font-corinthia ">Reception</h3>
-          <div>Jumat, 15 Oktober 2021</div>
-          <div>pukul 09.00 WIB - selesai</div>
+        <div id="imageModal" class="fixed hidden inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+            <div class="relative"><img id="modalImageContent" class="max-h-screen max-w-full rounded-xl shadow-xl" src="" alt="Gambar kenangan"><button onclick="closeModalImg()" aria-label="Tutup gambar" class="absolute right-2 top-2 rounded-full bg-black/70 px-3 py-1 text-white">&times;</button></div>
         </div>
 
-        <!-- unduh mantu -->
-        <div class="flex flex-col items-center justify-center w-full space-y-3  pt-10  text-sm">
-          <h3 class="text-[50px] mb-5 font-corinthia font-light">Unduh Mantu</h3>
-          <div>Rabu, 21 April 2022</div>
-          <div>pukul 09.00 WIB - selesai</div>
-          <div>Jalan Kemuning Raya, di Masjid Al Barokah</div>
+        <div id="infoModal" class="invisible fixed inset-0 flex items-center justify-center font-poppins">
+            <div class="w-full max-w-sm rounded-2xl p-6 text-center"><h2 class="mb-3 text-lg font-bold text-stone-800">Kado</h2><p class="mb-4 text-sm text-stone-600">Terima kasih atas doa dan perhatian Anda.</p><img src="{{ asset('tema/darkpre/src/img/dana.png') }}" alt="Informasi kado" class="mx-auto mb-4 w-32"><button onclick="toggleModal()" type="button" class="rounded-full bg-stone-800 px-5 py-2 text-sm text-white">Tutup</button></div>
         </div>
-
-        <!-- button -->
-        <div class="text-center pt-8 ">
-          <a href="#" class="rounded-full w-11 border border-orange-200 p-2 "><i
-              class="fa-solid fa-map-location-dot mr-2"></i>lihat lokasi</a>
-        </div>
-
-        <div class="text-center w-full pt-14 pb-14 font-light lg:text-sm text-[11px]">Merupakan suatu kehormatan dan
-          kebahagiaan bagi
-          kami <br> apabila,
-          Saudara
-          / i. berkenan hadir untuk memberikan do'a <br> restunya kami ucapkan terimakasih.
-        </div>
-
-        <div
-          class="flex flex-col lg:absolute lg:inset-x-0 lg:-bottom-14 justify-center items-center space-y-3 pt-10 text-sm">
-          <p class="text-xl font-semibold">Turut Mengundang:</p>
-          <p>Keluarga Besar Sujono</p>
-          <p>Keluarga Besar Emence</p>
-          <p>Teman SMK 1 Negeri</p>
-        </div>
-
-      </div>
-      <!-- resepsi -->
-
-      <!-- pembatas -->
-      <div class="bg-neutral-950 "><img src="{{asset('tema/darkpre/src/img/pembatas.png')}}" class="w-full rotate-180" alt=""></div>
-
-      <!-- story -->
-      <div class="w-full bg-neutral-950 text-orange-200 font-poppins section overflow-x-hidden">
-        <h2 class="text-center text-[50px] font-corinthia z-50  font-light mb-6 py-8 ">Story</h2>
-        <div class="swiper_2 swiperStory mt-8 ">
-          <div class="swiper-wrapper gap-3 font-semibold ">
-            <div class="swiper-slide flex flex-col  text-sm space-y-5"><img src="{{asset('tema/darkpre/src/img/gambar-1.jpg')}}" alt=""
-                class="object-cover object-center aspect-square  w-[300px] shadow-md cursor-pointer rounded-full"
-                onclick="openModalImg(this)">
-              <p>Pertama kita bertemu di tahun baru tahun 2014</p>
-            </div>
-            <div class="swiper-slide flex flex-col  text-sm space-y-5"><img src="{{asset('tema/darkpre/src/img/gambar-2.jpg')}}" alt=""
-                class="object-cover object-center aspect-square  w-[300px] shadow-md cursor-pointer rounded-full"
-                onclick="openModalImg(this)">
-              <p>15 November 2020</p>
-            </div>
-            <div class="swiper-slide flex flex-col  text-sm space-y-5"><img src="{{asset('tema/darkpre/src/img/gambar-3.jpg')}}" alt=""
-                class="object-cover object-center aspect-square  w-[300px] shadow-md cursor-pointer rounded-full"
-                onclick="openModalImg(this)">
-              <p>29 November 2023</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- story -->
-
-      <!-- Galery -->
-      <div class=" w-full bg-neutral-950 text-orange-200 font-poppins section" id="gallery">
-        <h2 class="text-center text-[50px] font-corinthia z-50  font-light mb-6 py-8">Gallery Kami</h2>
-        <div class="text-center text-sm mb-10">"Pernikahan seperti mozaik yang kita buat dengan <br> pasangan kita,
-          jutaan momen kecil yang menjadi kisah <br> cinta."</div>
-        <div class="swiper mySwiper text-black pt-10 ">
-          <div class="swiper-wrapper ">
-            <div class="swiper-slide">
-              <img src="{{asset('tema/darkpre/src/img/gambar-1.jpg')}}" alt="Thumbnail" onclick="openModalImg(this)"
-                class="object-cover object-center w-full h-full shadow-md cursor-pointer">
-            </div>
-            <div class="swiper-slide">
-              <img src="{{asset('tema/darkpre/src/img/gambar-2.jpg')}}" alt="Thumbnail" onclick="openModalImg(this)"
-                class="object-cover object-center w-full h-full shadow-md cursor-pointer">
-            </div>
-            <div class="swiper-slide">
-              <img src="{{asset('tema/darkpre/src/img/gambar-3.jpg')}}" alt="Thumbnail" onclick="openModalImg(this)"
-                class="object-cover object-center w-full h-full shadow-md cursor-pointer">
-            </div>
-
-          </div>
-        </div>
-      </div>
-      <!-- end gallery -->
-
-      <!-- ucapan -->
-      <div class="w-full  bg-neutral-950 text-orange-200 relative z-50">
-        <h2 class="text-center text-[50px] font-light mb-6 py-8 font-corinthia">Ucapan & Doa</h2>
-        <div class="flex justify-center left-0  absolute  z-10">
-          <img src="{{asset('tema/darkpre/src/img/bunga.png')}}" alt="Hiasan Bunga" class="w-20 lg:w-32 ">
-        </div>
-
-        <!-- Gambar Hiasan Tengah -->
-        <div class="flex justify-center right-0  absolute  z-10">
-          <img src="{{asset('tema/darkpre/src/img/bunga.png')}}" alt="Hiasan Bunga" class="w-20 lg:w-32 ">
-        </div>
-
-
-        <div class="p-6 h-[300px] rounded-lg shadow-lg space-y-5 overflow-y-auto z-50 relative font-poppins">
-          <!-- AT -->
-          <div class=" p-4 rounded-md   h-auto  shadow-md shadow-slate-200 bg-neutral-950">
-            <h3 class="text-[14px] font-semibold">AT (Andy Tengil)</h3>
-            <p class="text-[12px] ">Thursday, 06 03 2025</p>
-            <p class="mt-2 text-[12px] italic">"Mantap antap"</p>
-          </div>
-
-          <!-- ST -->
-          <div class=" p-4 rounded-md shadow-md shadow-slate-200 h-auto bg-neutral-950">
-            <h3 class="text-[14px] font-semibold">ST (Selamat Tembak Dalam Coy)</h3>
-            <p class="text-[12px] ">Thursday, 06 03 2025</p>
-            <p class="mt-2  italic">"Selamat Ya"</p>
-          </div>
-
-          <!-- R -->
-          <div class=" p-4 rounded-md shadow-md shadow-slate-200 h-auto bg-neutral-950">
-            <h3 class="text-[14px] font-semibold">R (Ronald)</h3>
-            <p class="text-[12px] ">Thursday, 06 03 2025</p>
-            <p class="mt-2 text-[12px] italic">
-              "Selamat mengarungi kehidupan berumah tangga Bajuri & Ijah.. Langgeng terus sampai kapan pun"
-            </p>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="w-full bg-neutral-950 text-orange-200 p-6 shadow-lg relative  section" id="wishes">
-        <h4 class="text-2xl font-semibold mb-4 relative z-50 font-corinthia">Kirim Ucapan</h4>
-        <!-- Gambar Hiasan Tengah -->
-        <div class="flex justify-center right-14  absolute  z-10">
-          <img src="{{asset('tema/darkpre/src/img/bunga.png')}}" alt="Hiasan Bunga" class="w-20 lg:w-32 ">
-        </div>
-        <form action="" class="space-y-4 relative z-50">
-          <!-- Input Nama -->
-          <input type="text" name="nama" placeholder="Nama Lengkap"
-            class="w-full p-3 rounded-md bg-slate-600 opacity-35 text-orange-200 placeholder-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-200" />
-
-          <!-- Textarea Ucapan -->
-          <textarea name="pesan" placeholder="Ucapan & Doa" rows="4"
-            class="w-full p-3 rounded-md bg-slate-600 opacity-35 text-orange-200 placeholder-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-200"></textarea>
-
-          <!-- Select Konfirmasi Kehadiran -->
-          <select name="konfirmasi"
-            class="w-full p-3 rounded-md bg-slate-600 opacity-35 text-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-200">
-            <option value="">Konfirmasi Kehadiran</option>
-            <option value="datang">Datang Dong</option>
-            <option value="tidak_datang">Tidak Bisa Datang Nih</option>
-            <option value="diusahakan">Diusahakan Datang Ya</option>
-          </select>
-
-          <!-- Button Kirim -->
-          <button type="submit"
-            class="w-full rounded-full bg-orange-200 text-black font-semibold p-3 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200">
-            Kirim Sekarang
-          </button>
-        </form>
-      </div>
-
-      <div class="text-center pt-12 text-orange-200 text-[10px] bg-neutral-950 pb-5">
-        presented by <br> <span class="font-semibold">Wayae Nikah</span>
-      </div>
-      <!-- ucapan -->
-
-      <!-- Navbar mobile -->
-      <div
-        class="navbar block lg:hidden fixed bottom-3 ring-1 ring-offset-2 ring-white inset-x-0 w-auto h-auto mx-2 bg-neutral-950 rounded-full shadow-lg z-50"
-        id="navbar">
-        <div class=" py-3 relative">
-          <div class="flex flex-row  justify-center items-center w-full text-orange-200 text-sm gap-3">
-            <a class="nav-link  couple flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#couple">
-              <i class="fa-regular fa-heart"></i>
-              <span class="ml-2 hidden">couple</span>
-            </a>
-            <a class="nav-link   date  flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#date">
-              <i class="fa-regular fa-calendar"></i>
-              <span class="ml-2 hidden">date</span>
-            </a>
-            <a class="nav-link  location flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#location">
-              <i class="fa-solid fa-map-location-dot"></i>
-              <span class="ml-2 hidden">location</span>
-            </a>
-            <a class="nav-link  gallery flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#gallery">
-              <i class="fa-regular fa-images"></i>
-              <span class="ml-2 hidden">gallery</span>
-            </a>
-            <a class="nav-link  wishes flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-              href="#wishes">
-              <i class="fa-regular fa-note-sticky"></i>
-              <span class="ml-2 hidden">wishes</span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <!-- Navbar -->
     </div>
 
-    <!-- Modal Image -->
-    <div id="imageModal"
-      class="fixed hidden inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center transition-all duration-300 ease-in-out">
-      <div class="relative">
-        <img id="modalImageContent" class="max-w-full max-h-screen rounded-lg shadow-xl py-11" src=""
-          alt="Modal Image" />
-        <button onclick="closeModalImg()"
-          class="absolute top-2 right-2 text-white bg-sky-500 hover:bg-slate-600 rounded-lg py-1 px-3 focus:outline-none">
-          ✕
-        </button>
-      </div>
-    </div>
+    <script src="{{ asset('tema/darkpre/assets/aos/dist/aos.js') }}"></script>
+    <script src="{{ asset('tema/darkpre/assets/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('tema/darkpre/src/js/swiper.js') }}"></script>
+    <script src="{{ asset('tema/darkpre/src/js/nav.js') }}"></script>
+    <script src="{{ asset('tema/darkpre/src/js/modal.js') }}"></script>
+    <script src="{{ asset('tema/darkpre/src/js/audio.js') }}"></script>
+    <script>
+        AOS.init({ duration: 850, easing: 'ease-out-cubic', once: true, offset: 70 });
 
-  </div>
-  <!-- konten -->
-
-  <!-- aos -->
-  <script src="{{asset('tema/darkpre/assets/aos/dist/aos.js')}}"></script>
-
-  <!-- Swiper -->
-  <script src="{{asset('tema/darkpre/assets/swiper/swiper-bundle.min.js')}}"></script>
-  <script src="{{asset('tema/darkpre/assets/swiper/swiper-element-bundle.min.js')}}"></script>
-  <script src="{{asset('tema/darkpre/src/js/swiper.js')}}"></script>
-
-  <!-- nav -->
-  <script src="{{asset('tema/darkpre/src/js/nav.js')}}"></script>
-  <!-- modal -->
-  <script src="{{asset('tema/darkpre/src/js/modal.js')}}"></script>
-  <!-- audio -->
-  <script src="{{asset('tema/darkpre/src/js/audio.js')}}"></script>
-  <script src="{{asset('tema/darkpre/src/js/setDate.js')}}"></script>
-  <script>
-    AOS.init();
-  </script>
-
+        document.addEventListener('DOMContentLoaded', () => {
+            const target = new Date('2025-04-02T09:00:00').getTime();
+            const elements = ['days', 'hours', 'minutes', 'seconds'].reduce((map, id) => ({ ...map, [id]: document.getElementById(id) }), {});
+            const update = () => {
+                const distance = Math.max(0, target - Date.now());
+                const values = {
+                    days: Math.floor(distance / 86400000),
+                    hours: Math.floor((distance % 86400000) / 3600000),
+                    minutes: Math.floor((distance % 3600000) / 60000),
+                    seconds: Math.floor((distance % 60000) / 1000),
+                };
+                Object.entries(values).forEach(([key, value]) => elements[key].textContent = String(value).padStart(2, '0'));
+            };
+            update();
+            setInterval(update, 1000);
+        });
+    </script>
 </body>
 
 </html>
