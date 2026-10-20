@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Always send public theme demos through Laravel. This also handles
+    # production servers that still contain a physical /demo directory.
+    RewriteRule ^demo(?:/.*)?$ index.php [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
