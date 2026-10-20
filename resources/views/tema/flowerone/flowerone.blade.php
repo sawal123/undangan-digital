@@ -94,9 +94,10 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('tema/flowerone/style/theme.css') }}">
 </head>
 
-<body class="position-relative ">
+<body class="position-relative flowerone-theme">
     <!-- COVER -->
     @include('tema.flowerone.cover')
     <!-- COVER -->
@@ -144,17 +145,16 @@
     <nav class="navbar fixed-bottom mx-5 bg-white rounded-top-2 shadow-lg" id="navbar">
         <div class="container-fluid pt-2">
             <div class="d-flex justify-content-center w-100 gap-2">
-                <a class="nav-link icon-container home" href="#home"><i class="fa-regular fa-file-lines"></i></a>
-                <a class="nav-link icon-container detail" href="#detail"><i class="fa-regular fa-heart"></i></a>
-                <a class="nav-link icon-container acara" href="#acara"><i class="fa-regular fa-note-sticky"></i></a>
-                @if ($poto)
-                    <a class="nav-link icon-container gallery" href="#gallery"><i
-                            class="fa-regular fa-images"></i></a>
+                <a class="nav-link icon-container home" href="#home" aria-label="Beranda"><i class="fa-solid fa-house"></i><span class="nav-label">Home</span></a>
+                <a class="nav-link icon-container detail" href="#detail" aria-label="Mempelai"><i class="fa-solid fa-heart"></i><span class="nav-label">Mempelai</span></a>
+                <a class="nav-link icon-container acara" href="#acara" aria-label="Acara"><i class="fa-solid fa-calendar-days"></i><span class="nav-label">Acara</span></a>
+                @if ($poto || $video)
+                    <a class="nav-link icon-container gallery" href="#gallery" aria-label="Gallery"><i class="fa-solid fa-images"></i><span class="nav-label">Gallery</span></a>
                 @endif
-                <a class="nav-link icon-container reservation" href="#reservation"><i
-                        class="fa-solid fa-gifts"></i></a>
-                <a class="nav-link icon-container message" href="#message"><i
-                        class="fa-brands fa-rocketchat"></i></a>
+                <a class="nav-link icon-container reservation" href="#reservation" aria-label="Kado"><i class="fa-solid fa-gift"></i><span class="nav-label">Kado</span></a>
+                @if ($data->FiturUcapan?->isActive)
+                    <a class="nav-link icon-container message" href="#message" aria-label="Ucapan"><i class="fa-solid fa-comment-dots"></i><span class="nav-label">Ucapan</span></a>
+                @endif
             </div>
         </div>
     </nav>
@@ -168,7 +168,7 @@
                 <div class="rounded-card w-100 position-relative">
 
                     <!-- Background Image -->
-                    <div class="w-100 position-absolute" style="z-index: 1; top: 0; left: 0;  overflow: hidden;">
+                    <div class="w-100 position-absolute floral-backdrop" style="z-index: 1; top: 0; left: 0; overflow: hidden;">
                         <img src="{{ asset('tema/flowerone/img/abstract.png') }}"
                             class="object-fit-cover w-100 h-100" alt="">
                     </div>
@@ -399,7 +399,7 @@
                             @endif
 
                             <!-- Slider main container -->
-                            @if ($data)
+                            @if ($poto)
                                 @include('tema.flowerone.gallery')
                             @endif
 

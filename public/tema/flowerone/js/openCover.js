@@ -1,14 +1,11 @@
-// Get references to the elements
-const cover = document.getElementById('cover');
-const openCover = document.getElementById('openCover');
+document.addEventListener('DOMContentLoaded', () => {
+    const cover = document.getElementById('cover');
+    const openCover = document.getElementById('openCover');
 
-// Open Cover Button Action
-openCover.addEventListener('click', function () {
-    window.musicPlayer?.play();
+    if (!cover || !openCover) return;
 
-    setTimeout(function () {
-        // Hide the cover with fade-out effect
-        cover.classList.remove('d-block');
-        cover.classList.add('d-none', 'fade-out');
-    }, 500);
+    openCover.addEventListener('click', () => {
+        window.musicPlayer?.play();
+        cover.classList.add('d-none');
+    });
 });

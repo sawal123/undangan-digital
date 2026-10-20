@@ -1,5 +1,5 @@
-<div class="min-vh-100 position-fixed top-0 left-0 w-100 d-block align-content-center"
-    style="background-color: pink; z-index: 9999;" id="cover">
+<div class="min-vh-100 position-fixed top-0 left-0 w-100 d-block align-content-center flowerone-cover"
+    id="cover">
     <div class="text-center mt-3">
         <img src="{{ asset('tema/flowerone/img/flower-top.png') }}" class="flower-img img-fluid" alt="Flower decoration">
     </div>
