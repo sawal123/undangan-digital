@@ -1,35 +1,15 @@
-<p class="text-center text-[12px] leading-[20px]" data-aos="fade-up" data-aos-duration="3000">
-    {{ $data->teksUndangan?->pembuka ?? '' }}
-</p>
-
-<!-- Card 1 -->
-<div class="mx-auto bg-white overflow-hidden my-3 px-3 font-italiana">
-    <div class="flex justify-center" data-aos="zoom-in-up" data-aos-duration="3000">
-        <img src="{{ asset('storage/' . ($data->pria?->image ?? '')) }}" alt="Foto Siska"
-            style="width: 256px; height: 256px; object-fit: cover; border-radius: 50%;" />
-
-
-    </div>
-
-    <div class="p-4 text-center" data-aos="fade-up" data-aos-duration="3000">
-        <h2 class="text-xl font-semibold text-gray-800">{{ $data->pria?->nama_lengkap ?? '' }}</h2>
-        <p class="mt-2 text-gray-600">{{ $data->pria?->deskripsi ?? '' }}</p>
-    </div>
+<div class="darksweet-couple-grid">
+    @foreach ([['person' => $data->pria, 'label' => 'Mempelai Pria'], ['person' => $data->wanita, 'label' => 'Mempelai Wanita']] as $couple)
+        @php $person = $couple['person']; @endphp
+        <article class="darksweet-person-card" data-aos="fade-up">
+            <div class="darksweet-person-card__image">
+                <img src="{{ asset('storage/' . ($person?->image ?? '')) }}" alt="{{ $couple['label'] }} {{ $person?->nama_lengkap ?? '' }}" loading="lazy">
+            </div>
+            <div class="darksweet-person-card__body">
+                <p class="darksweet-eyebrow">{{ $couple['label'] }}</p>
+                <h3 class="darksweet-person-card__name">{{ $person?->nama_lengkap ?? '' }}</h3>
+                <p class="darksweet-person-card__description">{{ $person?->deskripsi ?? '' }}</p>
+            </div>
+        </article>
+    @endforeach
 </div>
-<!-- Card 1 -->
-
-<!-- Card 2 -->
-<div class="mx-auto bg-white overflow-hidden my-3 px-3 font-italiana">
-    <div class="flex justify-center" data-aos="zoom-in-up" data-aos-duration="3000">
-        <img src="{{ asset('storage/' . ($data->wanita?->image ?? '')) }}" alt="Foto Siska"
-            style="width: 256px; height: 256px; object-fit: cover; border-radius: 50%;" />
-
-
-    </div>
-
-    <div class="p-4 text-center" data-aos="fade-up" data-aos-duration="3000">
-        <h2 class="text-xl font-semibold text-gray-800">{{ $data->wanita?->nama_lengkap ?? '' }}</h2>
-        <p class="mt-2 text-gray-600">{{ $data->wanita?->deskripsi ?? '' }}</p>
-    </div>
-</div>
-<!-- Card 2 -->

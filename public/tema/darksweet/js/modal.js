@@ -1,21 +1,21 @@
 // MOdal qr
 const openModal = document.getElementById('openModalQr');
- const closeModal = document.getElementById('closeModal');
- const modal = document.getElementById('modal');
+const closeModal = document.getElementById('closeModal');
+const modal = document.getElementById('modal');
 
- openModal.addEventListener('click', () => {
-   modal.classList.remove('invisible');
- });
+if (openModal && closeModal && modal) {
+    openModal.addEventListener('click', () => {
+        modal.classList.remove('invisible');
+    });
 
- closeModal.addEventListener('click', () => {
-   modal.classList.add('invisible'); 
- });
+    closeModal.addEventListener('click', () => {
+        modal.classList.add('invisible');
+    });
 
- modal.addEventListener('click', (event) => {
-   if (event.target === modal) {
-     modal.classList.add('invisible');
-   }
- });
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) modal.classList.add('invisible');
+    });
+}
 
 
 
