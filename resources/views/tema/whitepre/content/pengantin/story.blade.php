@@ -1,38 +1,24 @@
-<style>
-    .swiper {
-        width: 600px;
-        height: 300px;
-    }
-</style>
 @if ($data->kisah?->isNotEmpty())
-    <div class="w-full bg-orange-50 text-pink-800 font-poppins section overflow-x-hidden"
-        style="background-image:url(' {{ asset('tema/whitepre/src/img/pembatas_bunga.png') }}'); background-position: center; background-size: contain; background-repeat: round;">
-        <h2 class="text-center text-[50px]  font-great_vibes z-50  font-semibold mb-6 py-8 ">Story</h2>
-        <div class="swiper swiperStory mt-8 ">
-            <div class="swiper-wrapper gap-2 font-semibold ">
+    <section class="whitepre-section whitepre-story-section" aria-label="Cerita pasangan"
+        style="background-image: url('{{ asset('tema/whitepre/src/img/pembatas_bunga.png') }}'); background-position: center; background-size: contain; background-repeat: repeat-y;">
+        <h2 class="whitepre-section-heading" data-aos="fade-up">Story</h2>
+        <div class="swiper swiperStory">
+            <div class="swiper-wrapper">
                 @foreach ($data->kisah as $item)
-                    <div class="swiper-slide flex flex-col text-sm space-y-5  ">
-                        <img src="{{ asset('storage/' . ($item->image?->image ?? '')) }}" alt=""
-                            class="object-cover object-center w-[300px] h-[150px] shadow-md cursor-pointer rounded-full border-2 border-dashed border-pink-800"
-                            onclick="openModalImg(this)">
-                        <div class="font-semibold text-[15px]">{{ $item->title }} <br> <span
-                                class="font-normal text-[12px]"> {{ $item->deskripsi }}</span> </div>
-                    </div>
+                    <article class="swiper-slide whitepre-story-slide">
+                        <img src="{{ asset('storage/' . ($item->image?->image ?? 'images/placeholder.jpg')) }}"
+                            alt="{{ $item->title ?? 'Cerita pasangan' }}" onclick="openModalImg(this)">
+                        <div class="whitepre-story-line" aria-hidden="true"></div>
+                        <div class="whitepre-story-copy">
+                            <h3 class="font-semibold">{{ $item->title }}</h3>
+                            @if ($item->deskripsi)
+                                <p class="mt-2 text-xs font-normal leading-relaxed">{{ $item->deskripsi }}</p>
+                            @endif
+                        </div>
+                    </article>
                 @endforeach
             </div>
+            <div class="swiper-pagination"></div>
         </div>
-    </div>
+    </section>
 @endif
-
-
-<script>
-    var swiper_2 = new Swiper(".swiperStory", {
-        slidesPerView: 3,
-        spaceBetween: 30,
-        centeredSlides: true,
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-    });
-</script>

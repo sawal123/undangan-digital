@@ -18,7 +18,6 @@
     <link rel="stylesheet" href=" {{ asset('tema/whitepre/src/css/gallery.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/whitepre/assets/fontawesome-free/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/whitepre/assets/swiper/swiper-bundle.min.css') }}">
-    <script src="{{ asset('tema/whitepre/assets/swiper/swiper-bundle.min.js') }}"></script>
 
     <style>
         @if ($data->dataFont)
@@ -56,16 +55,17 @@
             font-style: normal;
         }
     </style>
+    @include('tema.whitepre.styles')
 </head>
 
-<body class="relative">
+<body class="whitepre-page relative">
 
     <!-- cover mobile -->
     @include('tema.whitepre.cover-mobile')
 
 
     <!-- konten -->
-    <div class="flex flex-row h-screen z-10 relative">
+    <div class="whitepre-shell flex flex-row z-10 relative">
         <!-- Bagian kiri  -->
         @include('tema.whitepre.bagian-kiri')
 
@@ -78,9 +78,9 @@
             <div class="relative">
                 <img id="modalImageContent" class="max-w-full max-h-screen rounded-lg shadow-xl py-11" src=""
                     alt="Modal Image" />
-                <button onclick="closeModalImg()"
+                <button onclick="closeModalImg()" aria-label="Tutup gambar"
                     class="absolute top-2 right-2 text-white bg-sky-500 hover:bg-slate-600 rounded-lg py-1 px-3 focus:outline-none">
-                    ✕
+                    &times;
                 </button>
             </div>
         </div>
@@ -93,7 +93,12 @@
     <!-- konten -->
     <script src="{{ asset('tema/whitepre/assets/aos/dist/aos.js') }}"></script>
     <script>
-        AOS.init();
+        AOS.init({
+            duration: 850,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 70
+        });
     </script>
 
     <!-- Swiper -->
