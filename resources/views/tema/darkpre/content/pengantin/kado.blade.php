@@ -1,54 +1,55 @@
-<button onclick="toggleModal()" type="button"
-    class="fixed lg:absolute rounded-full w-14 h-14 top-28 right-2 lg:right-5 bg-teal-400 z-50 flex items-center justify-center text-2xl shadow-lg hover:bg-teal-500 transition duration-300">
-    <i class="fa-solid fa-wallet text-white"></i>
+<button onclick="toggleModal()" type="button" aria-label="Buka informasi kado"
+    class="darkpre-float-control darkpre-float-control--gift fixed lg:absolute top-28 right-2 z-50 h-14 w-14 rounded-full text-2xl lg:right-5">
+    <i class="fa-solid fa-wallet" aria-hidden="true"></i>
 </button>
 
-<!-- Modal kado -->
-<div id="infoModal"
-    class="invisible fixed inset-0 bg-black bg-opacity-50  flex items-center justify-center z-50 font-poppins ">
-    <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center">
-        <h2 class="text-lg font-bold text-gray-800 mb-4">Kado</h2>
-        <p class="text-gray-600 mb-4">Berikut adalah informasi untuk mengirimkan kado atau hadiah secara
-            online atau
-            melalui pengiriman fisik:</p>
-        @foreach ($data->kado as $index => $kado)
-            <ul class="text-left text-gray-700 mb-6 flex flex-col items-center text-sm relative ">
-                <li class="mb-2 text-center"><img src="{{ asset('storage/' . ($kado->giftPay?->icon ?? '')) }}"
-                        alt="" class="w-32"></li>
-                <li class="mb-2"><strong>{{ $kado->namaPay }}</strong></li>
-                <li class="nomor-rekening">{{ $kado->nomorPay }}</li>
-                <li class="my-2">
-                    <button onclick="salinTeks(this)" style="border: 1px solid #313131;"
-                        class=" sm:px-3 py-1 text-slate-800 text-sm sm:text-xs rounded-lg bg-blue-500 p-2">
-                        Copy
-                    </button>
-                </li>
-            </ul>
-            <hr class="" style="margin-bottom: 5px">
-            @if ($kado->qris)
-                <ul class="text-left text-gray-700 mb-6 flex flex-col items-center  text-sm relative ">
-                    <li class="mb-2"><strong>Kasih Hadiah Pakai QRIS</strong></li>
-                    <li class="mb-2 text-center"><img src="{{ asset('storage/' . $kado->qris) }}" alt=""
-                            class="w-32"></li>
+<div id="infoModal" class="invisible fixed inset-0 flex items-center justify-center font-poppins">
+    <div class="w-full max-w-sm rounded-2xl p-6 text-center">
+        <h2 class="mb-4 text-lg font-bold text-stone-800">Kado</h2>
+        <p class="mb-4 text-sm text-stone-600">
+            Berikut adalah informasi untuk mengirimkan kado atau hadiah secara online.
+        </p>
 
-                </ul>
-            @endif
-        @endforeach
-        <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
-            onclick="toggleModal()">Tutup</button>
+        @forelse ($data->kado as $kado)
+            <div class="relative mb-6 border-b border-stone-300 pb-5 text-sm text-stone-700 last:border-0">
+                @if ($kado->giftPay?->icon)
+                    <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" alt="{{ $kado->namaPay }}"
+                        class="mx-auto mb-3 h-auto w-32">
+                @endif
+                <strong class="block">{{ $kado->namaPay }}</strong>
+                <span class="nomor-rekening mt-1 block">{{ $kado->nomorPay }}</span>
+                <button onclick="salinTeks(this)" type="button"
+                    class="mt-3 rounded-lg bg-stone-800 px-3 py-1 text-xs text-white transition hover:bg-stone-700">
+                    Salin nomor
+                </button>
+
+                @if ($kado->qris)
+                    <div class="mt-5 border-t border-stone-200 pt-4">
+                        <strong class="mb-2 block">Kasih hadiah dengan QRIS</strong>
+                        <img src="{{ asset('storage/' . $kado->qris) }}" alt="QRIS {{ $kado->namaPay }}"
+                            class="mx-auto w-40">
+                    </div>
+                @endif
+            </div>
+        @empty
+            <p class="text-sm text-stone-600">Informasi kado belum tersedia.</p>
+        @endforelse
+
+        <button class="rounded-full bg-stone-800 px-5 py-2 text-sm text-white transition hover:bg-stone-700"
+            onclick="toggleModal()" type="button">
+            Tutup
+        </button>
     </div>
-
-    <script>
-        function salinTeks(button) {
-            // Ambil elemen teks dalam kartu yang sesuai dengan tombol yang diklik
-            const nomorRekening = button.closest('.relative').querySelector('.nomor-rekening').textContent;
-
-            // Salin teks ke clipboard
-            navigator.clipboard.writeText(nomorRekening).then(() => {
-                alert('Nomor rekening berhasil disalin: ' + nomorRekening);
-            }).catch(err => {
-                alert('Gagal menyalin teks: ' + err);
-            });
-        }
-    </script>
 </div>
+
+<script>
+    function salinTeks(button) {
+        const nomorRekening = button.closest('.relative').querySelector('.nomor-rekening')?.textContent.trim();
+        if (!nomorRekening || !navigator.clipboard) return;
+
+        navigator.clipboard.writeText(nomorRekening).then(() => {
+            button.textContent = 'Tersalin';
+            setTimeout(() => button.textContent = 'Salin nomor', 1600);
+        });
+    }
+</script>

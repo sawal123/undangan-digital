@@ -1,23 +1,31 @@
-var swiper = new Swiper(".mySwiper", {
-    spaceBetween: 30,
-    effect: "fade",
-    autoplay: {
-        delay: 2000,
-        disableOnInteraction: false,
-      },
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
-  });
+const gallerySlider = document.querySelector('.mySwiper');
 
+if (gallerySlider) {
+    new Swiper(gallerySlider, {
+        effect: 'fade',
+        loop: true,
+        autoplay: {
+            delay: 3200,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.mySwiper .swiper-pagination',
+            clickable: true,
+        },
+    });
+}
 
-  var swiper_2 = new Swiper(".swiperStory", {
-    slidesPerView: 3,
-    spaceBetween: 30,
-    centeredSlides: true,
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
-  });
+const storySlider = document.querySelector('.swiperStory');
+
+if (storySlider) {
+    new Swiper(storySlider, {
+        slidesPerView: 1,
+        spaceBetween: 16,
+        centeredSlides: false,
+        watchOverflow: true,
+        pagination: {
+            el: '.swiperStory .swiper-pagination',
+            clickable: true,
+        },
+    });
+}

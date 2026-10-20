@@ -1,102 +1,55 @@
-<div class="w-full lg:w-2/5 h-full relative items-center text-white ml-auto z-10">
-
-    <!-- cover-kiri -->
+<main class="darkpre-content-panel relative z-10">
     @include('tema.darkpre.content.cover-kanan')
-    <!-- End cover-kiri -->
 
-    <!-- Kutipan Al-Qur'an -->
-    <div class="bg-neutral-950 w-full p-2 ">
-
-        <div class="border border-orange-200 rounded-lg border-dashed text-orange-200 p-2 italic">
-            <p class="text-center font-semibold p-10 space-y-3 lg:text-lg text-[13px]">{{ $data->qoute?->title ?? '' }}
-            </p>
-            <p class="text-center font-semibold  space-y-3 lg:text-lg text-[13px]">"{{ $data->qoute?->qoute ?? '' }}"
-                <br>
-                <br>
-                <span class="italic">{{ $data->qoute?->subtitle ?? '' }}</span>
-            </p>
+    <section class="darkpre-section" aria-label="Kutipan pernikahan">
+        <div class="darkpre-quote-card" data-aos="fade-up">
+            @if ($data->qoute?->title)
+                <p class="mb-3 font-semibold">{{ $data->qoute->title }}</p>
+            @endif
+            <p>{{ $data->qoute?->qoute ?? '' }}</p>
+            @if ($data->qoute?->subtitle)
+                <span class="mt-3 block text-sm not-italic">{{ $data->qoute->subtitle }}</span>
+            @endif
         </div>
+    </section>
+
+    <div class="darkpre-divider" aria-hidden="true">
+        <img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" alt="">
     </div>
 
-    <!-- pembatas -->
-    <div class="bg-neutral-950 pt-10 section" id="couple"><img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}"
-            class="w-full" alt=""></div>
-
-    <!-- opening -->
     @include('tema.darkpre.content.pengantin.opening')
-    <!-- opening -->
 
-    <!-- pembatas -->
-    <div class="bg-neutral-950  section" id="date"><img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}"
-            class="w-full rotate-180" alt=""></div>
-
-    <!-- himbauan 1 -->
-    @include('tema.darkpre.content.pengantin.himbauan-1')
-    <!-- end himbauan 1 -->
-
-    <!-- pembatas -->
-    <div class="bg-neutral-950  section" id="location"><img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}"
-            class="w-full" alt=""></div>
-
-    <!-- acara -->
-    @include('tema.darkpre.content.pengantin.acara')
-    <!-- acara -->
-
-    <!-- pembatas -->
-    <div class="bg-neutral-950 "><img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" class="w-full rotate-180"
-            alt=""></div>
-
-    {{-- story --}}
-    @include('tema.darkpre.content.pengantin.story')
-    {{-- story --}}
-
-    <!-- album -->
-    @include('tema.darkpre.content.pengantin.album')
-    <!-- end album -->
-
-    <!-- ucapan -->
-    @include('tema.darkpre.content.pengantin.ucapan')
-    <!-- ucapan -->
-
-    <div class="text-center pt-6 lg:pt-12 text-orange-200 text-[10px] bg-neutral-950 pb-24 lg:pb-5">
-        presented by <br> <span class="font-semibold">Wayae Nikah</span>
+    <div class="darkpre-divider" aria-hidden="true">
+        <img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" alt="">
     </div>
 
+    @include('tema.darkpre.content.pengantin.himbauan-1')
+    @include('tema.darkpre.content.pengantin.acara')
 
-    <!-- Navbar mobile -->
-    <div class="navbar block lg:hidden fixed bottom-3 ring-1 ring-offset-2 ring-white inset-x-0 w-auto h-auto mx-2 bg-neutral-950 rounded-full shadow-lg z-50"
-        id="navbar">
-        <div class=" py-3 relative">
-            <div class="flex flex-row  justify-center items-center w-full text-orange-200 text-sm gap-3">
-                <a class="nav-link  couple flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#couple">
-                    <i class="fa-regular fa-heart"></i>
-                    <span class="ml-2 hidden">couple</span>
-                </a>
-                <a class="nav-link   date  flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#date">
-                    <i class="fa-regular fa-calendar"></i>
-                    <span class="ml-2 hidden">date</span>
-                </a>
-                <a class="nav-link  location flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#location">
-                    <i class="fa-solid fa-map-location-dot"></i>
-                    <span class="ml-2 hidden">location</span>
-                </a>
+    <div class="darkpre-divider" aria-hidden="true">
+        <img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" alt="">
+    </div>
+
+    @include('tema.darkpre.content.pengantin.story')
+    @include('tema.darkpre.content.pengantin.album')
+    @include('tema.darkpre.content.pengantin.ucapan')
+
+    <footer class="darkpre-footer">
+        presented by<br>
+        <span class="font-semibold">Wayae Nikah</span>
+    </footer>
+
+    <nav class="darkpre-mobile-nav navbar block lg:hidden" id="mobile-navbar" aria-label="Navigasi undangan">
+        <div>
+            <div>
+                <a aria-label="Pasangan" class="nav-link couple" href="#couple"><i class="fa-regular fa-heart"></i><span class="ml-2 hidden">Pasangan</span></a>
+                <a aria-label="Acara" class="nav-link date" href="#date"><i class="fa-regular fa-calendar"></i><span class="ml-2 hidden">Acara</span></a>
+                <a aria-label="Lokasi" class="nav-link location" href="#location"><i class="fa-solid fa-map-location-dot"></i><span class="ml-2 hidden">Lokasi</span></a>
                 @if ($poto)
-                    <a class="nav-link  gallery flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                        href="#gallery">
-                        <i class="fa-regular fa-images"></i>
-                        <span class="ml-2 hidden">gallery</span>
-                    </a>
+                    <a aria-label="Galeri" class="nav-link gallery" href="#gallery"><i class="fa-regular fa-images"></i><span class="ml-2 hidden">Galeri</span></a>
                 @endif
-                <a class="nav-link  wishes flex items-center justify-start text-orange-200 hover:bg-orange-100 hover:text-black px-2 py-1 rounded-full transition duration-200"
-                    href="#wishes">
-                    <i class="fa-regular fa-note-sticky"></i>
-                    <span class="ml-2 hidden">wishes</span>
-                </a>
+                <a aria-label="Ucapan" class="nav-link wishes" href="#wishes"><i class="fa-regular fa-note-sticky"></i><span class="ml-2 hidden">Ucapan</span></a>
             </div>
         </div>
-    </div>
-    <!-- Navbar -->
-</div>
+    </nav>
+</main>
