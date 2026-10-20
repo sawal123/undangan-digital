@@ -1,45 +1,19 @@
-// Mendapatkan elemen dan link berdasarkan ID dan kelas
-const home = document.getElementById('home');
-const homeLink = document.getElementsByClassName('home');
-const detail = document.getElementById('detail');
-const detailLink = document.getElementsByClassName('detail');
-const gallery = document.getElementById('gallery');
-const galleryLink = document.getElementsByClassName('gallery');
-const reservation = document.getElementById('reservation');
-const reservationLink = document.getElementsByClassName('reservation');
-const message = document.getElementById('message');
-const messageLink = document.getElementsByClassName('message');
+document.addEventListener('DOMContentLoaded', () => {
+    const links = [...document.querySelectorAll('#navbar .nav-link')];
+    const sections = links
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+    if (!links.length || !sections.length) return;
 
-// Fungsi untuk menambahkan class active pada link yang sesuai
-function setActive(link) {
-  const allLinks = document.getElementsByClassName('nav-link');
-  // Menghapus class active dari semua link
-  for (let i = 0; i < allLinks.length; i++) {
-    allLinks[i].classList.remove('active');
-  }
-  // Menambahkan class active hanya pada link yang sedang aktif
-  for (let i = 0; i < link.length; i++) {
-    link[i].classList.add('active');
-  }
-}
+    const activate = id => {
+        links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+    };
 
-// Fungsi untuk mengecek apakah elemen berada di dalam viewport
-function isInViewport(element) {
-  const rect = element.getBoundingClientRect();
-  return rect.top >= -5 && rect.bottom <= window.innerHeight;
-}
+    const observer = new IntersectionObserver(entries => {
+        const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) activate(visible.target.id);
+    }, { rootMargin: '-42% 0px -48% 0px', threshold: [0, .25, .6] });
 
-// Event handler onscroll untuk window
-window.onscroll = function () {
-  if (isInViewport(home)) {
-    setActive(homeLink);
-  } else if (isInViewport(detail)) {
-    setActive(detailLink);
-  } else if (isInViewport(gallery)) {
-    setActive(galleryLink);
-  } else if (isInViewport(reservation)) {
-    setActive(reservationLink);
-  } else if (isInViewport(message)) {
-    setActive(messageLink);
-  }
-};
+    sections.forEach(section => observer.observe(section));
+    activate(sections[0].id);
+});

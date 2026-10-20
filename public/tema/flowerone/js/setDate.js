@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-        // Ambil tanggal dari elemen HTML
         const countdownElement = document.querySelector('.date.countdown');
+        const countdown = document.getElementById('countdown');
+        if (!countdownElement || !countdown) return;
+
         const eventDate = new Date(countdownElement.getAttribute('data-date')).getTime();
+        if (Number.isNaN(eventDate)) return;
 
         // Fungsi untuk memperbarui countdown setiap detik
         const updateCountdown = () => {
@@ -10,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (distance < 0) {
                 // Jika waktu habis
-                document.getElementById('countdown').innerHTML = `<p>Acara Sudah Dimulai!</p>`;
+                countdown.innerHTML = `<p class="countdown-finished">Acara sudah dimulai</p>`;
                 return;
             }
 
@@ -21,10 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Tampilkan hasil di HTML
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds;
+            countdown.querySelector('#days').textContent = days;
+            countdown.querySelector('#hours').textContent = hours;
+            countdown.querySelector('#minutes').textContent = minutes;
+            countdown.querySelector('#seconds').textContent = seconds;
         };
 
         // Jalankan fungsi pertama kali

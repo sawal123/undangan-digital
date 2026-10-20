@@ -83,19 +83,20 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('tema/flowerone/style/theme.css') }}">
 </head>
 
-<body class="position-relative ">
+<body class="position-relative flowerone-theme">
     <!-- COVER -->
-    <div class="min-vh-100 position-fixed top-0 left-0 w-100 d-block align-content-center"
-        style="background-color: pink; z-index: 9999;" id="cover">
+    <div class="min-vh-100 position-fixed top-0 left-0 w-100 d-block align-content-center flowerone-cover"
+        id="cover">
         <div class="text-center mt-3">
             <img src="{{ asset('tema/flowerone/img/flower-top.png') }}" class="flower-img img-fluid"
                 alt="Flower decoration">
         </div>
         <div data-aos="zoom-in" data-aos-duration="1500" class="text-center d-flex flex-column align-items-center">
             <div class="text-center mt-2">
-                <h4 class="header-text">The Wedding Off</h4>
+                <h4 class="header-text">The Wedding Of</h4>
                 <p class="main-text" style="font-size: 50px; font-family: Great Vibes, cursive;">Ajeng & Teddy</p>
             </div>
 
@@ -135,15 +136,12 @@
 
     <!-- Modal -->
     <!-- Tombol vertikal di pojok kanan -->
-    <div class="position-fixed d-flex flex-column z-3"
-        style="right: -35px; top: 400px; gap: 70px; z-index: 1; height: 100px; ">
+    <div class="flowerone-tools" aria-label="Kontrol undangan">
         <button type="button" class="btn text-white" data-bs-toggle="modal" data-bs-target="#musicModal" id="link"
-            style="transform: rotate(90deg); background-color: #9e0050;"><i class="fa-solid fa-music"></i>
-            Music
+            aria-label="Buka musik"><i class="fa-solid fa-music"></i>
         </button>
         <button type="button" class="btn text-white" data-bs-toggle="modal" data-bs-target="#qrcodeModal"
-            style="transform: rotate(90deg); background-color: #9e0050;"><i class="fa-solid fa-qrcode"></i>
-            QR Code
+            aria-label="Buka QR Code"><i class="fa-solid fa-qrcode"></i>
         </button>
     </div>
     <!-- Tombol vertikal di pojok kanan -->
@@ -253,13 +251,11 @@
     <nav class="navbar fixed-bottom mx-5 bg-white rounded-top-2 shadow-lg" id="navbar">
         <div class="container-fluid pt-2">
             <div class="d-flex justify-content-center w-100 gap-2">
-                <a class="nav-link icon-container home" href="#home"><i class="fa-regular fa-file-lines"></i></a>
-                <a class="nav-link icon-container detail" href="#detail"><i class="fa-regular fa-heart"></i></a>
-                <a class="nav-link icon-container gallery" href="#gallery"><i class="fa-regular fa-images"></i></a>
-                <a class="nav-link icon-container reservation" href="#reservation"><i
-                        class="fa-solid fa-gifts"></i></a>
-                <a class="nav-link icon-container message" href="#message"><i
-                        class="fa-brands fa-rocketchat"></i></a>
+                <a class="nav-link icon-container home" href="#home" aria-label="Beranda"><i class="fa-solid fa-house"></i><span class="nav-label">Home</span></a>
+                <a class="nav-link icon-container detail" href="#detail" aria-label="Mempelai"><i class="fa-solid fa-heart"></i><span class="nav-label">Mempelai</span></a>
+                <a class="nav-link icon-container gallery" href="#gallery" aria-label="Gallery"><i class="fa-solid fa-images"></i><span class="nav-label">Gallery</span></a>
+                <a class="nav-link icon-container reservation" href="#reservation" aria-label="Kado"><i class="fa-solid fa-gift"></i><span class="nav-label">Kado</span></a>
+                <a class="nav-link icon-container message" href="#message" aria-label="Ucapan"><i class="fa-solid fa-comment-dots"></i><span class="nav-label">Ucapan</span></a>
             </div>
         </div>
     </nav>
@@ -273,7 +269,7 @@
                 <div class="rounded-card w-100 position-relative">
 
                     <!-- Background Image -->
-                    <div class="w-100 position-absolute" style="z-index: 1; top: 0; left: 0;  overflow: hidden;">
+                    <div class="w-100 position-absolute floral-backdrop" style="z-index: 1; top: 0; left: 0; overflow: hidden;">
                         <img src="{{ asset('tema/flowerone/img/abstract.png') }}"
                             class="object-fit-cover w-100 h-100" alt="">
                     </div>
@@ -294,9 +290,9 @@
                     <!-- Jumbotron -->
                     <section>
                         <div class="jumbotron text-center position-relative text-black z-3">
-                            <h4>The Wedding Off</h4>
+                            <h4>The Wedding Of</h4>
                             <p class="name-relationship countdown">Ajeng & Teddy</p>
-                            <p class="date countdown">Minggu <br> 10 • 11 • 2025</p>
+                            <p class="date countdown" data-date="2025-11-10">Minggu <br> 10 • 11 • 2025</p>
 
                             <!-- Countdown Display -->
                             <div class="countdown d-flex justify-content-center gap-3" id="countdown">
@@ -552,43 +548,21 @@
                         </div>
 
                         <!-- Slider main container -->
-                        <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
-                            class="swiper mySwiper2 p-1">
-                            <!-- Thumbnail Swiper -->
-                            <div thumbsSlider="" class="swiper mySwiper" data-aos="fade-up"
-                                data-aos-duration="1000">
+                        <div class="flowerone-gallery" data-aos="fade-up" data-aos-duration="800">
+                            <div class="swiper mySwiper2" aria-label="Galeri utama">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-1.jpg"
-                                            class="object-fit-cover" />
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-2.jpg"
-                                            class="object-fit-cover" />
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-3.jpg"
-                                            class="object-fit-cover" />
-                                    </div>
+                                    <div class="swiper-slide"><img src="{{ asset('tema/flowerone/img/image-wide.jpeg') }}" alt="Foto galeri satu"></div>
+                                    <div class="swiper-slide"><img src="{{ asset('tema/flowerone/img/foto-prewed.webp') }}" alt="Foto galeri dua"></div>
+                                    <div class="swiper-slide"><img src="{{ asset('tema/flowerone/img/flower.jpg') }}" alt="Foto galeri tiga"></div>
                                 </div>
-
-                                <!-- Navigation Buttons -->
-                                <div class="swiper-button-next p-2 rounded-circle"></div>
-                                <div class="swiper-button-prev p-2 rounded-circle"></div>
-
+                                <div class="swiper-button-next" aria-label="Foto berikutnya"></div>
+                                <div class="swiper-button-prev" aria-label="Foto sebelumnya"></div>
                             </div>
-
-                            <!-- Main Image Swiper -->
-                            <div class="swiper-wrapper" style="height: 300px;" data-aos="fade-up"
-                                data-aos-duration="1000">
-                                <div class="swiper-slide">
-                                    <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                            <div thumbsSlider class="swiper mySwiper" aria-label="Pilih foto galeri">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide"><img src="{{ asset('tema/flowerone/img/image-wide.jpeg') }}" alt="Thumbnail foto satu"></div>
+                                    <div class="swiper-slide"><img src="{{ asset('tema/flowerone/img/foto-prewed.webp') }}" alt="Thumbnail foto dua"></div>
+                                    <div class="swiper-slide"><img src="{{ asset('tema/flowerone/img/flower.jpg') }}" alt="Thumbnail foto tiga"></div>
                                 </div>
                             </div>
                         </div>
@@ -683,13 +657,13 @@
                         <form action="" data-aos="fade-up" data-aos-duration="1000">
                             <!-- Input field for messages -->
                             <div class="input-name mb-4">
-                                <input type="text" id="messageInput" class="form-control custom-input-bg"
+                                <input type="text" id="messageName" class="form-control custom-input-bg"
                                     placeholder="Nama Anda">
                             </div>
 
                             <!-- Input field for messages -->
                             <div class="input-message mb-4">
-                                <textarea id="messageInput" class="form-control custom-input-bg" rows="5" placeholder="Tulis Ucapan dan Doa"></textarea>
+                                <textarea id="messageText" class="form-control custom-input-bg" rows="5" placeholder="Tulis Ucapan dan Doa"></textarea>
                             </div>
                             <button type="submit" class="btn text-white mb-3">Kirim Ucapan</button>
                         </form>
@@ -868,7 +842,7 @@
             <footer class="footer mt-5 text-center mb-5">
                 <p style="margin: 0px">Ajeng & Teddy </p>
                 <p style="margin: 0px">Made with ❤ somewhere in the world</p>
-                <p style="margin-bottom: 5px">Powered by EraWedding</p>
+                <p style="margin-bottom: 5px">Powered by Wayae Nikah</p>
             </footer>
             <!-- FOOTER -->
         </div>

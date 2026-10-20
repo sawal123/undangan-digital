@@ -1,9 +1,8 @@
 @if ($data->sound?->isActive)
-    <div class="position-fixed d-flex flex-column z-3"
-        style="right: -35px; top: 400px; gap: 70px; z-index: 1; height: 100px; ">
+    <div class="flowerone-tools" aria-label="Kontrol undangan">
         <button type="button" class="btn text-white" data-bs-toggle="modal" data-bs-target="#musicModal" id="link"
-            style="transform: rotate(90deg); background-color: #9e0050;"><i class="fa-solid fa-music"></i>
-            Music
+            aria-label="Buka musik">
+            <i class="fa-solid fa-music"></i>
         </button>
     </div>
 @endif

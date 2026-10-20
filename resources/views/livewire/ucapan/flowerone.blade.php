@@ -19,7 +19,8 @@
 
                 <!-- Input Nama -->
                 <div class="input-name mb-4">
-                    <input type="text" id="messageInput" class="form-control custom-input-bg" wire:model="nama"
+                    <label for="flowerone-message-name" class="visually-hidden">Nama Anda</label>
+                    <input type="text" id="flowerone-message-name" class="form-control custom-input-bg" wire:model="nama"
                         placeholder="Nama Anda">
                     @error('nama')
                         <div class="text-red-500">{{ $message }}</div>
@@ -28,7 +29,8 @@
 
                 <!-- Input Ucapan -->
                 <div class="input-message mb-4">
-                    <textarea id="messageInput" class="form-control custom-input-bg" rows="5" wire:model="ucapan"
+                    <label for="flowerone-message-text" class="visually-hidden">Ucapan dan doa</label>
+                    <textarea id="flowerone-message-text" class="form-control custom-input-bg" rows="5" wire:model="ucapan"
                         placeholder="Tulis Ucapan dan Doa"></textarea>
                     @error('ucapan')
                         <div class="text-red-500">{{ $message }}</div>
@@ -37,7 +39,8 @@
 
                 <!-- Input Status -->
                 <div class="input-message mb-4">
-                    <select id="messageInput" class="form-select custom-input-bg" wire:model="status">
+                    <label for="flowerone-message-status" class="visually-hidden">Konfirmasi kehadiran</label>
+                    <select id="flowerone-message-status" class="form-select custom-input-bg" wire:model="status">
                         <option selected disabled>Konfirmasi Kehadiran</option>
                         <option value="Datang Dong">Datang Dong</option>
                         <option value="Ga bisa Datang Nih">Ga bisa Datang Nih</option>
