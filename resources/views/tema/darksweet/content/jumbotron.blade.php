@@ -1,43 +1,34 @@
-<div class="container px-0 fixed mx-auto w-full md:w-2/4 lg:w-1/3 h-screen justify-center items-center">
-    <!-- Background Image -->
-    <!-- Swiper -->
-    <div class="absolute inset-0 swiper mySwiper h-full w-full">
-        @if ($poto == null)
-            <div class="swiper-slide bg-local bg-cover bg-center object-cover brightness-50 contrast-100 "
-                style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}');">
-            </div>
-        @else
-            <div class="swiper-wrapper w-full h-full">
-                @if (isset($poto[0]))
-                    <div class="swiper-slide bg-local bg-cover bg-center object-contain brightness-50 contrast-100"
-                        style="background-image: url('{{ asset('storage/' . $poto[0]) }}');"></div>
-                @endif
-                @if (isset($poto[1]))
-                    <div class="swiper-slide bg-local bg-cover bg-origin-content bg-center object-cover brightness-50 contrast-100 "
-                        style="background-image: url('{{ asset('storage/' . $poto[1]) }}');"></div>
-                @endif
-                @if (isset($poto[2]))
-                    <div class="swiper-slide bg-local bg-cover bg-center object-cover brightness-50 contrast-100 "
-                        style="background-image: url('{{ asset('storage/' . $poto[2]) }}');"></div>
-                @endif
-            </div>
-        @endif
+@php
+    $heroPhotos = collect($poto ?? [])->filter()->take(3)->values();
+    if ($heroPhotos->isEmpty()) {
+        $heroPhotos = collect([$thumbnailWa?->thumbnail])->filter()->values();
+    }
+    if ($heroPhotos->isEmpty()) {
+        $heroPhotos = collect(['tema/darksweet/img/pasangan.jpg']);
+    }
+@endphp
 
-    </div>
-
-    <!-- Content -->
-    <div class="flex flex-col items-center gap-4 md:gap-8 justify-center absolute inset-0 z-20 ">
-
-
-        <!-- Bottom Title -->
-        <div class="">
-            <p class=" text-shadow text-center text-white " data-aos="zoom-in-up" data-aos-duration="2000">
-                Invitation From</p>
-            <h1 class=" text-shadow text-white text-4xl font-bold text-center " data-aos="zoom-in-up"
-                data-aos-duration="3000">{{ $data->pria?->nama_panggilan ?? '' }} &
-                {{ $data->wanita?->nama_panggilan ?? '' }}</h1>
+<section id="hero" class="darksweet-hero">
+    <div class="swiper mySwiper darksweet-hero__slider" aria-label="Foto pembuka undangan">
+        <div class="swiper-wrapper">
+            @foreach ($heroPhotos as $photo)
+                <div class="swiper-slide" style="background-image: url('{{ str_starts_with($photo, 'tema/') ? asset($photo) : asset('storage/' . $photo) }}');"></div>
+            @endforeach
         </div>
-        @include('tema.darksweet.content.countdown')
     </div>
 
-</div>
+    <div class="darksweet-hero__content">
+        <p class="darksweet-hero__badge" data-aos="fade-down">
+            <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
+            {{ $data->setting?->acara ?? 'The Wedding' }}
+        </p>
+        <h1 class="darksweet-hero__title" data-aos="fade-up">
+            {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}
+        </h1>
+        @include('tema.darksweet.content.countdown')
+        <div class="darksweet-scroll-hint" data-aos="fade-up" data-aos-delay="250">
+            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            <span>Gulir untuk melihat cerita kami</span>
+        </div>
+    </div>
+</section>

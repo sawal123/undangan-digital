@@ -1,46 +1,21 @@
-<nav
-    class="fixed bottom-2 mb-1 md:mb-3 z-30 w-full md:w-2/4 lg:w-1/3 mx-auto max-h-[40px] flex justify-center inset-x-0">
-    <div
-        class="py-2 px-4 w-full h-full flex justify-evenly mx-6 space-x-6 items-center rounded-full bg-white shadow-2xl ring-1 ring-black backdrop-blur-lg bg-opacity-50">
-        <!-- Icon 1 -->
-        <a href="#home"
-            class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200 scroll-smooth text-opacity-100">
-            <i class="fa-solid fa-house text-lg md:text-2xl "></i>
-        </a>
-        <!-- Icon 2 -->
-        <a href="#pengantin" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-            <i class="fa-solid fa-user-group text-lg md:text-2xl"></i>
-        </a>
-        <a href="#hitunghari" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-            <i class="fa-solid fa-calendar text-lg md:text-2xl"></i>
-        </a>
-        <a href="#savethedate" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-            <i class="fa-solid fa-calendar-check text-lg md:text-2xl"></i>
-        </a>
+@php
+    $navItems = 5 + ($data->kisah?->isNotEmpty() ? 1 : 0) + (!empty($poto) ? 1 : 0);
+@endphp
+<nav class="darksweet-nav" style="--ds-nav-items: {{ $navItems }};" aria-label="Navigasi undangan">
+    <div class="darksweet-nav__inner">
+        <a class="darksweet-nav__link" href="#hero"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a>
+        <a class="darksweet-nav__link" href="#pengantin"><i class="fa-solid fa-heart" aria-hidden="true"></i><span>Pasangan</span></a>
+        <a class="darksweet-nav__link" href="#savethedate"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span>Acara</span></a>
         @if ($data->kisah?->isNotEmpty())
-            <a href="#story" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-                <i class="fa-solid fa-history text-lg md:text-2xl"></i>
-            </a>
+            <a class="darksweet-nav__link" href="#story"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i><span>Cerita</span></a>
         @endif
-
-        @if ($poto != null)
-            <a href="#gallery" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-                <i class="fa-solid fa-images text-lg md:text-2xl"></i>
-            </a>
+        @if (!empty($poto))
+            <a class="darksweet-nav__link" href="#gallery"><i class="fa-solid fa-images" aria-hidden="true"></i><span>Galeri</span></a>
         @endif
-        <a href="#hadiah" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-            <i class="fa-solid fa-gift text-lg md:text-2xl"></i>
-        </a>
-        <a href="#absen" class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-            <i class="fa-solid fa-comment text-lg md:text-2xl"></i>
-        </a>
-
-
-        <button type="button" id="musicToggle"
-            class="flex items-center text-gray-600 hover:text-sky-600 transition duration-200">
-            <i class="fa-solid fa-music text-lg md:text-2xl"></i>
+        <a class="darksweet-nav__link" href="#absen"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i><span>Ucapan</span></a>
+        <button type="button" id="toggleButton" class="darksweet-nav__link" aria-label="Putar atau jeda musik">
+            <i class="fa-solid fa-music" aria-hidden="true"></i><span>Musik</span>
         </button>
-
     </div>
 </nav>
 
