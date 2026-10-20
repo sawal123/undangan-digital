@@ -3,9 +3,9 @@
     RewriteBase /
 
     RewriteCond %{HTTP_HOST} ^(www\.)?wayaenikah\.com$ [NC]
+    RewriteRule ^demo(?:/.*)?$ public/index.php [END]
 
-    RewriteRule ^demo(?:/.*)?$ public/index.php [L]
-
+    RewriteCond %{HTTP_HOST} ^(www\.)?wayaenikah\.com$ [NC]
     RewriteRule ^(.*)$ public/$1 [L]
 
 </IfModule>
