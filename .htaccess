@@ -1,4 +1,4 @@
-<IfModule mod_rewrite.c>
+<!-- <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
     RewriteCond %{HTTP_HOST} ^(www\.)?wayaenikah\.com$ [NC]
@@ -8,5 +8,16 @@
     RewriteRule ^demo(?:/.*)?$ public/index.php [L]
 
     RewriteRule ^(.*)$ public/$1 [L]
-</IfModule>
+</IfModule> -->
 
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    RewriteCond %{HTTP_HOST} ^(www\.)?wayaenikah\.com$ [NC]
+
+    RewriteRule ^demo(?:/.*)?$ public/index.php [L]
+
+    RewriteRule ^(.*)$ public/$1 [L]
+
+</IfModule>
