@@ -1,13 +1,17 @@
-<div class="cover h-full  w-full  mx-auto ">
-    <div class="w-full h-[500px] relative flex bg-no-repeat bg-cover bg-center"
-        style="background-image: url('{{ asset('storage/' . ($data->thumbnailWas?->thumbnail ?? '')) }}');">
+@php
+    $standCoverImage = $thumbnailWa?->thumbnail
+        ? asset('storage/' . $thumbnailWa->thumbnail)
+        : asset('tema/standtheme/assets/img/cover.jpg');
+    $standCoverDate = ($data->acara?->first())?->date;
+@endphp
 
-
-
-        <svg xmlns="http://www.w3.org/2000/svg" class="bottom-0 absolute " viewBox="0 0 1440 320">
-            <path fill="#F7F4EF" fill-opacity="1" d="M0,192L480,256L960,128L1440,64L1440,320L960,320L480,320L0,320Z">
-            </path>
-        </svg>
+<section id="standCover" class="stand-cover" style="background-image: url('{{ $standCoverImage }}');">
+    <div class="stand-cover__content" data-aos="fade-up">
+        <p class="stand-cover__eyebrow">{{ $data->setting?->acara ?? 'The Wedding' }}</p>
+        <h1 class="stand-cover__title">{{ $data->pria?->nama_panggilan ?? '' }} &amp; {{ $data->wanita?->nama_panggilan ?? '' }}</h1>
+        @if ($standCoverDate)
+            <p class="stand-cover__date">{{ \Carbon\Carbon::parse($standCoverDate)->translatedFormat('j F Y') }}</p>
+        @endif
+        <div class="stand-cover__hint"><i class="fa-solid fa-chevron-down"></i><span>Gulir untuk melihat undangan</span></div>
     </div>
-
-</div>
+</section>

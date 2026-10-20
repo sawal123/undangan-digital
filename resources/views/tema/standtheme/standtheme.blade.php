@@ -1,125 +1,82 @@
 <!doctype html>
-<html>
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <meta property="og:title" content="{{ $data->title }}" />
-    <meta property="og:description" content="Deskripsi singkat undangan." />
-    <meta property="og:url" content="{{ url()->current() }}" />
-    <meta property="og:type" content="website" />
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:title" content="{{ $data->title }}">
+    <meta property="og:description" content="Undangan {{ $data->title }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
     @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title])
     <title>{{ $data->title }}</title>
-    <link href="{{ asset('tema/standtheme/output.css') }}" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ asset('tema/standtheme/assets/aos/dist/aos.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/fontawesome-free/css/all.css') }}">
+    <link rel="stylesheet" href="{{ asset('tema/standtheme/css/style.css') }}">
     <style>
         @if ($data->dataFont)
             @import url('{{ $data->dataFont?->titleFont?->link ?? '' }}');
             @import url('{{ $data->dataFont?->subFont?->link ?? '' }}');
-
         @else
-            @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
-            @import url('https://fonts.googleapis.com/css2?family=Capriola&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Capriola&family=Dancing+Script:wght@400..700&display=swap');
         @endif
 
-
-        .title {
-            font-family: "{{ $data->dataFont?->titleFont?->nama ?? 'Dancing Script' }}", system-ui;
-            font-optical-sizing: auto;
-            font-weight: <weight>;
-            font-style: normal;
-            font-size: {{ $data->dataFont?->s_title ?? 40 }}px !important
+        :root {
+            --stand-title-font: "{{ $data->dataFont?->titleFont?->nama ?? 'Dancing Script' }}", cursive;
+            --stand-body-font: "{{ $data->dataFont?->subFont?->nama ?? 'Capriola' }}", system-ui, sans-serif;
         }
 
-        html {
-            font-family: "{{ $data->dataFont?->subFont?->nama ?? 'Capriola' }}";
-        }
+        .stand-body { font-family: var(--stand-body-font); }
+        .stand-title, .stand-script, .stand-modal__title, .stand-cover__title, .stand-opening__names, .stand-event-card__title, .stand-footer__title, .stand-music-modal__panel h2 { font-family: var(--stand-title-font); }
     </style>
 </head>
 
-<body class="bg-white ">
-    <!-- Main modal -->
-    @include('tema.standtheme.modal')
-    <!--  end modal -->
+<body class="stand-body is-locked">
+    <div class="stand-shell">
+        @include('tema.standtheme.modal')
 
-    <!-- content -->
-    <div class=" md:w-[640px] w-full bg-[#F7F4EF] mx-auto">
-        <!-- cover -->
-        @include('tema.standtheme.cover')
-        {{-- end cover --}}
+        <main id="standContent" class="stand-main">
+            @include('tema.standtheme.cover')
+            @include('tema.standtheme.opening')
+            @include('tema.standtheme.undangan')
+            @include('tema.standtheme.himbauan-1')
+            @include('tema.standtheme.reveal')
+            @include('tema.standtheme.album')
+            @include('tema.standtheme.denah')
+            @include('tema.standtheme.himbauan-2')
+            @include('tema.standtheme.ucapan')
 
-        <!-- opening -->
-        @include('tema.standtheme.opening')
-        {{-- end opening --}}
+            <footer class="stand-footer">
+                <h2 class="stand-footer__title">Terima Kasih</h2>
+                <p class="stand-footer__text">Dengan penuh kasih, {{ $data->pria?->nama_panggilan ?? '' }} &amp; {{ $data->wanita?->nama_panggilan ?? '' }}</p>
+            </footer>
+        </main>
 
-        <!-- undangan -->
-        @include('tema.standtheme.undangan')
-        {{-- end undangan --}}
-
-        <!-- himbauan 1 -->
-        @include('tema.standtheme.himbauan-1')
-        <!-- end himbauan 1 -->
-
-        <!-- denah -->
-        {{-- @include('tema.standtheme.denah') --}}
-        <!-- end denah -->
-
-        <!-- himbauan 2 -->
-        {{-- @include('tema.standtheme.himbauan-2') --}}
-        <!--end himbauan 2 -->
-
-        <!-- album -->
-        @include('tema.standtheme.album')
-        <!-- end album -->
-
-        <!-- reveal -->
-        @include('tema.standtheme.reveal')
-        <!-- end reveal -->
-
-        <!-- ucapan-->
-        @include('tema.standtheme.ucapan')
-        <!-- end ucapan-->
-
-        <div class="footer bg-[#755F4B] pb-10 ">
-            <p class="text-center text-white pt-10">© Wayae Nikah 2025</p>
-        </div>
-
+        <nav class="stand-nav" aria-label="Navigasi undangan">
+            <div class="stand-nav__inner">
+                <a class="stand-nav__link" href="#standCover"><i class="fa-solid fa-house"></i><span>Home</span></a>
+                <a class="stand-nav__link" href="#standAcara"><i class="fa-solid fa-calendar-days"></i><span>Acara</span></a>
+                <a class="stand-nav__link" href="#standGallery"><i class="fa-solid fa-images"></i><span>Galeri</span></a>
+                <a class="stand-nav__link" href="#standMap"><i class="fa-solid fa-location-dot"></i><span>Lokasi</span></a>
+                <a class="stand-nav__link" href="#standUcapan"><i class="fa-solid fa-comment-dots"></i><span>Ucapan</span></a>
+            </div>
+        </nav>
     </div>
 
-    <!-- Music -->
     @include('tema.standtheme.music')
-    {{-- end music --}}
-    @if ($data->sound?->isActive)
-        <script>
-            const buka = document.getElementById('bukaModal');
-            const tutup = document.getElementById('tutupModal');
-            const mod = document.getElementById('mod');
 
-            buka.addEventListener('click', () => {
-                mod.classList.remove('hidden');
-            });
-
-            tutup.addEventListener('click', () => {
-                mod.classList.add('hidden');
-            });
-
-            // Close modal when clicking outside
-            mod.addEventListener('click', (e) => {
-                if (e.target === mod) {
-                    mod.classList.add('hidden');
-                }
-            });
-        </script>
-    @endif
+    <div id="standLightbox" class="stand-lightbox is-hidden" role="dialog" aria-modal="true" aria-label="Pratinjau foto">
+        <div class="stand-lightbox__panel">
+            <button type="button" class="stand-lightbox__close" onclick="closeStandLightbox()" aria-label="Tutup foto">&times;</button>
+            <img id="standLightboxImage" src="" alt="Pratinjau foto">
+        </div>
+    </div>
 
     <script src="{{ asset('tema/standtheme/assets/aos/dist/aos.js') }}"></script>
-    <script>
-        AOS.init();
-    </script>
+    <script>window.addEventListener('load', () => window.AOS?.init({ once: true, duration: 750, offset: 70 }));</script>
     <script src="{{ asset('tema/standtheme/js/modal.js') }}"></script>
-
 </body>
 
 </html>

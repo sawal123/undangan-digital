@@ -1,60 +1,27 @@
-<div class="undangan mt-10 flex flex-col justify-center py-2">
-    {{-- AKAD --}}
-    @foreach ($data->acara as $item)
-        <div class="border my-2 py-2 rounded-lg ">
-            <p class="items-center text-center text-4xl title italic  my-7 text-[#755f4B]" data-aos="fade-up"
-                data-aos-duration="1500">
-                {{ $item->nama_acara }}</p>
-            <div class="grid grid-cols-3 gap-4 items-center mx-12 md:mx-28 text-[12px] md:text-lg" data-aos="fade-up">
-                <!-- Kolom 1 -->
-                <div class="flex flex-col items-center border-t border-gray-400">
-                    <span
-                        class="text-gray-600 py-4 text-sm">{{ $item->date ? \Carbon\Carbon::parse($item->date)->locale('id')->translatedFormat('l') : '-' }}
-                    </span>
-                    <span class="border-t border-gray-400 w-full mt-1"></span>
-                </div>
+<section id="standAcara" class="stand-section stand-section--soft">
+    <div class="stand-section__header" data-aos="fade-up">
+        <p class="stand-eyebrow">Catat tanggalnya</p>
+        <h2 class="stand-section__title">Acara Kami</h2>
+        <p class="stand-section__subtitle">Kami menantikan kehadiran dan doa restu Anda di hari istimewa kami.</p>
+    </div>
 
-                <!-- Kolom 2 -->
-                <div class="text-center">
-                    <span
-                        class="block text-sm text-gray-600">{{ $item->date ? \Carbon\Carbon::parse($item->date)->locale('id')->translatedFormat('F') : '-' }}
-                    </span>
-                    <span
-                        class="block text-4xl font-bold text-gray-900">{{ $item->date ? \Carbon\Carbon::parse($item->date)->locale('id')->translatedFormat('d') : '-' }}
-                    </span>
-                    <span
-                        class="block text-sm text-gray-600">{{ $item->date ? \Carbon\Carbon::parse($item->date)->locale('id')->translatedFormat('Y') : '-' }}
-                    </span>
-                </div>
-
-                <!-- Kolom 3 -->
-                <div class="flex flex-col items-center text-center border-t border-gray-400">
-                    <span class="text-gray-600 py-4 text-sm">{{ $item->jam_start }} s/d {{ $item->jam_end }}
-                        {{ $item->zona_waktu }} </span>
-                    <span class="border-t border-gray-400 w-full mt-1"></span>
-                </div>
-            </div>
-            <div class="mt-8">
-                <p class="text-center  text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">
-                    {{ $item->alamat }}</p>
-                <p class="text-center  text-[#755f4B]" data-aos="fade-up" data-aos-duration="1500">{{ $item->vanue }}
-                </p>
-            </div>
-            @if ($item->maps)
-                <div class="flex justify-center mt-2">
-                    <a href="{{ $item->maps }}"
-                        class=" px-4 py-2 bg-[#755f4B] text-white rounded-lg hover:bg-gray-500" data-aos="fade-up"
-                        data-aos-duration="1800">
-                        Lihat Lokasi
-                    </a>
-                </div>
-            @endif
-
-        </div>
-    @endforeach
-
-
-
-
-
-</div>
+    <div class="stand-event-list">
+        @foreach ($data->acara as $item)
+            @php $standEventDate = $item->date ? \Carbon\Carbon::parse($item->date) : null; @endphp
+            <article class="stand-event-card" data-aos="fade-up">
+                <h3 class="stand-event-card__title">{{ $item->nama_acara }}</h3>
+                @if ($standEventDate)
+                    <div class="stand-event-card__date">
+                        <div class="stand-event-card__date-group"><span class="stand-event-card__date-label">Hari</span><span>{{ $standEventDate->translatedFormat('l') }}</span></div>
+                        <div class="stand-event-card__date-main"><strong class="stand-event-card__day">{{ $standEventDate->format('d') }}</strong><span class="stand-event-card__meta">{{ $standEventDate->translatedFormat('F Y') }}</span></div>
+                        <div class="stand-event-card__date-group"><span class="stand-event-card__date-label">Waktu</span><span>{{ $item->jam_start }}{{ $item->jam_end ? ' – ' . $item->jam_end : '' }}<br>{{ $item->zona_waktu }}</span></div>
+                    </div>
+                @endif
+                <p class="stand-event-card__location"><i class="fa-solid fa-location-dot"></i><br>{{ $item->vanue }}<br>{{ $item->alamat }}</p>
+                @if ($item->maps)
+                    <div class="stand-event-card__actions"><a class="stand-button" href="{{ $item->maps }}" target="_blank" rel="noopener"><i class="fa-solid fa-location-dot"></i>Lihat Lokasi</a></div>
+                @endif
+            </article>
+        @endforeach
+    </div>
+</section>
