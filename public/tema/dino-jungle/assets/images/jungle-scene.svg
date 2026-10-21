@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="850" viewBox="0 0 800 850" role="img">
+
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#79d8ff"/><stop offset=".65" stop-color="#cbf9df"/><stop offset="1" stop-color="#effbbe"/></linearGradient>
+ <linearGradient id="mt" x2="0" y2="1"><stop stop-color="#a0cf7a"/><stop offset="1" stop-color="#418943"/></linearGradient>
+ <linearGradient id="vol" x2="0" y2="1"><stop stop-color="#816f57"/><stop offset="1" stop-color="#345d39"/></linearGradient>
+ <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#91b54e"/><stop offset="1" stop-color="#295a2d"/></linearGradient>
+</defs>
+<rect width="800" height="850" fill="url(#sky)"/>
+<circle cx="647" cy="146" r="70" fill="#fffab2" opacity=".85"/>
+<g fill="#fff" opacity=".94"><path d="M55 112 Q70 85 100 97Q122 56 174 80Q213 67 238 96Q287 94 297 120Q298 145 254 147H74Q39 148 55 112Z"/><path d="M445 116Q459 82 493 90Q517 57 561 86Q610 75 633 119Q676 124 671 149H457Q418 149 445 116Z"/></g>
+<path d="M0 415Q120 295 218 369Q287 261 392 354Q492 288 582 367Q692 285 800 390V850H0Z" fill="#a5d28b"/>
+<path d="M0 470Q110 350 213 421Q331 348 415 433Q539 312 638 418Q727 370 800 424V850H0Z" fill="url(#mt)"/>
+<!-- volcano -->
+<path d="M492 451L604 247 714 453Z" fill="url(#vol)"/>
+<path d="M576 300L603 248 625 302 641 309 600 327 559 305Z" fill="#f46e30"/>
+<path d="M578 318Q602 338 595 368L613 390 614 341Q628 321 627 315Z" fill="#ff8a2a"/>
+<path d="M595 246Q558 217 593 194Q615 167 590 151Q641 167 631 203Q669 215 640 247" fill="none" stroke="#ffa83d" stroke-width="18" stroke-linecap="round"/>
+<g fill="#ffbd4d"><circle cx="545" cy="208" r="10"/><circle cx="650" cy="187" r="8"/><circle cx="701" cy="237" r="10"/><circle cx="572" cy="161" r="7"/><circle cx="677" cy="143" r="6"/></g>
+<path d="M0 550Q150 478 294 562Q450 494 606 546Q707 506 800 565V850H0Z" fill="#3e8f48"/>
+<path d="M0 683Q120 585 271 652Q400 588 546 666Q682 617 800 669V850H0Z" fill="url(#ground)"/>
+<path d="M250 850Q257 747 364 688Q422 673 464 703Q583 751 587 850Z" fill="#d7a85c"/>
+<path d="M314 850Q322 790 398 757Q452 730 515 795L544 850Z" fill="#efc276"/>
+<g fill="#c0dc71" opacity=".9"><ellipse cx="112" cy="574" rx="18" ry="9"/><ellipse cx="212" cy="606" rx="20" ry="9"/><ellipse cx="733" cy="603" rx="25" ry="13"/></g>
+
+</svg>
