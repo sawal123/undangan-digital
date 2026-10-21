@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" role="img">
+
+<defs><linearGradient id="skin" x2=".8" y2="1"><stop stop-color="#b9e76d"/><stop offset=".55" stop-color="#6dbf3a"/><stop offset="1" stop-color="#398e35"/></linearGradient><linearGradient id="bel" x2="0" y2="1"><stop stop-color="#f6e69a"/><stop offset="1" stop-color="#d8bb65"/></linearGradient></defs>
+<!-- tail --> <path d="M230 276Q304 247 344 198Q338 305 253 325Z" fill="#4ca339" stroke="#276a36" stroke-width="7"/>
+<!-- body --> <ellipse cx="184" cy="278" rx="109" ry="105" fill="url(#skin)" stroke="#266d37" stroke-width="8"/>
+<ellipse cx="161" cy="287" rx="68" ry="78" fill="url(#bel)"/>
+<path d="M105 199L90 170 126 182 132 150 154 182 174 155 180 195" fill="#387e31"/>
+<!-- legs --> <path d="M115 342Q75 368 96 382H161Q176 378 166 359Z" fill="#58a939" stroke="#246938" stroke-width="7"/><path d="M212 344Q199 379 219 386H283Q299 378 272 358Z" fill="#58a939" stroke="#246938" stroke-width="7"/>
+<g stroke="#f6e7a7" stroke-width="7" stroke-linecap="round"><path d="M113 378l-5 8m28-7-3 9m105-8-5 9m28-9 3 8"/></g>
+<!-- arms --> <path d="M99 256Q61 248 63 284Q63 305 84 301L103 284" fill="#5bb741" stroke="#27783a" stroke-width="7"/><path d="M256 256Q283 260 278 286Q275 305 256 294L242 284" fill="#5bb741" stroke="#27783a" stroke-width="7"/>
+<!-- head --> <path d="M93 88Q121 44 211 59Q280 76 283 134Q314 185 256 211Q217 237 121 211Q51 191 70 140Q62 110 93 88Z" fill="url(#skin)" stroke="#276c36" stroke-width="9"/>
+<ellipse cx="116" cy="150" rx="75" ry="48" fill="#8dd05e" stroke="#276c36" stroke-width="8"/><ellipse cx="100" cy="166" rx="12" ry="6" fill="#3a7940"/><ellipse cx="153" cy="158" rx="9" ry="5" fill="#3a7940"/>
+<!-- happy smile --> <path d="M63 176Q113 219 190 184Q170 246 110 228Q82 221 63 176Z" fill="#693a2c" stroke="#276c36" stroke-width="6"/>
+<g fill="#fff1d9"><path d="M77 193l15 21 11-17Z"/><path d="M116 207l13 22 11-23Z"/><path d="M157 198l11 13 8-19Z"/></g>
+<path d="M110 229Q138 214 164 216" fill="none" stroke="#ea7773" stroke-width="13" stroke-linecap="round"/>
+<!-- eyes --> <ellipse cx="171" cy="111" rx="24" ry="28" fill="white"/><ellipse cx="232" cy="111" rx="24" ry="28" fill="white"/><ellipse cx="178" cy="114" rx="12" ry="18" fill="#263a30"/><ellipse cx="240" cy="114" rx="12" ry="18" fill="#263a30"/><g fill="white"><circle cx="183" cy="107" r="6"/><circle cx="243" cy="107" r="6"/></g>
+<ellipse cx="250" cy="161" rx="17" ry="9" fill="#eea16c" opacity=".72"/>
+
+</svg>
