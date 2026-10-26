@@ -3,6 +3,11 @@
     $quoteTitle = $data->qoute?->title ?? '';
     $quoteText = $data->qoute?->qoute ?? '';
     $quoteSubtitle = $data->qoute?->subtitle ?? '';
+    $calendarPayload = $calendarEvent?->date ? [
+        'title' => $data->title ?? 'Pernikahan Kami',
+        'date' => date('Ymd', strtotime($calendarEvent->date)),
+        'location' => $calendarEvent->alamat ?? '',
+    ] : null;
 @endphp
 
 <section id="hitunghari" class="darksweet-section darksweet-section--accent">
@@ -31,11 +36,8 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const event = @json([
-                    'title' => $data->title ?? 'Pernikahan Kami',
-                    'date' => date('Ymd', strtotime($calendarEvent->date)),
-                    'location' => $calendarEvent->alamat ?? '',
-                ]);
+                const event = @json($calendarPayload);
+                if (!event) return;
                 const button = document.getElementById('googleCalendarBtn');
                 if (!button) return;
                 const dates = `${event.date}T100000Z/${event.date}T120000Z`;

@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @php
-        use CarbonCarbon;
+        
+         use Carbon\Carbon;
         Carbon::setLocale('id');
         $firstAcaraDate = ($data->acara[0] ?? null)?->date;
         $tanggalAcara = $firstAcaraDate ? Carbon::parse($firstAcaraDate)->translatedFormat('l, j F Y') : '';
