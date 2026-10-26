@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/fontawesome-free/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/swiper/swiper-bundle.min.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/aos/dist/aos.css') }}">
-    <link rel="stylesheet" href="{{ asset('tema/darksweet/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('tema/darksweet/css/style.css') }}?v={{ filemtime(public_path('tema/darksweet/css/style.css')) }}">
     <style>
         @if ($data->dataFont)
             @import url('{{ $data->dataFont?->titleFont?->link ?? '' }}');
@@ -62,7 +62,7 @@
     <script>window.addEventListener('load', () => window.AOS?.init({ once: true, duration: 750, offset: 70 }));</script>
     <script src="{{ asset('tema/darksweet/assets/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('tema/darksweet/js/setDate.js') }}"></script>
-    <script src="{{ asset('tema/darksweet/js/swiper.js') }}"></script>
+    <script src="{{ asset('tema/darksweet/js/swiper.js') }}?v={{ filemtime(public_path('tema/darksweet/js/swiper.js')) }}"></script>
     <script src="{{ asset('tema/darksweet/js/autoScroll.js') }}"></script>
     <script src="{{ asset('tema/darksweet/js/openCover.js') }}"></script>
     <script src="{{ asset('tema/darksweet/js/modalImage.js') }}"></script>

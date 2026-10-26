@@ -40,15 +40,18 @@
 
         <div class="darksweet-gift-list">
             @foreach ($data->kado as $kado)
-                <article class="darksweet-gift-card" data-aos="fade-up">
-                    <div class="darksweet-gift-card__icon" aria-hidden="true">
-                        @if ($kado->giftPay?->icon && (file_exists(public_path('storage/' . $kado->giftPay->icon)) || \Illuminate\Support\Facades\Storage::disk('public')->exists($kado->giftPay->icon)))
-                            <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" alt="{{ $kado->giftPay?->nama_pay ?? 'Bank' }}">
+                @php
+                    $hasBankIcon = !empty($kado->giftPay?->icon) && (file_exists(public_path('storage/' . $kado->giftPay->icon)) || \Illuminate\Support\Facades\Storage::disk('public')->exists($kado->giftPay->icon));
+                @endphp
+                <article class="darksweet-gift-card" data-aos="fade-up" style="display: flex; align-items: center; gap: 0.95rem; padding: 1.1rem 1.25rem; border: 1px solid var(--ds-line); border-radius: 1.25rem; background: linear-gradient(135deg, rgba(240, 200, 143, 0.12), rgba(199, 124, 145, 0.08));">
+                    <div class="darksweet-gift-card__icon {{ $hasBankIcon ? 'darksweet-gift-card__icon--logo' : '' }}" aria-hidden="true" style="width: 3.25rem; height: 3.25rem; min-width: 3.25rem; max-width: 3.25rem; border-radius: 0.85rem; overflow: hidden; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 0.35rem; {{ $hasBankIcon ? 'background: #ffffff;' : 'background: var(--ds-gold);' }} flex-shrink: 0;">
+                        @if ($hasBankIcon)
+                            <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" alt="{{ $kado->giftPay?->nama_pay ?? 'Bank' }}" style="max-width: 100% !important; max-height: 100% !important; width: auto !important; height: auto !important; object-fit: contain; display: block; margin: auto;">
                         @else
-                            <i class="fa-solid fa-building-columns"></i>
+                            <i class="fa-solid fa-building-columns" style="color: var(--ds-ink); font-size: 1.25rem;"></i>
                         @endif
                     </div>
-                    <div>
+                    <div class="darksweet-gift-card__info" style="flex: 1; min-width: 0;">
                         @if ($kado->giftPay?->nama_pay)
                             <p class="darksweet-gift-card__bank">{{ $kado->giftPay->nama_pay }}</p>
                         @endif
@@ -62,16 +65,18 @@
                             <p class="darksweet-gift-card__name">{{ $displayOwner }}</p>
                         @endif
                     </div>
-                    <button type="button" class="darksweet-copy-button" data-copy="{{ $kado->nomorPay }}">Salin</button>
+                    <button type="button" class="darksweet-copy-button" data-copy="{{ $kado->nomorPay }}" style="flex-shrink: 0;">Salin</button>
                 </article>
                 @if ($kado->qris)
-                    <div class="darksweet-gift-card" data-aos="fade-up">
-                        <div class="darksweet-gift-card__icon" aria-hidden="true"><i class="fa-solid fa-qrcode"></i></div>
-                        <div>
+                    <div class="darksweet-gift-card" data-aos="fade-up" style="display: flex; align-items: center; gap: 0.95rem; padding: 1.1rem 1.25rem; border: 1px solid var(--ds-line); border-radius: 1.25rem; background: linear-gradient(135deg, rgba(240, 200, 143, 0.12), rgba(199, 124, 145, 0.08));">
+                        <div class="darksweet-gift-card__icon" aria-hidden="true" style="width: 3.25rem; height: 3.25rem; min-width: 3.25rem; max-width: 3.25rem; border-radius: 0.85rem; overflow: hidden; display: flex; align-items: center; justify-content: center; box-sizing: border-box; background: var(--ds-gold); flex-shrink: 0;">
+                            <i class="fa-solid fa-qrcode" style="color: var(--ds-ink); font-size: 1.25rem;"></i>
+                        </div>
+                        <div class="darksweet-gift-card__info" style="flex: 1; min-width: 0;">
                             <p class="darksweet-gift-card__bank">QRIS</p>
                             <p class="darksweet-gift-card__name">Scan untuk mengirim tanda kasih.</p>
                         </div>
-                        <a class="darksweet-copy-button" href="{{ asset('storage/' . $kado->qris) }}" target="_blank" rel="noopener">Lihat</a>
+                        <a class="darksweet-copy-button" href="{{ asset('storage/' . $kado->qris) }}" target="_blank" rel="noopener" style="flex-shrink: 0;">Lihat</a>
                     </div>
                 @endif
             @endforeach

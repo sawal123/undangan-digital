@@ -207,18 +207,26 @@ button, a { -webkit-tap-highlight-color: transparent; }
     isolation: isolate;
 }
 
-.darksweet-hero__slider, .darksweet-hero__slider .swiper-wrapper, .darksweet-hero__slider .swiper-slide {
+.darksweet-hero__slider {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
 }
 
+.darksweet-hero__slider .swiper-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
 .darksweet-hero__slider .swiper-slide {
+    width: 100%;
+    height: 100%;
     background-position: center;
     background-size: cover;
     filter: saturate(0.78) contrast(1.08);
 }
+
 
 .darksweet-hero__slider::after {
     position: absolute;
@@ -433,13 +441,19 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .darksweet-video { width: 100%; max-width: 42rem; aspect-ratio: 16 / 9; margin: 0 auto 1.25rem; overflow: hidden; border: 1px solid var(--ds-line); border-radius: var(--ds-radius); background: #000; }
 .darksweet-video iframe { width: 100%; height: 100%; border: 0; }
 
-.darksweet-gift-card { display: grid; grid-template-columns: auto 1fr auto; gap: 0.8rem; align-items: center; padding: 1rem; border: 1px solid var(--ds-line); border-radius: 1.25rem; background: linear-gradient(135deg, rgba(240, 200, 143, 0.12), rgba(199, 124, 145, 0.08)); }
-.darksweet-gift-card__icon { display: grid; width: 2.7rem; height: 2.7rem; place-items: center; border-radius: 0.9rem; background: var(--ds-gold); color: var(--ds-ink); overflow: hidden; }
-.darksweet-gift-card__icon img { width: 1.8rem; height: 1.8rem; object-fit: contain; }
+.darksweet-gift-card { display: flex; align-items: center; gap: 0.95rem; padding: 1.1rem 1.25rem; border: 1px solid var(--ds-line); border-radius: 1.25rem; background: linear-gradient(135deg, rgba(240, 200, 143, 0.12), rgba(199, 124, 145, 0.08)); backdrop-filter: blur(8px); transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+.darksweet-gift-card:hover { border-color: rgba(240, 200, 143, 0.45); box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3); }
+.darksweet-gift-card__icon { display: flex; align-items: center; justify-content: center; width: 3.25rem; height: 3.25rem; min-width: 3.25rem; max-width: 3.25rem; border-radius: 0.85rem; background: var(--ds-gold); color: var(--ds-ink); overflow: hidden; padding: 0.4rem; box-sizing: border-box; flex-shrink: 0; }
+.darksweet-gift-card__icon--logo { background: #ffffff; }
+.darksweet-gift-card__icon img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; margin: auto; }
+.darksweet-gift-card__info { flex: 1; min-width: 0; }
 .darksweet-gift-card__bank { margin: 0; color: var(--ds-gold); font-size: 0.88rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
 .darksweet-gift-card__number { margin: 0.2rem 0 0; color: var(--ds-cream); font-size: 0.84rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 700; overflow-wrap: anywhere; }
 .darksweet-gift-card__name { margin: 0.15rem 0 0; color: var(--ds-muted); font-size: 0.76rem; font-weight: 600; }
-.darksweet-copy-button { padding: 0.5rem 0.7rem; border: 1px solid var(--ds-line); border-radius: 0.7rem; background: transparent; color: var(--ds-gold); cursor: pointer; font-size: 0.7rem; font-weight: 800; }
+.darksweet-copy-button { display: inline-flex; align-items: center; justify-content: center; padding: 0.55rem 0.85rem; border: 1px solid var(--ds-line); border-radius: 0.75rem; background: transparent; color: var(--ds-gold); cursor: pointer; font-size: 0.72rem; font-weight: 800; flex-shrink: 0; transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease; }
+.darksweet-copy-button:hover, .darksweet-copy-button:focus-visible { background: rgba(240, 200, 143, 0.15); border-color: var(--ds-gold); color: var(--ds-cream); transform: translateY(-1px); }
+.darksweet-copy-button:active { transform: translateY(0); }
+
 
 
 .darksweet-attendance { max-width: 42rem; margin: 0 auto; }
