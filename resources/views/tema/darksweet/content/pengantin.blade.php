@@ -41,10 +41,26 @@
         <div class="darksweet-gift-list">
             @foreach ($data->kado as $kado)
                 <article class="darksweet-gift-card" data-aos="fade-up">
-                    <div class="darksweet-gift-card__icon" aria-hidden="true"><i class="fa-solid fa-building-columns"></i></div>
+                    <div class="darksweet-gift-card__icon" aria-hidden="true">
+                        @if ($kado->giftPay?->icon && (file_exists(public_path('storage/' . $kado->giftPay->icon)) || \Illuminate\Support\Facades\Storage::disk('public')->exists($kado->giftPay->icon)))
+                            <img src="{{ asset('storage/' . $kado->giftPay->icon) }}" alt="{{ $kado->giftPay?->nama_pay ?? 'Bank' }}">
+                        @else
+                            <i class="fa-solid fa-building-columns"></i>
+                        @endif
+                    </div>
                     <div>
-                        <p class="darksweet-gift-card__name">{{ $kado->namaPay }}</p>
+                        @if ($kado->giftPay?->nama_pay)
+                            <p class="darksweet-gift-card__bank">{{ $kado->giftPay->nama_pay }}</p>
+                        @endif
                         <p class="darksweet-gift-card__number">{{ $kado->nomorPay }}</p>
+                        @php
+                            $ownerName = trim($kado->namaPay ?? '');
+                            $isPrefixed = preg_match('/^a[\.\/\s]*n[\.\/\s]*/i', $ownerName);
+                            $displayOwner = $isPrefixed ? $ownerName : ($ownerName ? 'a.n. ' . $ownerName : '');
+                        @endphp
+                        @if ($displayOwner)
+                            <p class="darksweet-gift-card__name">{{ $displayOwner }}</p>
+                        @endif
                     </div>
                     <button type="button" class="darksweet-copy-button" data-copy="{{ $kado->nomorPay }}">Salin</button>
                 </article>
@@ -52,8 +68,8 @@
                     <div class="darksweet-gift-card" data-aos="fade-up">
                         <div class="darksweet-gift-card__icon" aria-hidden="true"><i class="fa-solid fa-qrcode"></i></div>
                         <div>
-                            <p class="darksweet-gift-card__name">QRIS</p>
-                            <p class="darksweet-gift-card__number">Scan untuk mengirim tanda kasih.</p>
+                            <p class="darksweet-gift-card__bank">QRIS</p>
+                            <p class="darksweet-gift-card__name">Scan untuk mengirim tanda kasih.</p>
                         </div>
                         <a class="darksweet-copy-button" href="{{ asset('storage/' . $kado->qris) }}" target="_blank" rel="noopener">Lihat</a>
                     </div>

@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @php
+        use Carbon\Carbon;
+        Carbon::setLocale('id');
+    @endphp
 
     <meta property="og:title" content="{{ $data->title }}" />
     <meta property="og:description" content="Deskripsi singkat undangan." />

@@ -28,9 +28,7 @@
 
     <p id="countdown" class="darkpre-date-line" data-aos="fade-up">
         @if ($acaraUtamaDate)
-            {{ date('d', strtotime($acaraUtamaDate)) }},
-            {{ \Carbon\Carbon::parse($acaraUtamaDate)->translatedFormat('l') }}
-            {{ \Carbon\Carbon::parse($acaraUtamaDate)->translatedFormat('F Y') }}
+            {{ \Carbon\Carbon::parse($acaraUtamaDate)->translatedFormat('l, d F Y') }}
         @else
             Tanggal acara belum tersedia
         @endif
@@ -53,9 +51,7 @@
                 <div class="darkpre-event-details">
                     <div>
                         @if ($item->date)
-                            {{ date('d', strtotime($item->date)) }},
-                            {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l') }}
-                            {{ \Carbon\Carbon::parse($item->date)->translatedFormat('F Y') }}
+                            {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l, d F Y') }}
                         @else
                             Tanggal acara belum tersedia
                         @endif

@@ -1,10 +1,15 @@
 @php
-    $heroPhotos = collect($poto ?? [])->filter()->take(3)->values();
-    if ($heroPhotos->isEmpty()) {
-        $heroPhotos = collect([$thumbnailWa?->thumbnail])->filter()->values();
+    $heroPhotos = collect($poto ?? [])->filter();
+    if ($thumbnailWa?->thumbnail && ! $heroPhotos->contains($thumbnailWa->thumbnail)) {
+        $heroPhotos->prepend($thumbnailWa->thumbnail);
     }
+    $heroPhotos = $heroPhotos->take(3)->values();
     if ($heroPhotos->isEmpty()) {
-        $heroPhotos = collect(['tema/darksweet/img/pasangan.jpg']);
+        $heroPhotos = collect([
+            'tema/darksweet/img/illustration.jpg',
+            'tema/darksweet/img/pasangan.jpg',
+            'tema/darksweet/img/wedding.jpg',
+        ]);
     }
 @endphp
 

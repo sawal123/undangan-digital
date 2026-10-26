@@ -434,10 +434,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .darksweet-video iframe { width: 100%; height: 100%; border: 0; }
 
 .darksweet-gift-card { display: grid; grid-template-columns: auto 1fr auto; gap: 0.8rem; align-items: center; padding: 1rem; border: 1px solid var(--ds-line); border-radius: 1.25rem; background: linear-gradient(135deg, rgba(240, 200, 143, 0.12), rgba(199, 124, 145, 0.08)); }
-.darksweet-gift-card__icon { display: grid; width: 2.7rem; height: 2.7rem; place-items: center; border-radius: 0.9rem; background: var(--ds-gold); color: var(--ds-ink); }
-.darksweet-gift-card__name { margin: 0; color: var(--ds-cream); font-size: 0.82rem; font-weight: 800; }
-.darksweet-gift-card__number { margin: 0.25rem 0 0; color: var(--ds-muted); font-size: 0.76rem; overflow-wrap: anywhere; }
+.darksweet-gift-card__icon { display: grid; width: 2.7rem; height: 2.7rem; place-items: center; border-radius: 0.9rem; background: var(--ds-gold); color: var(--ds-ink); overflow: hidden; }
+.darksweet-gift-card__icon img { width: 1.8rem; height: 1.8rem; object-fit: contain; }
+.darksweet-gift-card__bank { margin: 0; color: var(--ds-gold); font-size: 0.88rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
+.darksweet-gift-card__number { margin: 0.2rem 0 0; color: var(--ds-cream); font-size: 0.84rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 700; overflow-wrap: anywhere; }
+.darksweet-gift-card__name { margin: 0.15rem 0 0; color: var(--ds-muted); font-size: 0.76rem; font-weight: 600; }
 .darksweet-copy-button { padding: 0.5rem 0.7rem; border: 1px solid var(--ds-line); border-radius: 0.7rem; background: transparent; color: var(--ds-gold); cursor: pointer; font-size: 0.7rem; font-weight: 800; }
+
 
 .darksweet-attendance { max-width: 42rem; margin: 0 auto; }
 .darksweet-attendance .darksweet-form, .darksweet-message-list { display: grid; gap: 0.9rem; }
