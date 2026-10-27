@@ -91,54 +91,44 @@
         </div>
     </div>
 
-    <!-- Pria & Wanita Form Components (Reordered visually based on urutanMempelai) -->
+    <!-- Pria & Wanita Form Components (Reordered visually using CSS order to preserve Livewire DOM state) -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        @if($urutanMempelai === 'wanita_pria')
-            <!-- Wanita First -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 relative">
-                <div class="mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-                        <i data-lucide="award" class="w-3.5 h-3.5"></i>
-                        Posisi 1 (Tampil Pertama)
-                    </span>
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mempelai Wanita</span>
-                </div>
-                <livewire:dashboard-demo.kelola.wanita :data-id="$dataId" :key="'wanita-card-'.$dataId" />
-            </div>
-
-            <!-- Pria Second -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 relative">
-                <div class="mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <!-- Pria Card Container -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 relative transition-all {{ $urutanMempelai === 'wanita_pria' ? 'order-2' : 'order-1' }}"
+            wire:key="container-card-pria-{{ $dataId }}">
+            <div class="mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                @if($urutanMempelai === 'wanita_pria')
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                         Posisi 2 (Tampil Kedua)
                     </span>
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mempelai Pria</span>
-                </div>
-                <livewire:dashboard-demo.kelola.pria :data-id="$dataId" :key="'pria-card-'.$dataId" />
-            </div>
-        @else
-            <!-- Pria First -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 relative">
-                <div class="mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                @else
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
                         <i data-lucide="award" class="w-3.5 h-3.5"></i>
                         Posisi 1 (Tampil Pertama)
                     </span>
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mempelai Pria</span>
-                </div>
-                <livewire:dashboard-demo.kelola.pria :data-id="$dataId" :key="'pria-card-'.$dataId" />
+                @endif
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mempelai Pria</span>
             </div>
+            <livewire:dashboard-demo.kelola.pria :data-id="$dataId" :key="'pria-form-'.$dataId" />
+        </div>
 
-            <!-- Wanita Second -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 relative">
-                <div class="mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <!-- Wanita Card Container -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 relative transition-all {{ $urutanMempelai === 'wanita_pria' ? 'order-1' : 'order-2' }}"
+            wire:key="container-card-wanita-{{ $dataId }}">
+            <div class="mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                @if($urutanMempelai === 'wanita_pria')
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                        <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                        Posisi 1 (Tampil Pertama)
+                    </span>
+                @else
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                         Posisi 2 (Tampil Kedua)
                     </span>
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mempelai Wanita</span>
-                </div>
-                <livewire:dashboard-demo.kelola.wanita :data-id="$dataId" :key="'wanita-card-'.$dataId" />
+                @endif
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mempelai Wanita</span>
             </div>
-        @endif
+            <livewire:dashboard-demo.kelola.wanita :data-id="$dataId" :key="'wanita-form-'.$dataId" />
+        </div>
     </div>
 </div>

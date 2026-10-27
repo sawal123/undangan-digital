@@ -95,14 +95,22 @@ class UrutanMempelaiTest extends TestCase
 
         Livewire::test(Pengantin::class, ['id' => $data->uid])
             ->assertSet('urutanMempelai', 'pria_wanita')
+            ->assertSee('Mempelai Pria')
+            ->assertSee('Mempelai Wanita')
             ->call('setUrutan', 'wanita_pria')
-            ->assertSet('urutanMempelai', 'wanita_pria');
+            ->assertSet('urutanMempelai', 'wanita_pria')
+            ->assertSee('Mempelai Pria')
+            ->assertSee('Mempelai Wanita')
+            ->assertSee('Posisi 1 (Tampil Pertama)')
+            ->assertSee('Posisi 2 (Tampil Kedua)');
 
         $this->assertEquals('wanita_pria', $data->fresh()->urutan_mempelai);
 
         Livewire::test(Pengantin::class, ['id' => $data->uid])
             ->call('setUrutan', 'pria_wanita')
-            ->assertSet('urutanMempelai', 'pria_wanita');
+            ->assertSet('urutanMempelai', 'pria_wanita')
+            ->assertSee('Mempelai Pria')
+            ->assertSee('Mempelai Wanita');
 
         $this->assertEquals('pria_wanita', $data->fresh()->urutan_mempelai);
     }
