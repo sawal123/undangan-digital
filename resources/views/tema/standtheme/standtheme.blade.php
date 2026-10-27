@@ -50,7 +50,7 @@
 
             <footer class="stand-footer">
                 <h2 class="stand-footer__title">Terima Kasih</h2>
-                <p class="stand-footer__text">Dengan penuh kasih, {{ $data->pria?->nama_panggilan ?? '' }} &amp; {{ $data->wanita?->nama_panggilan ?? '' }}</p>
+                <p class="stand-footer__text">Dengan penuh kasih, {{ $coupleNames ?? $data->couple_name }}</p>
             </footer>
         </main>
 

@@ -1,23 +1,34 @@
 <div class="darksweet-couple-grid">
     @php
-        $couples = [
-            [
-                'person' => $data->pria,
-                'default' => 'tema/darksweet/img/young-bride-groom-outdoor-photoshoot.jpg',
-            ],
-            [
-                'person' => $data->wanita,
-                'default' => 'tema/darksweet/img/smiley-newlyweds-posing-together-outdoors.jpg',
-            ],
-        ];
+        $isWanitaFirst = $isWanitaFirst ?? $data->is_wanita_first;
+        $couples = $isWanitaFirst
+            ? [
+                [
+                    'person' => $data->wanita,
+                    'default' => 'tema/darksweet/img/smiley-newlyweds-posing-together-outdoors.jpg',
+                ],
+                [
+                    'person' => $data->pria,
+                    'default' => 'tema/darksweet/img/young-bride-groom-outdoor-photoshoot.jpg',
+                ],
+            ]
+            : [
+                [
+                    'person' => $data->pria,
+                    'default' => 'tema/darksweet/img/young-bride-groom-outdoor-photoshoot.jpg',
+                ],
+                [
+                    'person' => $data->wanita,
+                    'default' => 'tema/darksweet/img/smiley-newlyweds-posing-together-outdoors.jpg',
+                ],
+            ];
     @endphp
 
     @foreach ($couples as $couple)
         @php
             $person = $couple['person'];
-            $hasStorageImage = !empty($person?->image) && (file_exists(public_path('storage/' . $person->image)) || \Illuminate\Support\Facades\Storage::disk('public')->exists($person->image));
-            $personImage = $hasStorageImage
-                ? asset('storage/' . $person->image)
+            $personImage = !empty($person?->image)
+                ? asset('storage/' . ltrim($person->image, '/'))
                 : asset($couple['default']);
         @endphp
         <article class="darksweet-person-card" data-aos="fade-up">

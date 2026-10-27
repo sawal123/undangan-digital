@@ -2,9 +2,15 @@
     <div class="darkpre-left-image"
         style="background-image: url('{{ asset('storage/' . ($thumbnailWa?->thumbnail ?? 'images/placeholder.jpg')) }}');"></div>
     <h2 class="darkpre-left-title">
-        {{ $data->wanita?->nama_panggilan ?? '' }}
-        <span class="font-poppins text-[25px]">&amp;</span>
-        {{ $data->pria?->nama_panggilan ?? '' }}
+        @if ($isWanitaFirst ?? $data->is_wanita_first)
+            {{ $data->wanita?->nama_panggilan ?? '' }}
+            <span class="font-poppins text-[25px]">&amp;</span>
+            {{ $data->pria?->nama_panggilan ?? '' }}
+        @else
+            {{ $data->pria?->nama_panggilan ?? '' }}
+            <span class="font-poppins text-[25px]">&amp;</span>
+            {{ $data->wanita?->nama_panggilan ?? '' }}
+        @endif
     </h2>
 
     @include('tema.darkpre.content.music')

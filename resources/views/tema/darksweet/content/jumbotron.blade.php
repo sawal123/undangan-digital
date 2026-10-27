@@ -28,7 +28,7 @@
             {{ $data->setting?->acara ?? 'The Wedding' }}
         </p>
         <h1 class="darksweet-hero__title" data-aos="fade-up">
-            {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}
+            {{ $coupleNames ?? $data->couple_name }}
         </h1>
         @include('tema.darksweet.content.countdown')
         <div class="darksweet-scroll-hint" data-aos="fade-up" data-aos-delay="250">

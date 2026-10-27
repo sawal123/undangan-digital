@@ -34,7 +34,8 @@
         $wanitaImage =
             $storageUrl($wanita?->image) ??
             'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&auto=format';
-        $coupleNames = ($pria?->nama_panggilan ?? 'Mempelai') . ' & ' . ($wanita?->nama_panggilan ?? 'Mempelai');
+        $coupleNames = $coupleNames ?? $data->couple_name;
+        $isWanitaFirst = $isWanitaFirst ?? $data->is_wanita_first;
         $pageTitle = ($data->setting?->acara ?? 'The Wedding Of') . ' ' . $coupleNames;
     @endphp
     <title>{{ $pageTitle }}</title>
@@ -618,9 +619,17 @@
 
         <div class="main-content" id="mainContent">
             <section id="heroSection" class="hero-bg-section" style="padding-top: 56px;">
-                <div class="couple-names-hero">{{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai') }}
-                    <span style="font-weight:400">&amp;</span>
-                    {{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai') }}</div>
+                <div class="couple-names-hero">
+                    @if ($isWanitaFirst)
+                        {{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai') }}
+                        <span style="font-weight:400">&amp;</span>
+                        {{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai') }}
+                    @else
+                        {{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai') }}
+                        <span style="font-weight:400">&amp;</span>
+                        {{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai') }}
+                    @endif
+                </div>
                 <div class="hero-date">{{ $eventDateText }}</div>
                 <div class="floral-divider"><span>*</span><span>+</span><span>*</span></div>
                 <div class="quote-block">
@@ -640,19 +649,35 @@
             <section id="coupleSection">
                 <div class="section-title">Mempelai</div>
                 <div class="floral-divider"><span>*</span><span>+</span><span>*</span></div>
-                <div class="couple-card">
-                    <img class="couple-img" src="{{ $priaImage }}"
-                        alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
-                    <h3>{{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai Pria') }}</h3>
-                    <p>{{ $pria?->deskripsi ?? 'Mempelai pria' }}</p>
-                </div>
-                <div class="ampersand">&amp;</div>
-                <div class="couple-card">
-                    <img class="couple-img" src="{{ $wanitaImage }}"
-                        alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
-                    <h3>{{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai Wanita') }}</h3>
-                    <p>{{ $wanita?->deskripsi ?? 'Mempelai wanita' }}</p>
-                </div>
+                @if ($isWanitaFirst)
+                    <div class="couple-card">
+                        <img class="couple-img" src="{{ $wanitaImage }}"
+                            alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                        <h3>{{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai Wanita') }}</h3>
+                        <p>{{ $wanita?->deskripsi ?? 'Mempelai wanita' }}</p>
+                    </div>
+                    <div class="ampersand">&amp;</div>
+                    <div class="couple-card">
+                        <img class="couple-img" src="{{ $priaImage }}"
+                            alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                        <h3>{{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai Pria') }}</h3>
+                        <p>{{ $pria?->deskripsi ?? 'Mempelai pria' }}</p>
+                    </div>
+                @else
+                    <div class="couple-card">
+                        <img class="couple-img" src="{{ $priaImage }}"
+                            alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                        <h3>{{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai Pria') }}</h3>
+                        <p>{{ $pria?->deskripsi ?? 'Mempelai pria' }}</p>
+                    </div>
+                    <div class="ampersand">&amp;</div>
+                    <div class="couple-card">
+                        <img class="couple-img" src="{{ $wanitaImage }}"
+                            alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                        <h3>{{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai Wanita') }}</h3>
+                        <p>{{ $wanita?->deskripsi ?? 'Mempelai wanita' }}</p>
+                    </div>
+                @endif
             </section>
 
             <section id="eventSection">

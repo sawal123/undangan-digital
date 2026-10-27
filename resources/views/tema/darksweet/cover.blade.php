@@ -12,14 +12,14 @@
         <div class="darksweet-cover__monogram" aria-hidden="true"><i class="fa-solid fa-heart"></i></div>
         <p class="darksweet-cover__eyebrow">{{ $data->setting?->acara ?? 'The Wedding' }}</p>
         <h1 class="darksweet-cover__title">
-            {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}
+            {{ $coupleNames ?? $data->couple_name }}
         </h1>
         @if ($coverDate)
             <p class="darksweet-cover__date">{{ \Carbon\Carbon::parse($coverDate)->translatedFormat('j F Y') }}</p>
         @endif
 
         <div class="darksweet-cover__visual">
-            <img src="{{ $coverImage }}" alt="Foto {{ $data->pria?->nama_panggilan ?? 'mempelai' }} dan {{ $data->wanita?->nama_panggilan ?? 'mempelai' }}">
+            <img src="{{ $coverImage }}" alt="Foto {{ $coupleNames ?? $data->couple_name }}">
         </div>
 
         <p class="darksweet-cover__guest">

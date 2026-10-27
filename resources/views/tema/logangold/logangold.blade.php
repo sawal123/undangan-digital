@@ -33,7 +33,8 @@
         $wanitaImage =
             $storageUrl($wanita?->image) ??
             'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=600';
-        $coupleNames = ($pria?->nama_panggilan ?? 'Mempelai') . ' & ' . ($wanita?->nama_panggilan ?? 'Mempelai');
+        $coupleNames = $coupleNames ?? $data->couple_name;
+        $isWanitaFirst = $isWanitaFirst ?? $data->is_wanita_first;
         $pageTitle = ($data->setting?->acara ?? 'The Wedding Of') . ' ' . $coupleNames;
     @endphp
     <title>{{ $pageTitle }}</title>
@@ -336,33 +337,63 @@
 
         <div class="px-5 py-4 scroll-reveal" id="couple">
             <h2 class="font-serif text-2xl font-bold text-center gold-text mb-6">Mempelai</h2>
-            <div class="glass-card rounded-3xl p-5 text-center mb-6">
-                <img src="{{ $priaImage }}"
-                    class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3"
-                    alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
-                <h3 class="font-serif text-xl font-semibold">
-                    {{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai Pria') }}</h3>
-                <p class="text-sm opacity-80">{{ $pria?->deskripsi ?? 'Mempelai pria' }}</p>
-                @if ($pria?->instagram)
-                    <a href="https://instagram.com/{{ ltrim($pria->instagram, '@') }}" target="_blank"
-                        class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i>
-                        {{ $pria->instagram }}</a>
-                @endif
-            </div>
-            <div class="text-center gold-text text-2xl my-2">&amp;</div>
-            <div class="glass-card rounded-3xl p-5 text-center mt-2">
-                <img src="{{ $wanitaImage }}"
-                    class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3"
-                    alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
-                <h3 class="font-serif text-xl font-semibold">
-                    {{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai Wanita') }}</h3>
-                <p class="text-sm opacity-80">{{ $wanita?->deskripsi ?? 'Mempelai wanita' }}</p>
-                @if ($wanita?->instagram)
-                    <a href="https://instagram.com/{{ ltrim($wanita->instagram, '@') }}" target="_blank"
-                        class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i>
-                        {{ $wanita->instagram }}</a>
-                @endif
-            </div>
+            @if ($isWanitaFirst)
+                <div class="glass-card rounded-3xl p-5 text-center mb-6">
+                    <img src="{{ $wanitaImage }}"
+                        class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3"
+                        alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                    <h3 class="font-serif text-xl font-semibold">
+                        {{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai Wanita') }}</h3>
+                    <p class="text-sm opacity-80">{{ $wanita?->deskripsi ?? 'Mempelai wanita' }}</p>
+                    @if ($wanita?->instagram)
+                        <a href="https://instagram.com/{{ ltrim($wanita->instagram, '@') }}" target="_blank"
+                            class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i>
+                            {{ $wanita->instagram }}</a>
+                    @endif
+                </div>
+                <div class="text-center gold-text text-2xl my-2">&amp;</div>
+                <div class="glass-card rounded-3xl p-5 text-center mt-2">
+                    <img src="{{ $priaImage }}"
+                        class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3"
+                        alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                    <h3 class="font-serif text-xl font-semibold">
+                        {{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai Pria') }}</h3>
+                    <p class="text-sm opacity-80">{{ $pria?->deskripsi ?? 'Mempelai pria' }}</p>
+                    @if ($pria?->instagram)
+                        <a href="https://instagram.com/{{ ltrim($pria->instagram, '@') }}" target="_blank"
+                            class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i>
+                            {{ $pria->instagram }}</a>
+                    @endif
+                </div>
+            @else
+                <div class="glass-card rounded-3xl p-5 text-center mb-6">
+                    <img src="{{ $priaImage }}"
+                        class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3"
+                        alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                    <h3 class="font-serif text-xl font-semibold">
+                        {{ $pria?->nama_lengkap ?? ($pria?->nama_panggilan ?? 'Mempelai Pria') }}</h3>
+                    <p class="text-sm opacity-80">{{ $pria?->deskripsi ?? 'Mempelai pria' }}</p>
+                    @if ($pria?->instagram)
+                        <a href="https://instagram.com/{{ ltrim($pria->instagram, '@') }}" target="_blank"
+                            class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i>
+                            {{ $pria->instagram }}</a>
+                    @endif
+                </div>
+                <div class="text-center gold-text text-2xl my-2">&amp;</div>
+                <div class="glass-card rounded-3xl p-5 text-center mt-2">
+                    <img src="{{ $wanitaImage }}"
+                        class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gold mb-3"
+                        alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                    <h3 class="font-serif text-xl font-semibold">
+                        {{ $wanita?->nama_lengkap ?? ($wanita?->nama_panggilan ?? 'Mempelai Wanita') }}</h3>
+                    <p class="text-sm opacity-80">{{ $wanita?->deskripsi ?? 'Mempelai wanita' }}</p>
+                    @if ($wanita?->instagram)
+                        <a href="https://instagram.com/{{ ltrim($wanita->instagram, '@') }}" target="_blank"
+                            class="text-gold text-sm inline-block mt-2"><i class="fab fa-instagram"></i>
+                            {{ $wanita->instagram }}</a>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <div class="px-5 py-4 scroll-reveal" id="events">

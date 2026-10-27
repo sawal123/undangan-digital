@@ -29,7 +29,8 @@
             ((count($poto ?? []) > 1 ? $storageUrl($poto[1]) : null) ?? $coverImage);
         $priaImage = $storageUrl($pria?->image) ?? asset('tema/wedding_blue/assets/gallery-1.png');
         $wanitaImage = $storageUrl($wanita?->image) ?? asset('tema/wedding_blue/assets/gallery-2.png');
-        $coupleNames = ($pria?->nama_panggilan ?? 'Mempelai') . ' & ' . ($wanita?->nama_panggilan ?? 'Mempelai');
+        $coupleNames = $coupleNames ?? $data->couple_name;
+        $isWanitaFirst = $isWanitaFirst ?? $data->is_wanita_first;
         $pageTitle = ($data->setting?->acara ?? 'The Wedding Of') . ' ' . $coupleNames;
     @endphp
     <title>{{ $pageTitle }}</title>
@@ -1304,24 +1305,43 @@
                 </div>
                 <div class="card intro-card glow zoom">
                     <div class="intro-photos">
-                        <img class="intro-photo" src="{{ $priaImage }}"
-                            alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
-                        <img class="intro-photo" src="{{ $wanitaImage }}"
-                            alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                        @if ($isWanitaFirst)
+                            <img class="intro-photo" src="{{ $wanitaImage }}"
+                                alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                            <img class="intro-photo" src="{{ $priaImage }}"
+                                alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                        @else
+                            <img class="intro-photo" src="{{ $priaImage }}"
+                                alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                            <img class="intro-photo" src="{{ $wanitaImage }}"
+                                alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                        @endif
                     </div>
                     <h3>{{ $coupleNames }}</h3>
                     <p>{{ $data->qoute?->subtitle ?? 'Love is not just looking at each other, but looking together in the same direction.' }}
                     </p>
                     <div class="names">
-                        <div class="person">
-                            <div class="label">Mempelai Pria</div>
-                            <b>{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}</b><span>{{ $pria?->deskripsi ?? '' }}</span>
-                        </div>
-                        <div class="amp">&</div>
-                        <div class="person">
-                            <div class="label">Mempelai Wanita</div>
-                            <b>{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</b><span>{{ $wanita?->deskripsi ?? '' }}</span>
-                        </div>
+                        @if ($isWanitaFirst)
+                            <div class="person">
+                                <div class="label">Mempelai Wanita</div>
+                                <b>{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</b><span>{{ $wanita?->deskripsi ?? '' }}</span>
+                            </div>
+                            <div class="amp">&</div>
+                            <div class="person">
+                                <div class="label">Mempelai Pria</div>
+                                <b>{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}</b><span>{{ $pria?->deskripsi ?? '' }}</span>
+                            </div>
+                        @else
+                            <div class="person">
+                                <div class="label">Mempelai Pria</div>
+                                <b>{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}</b><span>{{ $pria?->deskripsi ?? '' }}</span>
+                            </div>
+                            <div class="amp">&</div>
+                            <div class="person">
+                                <div class="label">Mempelai Wanita</div>
+                                <b>{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</b><span>{{ $wanita?->deskripsi ?? '' }}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </section>

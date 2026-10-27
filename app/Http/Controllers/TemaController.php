@@ -187,6 +187,11 @@ class TemaController extends Controller
 
         return [
             'data' => $data,
+            'coupleNames' => $data->couple_name,
+            'coupleFullNames' => $data->couple_full_name,
+            'isWanitaFirst' => $data->is_wanita_first,
+            'firstPerson' => $data->first_person,
+            'secondPerson' => $data->second_person,
             'hari' => $hari,
             'bulan' => $bulan,
             'tamu' => $ta?->nama ?? $tamu ?? 'Tamu Undangan',
