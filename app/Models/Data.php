@@ -28,11 +28,54 @@ class Data extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'theme_id', 'event_type_id', 'title', 'slug', 'uid', 'isActive'];
+    protected $fillable = ['user_id', 'theme_id', 'event_type_id', 'title', 'slug', 'uid', 'isActive', 'urutan_mempelai'];
 
     protected $casts = [
         'isActive' => 'boolean',
     ];
+
+    public function getIsWanitaFirstAttribute(): bool
+    {
+        return ($this->urutan_mempelai ?? 'pria_wanita') === 'wanita_pria';
+    }
+
+    public function getCoupleNameAttribute(): string
+    {
+        $priaName = $this->pria?->nama_panggilan ?? '';
+        $wanitaName = $this->wanita?->nama_panggilan ?? '';
+
+        if (empty($priaName) && empty($wanitaName)) {
+            return $this->title ?? 'Mempelai';
+        }
+
+        if ($this->is_wanita_first) {
+            return trim(($wanitaName ?: 'Mempelai') . ' & ' . ($priaName ?: 'Mempelai'));
+        }
+
+        return trim(($priaName ?: 'Mempelai') . ' & ' . ($wanitaName ?: 'Mempelai'));
+    }
+
+    public function getCoupleFullNameAttribute(): string
+    {
+        $priaFull = $this->pria?->nama_lengkap ?? '';
+        $wanitaFull = $this->wanita?->nama_lengkap ?? '';
+
+        if ($this->is_wanita_first) {
+            return trim(($wanitaFull ?: 'Mempelai Wanita') . ' & ' . ($priaFull ?: 'Mempelai Pria'));
+        }
+
+        return trim(($priaFull ?: 'Mempelai Pria') . ' & ' . ($wanitaFull ?: 'Mempelai Wanita'));
+    }
+
+    public function getFirstPersonAttribute()
+    {
+        return $this->is_wanita_first ? $this->wanita : $this->pria;
+    }
+
+    public function getSecondPersonAttribute()
+    {
+        return $this->is_wanita_first ? $this->pria : $this->wanita;
+    }
 
     public function canBeShared(): bool
     {

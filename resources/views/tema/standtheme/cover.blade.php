@@ -8,7 +8,7 @@
 <section id="standCover" class="stand-cover" style="background-image: url('{{ $standCoverImage }}');">
     <div class="stand-cover__content" data-aos="fade-up">
         <p class="stand-cover__eyebrow">{{ $data->setting?->acara ?? 'The Wedding' }}</p>
-        <h1 class="stand-cover__title">{{ $data->pria?->nama_panggilan ?? '' }} &amp; {{ $data->wanita?->nama_panggilan ?? '' }}</h1>
+        <h1 class="stand-cover__title">{{ $coupleNames ?? $data->couple_name }}</h1>
         @if ($standCoverDate)
             <p class="stand-cover__date">{{ \Carbon\Carbon::parse($standCoverDate)->translatedFormat('j F Y') }}</p>
         @endif

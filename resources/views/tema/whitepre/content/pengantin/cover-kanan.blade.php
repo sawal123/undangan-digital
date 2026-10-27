@@ -6,9 +6,15 @@
     <div class="whitepre-hero-content">
         <p class="whitepre-hero-eyebrow" data-aos="fade-down">{{ $data->setting?->acara ?? 'The Wedding' }}</p>
         <h1 class="whitepre-hero-title" data-aos="fade-up" data-aos-delay="120">
-            {{ $data->pria?->nama_panggilan ?? '' }}
-            <span class="text-[25px]">&amp;</span>
-            {{ $data->wanita?->nama_panggilan ?? '' }}
+            @if ($isWanitaFirst ?? $data->is_wanita_first)
+                {{ $data->wanita?->nama_panggilan ?? '' }}
+                <span class="text-[25px]">&amp;</span>
+                {{ $data->pria?->nama_panggilan ?? '' }}
+            @else
+                {{ $data->pria?->nama_panggilan ?? '' }}
+                <span class="text-[25px]">&amp;</span>
+                {{ $data->wanita?->nama_panggilan ?? '' }}
+            @endif
         </h1>
 
         @php

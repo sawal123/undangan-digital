@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <!-- Open Graph Meta Tags -->
-    <title>{{ $data->setting?->acara ?? 'The Wedding' }} {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}</title>
+    <title>{{ $data->setting?->acara ?? 'The Wedding' }} {{ $coupleNames ?? $data->couple_name }}</title>
     @php
         use Carbon\Carbon;
         Carbon::setLocale('id');
@@ -191,8 +191,7 @@
                         <div class="jumbotron text-center position-relative text-black z-3">
                             <p>{{ $data->setting?->acara ?? 'The Wedding' }}</p>
                             <h1 class="countdown">
-                                {{ $data?->pria?->nama_panggilan ?? 'Teddy' }} &
-                                {{ $data?->wanita?->nama_panggilan ?? 'Ajeng' }}
+                                {{ $coupleNames ?? $data->couple_name }}
                             </h1>
                             {{-- <p class="date countdown">Minggu <br> 10 • 11 • 2024</p> --}}
                             @include('tema.flowerone.flower.countdown')
@@ -449,7 +448,7 @@
             </div>
 
             <footer class="footer mt-5 text-center mb-5">
-                <p style="margin: 0px">{{ $data->wanita?->nama_panggilan ?? '' }} & {{ $data->pria?->nama_panggilan ?? '' }} </p>
+                <p style="margin: 0px">{{ $coupleNames ?? $data->couple_name }}</p>
                 <p style="margin: 0px">Made with ❤ somewhere in the world</p>
                 <p style="margin-bottom: 5px">Powered by Wayae Nikah</p>
             </footer>

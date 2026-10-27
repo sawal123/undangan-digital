@@ -18,7 +18,7 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
     @include('components.social-preview-meta', ['data' => $data, 'title' => $data->title])
-    <title>{{ $data->setting?->acara ?? 'The Wedding' }} {{ $data->pria?->nama_panggilan ?? '' }} & {{ $data->wanita?->nama_panggilan ?? '' }}</title>
+    <title>{{ $data->setting?->acara ?? 'The Wedding' }} {{ $coupleNames ?? $data->couple_name }}</title>
 
     <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/fontawesome-free/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('tema/darksweet/assets/swiper/swiper-bundle.min.css') }}">

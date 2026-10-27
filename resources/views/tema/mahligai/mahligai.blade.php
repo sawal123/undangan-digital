@@ -34,12 +34,9 @@
         $priaImage =
             $storageUrl($pria?->image) ??
             'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=600';
-        $title =
-            ($data->setting?->acara ?? 'The Wedding Of') .
-            ' ' .
-            ($wanita?->nama_panggilan ?? 'Mempelai') .
-            ' & ' .
-            ($pria?->nama_panggilan ?? 'Mempelai');
+        $coupleNames = $coupleNames ?? $data->couple_name;
+        $isWanitaFirst = $isWanitaFirst ?? $data->is_wanita_first;
+        $title = ($data->setting?->acara ?? 'The Wedding Of') . ' ' . $coupleNames;
         $galleryImages = array_values(array_filter(array_map($storageUrl, $poto ?? [])));
         $heroImages = array_slice($galleryImages, 0, 3);
         if (empty($heroImages)) {
@@ -636,8 +633,13 @@
         <div class="cover-content">
             <h3>{{ $data->setting?->acara ?? 'The Wedding Of' }}</h3>
             <div class="couple-name-cover">
-                {{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }} <br> & <br>
-                {{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}
+                @if ($isWanitaFirst)
+                    {{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }} <br> & <br>
+                    {{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}
+                @else
+                    {{ $pria?->nama_lengkap ?? 'Mempelai Pria' }} <br> & <br>
+                    {{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}
+                @endif
             </div>
             <p>{{ $eventDateText }}</p>
             <div class="guest-card">
@@ -656,7 +658,7 @@
         <section id="hero">
             <div class="hero-content" style="text-align:center;">
                 <h1 style="font-family:'Playfair Display'; font-size:2rem; color:#a27145;">
-                    {{ $wanita?->nama_panggilan ?? 'Mempelai' }} & {{ $pria?->nama_panggilan ?? 'Mempelai' }}
+                    {{ $coupleNames }}
                 </h1>
                 <p>{{ $eventDateText }}</p>
                 <div class="floral-divider">* * *</div>
@@ -716,19 +718,35 @@
                     ),
                 ) !!}
             </p>
-            <div class="couple-card">
-                <img class="couple-photo" src="{{ $wanitaImage }}"
-                    alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
-                <h2 style="font-family:Playfair Display;">{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</h2>
-                <p>{!! nl2br(e($wanita?->deskripsi ?? '')) !!}</p>
-            </div>
-            <div class="ampersand">&</div>
-            <div class="couple-card">
-                <img class="couple-photo" src="{{ $priaImage }}"
-                    alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
-                <h2 style="font-family:Playfair Display;">{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}</h2>
-                <p>{!! nl2br(e($pria?->deskripsi ?? '')) !!}</p>
-            </div>
+            @if ($isWanitaFirst)
+                <div class="couple-card">
+                    <img class="couple-photo" src="{{ $wanitaImage }}"
+                        alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                    <h2 style="font-family:Playfair Display;">{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</h2>
+                    <p>{!! nl2br(e($wanita?->deskripsi ?? '')) !!}</p>
+                </div>
+                <div class="ampersand">&</div>
+                <div class="couple-card">
+                    <img class="couple-photo" src="{{ $priaImage }}"
+                        alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                    <h2 style="font-family:Playfair Display;">{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}</h2>
+                    <p>{!! nl2br(e($pria?->deskripsi ?? '')) !!}</p>
+                </div>
+            @else
+                <div class="couple-card">
+                    <img class="couple-photo" src="{{ $priaImage }}"
+                        alt="{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}">
+                    <h2 style="font-family:Playfair Display;">{{ $pria?->nama_lengkap ?? 'Mempelai Pria' }}</h2>
+                    <p>{!! nl2br(e($pria?->deskripsi ?? '')) !!}</p>
+                </div>
+                <div class="ampersand">&</div>
+                <div class="couple-card">
+                    <img class="couple-photo" src="{{ $wanitaImage }}"
+                        alt="{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}">
+                    <h2 style="font-family:Playfair Display;">{{ $wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</h2>
+                    <p>{!! nl2br(e($wanita?->deskripsi ?? '')) !!}</p>
+                </div>
+            @endif
         </section>
 
         <section id="events">
@@ -907,7 +925,7 @@
 
         <footer>
             <div style="font-family: 'Playfair Display'; font-size:2rem; margin-bottom: 0.5rem;">
-                {{ $wanita?->nama_panggilan ?? 'Mempelai' }} & {{ $pria?->nama_panggilan ?? 'Mempelai' }}
+                {{ $coupleNames }}
             </div>
             <p>{!! nl2br(e($data->teksUndangan?->penutup ?? 'Terima kasih atas doa dan kehadiran Anda.')) !!}</p>
             <div class="floral-divider" style="color:#ffefdb;">* * *</div>

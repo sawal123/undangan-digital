@@ -7,11 +7,31 @@
 <section class="stand-section stand-opening" data-aos="fade-up">
     <img class="stand-opening__ornament" src="{{ asset('tema/standtheme/assets/img/bismillah.png') }}" alt="Bismillah">
     <p class="stand-eyebrow">Dengan penuh rasa syukur</p>
-    <h2 class="stand-opening__names">{{ $data->pria?->nama_lengkap ?? 'Mempelai Pria' }}</h2>
-    <p class="stand-opening__ampersand">&amp;</p>
-    <h2 class="stand-opening__names">{{ $data->wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</h2>
+    @if ($isWanitaFirst ?? $data->is_wanita_first)
+        @if ($data->wanita?->image)
+            <div class="stand-opening__portrait"><img src="{{ asset('storage/' . ltrim($data->wanita->image, '/')) }}" alt="{{ $data->wanita?->nama_lengkap ?? 'Mempelai Wanita' }}" loading="lazy"></div>
+        @endif
+        <h2 class="stand-opening__names">{{ $data->wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</h2>
+        <p class="stand-opening__ampersand">&amp;</p>
+        @if ($data->pria?->image)
+            <div class="stand-opening__portrait"><img src="{{ asset('storage/' . ltrim($data->pria->image, '/')) }}" alt="{{ $data->pria?->nama_lengkap ?? 'Mempelai Pria' }}" loading="lazy"></div>
+        @endif
+        <h2 class="stand-opening__names">{{ $data->pria?->nama_lengkap ?? 'Mempelai Pria' }}</h2>
+    @else
+        @if ($data->pria?->image)
+            <div class="stand-opening__portrait"><img src="{{ asset('storage/' . ltrim($data->pria->image, '/')) }}" alt="{{ $data->pria?->nama_lengkap ?? 'Mempelai Pria' }}" loading="lazy"></div>
+        @endif
+        <h2 class="stand-opening__names">{{ $data->pria?->nama_lengkap ?? 'Mempelai Pria' }}</h2>
+        <p class="stand-opening__ampersand">&amp;</p>
+        @if ($data->wanita?->image)
+            <div class="stand-opening__portrait"><img src="{{ asset('storage/' . ltrim($data->wanita->image, '/')) }}" alt="{{ $data->wanita?->nama_lengkap ?? 'Mempelai Wanita' }}" loading="lazy"></div>
+        @endif
+        <h2 class="stand-opening__names">{{ $data->wanita?->nama_lengkap ?? 'Mempelai Wanita' }}</h2>
+    @endif
 
-    <div class="stand-opening__portrait"><img src="{{ $standOpeningPhoto }}" alt="Foto kedua mempelai" loading="lazy"></div>
+    @if (! $data->pria?->image && ! $data->wanita?->image)
+        <div class="stand-opening__portrait"><img src="{{ $standOpeningPhoto }}" alt="Foto kedua mempelai" loading="lazy"></div>
+    @endif
     <p class="stand-opening__description">{{ $data->teksUndangan?->pembuka ?? 'Dengan memohon rahmat dan ridho Tuhan Yang Maha Esa, kami mengundang Anda untuk hadir di hari bahagia kami.' }}</p>
 
     @php $standOpeningEvent = $data->acara?->first(); @endphp

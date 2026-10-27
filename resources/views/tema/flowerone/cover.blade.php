@@ -7,8 +7,7 @@
         <div class="text-center mt-2">
             <h4 class="header-text">{{ $data->setting?->acara ?? 'The Wedding' }}</h4>
             <h1>
-                {{ $data?->pria?->nama_panggilan ?? 'Teddy' }} &
-                {{ $data?->wanita?->nama_panggilan ?? 'Ajeng' }}</h1>
+                {{ $coupleNames ?? $data->couple_name }}</h1>
         </div>
         @php
             $firstAcaraDate = ($data->acara[0] ?? null)?->date;

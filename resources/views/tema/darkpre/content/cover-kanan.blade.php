@@ -8,9 +8,15 @@
             {{ $data->setting?->acara ?? 'The Wedding' }}
         </p>
         <h1 class="darkpre-hero-title" data-aos="fade-up" data-aos-delay="120">
-            {{ $data->pria?->nama_panggilan ?? '' }}
-            <span class="font-poppins text-[25px]">&amp;</span>
-            {{ $data->wanita?->nama_panggilan ?? '' }}
+            @if ($isWanitaFirst ?? $data->is_wanita_first)
+                {{ $data->wanita?->nama_panggilan ?? '' }}
+                <span class="font-poppins text-[25px]">&amp;</span>
+                {{ $data->pria?->nama_panggilan ?? '' }}
+            @else
+                {{ $data->pria?->nama_panggilan ?? '' }}
+                <span class="font-poppins text-[25px]">&amp;</span>
+                {{ $data->wanita?->nama_panggilan ?? '' }}
+            @endif
         </h1>
 
         @php

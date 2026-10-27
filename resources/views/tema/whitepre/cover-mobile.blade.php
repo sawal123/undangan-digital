@@ -111,8 +111,13 @@
             data-aos-duration="1500">{{ $data->setting?->acara ?? 'The Wedding' }}</h3>
         <h1 class="whitepre-cover-title mt-8 text-center text-[50px] font-light " data-aos="fade-up"
             data-aos-anchor-placement="top-bottom">
-            {{ $data->pria?->nama_panggilan ?? '' }}<span class=" text-[25px]"> & </span>
-            {{ $data->wanita?->nama_panggilan ?? '' }}
+            @if ($isWanitaFirst ?? $data->is_wanita_first)
+                {{ $data->wanita?->nama_panggilan ?? '' }}<span class=" text-[25px]"> & </span>
+                {{ $data->pria?->nama_panggilan ?? '' }}
+            @else
+                {{ $data->pria?->nama_panggilan ?? '' }}<span class=" text-[25px]"> & </span>
+                {{ $data->wanita?->nama_panggilan ?? '' }}
+            @endif
         </h1>
         @php
             $firstAcaraDate = ($data->acara[0] ?? null)?->date;
