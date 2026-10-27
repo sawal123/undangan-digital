@@ -40,6 +40,9 @@
             <x-admin.menu :link="route('admin.transaksi')" :icon="'mdi mdi-cube-send'" :active="request()->routeIs('admin.transaksi')">
                 {{ __('Transaksi') }}
             </x-admin.menu>
+            <x-admin.menu :link="route('admin.undangan')" :icon="'mdi mdi-calendar-clock'" :active="request()->routeIs('admin.undangan')">
+                {{ __('Status Undangan') }}
+            </x-admin.menu>
             <x-admin.menu :link="route('admin.user')" :icon="'mdi mdi-account'" :active="request()->routeIs('admin.user')">
                 {{ __('User') }}
             </x-admin.menu>
@@ -47,8 +50,11 @@
                 {{ __('Setting') }}
             </x-admin.menu>
 
-            <x-admin.menu :link="route('admin.pay.setting')" :icon="'mdi mdi-cog'" :active="request()->routeIs('admin.pay.setting')">
-                {{ __('Gift Pay Setting') }}
+            <x-admin.menu :link="route('admin.pay.setting')" :icon="'mdi mdi-credit-card-outline'" :active="request()->routeIs('admin.pay.setting')">
+                {{ __('Metode Pembayaran') }}
+            </x-admin.menu>
+            <x-admin.menu :link="route('admin.gift.pay')" :icon="'mdi mdi-gift-outline'" :active="request()->routeIs('admin.gift.pay')">
+                {{ __('Gift Pay (Hadiah)') }}
             </x-admin.menu>
             {{-- <x-admin.menu :link="route('admin.logout')" :icon="'mdi mdi-power'">
                 {{ __('Log Out') }}

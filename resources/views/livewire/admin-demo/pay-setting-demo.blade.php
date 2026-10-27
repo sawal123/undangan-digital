@@ -1,8 +1,20 @@
 <div x-data="{ deleteId: null, deleteMethod: 'delete' }" @set-delete.window="deleteId = $event.detail.id; deleteMethod = $event.detail.method || 'delete'">
-    <div class="mb-6 flex justify-between items-center">
+    <!-- Navigation Tabs -->
+    <div class="mb-6 flex flex-wrap items-center gap-2 p-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl w-fit border border-slate-200 dark:border-slate-700">
+        <a href="{{ route('admin.pay.setting') }}" wire:navigate class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-indigo-600 text-white shadow-sm">
+            <i data-lucide="credit-card" class="w-4 h-4"></i>
+            <span>Metode Pembayaran (Transaksi)</span>
+        </a>
+        <a href="{{ route('admin.gift.pay') }}" wire:navigate class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50">
+            <i data-lucide="gift" class="w-4 h-4"></i>
+            <span>Gift Pay (Hadiah Undangan)</span>
+        </a>
+    </div>
+
+    <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Gift Pay Setting</h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Konfigurasi metode pembayaran dan instruksi transfer.</p>
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Metode Pembayaran</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Konfigurasi metode pembayaran checkout transaksi (Midtrans & Manual transfer).</p>
         </div>
         <x-ui.button variant="primary" icon="plus" x-on:click="$wire.resetInput(); $dispatch('open-modal', { name: 'pay-modal' })">
             Tambah Metode

@@ -35,12 +35,37 @@
                 <td class="px-5 py-3.5">
                     <p class="text-sm font-medium text-slate-800 dark:text-white">{{ $t->data->title ?? 'Paket Undangan' }}</p>
                     <p class="text-[10px] text-slate-500">{{ $t->created_at->format('d M Y, H:i') }}</p>
+                    @if($t->data?->theme)
+                        <div class="mt-1 flex flex-wrap items-center gap-1.5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                                <i data-lucide="palette" class="w-3 h-3"></i>
+                                {{ $t->data->theme->nama }}
+                            </span>
+                            @if($t->data->theme->demo)
+                                <a href="{{ route('admin.temademo', $t->data->theme->demo) }}" target="_blank" class="inline-flex items-center gap-0.5 text-[10px] font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline">
+                                    <span>Demo Tema</span>
+                                    <i data-lucide="external-link" class="w-2.5 h-2.5"></i>
+                                </a>
+                            @endif
+                        </div>
+                    @endif
+                    @if($t->data?->slug)
+                        <div class="mt-1">
+                            <a href="{{ route('visit', $t->data->slug) }}" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline">
+                                <i data-lucide="link" class="w-3 h-3"></i>
+                                <span>/u/{{ $t->data->slug }}</span>
+                                <i data-lucide="external-link" class="w-2.5 h-2.5"></i>
+                            </a>
+                        </div>
+                    @endif
                 </td>
                 <td class="px-5 py-3.5 text-sm font-bold">
                     Rp {{ number_format($t->gross_amount, 0, ',', '.') }}
                 </td>
                 <td class="px-5 py-3.5">
-                    <span class="text-xs uppercase text-slate-500">{{ $t->payment_type }}</span>
+                    <span class="text-xs font-semibold uppercase text-slate-700 dark:text-slate-300">
+                        {{ $t->payment?->bank ?? $t->payment_type }}
+                    </span>
                 </td>
                 <td class="px-5 py-3.5">
                     @php

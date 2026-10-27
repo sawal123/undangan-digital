@@ -41,7 +41,7 @@ class TransaksiDemo extends Component
     public function render()
     {
         $transactions = Transaction::query()
-            ->with(['data', 'user'])
+            ->with(['data.theme', 'user', 'payment'])
             ->when(!empty(trim($this->search)), function ($query) {
                 $searchTerm = '%' . trim($this->search) . '%';
                 $query->where(function ($sub) use ($searchTerm) {
@@ -51,6 +51,13 @@ class TransaksiDemo extends Component
                         ->orWhereHas('user', function ($uQuery) use ($searchTerm) {
                             $uQuery->where('name', 'like', $searchTerm)
                                 ->orWhere('email', 'like', $searchTerm);
+                        })
+                        ->orWhereHas('data', function ($dQuery) use ($searchTerm) {
+                            $dQuery->where('title', 'like', $searchTerm)
+                                ->orWhere('slug', 'like', $searchTerm)
+                                ->orWhereHas('theme', function ($tQuery) use ($searchTerm) {
+                                    $tQuery->where('nama', 'like', $searchTerm);
+                                });
                         });
                 });
             })

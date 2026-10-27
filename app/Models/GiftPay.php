@@ -10,7 +10,8 @@ class GiftPay extends Model
     use HasFactory;
     protected $fillable = ['nama_pay', 'icon'];
 
-    public function kado(){
-        return $this->hasMany(GiftPay::class);
+    public function kado()
+    {
+        return $this->hasMany(\App\Models\KelolaUndangan\Kado::class, 'gift_id');
     }
 }

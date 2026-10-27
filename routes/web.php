@@ -97,7 +97,9 @@ Route::middleware(['auth', 'not.suspended', 'security.admin.access', 'role:Owner
     Route::get('/price', \App\Livewire\AdminDemo\HargaDemo::class)->name('price');
     Route::get('/harga', \App\Livewire\AdminDemo\HargaDemo::class)->name('harga');
     Route::get('/pay-setting', \App\Livewire\AdminDemo\PaySettingDemo::class)->name('pay.setting');
+    Route::get('/gift-pay', \App\Livewire\AdminDemo\GiftPayDemo::class)->name('gift.pay');
     Route::get('/transaksi', \App\Livewire\AdminDemo\TransaksiDemo::class)->name('transaksi');
+    Route::get('/undangan', \App\Livewire\AdminDemo\UndanganDemo::class)->name('undangan');
     Route::get('/user', \App\Livewire\AdminDemo\UserDemo::class)->name('user');
     Route::get('/security', \App\Livewire\AdminDemo\SecurityMonitoringDemo::class)->name('security');
     Route::get('/animation', \App\Livewire\AdminDemo\AnimationDemo::class)->name('animation');

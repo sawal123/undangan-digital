@@ -179,6 +179,11 @@
                     <i data-lucide="credit-card" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="text-sm font-medium">Transaksi</span>
                 </a>
+                <a href="{{ route('admin.undangan') }}" wire:navigate
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.undangan') ? 'active' : '' }}">
+                    <i data-lucide="calendar-clock" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="text-sm font-medium">Status Undangan</span>
+                </a>
                 <a href="{{ route('admin.user') }}" wire:navigate
                     class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.user') ? 'active' : '' }}">
                     <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
@@ -201,8 +206,13 @@
                 </a>
                 <a href="{{ route('admin.pay.setting') }}" wire:navigate
                     class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.pay.setting') ? 'active' : '' }}">
-                    <i data-lucide="wallet" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="text-sm font-medium">Gift Pay Setting</span>
+                    <i data-lucide="credit-card" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="text-sm font-medium">Metode Pembayaran</span>
+                </a>
+                <a href="{{ route('admin.gift.pay') }}" wire:navigate
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all {{ request()->routeIs('admin.gift.pay') ? 'active' : '' }}">
+                    <i data-lucide="gift" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="text-sm font-medium">Gift Pay (Hadiah)</span>
                 </a>
                 <!-- Add more links as needed -->
             </nav>
