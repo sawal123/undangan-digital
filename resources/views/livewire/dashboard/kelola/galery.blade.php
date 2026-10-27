@@ -34,6 +34,9 @@
             <div class="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden hover:shadow-md transition-all">
                 <!-- Media Preview -->
                 <div class="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-900">
+                    <div class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-lg bg-black/60 backdrop-blur-md text-white text-[11px] font-bold tracking-wider shadow-sm">
+                        #{{ $index + 1 }}
+                    </div>
                     @if ($item->poto)
                         <img src="{{ asset('storage/' . $item->poto) }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Gallery Image">
                     @else
@@ -53,11 +56,13 @@
                 <div class="p-4 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-1">
                         <button @if($index === 0) disabled @else wire:click="previous({{ $item->sort }})" wire:loading.attr="disabled" wire:target="previous({{ $item->sort }})" @endif
+                            title="Geser ke kiri / posisi sebelumnya"
                             class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-30 disabled:pointer-events-none transition-colors">
                             <span wire:loading.remove wire:target="previous({{ $item->sort }})"><i data-lucide="arrow-left-circle" class="w-5 h-5"></i></span>
                             <span wire:loading wire:target="previous({{ $item->sort }})"><x-loading-spinner class="w-4 h-4" /></span>
                         </button>
                         <button @if($data->count() === $index + 1) disabled @else wire:click="next({{ $item->sort }})" wire:loading.attr="disabled" wire:target="next({{ $item->sort }})" @endif
+                            title="Geser ke kanan / posisi berikutnya"
                             class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-30 disabled:pointer-events-none transition-colors">
                             <span wire:loading.remove wire:target="next({{ $item->sort }})"><i data-lucide="arrow-right-circle" class="w-5 h-5"></i></span>
                             <span wire:loading wire:target="next({{ $item->sort }})"><x-loading-spinner class="w-4 h-4" /></span>

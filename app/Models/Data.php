@@ -13,6 +13,7 @@ use App\Models\KelolaUndangan\Kado;
 use App\Models\KelolaUndangan\KisahCinta;
 use App\Models\KelolaUndangan\Pria;
 use App\Models\KelolaUndangan\Qoute;
+use App\Models\KelolaUndangan\Rundown;
 use App\Models\KelolaUndangan\Sound;
 use App\Models\KelolaUndangan\Streaming;
 use App\Models\KelolaUndangan\Tamu;
@@ -169,6 +170,11 @@ class Data extends Model
     public function acara()
     {
         return $this->hasMany(Acara::class);
+    }
+
+    public function rundowns()
+    {
+        return $this->hasMany(Rundown::class)->orderBy('sort', 'asc');
     }
 
     public function galery()

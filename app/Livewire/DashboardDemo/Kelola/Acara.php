@@ -15,6 +15,8 @@ class Acara extends Component
     #[Locked]
     public int $dataId;
 
+    public string $invitationUid = '';
+
     public string $acara = '';
 
     public string $vanue = '';
@@ -90,9 +92,50 @@ class Acara extends Component
         $this->resetInputFields();
     }
 
+    public function updatedMaps(): void
+    {
+        $this->maps = $this->sanitizeMapsUrl($this->maps);
+    }
+
+    public function generateMapsFromAddress(): void
+    {
+        $queryParts = array_filter([trim($this->vanue), trim($this->alamat)]);
+        if (empty($queryParts)) {
+            session()->flash('error', 'Isi venue atau alamat terlebih dahulu untuk membuat link Google Maps.');
+            return;
+        }
+
+        $query = urlencode(implode(', ', $queryParts));
+        $this->maps = "https://www.google.com/maps/search/?api=1&query={$query}";
+    }
+
+    public function sanitizeMapsUrl(?string $url): string
+    {
+        if (empty($url)) {
+            return '';
+        }
+
+        $url = trim($url);
+
+        // Jika user paste kode embed iframe: <iframe src="https://..." ...></iframe>
+        if (preg_match('/src=[\"\']([^\"\']+)[\"\']/', $url, $matches)) {
+            $url = $matches[1];
+        }
+
+        $url = strip_tags($url);
+        $url = trim($url);
+
+        if (str_starts_with($url, 'www.')) {
+            $url = 'https://' . $url;
+        }
+
+        return substr($url, 0, 500);
+    }
+
     public function save(): void
     {
         $this->authorizeInvitationState();
+        $this->maps = $this->sanitizeMapsUrl($this->maps);
         $this->validate();
 
         $jamEndValue = ($this->selesai || empty(trim($this->end))) ? 'Selesai' : trim($this->end);
@@ -131,7 +174,9 @@ class Acara extends Component
 
     public function mount(string $id): void
     {
-        $this->dataId = $this->ownedInvitationByUid($id)->id;
+        $data = $this->ownedInvitationByUid($id);
+        $this->dataId = $data->id;
+        $this->invitationUid = $data->uid;
     }
 
     public function resetInputFields(): void
@@ -157,6 +202,7 @@ class Acara extends Component
 
         return view('livewire.dashboard.kelola.acara', [
             'dataAcara' => $dataAcara,
+            'invitationUid' => $this->invitationUid,
         ])->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Acara',
         ]);

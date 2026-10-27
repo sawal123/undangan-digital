@@ -15,12 +15,25 @@
             </p>
         </div>
 
-        @if($activeTab === 'daftar')
-            <button x-on:click="$wire.call('resetField'); $dispatch('open-modal', { name: 'tamu-modal' })"
-                class="inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-all gap-2 shadow-sm shadow-indigo-200 dark:shadow-none">
-                <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Tamu
+        <div class="flex flex-wrap items-center gap-2">
+            <button wire:click="exportCsv" wire:loading.attr="disabled"
+                class="inline-flex items-center justify-center px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold rounded-xl transition-all gap-1.5 shadow-sm">
+                <i data-lucide="download" class="w-4 h-4 text-slate-500"></i>
+                <span wire:loading.remove wire:target="exportCsv">Export CSV</span>
+                <span wire:loading wire:target="exportCsv">Mengunduh...</span>
             </button>
-        @endif
+
+            @if($activeTab === 'daftar')
+                <button wire:click="openImportModal"
+                    class="inline-flex items-center justify-center px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold rounded-xl transition-all gap-1.5 shadow-sm">
+                    <i data-lucide="upload" class="w-4 h-4 text-slate-500"></i> Import Tamu
+                </button>
+                <button x-on:click="$wire.call('resetField'); $dispatch('open-modal', { name: 'tamu-modal' })"
+                    class="inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-xl transition-all gap-2 shadow-sm shadow-indigo-200 dark:shadow-none">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Tamu
+                </button>
+            @endif
+        </div>
     </div>
 
     <!-- Alert Notifications -->
@@ -569,13 +582,14 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Tautan Personal Tamu:</label>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2" x-data="{ copied: false }">
                         <input type="text" readonly value="{{ $slug }}" id="guest-url-input"
                             class="flex-1 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono text-slate-800 dark:text-slate-200 select-all">
-                        <button type="button" onclick="navigator.clipboard.writeText('{{ $slug }}'); alert('Link berhasil disalin!')"
+                        <button type="button" @click="navigator.clipboard.writeText('{{ $slug }}'); copied = true; setTimeout(() => copied = false, 2000)"
                             class="px-3.5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                            <span>Salin</span>
+                            <i x-show="!copied" data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <i x-show="copied" data-lucide="check" class="w-3.5 h-3.5"></i>
+                            <span x-text="copied ? 'Tersalin!' : 'Salin'"></span>
                         </button>
                     </div>
                 </div>
@@ -606,4 +620,41 @@
             Ya, Hapus Sekarang
         </button>
     </x-ui.modal-delete>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: IMPORT TAMU VIA CSV                               -->
+    <!-- ======================================================== -->
+    <x-ui.modal name="import-tamu-modal" title="Import Tamu dari CSV" icon="upload" maxWidth="lg">
+        <form wire:submit="importCsv" class="space-y-4">
+            <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/40 text-xs text-indigo-900 dark:text-indigo-300 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold flex items-center gap-1.5"><i data-lucide="file-spreadsheet" class="w-4 h-4 text-indigo-600"></i> Format File CSV</span>
+                    <button type="button" wire:click="downloadTemplateCsv" class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline flex items-center gap-1">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh Template
+                    </button>
+                </div>
+                <p class="text-slate-600 dark:text-slate-400">File harus berisi kolom: <strong>Nama</strong> (Wajib) dan <strong>WhatsApp</strong> (Opsional). Baris pertama akan dianggap sebagai header jika berisi kata "Nama".</p>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Pilih File CSV (.csv / .txt) <span class="text-rose-500">*</span></label>
+                <input type="file" wire:model="csvFile" accept=".csv,text/csv,text/plain"
+                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900/30 dark:file:text-indigo-400">
+                <div wire:loading wire:target="csvFile" class="mt-1 text-xs text-indigo-600 dark:text-indigo-400">Mengunggah file...</div>
+                @error('csvFile') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
+            </div>
+
+            <div class="flex justify-end gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button type="button" x-on:click="$dispatch('close-modal', { name: 'import-tamu-modal' })"
+                    class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors">
+                    Batal
+                </button>
+                <button type="submit" wire:loading.attr="disabled" wire:target="importCsv"
+                    class="px-5 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2 disabled:opacity-50">
+                    <span wire:loading.remove wire:target="importCsv"><i data-lucide="upload-cloud" class="w-4 h-4 inline-block mr-1"></i> Mulai Import</span>
+                    <span wire:loading wire:target="importCsv">Memproses...</span>
+                </button>
+            </div>
+        </form>
+    </x-ui.modal>
 </div>

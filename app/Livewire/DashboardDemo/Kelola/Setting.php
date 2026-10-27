@@ -378,6 +378,36 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         $this->refreshSlugAvailability();
     }
 
+    public function generateSlug(): void
+    {
+        $this->authorizeInvitationState();
+        $data = $this->ownedInvitationById($this->dataId, ['pria', 'wanita']);
+
+        $baseText = '';
+        if ($data->pria || $data->wanita) {
+            $baseText = $data->couple_name;
+        }
+
+        if (empty(trim($baseText)) && !empty($this->title)) {
+            $baseText = $this->title;
+        }
+
+        $candidate = Str::slug($baseText);
+        if (empty($candidate)) {
+            $candidate = 'undangan-' . Str::lower(Str::random(6));
+        }
+
+        $uniqueSlug = $candidate;
+        $counter = 1;
+        while (Data::where('slug', $uniqueSlug)->whereKeyNot($this->dataId)->exists()) {
+            $uniqueSlug = "{$candidate}-{$counter}";
+            $counter++;
+        }
+
+        $this->slug = $uniqueSlug;
+        $this->refreshSlugAvailability();
+    }
+
     public function render()
     {
         $this->authorizeInvitationState();

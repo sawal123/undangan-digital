@@ -14,7 +14,12 @@
                     <input type="text" wire:model.defer="title" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Slug URL (u/slug-anda)</label>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Slug URL (u/slug-anda)</label>
+                        <button type="button" wire:click="generateSlug" class="text-xs text-indigo-600 dark:text-indigo-400 font-bold hover:underline flex items-center gap-1">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Auto Generate
+                        </button>
+                    </div>
                     <div class="relative">
                         <input type="text" wire:model.debounce.500ms="slug" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
                         <p class="mt-2 text-[10px] font-medium {{ $button ? 'text-emerald-500' : 'text-rose-500' }}">{{ $pesan }}</p>
