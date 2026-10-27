@@ -27,14 +27,13 @@ class Index extends Component
 
         $commonModules = [
             ['nama' => 'Acara', 'icon' => 'calendar', 'url' => 'acara', 'desc' => 'Kelola jadwal & lokasi'],
+            ['nama' => 'Tamu & RSVP', 'icon' => 'users', 'url' => 'tamu', 'desc' => 'Daftar tamu, RSVP & ucapan'],
             ['nama' => 'Galeri', 'icon' => 'image', 'url' => 'galeri', 'desc' => 'Foto & video momen'],
             ['nama' => 'Musik', 'icon' => 'music', 'url' => 'musik', 'desc' => 'Pilih latar musik'],
-            ['nama' => 'Ucapan', 'icon' => 'message-square', 'url' => 'ucapan', 'desc' => 'Doa & ucapan tamu'],
             ['nama' => 'Kado', 'icon' => 'gift', 'url' => 'kado', 'desc' => 'Kirim kado & hadiah'],
-            ['nama' => 'Tamu', 'icon' => 'users', 'url' => 'tamu', 'desc' => 'Daftar & sebar undangan'],
             ['nama' => 'Tema', 'icon' => 'palette', 'url' => 'tema', 'desc' => 'Pilih desain undangan'],
+            ['nama' => 'Buku Tamu QR', 'icon' => 'qr-code', 'url' => 'buku-tamu', 'desc' => 'Scan kehadiran hari-H (Segera Hadir)'],
             ['nama' => 'Setting', 'icon' => 'settings', 'url' => 'setting', 'desc' => 'Pengaturan umum'],
-            ['nama' => 'Buku Tamu', 'icon' => 'book-open', 'url' => 'buku-tamu', 'desc' => 'Catatan kehadiran tamu'],
         ];
 
         $weddingModules = [

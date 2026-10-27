@@ -1,5 +1,23 @@
 <div class="space-y-6" x-data="{ deleteId: null, deleteMethod: 'delete' }"
     @set-delete.window="deleteId = $event.detail.id; deleteMethod = $event.detail.method || 'delete'">
+
+    <!-- Unified Hub Notice Banner -->
+    <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="info" class="w-4 h-4"></i>
+            </div>
+            <p class="text-xs text-indigo-900 dark:text-indigo-300">
+                Fitur Doa & Ucapan kini telah diintegrasikan langsung dalam satu halaman pusat terpadu di menu <strong>Tamu & RSVP</strong>.
+            </p>
+        </div>
+        <a href="{{ route('dashboard.undangan.tamu', ['id' => request()->route('id'), 'tab' => 'ucapan']) }}" wire:navigate
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-sm flex-shrink-0">
+            <span>Buka di Tamu & RSVP</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+    </div>
+
     <!-- Header Section -->
     <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
