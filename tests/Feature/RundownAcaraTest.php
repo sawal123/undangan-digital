@@ -180,4 +180,84 @@ class RundownAcaraTest extends TestCase
         Livewire::test(RundownComponent::class, ['id' => $data1->uid])
             ->call('toggleActive', $rundown2->id);
     }
+
+    public function test_active_rundown_is_rendered_in_theme_page(): void
+    {
+        [$user, $data] = $this->createUserWithInvitation();
+
+        $cat = Category::firstOrCreate(['category' => 'Wedding']);
+        $darksweet = Theme::create([
+            'nama' => 'Dark Sweet',
+            'category_id' => $cat->id,
+            'event_type_id' => $data->event_type_id,
+            'path' => 'tema.darksweet.darksweet',
+            'demo' => 'temademo.darksweet',
+        ]);
+        $data->theme_id = $darksweet->id;
+        $data->save();
+
+        \App\Models\Transaction::create([
+            'data_id' => $data->id,
+            'user_id' => $user->id,
+            'payment_status' => 'SUCCESS',
+            'gross_amount' => 50000,
+        ]);
+
+        \App\Models\KelolaUndangan\Pria::create([
+            'data_id' => $data->id,
+            'nama_lengkap' => 'Romeo Montague',
+            'nama_panggilan' => 'Romeo',
+            'deskripsi' => 'Putra Tn. Montague',
+            'image' => 'pria.png',
+        ]);
+
+        \App\Models\KelolaUndangan\Wanita::create([
+            'data_id' => $data->id,
+            'nama_lengkap' => 'Juliet Capulet',
+            'nama_panggilan' => 'Juliet',
+            'deskripsi' => 'Putri Tn. Capulet',
+            'image' => 'wanita.png',
+        ]);
+
+        $acara = Acara::create([
+            'data_id' => $data->id,
+            'nama_acara' => 'Akad Nikah',
+            'date' => '2026-11-20',
+            'jam_start' => '08:00',
+            'jam_end' => '10:00',
+            'zona_waktu' => 'WIB',
+            'vanue' => 'Gedung Kencana',
+            'alamat' => 'Jl. Pahlawan No. 10',
+        ]);
+
+        Rundown::create([
+            'data_id' => $data->id,
+            'acara_id' => $acara->id,
+            'nama_kegiatan' => 'Ijab Kabul Khidmat',
+            'waktu_mulai' => '08:30',
+            'waktu_selesai' => '09:30',
+            'keterangan' => 'Prosesi ijab kabul bersama penghulu',
+            'lokasi' => 'Ruang Utama',
+            'is_active' => true,
+            'sort' => 1,
+        ]);
+
+        Rundown::create([
+            'data_id' => $data->id,
+            'acara_id' => $acara->id,
+            'nama_kegiatan' => 'Kegiatan Rahasia Nonaktif',
+            'waktu_mulai' => '10:00',
+            'is_active' => false,
+            'sort' => 2,
+        ]);
+
+        $response = $this->get('/u/' . $data->slug);
+
+        $response->assertStatus(200);
+        $response->assertSee('Rundown Acara');
+        $response->assertSee('Ijab Kabul Khidmat');
+        $response->assertSee('08:30 - 09:30');
+        $response->assertSee('Ruang Utama');
+        $response->assertDontSee('Kegiatan Rahasia Nonaktif');
+    }
 }

@@ -332,6 +332,19 @@
 
                     </section>
 
+                    @php
+                        $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+                    @endphp
+                    @if ($activeRundowns->isNotEmpty())
+                        <div class="flower-divider text-center" id="rundown-divider">
+                            <img src="{{ asset('tema/flowerone/img/flower-pembatas.png') }}" class="img-fluid"
+                                data-aos="fade-up" data-aos-duration="1000">
+                        </div>
+                        <section class="rundown-section text-center" id="rundown">
+                            @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'flowerone'])
+                        </section>
+                    @endif
+
 
                     <!--Start Timeline Pertemuan-->
                     <section>

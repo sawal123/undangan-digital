@@ -18,6 +18,16 @@
     @include('tema.darksweet.content.pengantin.acara')
 </section>
 
+@php
+    $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+@endphp
+
+@if ($activeRundowns->isNotEmpty())
+    <section id="rundown" class="darksweet-section darksweet-section--accent">
+        @include('tema.darksweet.content.pengantin.rundown', ['rundowns' => $activeRundowns])
+    </section>
+@endif
+
 @if ($data->kisah?->isNotEmpty())
     <section id="story" class="darksweet-section darksweet-section--accent">
         @include('tema.darksweet.content.pengantin.kisah')

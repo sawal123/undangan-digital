@@ -53,6 +53,17 @@
             @include('tema.spiderman.content.acara')
             <!-- acara -->
 
+            <!-- rundown -->
+            @php
+                $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+            @endphp
+            @if ($activeRundowns->isNotEmpty())
+                <div class="px-4 py-2" id="spiderman-rundown">
+                    @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'spiderman', 'title' => 'Rundown Pesta', 'subtitle' => 'Jadwal petualangan seru hari ini!'])
+                </div>
+            @endif
+            <!-- rundown -->
+
             <!-- gallery -->
             @include('tema.spiderman.content.gallery')
             <!-- gallery -->

@@ -1383,6 +1383,15 @@
                 </section>
             @endif
 
+            @php
+                $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+            @endphp
+            @if ($activeRundowns->isNotEmpty())
+                <section class="soft" id="rundown">
+                    @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'wedding_blue'])
+                </section>
+            @endif
+
             @if ($data->kisah?->isNotEmpty())
                 <section id="story">
                     <div class="section-title reveal">

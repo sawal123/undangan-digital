@@ -995,6 +995,15 @@
                 </section>
             @endif
 
+            @php
+                $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+            @endphp
+            @if ($activeRundowns->isNotEmpty())
+                <section class="soft" id="rundown">
+                    @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'pink', 'eyebrow' => 'Party Schedule', 'title' => 'Rundown Acara', 'subtitle' => 'Susunan kegiatan pesta ulang tahun yang istimewa.'])
+                </section>
+            @endif
+
             @if ($dressCode)
                 <section class="soft" id="dresscode">
                     <div class="section-title reveal">
