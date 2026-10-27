@@ -14,6 +14,10 @@ class Tamu extends Model
     public function ucapans(){
         return $this->hasOne(Ucapan::class);
     }
+
+    public function ucapan(){
+        return $this->ucapans();
+    }
     public function data(){
         return $this->belongsTo(Data::class);
     }

@@ -3,6 +3,7 @@
 namespace App\Livewire\DashboardDemo\Kelola;
 
 use App\Livewire\DashboardDemo\Kelola\Concerns\LoadsOwnedInvitation;
+use App\Models\Category;
 use App\Models\Theme;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Crypt;
@@ -19,6 +20,13 @@ class Tema extends Component
     public bool $canPreview = false;
 
     public bool $canShareInvitation = false;
+
+    public string $selectedCategory = 'all';
+
+    public function setCategory(string $category): void
+    {
+        $this->selectedCategory = $category;
+    }
 
     public function mount(string $id): void
     {
@@ -91,6 +99,17 @@ class Tema extends Component
         // Public link perlu pembayaran/premium
         $this->canShareInvitation = $data?->canBeShared() ?? false;
 
+        $categories = Category::has('theme')->withCount('theme')->get();
+
+        $totalThemesCount = Theme::query()
+            ->when($data->event_type_id, function ($query) use ($data) {
+                $query->where(function ($sub) use ($data) {
+                    $sub->where('event_type_id', $data->event_type_id)
+                        ->orWhereNull('event_type_id');
+                });
+            })
+            ->count();
+
         $themes = Theme::with(['category', 'eventType'])
             ->when($data->event_type_id, function ($query) use ($data) {
                 $query->where(function ($sub) use ($data) {
@@ -98,11 +117,16 @@ class Tema extends Component
                         ->orWhereNull('event_type_id');
                 });
             })
+            ->when($this->selectedCategory !== 'all', function ($query) {
+                $query->where('category_id', $this->selectedCategory);
+            })
             ->get();
 
         return view('livewire.dashboard.kelola.tema', [
             'data' => $data,
             'tema' => $themes,
+            'categories' => $categories,
+            'totalThemesCount' => $totalThemesCount,
         ])->layout('components.layouts.user-new', [
             'headerTitle' => 'Pilih Tema',
         ]);

@@ -68,6 +68,7 @@ Route::middleware(['auth', 'not.suspended', 'role:User', 'setup.complete'])->pre
     Route::get('/kelola/{id}/birthday', \App\Livewire\DashboardDemo\Kelola\Birthday::class)->name('undangan.birthday');
     Route::get('/kelola/{id}/detail-event', \App\Livewire\DashboardDemo\Kelola\EventDetail::class)->name('undangan.event-detail');
     Route::get('/kelola/{id}/acara', \App\Livewire\DashboardDemo\Kelola\Acara::class)->name('undangan.acara');
+    Route::get('/kelola/{id}/rundown', \App\Livewire\DashboardDemo\Kelola\Rundown::class)->name('undangan.rundown');
     Route::get('/kelola/{id}/galeri', \App\Livewire\DashboardDemo\Kelola\Galery::class)->name('undangan.galery');
     Route::get('/kelola/{id}/musik', \App\Livewire\DashboardDemo\Kelola\Sound::class)->name('undangan.musik');
     Route::get('/kelola/{id}/ucapan', \App\Livewire\DashboardDemo\Kelola\Ucapan::class)->name('undangan.ucapan');

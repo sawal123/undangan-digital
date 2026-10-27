@@ -8,15 +8,18 @@ use App\Models\KelolaUndangan\Tamu as TamuModel;
 use App\Models\KelolaUndangan\Ucapan as KelolaUndanganUcapan;
 use App\Models\teksWhatsApp;
 use App\Services\InvitationMessageRenderer;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class Tamu extends Component
 {
     use LoadsOwnedInvitation;
+    use WithFileUploads;
     use WithPagination;
 
     #[Locked]
@@ -35,6 +38,7 @@ class Tamu extends Component
     public array $invite = [];
     public string $title = 'Add Tamu';
     public bool $canShareInvitation = false;
+    public $csvFile = null;
 
     // RSVP (Tab 2) Properties
     public string $rsvpFilter = 'all';
@@ -92,6 +96,8 @@ class Tamu extends Component
         $this->dispatch('close-modal', name: 'delete-modal');
         $this->dispatch('close-modal', name: 'tamu-modal');
         $this->dispatch('close-modal', name: 'share-modal');
+        $this->dispatch('close-modal', name: 'import-tamu-modal');
+        $this->csvFile = null;
     }
 
     protected function normalizeWhatsAppNumber(?string $phone): string
@@ -233,6 +239,142 @@ class Tamu extends Component
         } while (TamuModel::where('data_id', $this->dataId)->where('kode', $kode)->exists());
 
         return $kode;
+    }
+
+    public function openImportModal(): void
+    {
+        $this->csvFile = null;
+        $this->resetValidation();
+        $this->dispatch('open-modal', name: 'import-tamu-modal');
+    }
+
+    public function downloadTemplateCsv()
+    {
+        $filename = 'template_import_tamu.csv';
+
+        return response()->streamDownload(function () {
+            $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, ['Nama', 'WhatsApp']);
+            fputcsv($handle, ['Budi Santoso', '081234567890']);
+            fputcsv($handle, ['Siti Aminah', '628987654321']);
+            fputcsv($handle, ['Ahmad Dahlan', '']);
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
+    }
+
+    public function importCsv(): void
+    {
+        $this->authorizeInvitationState();
+        $this->validate([
+            'csvFile' => 'required|file|mimes:csv,txt|max:2048',
+        ], [
+            'csvFile.required' => 'Pilih file CSV untuk diimpor.',
+            'csvFile.mimes' => 'File harus berformat .csv atau .txt',
+            'csvFile.max' => 'Ukuran file maksimal 2MB.',
+        ]);
+
+        $path = $this->csvFile->getRealPath();
+        $handle = fopen($path, 'r');
+        if ($handle === false) {
+            session()->flash('error', 'Gagal membaca file CSV.');
+            return;
+        }
+
+        $importedCount = 0;
+        $rowNumber = 0;
+
+        DB::transaction(function () use ($handle, &$importedCount, &$rowNumber) {
+            while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+                $rowNumber++;
+                if ($rowNumber === 1 && isset($row[0])) {
+                    $firstCol = strtolower(trim(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $row[0])));
+                    if ($firstCol === 'nama' || $firstCol === 'name') {
+                        continue;
+                    }
+                }
+
+                $name = isset($row[0]) ? trim($row[0]) : '';
+                if (empty($name)) {
+                    continue;
+                }
+
+                $rawPhone = isset($row[1]) ? trim($row[1]) : '';
+                $normalizedPhone = $this->normalizeWhatsAppNumber($rawPhone);
+                $kode = $this->generateGuestCode();
+
+                TamuModel::create([
+                    'data_id' => $this->dataId,
+                    'nama' => $name,
+                    'kode' => $kode,
+                    'nomor' => $normalizedPhone,
+                    'slug' => Str::slug($name),
+                ]);
+
+                $importedCount++;
+            }
+        });
+
+        fclose($handle);
+        $this->csvFile = null;
+        $this->dispatch('close-modal', name: 'import-tamu-modal');
+
+        if ($importedCount > 0) {
+            session()->flash('message', "Berhasil mengimpor {$importedCount} tamu baru.");
+        } else {
+            session()->flash('error', 'Tidak ada data tamu yang valid untuk diimpor dari file CSV.');
+        }
+    }
+
+    public function exportCsv()
+    {
+        $this->authorizeInvitationState();
+        $invitation = $this->ownedInvitationById($this->dataId);
+        $tamus = TamuModel::where('data_id', $this->dataId)
+            ->with(['ucapan'])
+            ->orderBy('id', 'asc')
+            ->get();
+
+        $filename = 'tamu_' . ($invitation->slug ?: 'undangan') . '_' . date('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($tamus, $invitation) {
+            $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, ['Nama Tamu', 'WhatsApp', 'Kode Tamu', 'Status RSVP', 'Jumlah Hadir', 'Link Undangan']);
+
+            foreach ($tamus as $tamu) {
+                $statusRsvp = 'Belum Konfirmasi';
+                $jumlahHadir = '-';
+                if ($tamu->ucapan) {
+                    $statusRsvp = match ($tamu->ucapan->status) {
+                        'hadir', 'yes' => 'Hadir',
+                        'tidak', 'no' => 'Tidak Hadir',
+                        'ragu', 'maybe' => 'Ragu-ragu',
+                        default => ucfirst($tamu->ucapan->status ?? 'Belum Konfirmasi')
+                    };
+                    $jumlahHadir = $tamu->ucapan->jumlah ?? '1';
+                }
+
+                $link = url('/u/' . $invitation->slug . '/' . $tamu->kode);
+
+                fputcsv($handle, [
+                    $tamu->nama,
+                    $tamu->nomor ?: '-',
+                    $tamu->kode,
+                    $statusRsvp,
+                    $jumlahHadir,
+                    $link,
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 
     // ==========================================

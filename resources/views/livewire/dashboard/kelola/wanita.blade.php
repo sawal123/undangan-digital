@@ -59,30 +59,49 @@
             @enderror
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4">
-            @if ($newImage || $existingImage)
-                <div class="flex-shrink-0">
-                    @if ($newImage)
+        <div class="flex flex-col sm:flex-row gap-4 items-start">
+            <div class="relative flex-shrink-0">
+                @if ($newImage)
+                    <div class="relative group">
                         <img src="{{ $newImage->temporaryUrl() }}"
-                            class="w-24 h-24 object-cover rounded-xl border border-slate-200 dark:border-slate-800"
-                            alt="Preview Image">
-                    @elseif ($existingImage)
-                        <img src="{{ $existingImage }}"
-                            class="w-24 h-24 object-cover rounded-xl border border-slate-200 dark:border-slate-800"
-                            alt="Preview Image">
-                    @endif
-                </div>
-            @endif
-            <div class="flex-1">
-                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Gambar <span
+                            class="w-24 h-24 object-cover rounded-2xl border-2 border-pink-500 shadow-md"
+                            alt="Preview Image Baru">
+                        <button type="button" wire:click="$set('newImage', null)"
+                            title="Batal ganti foto"
+                            class="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center text-xs shadow-md hover:bg-rose-600 transition-colors">
+                            ✕
+                        </button>
+                    </div>
+                    <span class="mt-1 block text-center text-[10px] font-bold text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-950/60 px-1.5 py-0.5 rounded-md">
+                        Foto Baru
+                    </span>
+                @elseif ($existingImage)
+                    <img src="{{ $existingImage }}"
+                        class="w-24 h-24 object-cover rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"
+                        alt="Preview Image Eksisting">
+                    <span class="mt-1 block text-center text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                        Foto Saat Ini
+                    </span>
+                @else
+                    <div class="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-slate-400 bg-slate-50 dark:bg-slate-900">
+                        <i data-lucide="user" class="w-8 h-8 opacity-40"></i>
+                        <span class="text-[10px] mt-1">Belum ada</span>
+                    </div>
+                @endif
+            </div>
+
+            <div class="flex-1 w-full">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Gambar Mempelai Wanita <span
                         class="text-rose-500">*</span></label>
-                <input id="gambar_wanita" name="gambar" wire:model="newImage" type="file"
+                <input id="gambar_wanita" name="gambar" wire:model="newImage" type="file" accept="image/*"
                     class="w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 dark:file:bg-pink-900/30 dark:file:text-pink-400 dark:hover:file:bg-pink-900/50 transition-all">
                 @error('newImage')
                     <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                 @enderror
-                <div wire:loading wire:target="newImage" class="mt-2 text-xs text-indigo-600 dark:text-indigo-400">
-                    Uploading...</div>
+                <div wire:loading wire:target="newImage" class="mt-2 text-xs text-pink-600 dark:text-pink-400 flex items-center gap-1.5">
+                    <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Mengunggah preview...
+                </div>
+                <p class="mt-1 text-[11px] text-slate-400">Format: JPG, JPEG, PNG, WEBP. Maks 2MB.</p>
             </div>
         </div>
 

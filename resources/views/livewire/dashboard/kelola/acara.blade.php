@@ -5,9 +5,15 @@
             <h3 class="text-lg font-bold text-slate-800 dark:text-white">Jadwal Acara</h3>
             <p class="text-sm text-slate-500 dark:text-slate-400">Silahkan kelola jadwal acara undangan Anda.</p>
         </div>
-        <button x-on:click="$wire.call('resetInputFields'); $dispatch('open-modal', { name: 'acara-modal' })" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors gap-2">
-            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Acara
-        </button>
+        <div class="flex flex-wrap items-center gap-2">
+            <a href="{{ route('dashboard.undangan.rundown', ['id' => $invitationUid]) }}" wire:navigate
+                class="inline-flex items-center justify-center px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium rounded-xl transition-colors gap-1.5 shadow-sm">
+                <i data-lucide="clock" class="w-4 h-4 text-slate-500"></i> Susunan Acara (Rundown)
+            </a>
+            <button x-on:click="$wire.call('resetInputFields'); $dispatch('open-modal', { name: 'acara-modal' })" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i> Tambah Acara
+            </button>
+        </div>
     </div>
 
     @if (session()->has('message'))
@@ -100,7 +106,19 @@
                 @error('zona') <span class="text-xs text-rose-500 mt-1">{{ $message }}</span> @enderror
             </div>
 
-            <x-ui.input label="Link Navigasi Map (Opsional)" type="url" wire:model="maps" placeholder="https://goo.gl/maps/..." />
+            <div>
+                <div class="flex items-center justify-between mb-1.5">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+                        Link Navigasi Map (Opsional)
+                    </label>
+                    <button type="button" wire:click="generateMapsFromAddress" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 font-medium">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Buat Link dari Alamat
+                    </button>
+                </div>
+                <input type="text" wire:model.live.debounce.300ms="maps" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400" placeholder="https://maps.google.com/... atau tempel kode embed iframe">
+                <p class="mt-1 text-[11px] text-slate-400">Bisa paste link Google Maps atau kode embed iframe (otomatis dirapikan).</p>
+                @error('maps') <span class="text-xs text-rose-500 mt-1">{{ $message }}</span> @enderror
+            </div>
 
             <div class="flex justify-end gap-2 mt-6">
                 <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'acara-modal' })">Batal</x-ui.button>

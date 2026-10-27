@@ -27,6 +27,7 @@ class Index extends Component
 
         $commonModules = [
             ['nama' => 'Acara', 'icon' => 'calendar', 'url' => 'acara', 'desc' => 'Kelola jadwal & lokasi'],
+            ['nama' => 'Rundown', 'icon' => 'clock', 'url' => 'rundown', 'desc' => 'Susunan jadwal hari-H'],
             ['nama' => 'Tamu & RSVP', 'icon' => 'users', 'url' => 'tamu', 'desc' => 'Daftar tamu, RSVP & ucapan'],
             ['nama' => 'Galeri', 'icon' => 'image', 'url' => 'galeri', 'desc' => 'Foto & video momen'],
             ['nama' => 'Musik', 'icon' => 'music', 'url' => 'musik', 'desc' => 'Pilih latar musik'],

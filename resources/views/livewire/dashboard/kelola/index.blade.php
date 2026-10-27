@@ -16,10 +16,14 @@
                     <i data-lucide="eye" class="w-4 h-4"></i>
                     Lihat Undangan
                 </a>
-                <button onclick="copyLink('{{ url('/u/' . $data->slug) }}')" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 transition-all gap-2 shadow-md shadow-indigo-200 dark:shadow-none">
-                    <i data-lucide="copy" class="w-4 h-4"></i>
-                    Salin Link
-                </button>
+                <div x-data="{ copied: false }">
+                    <button @click="navigator.clipboard.writeText('{{ url('/u/' . $data->slug) }}'); copied = true; setTimeout(() => copied = false, 2000)"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 transition-all gap-2 shadow-md shadow-indigo-200 dark:shadow-none">
+                        <i x-show="!copied" data-lucide="copy" class="w-4 h-4"></i>
+                        <i x-show="copied" data-lucide="check" class="w-4 h-4 text-emerald-300"></i>
+                        <span x-text="copied ? 'Tersalin ke Clipboard!' : 'Salin Link'"></span>
+                    </button>
+                </div>
             @else
                 <span class="inline-flex items-center px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-400 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-800 cursor-not-allowed gap-2">
                     <i data-lucide="lock" class="w-4 h-4"></i>
@@ -89,11 +93,3 @@
         @endforeach
     </div>
 </div>
-
-<script>
-    function copyLink(url) {
-        navigator.clipboard.writeText(url).then(() => {
-            alert('Link berhasil disalin!');
-        });
-    }
-</script>
