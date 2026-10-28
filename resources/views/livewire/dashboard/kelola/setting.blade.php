@@ -90,7 +90,11 @@
             <div>
                 <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Template Pesan Undangan</label>
                 <textarea wire:model.defer="pesanWa" rows="6" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-mono"></textarea>
-                <p class="mt-2 text-[10px] text-slate-400">Gunakan tag: <span class="font-bold text-emerald-500">@{{tamu}}</span>, <span class="font-bold text-emerald-500">@{{nama_mempelai1}}</span>, <span class="font-bold text-emerald-500">@{{nama_mempelai2}}</span>, <span class="font-bold text-emerald-500">@{{link}}</span></p>
+                @if ($isBirthday ?? false)
+                    <p class="mt-2 text-[10px] text-slate-400">Gunakan tag: <span class="font-bold text-emerald-500">@{{tamu}}</span>, <span class="font-bold text-emerald-500">@{{nama_ulang_tahun}}</span>, <span class="font-bold text-emerald-500">@{{usia}}</span>, <span class="font-bold text-emerald-500">@{{penyelenggara}}</span>, <span class="font-bold text-emerald-500">@{{link}}</span></p>
+                @else
+                    <p class="mt-2 text-[10px] text-slate-400">Gunakan tag: <span class="font-bold text-emerald-500">@{{tamu}}</span>, <span class="font-bold text-emerald-500">@{{nama_mempelai1}}</span>, <span class="font-bold text-emerald-500">@{{nama_mempelai2}}</span>, <span class="font-bold text-emerald-500">@{{link}}</span></p>
+                @endif
                 <div class="flex justify-end mt-4">
                     <button wire:click="teksWhatsApp" wire:loading.attr="disabled" wire:target="teksWhatsApp" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-200 dark:shadow-none flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
                         <span wire:loading.remove wire:target="teksWhatsApp" class="inline-flex items-center gap-2"><span wire:ignore><i data-lucide="save" class="w-4 h-4"></i></span> Simpan Template</span>
@@ -186,7 +190,7 @@
         <div class="p-6 space-y-4">
             <div>
                 <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Judul / Sumber</label>
-                <input type="text" wire:model.defer="tit" dir="auto" placeholder="QS. Ar-Rum: 21" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all" style="font-family: 'Noto Naskh Arabic', 'Amiri', Inter, sans-serif; unicode-bidi: plaintext;">
+                <input type="text" wire:model.defer="tit" dir="auto" placeholder="{{ ($isBirthday ?? false) ? 'Doa Berkah Usia / Harapan' : 'QS. Ar-Rum: 21' }}" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 outline-none transition-all" style="font-family: 'Noto Naskh Arabic', 'Amiri', Inter, sans-serif; unicode-bidi: plaintext;">
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Isi Quote</label>

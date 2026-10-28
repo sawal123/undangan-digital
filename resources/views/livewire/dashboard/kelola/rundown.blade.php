@@ -159,7 +159,11 @@
                 </div>
                 <h4 class="text-base font-bold text-slate-700 dark:text-slate-300">Belum Ada Susunan Acara</h4>
                 <p class="text-xs text-slate-400 mt-1 max-w-sm text-center">
-                    Tambahkan jadwal kegiatan hari-H seperti Akad Nikah, Temu Manten, Sambutan, Ramah Tamah, atau Sesi Foto.
+                    @if ($isBirthday ?? false)
+                        Tambahkan jadwal kegiatan hari-H seperti Pembukaan, Games, Tiup Lilin, Potong Kue, Ramah Tamah, atau Sesi Foto.
+                    @else
+                        Tambahkan jadwal kegiatan hari-H seperti Akad Nikah, Temu Manten, Sambutan, Ramah Tamah, atau Sesi Foto.
+                    @endif
                 </p>
                 <button type="button" wire:click="openCreateModal"
                     class="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm">
@@ -191,7 +195,7 @@
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">
                     Nama Kegiatan / Agenda <span class="text-rose-500">*</span>
                 </label>
-                <input type="text" wire:model="nama_kegiatan" placeholder="Contoh: Akad Nikah & Ijab Qabul"
+                <input type="text" wire:model="nama_kegiatan" placeholder="{{ ($isBirthday ?? false) ? 'Contoh: Tiup Lilin & Potong Kue' : 'Contoh: Akad Nikah & Ijab Qabul' }}"
                     class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all" required>
                 @error('nama_kegiatan') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
             </div>
@@ -227,7 +231,7 @@
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">
                     Lokasi / Ruangan (Opsional)
                 </label>
-                <input type="text" wire:model="lokasi" placeholder="Contoh: Ruang Utama Masjid / Panggung Pelaminan"
+                <input type="text" wire:model="lokasi" placeholder="{{ ($isBirthday ?? false) ? 'Contoh: Ruang Pesta / Area Kolam Renang' : 'Contoh: Ruang Utama Masjid / Panggung Pelaminan' }}"
                     class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
                 @error('lokasi') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
             </div>

@@ -219,7 +219,13 @@
             </div>
           @endforeach
         </div>
-        <div class="dress-card reveal"><div class="dress-icon">🧢</div><div><strong>Explorer Dress Code</strong><p data-dress-code>Pakai baju favoritmu warna hijau, cokelat, atau kuning!</p></div></div></section>
+      </section>
+      @endif
+
+      @if ($dressCode)
+        <div class="px-6 pb-6 text-center">
+          <div class="dress-card reveal mx-auto max-w-sm"><div class="dress-icon">🧢</div><div><strong>Explorer Dress Code</strong><p data-dress-code>{{ $dressCode }}</p></div></div>
+        </div>
       @endif
       <!-- GALLERY -->
       <section class="section-pad gallery-section" id="gallery"><p class="eyebrow reveal">SMILES, FUN & MEMORIES</p><h2 class="section-title reveal">Dino Memory<br/><em>Gallery</em></h2><p class="section-caption reveal">Cuplikan petualangan kecil sebelum hari yang besar.</p><div class="gallery-grid grid grid-cols-2 gap-3 mt-6" id="gallery-grid"></div><p class="gallery-hint reveal">Ketuk gambar untuk melihat lebih besar <svg><use href="#i-camera"/></svg></p></section>

@@ -223,7 +223,7 @@ class Rundown extends Component
 
     public function render(): View
     {
-        $this->authorizeInvitationState();
+        $data = $this->authorizeInvitationState(['eventType']);
 
         $acaras = KelolaUndanganAcara::where('data_id', $this->dataId)
             ->orderBy('id', 'asc')
@@ -245,6 +245,7 @@ class Rundown extends Component
             'acaras' => $acaras,
             'rundowns' => $rundowns,
             'invitationUid' => $this->invitationUid,
+            'isBirthday' => ($data->eventType?->key === 'birthday'),
         ])->layout('components.layouts.user-new', [
             'headerTitle' => 'Susunan Acara (Rundown)',
         ]);

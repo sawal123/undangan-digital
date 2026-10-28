@@ -15,9 +15,12 @@ class Pengantin extends Component
 
     public string $urutanMempelai = 'pria_wanita';
 
-    public function mount(string $id): void
+    public function mount(string $id)
     {
-        $data = $this->ownedInvitationByUid($id);
+        $data = $this->ownedInvitationByUid($id, ['eventType']);
+        if ($data->eventType?->key === 'birthday') {
+            return redirect()->route('dashboard.undangan.kelola', ['id' => $data->uid]);
+        }
         $this->dataId = $data->id;
         $this->urutanMempelai = $data->urutan_mempelai ?? 'pria_wanita';
     }

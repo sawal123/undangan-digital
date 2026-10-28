@@ -32,9 +32,13 @@ class Kisah extends Component
 
     public $formImage;
 
-    public function mount(string $id): void
+    public function mount(string $id)
     {
-        $this->dataId = $this->ownedInvitationByUid($id)->id;
+        $data = $this->ownedInvitationByUid($id, ['eventType']);
+        if ($data->eventType?->key === 'birthday') {
+            return redirect()->route('dashboard.undangan.kelola', ['id' => $data->uid]);
+        }
+        $this->dataId = $data->id;
     }
 
     public function resetField(): void
