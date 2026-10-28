@@ -196,13 +196,14 @@ class Acara extends Component
 
     public function render(): View
     {
-        $this->authorizeInvitationState();
+        $data = $this->authorizeInvitationState(['eventType']);
 
         $dataAcara = KelolaUndanganAcara::where('data_id', $this->dataId)->orderBy('id')->get();
 
         return view('livewire.dashboard.kelola.acara', [
             'dataAcara' => $dataAcara,
             'invitationUid' => $this->invitationUid,
+            'isBirthday' => ($data->eventType?->key === 'birthday'),
         ])->layout('components.layouts.user-new', [
             'headerTitle' => 'Kelola Acara',
         ]);

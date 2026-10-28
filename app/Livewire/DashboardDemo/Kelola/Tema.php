@@ -30,12 +30,20 @@ class Tema extends Component
 
     public function mount(string $id): void
     {
-        $data = $this->ownedInvitationByUid($id);
+        $data = $this->ownedInvitationByUid($id, ['eventType']);
         $this->dataId = $data->id;
         // Internal preview tidak perlu pembayaran
         $this->canPreview = $data->canBePreviewed();
         // Public link perlu pembayaran/premium
         $this->canShareInvitation = $data->canBeShared();
+
+        // Jika tipe acara adalah ulang tahun, default kategori langsung ke Ulang Tahun
+        if ($data->eventType?->key === 'birthday') {
+            $birthdayCatId = Category::where('category', 'Ulang Tahun')->value('id');
+            if ($birthdayCatId) {
+                $this->selectedCategory = (string) $birthdayCatId;
+            }
+        }
     }
 
     public function previewUrl(string $themePath): string
@@ -99,7 +107,21 @@ class Tema extends Component
         // Public link perlu pembayaran/premium
         $this->canShareInvitation = $data?->canBeShared() ?? false;
 
-        $categories = Category::has('theme')->withCount('theme')->get();
+        $categories = Category::whereHas('theme', function ($query) use ($data) {
+            $query->when($data->event_type_id, function ($q) use ($data) {
+                $q->where(function ($sub) use ($data) {
+                    $sub->where('event_type_id', $data->event_type_id)
+                        ->orWhereNull('event_type_id');
+                });
+            });
+        })->withCount(['theme' => function ($query) use ($data) {
+            $query->when($data->event_type_id, function ($q) use ($data) {
+                $q->where(function ($sub) use ($data) {
+                    $sub->where('event_type_id', $data->event_type_id)
+                        ->orWhereNull('event_type_id');
+                });
+            });
+        }])->get();
 
         $totalThemesCount = Theme::query()
             ->when($data->event_type_id, function ($query) use ($data) {

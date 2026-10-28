@@ -53,40 +53,41 @@ class DataController extends Controller
 
         $defaultTexts = match ($eventKey) {
             'birthday' => [
-                'pembuka' => 'Dengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara ulang tahun kami',
+                'pembuka' => 'Dengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara ulang tahun buah hati kami',
                 'acara' => 'Acara ulang tahun ini insyaAllah akan dilaksanakan pada:',
                 'penutup' => 'Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa.',
-                'whatsapp' => 'Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara ulang tahun kami.
-            Silahkan kunjungi link berikut untuk membuka undangan:
-            {{link}}
-            Atas kehadiran dan doanya, kami ucapkan terimakasih.',
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara ulang tahun:
+*{{nama_ulang_tahun}}* (ke-{{usia}})
+Silahkan kunjungi link berikut untuk membuka undangan:
+{{link}}
+Atas kehadiran dan doanya, kami ucapkan terimakasih.",
             ],
             'engagement' => [
                 'pembuka' => 'Dengan penuh rasa syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pertunangan kami',
                 'acara' => 'Acara pertunangan ini insyaAllah akan dilaksanakan pada:',
                 'penutup' => 'Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa.',
-                'whatsapp' => 'Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pertunangan kami.
-            Silahkan kunjungi link berikut untuk membuka undangan:
-            {{link}}
-            Atas kehadiran dan doanya, kami ucapkan terimakasih.',
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pertunangan kami.
+Silahkan kunjungi link berikut untuk membuka undangan:
+{{link}}
+Atas kehadiran dan doanya, kami ucapkan terimakasih.",
             ],
             'pengajian' => [
                 'pembuka' => 'Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pengajian kami',
                 'acara' => 'Acara pengajian ini insyaAllah akan dilaksanakan pada:',
                 'penutup' => 'Atas kehadiran dan doa Bapak/Ibu/Saudara/i, kami ucapkan terimakasih.',
-                'whatsapp' => 'Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pengajian kami.
-            Silahkan kunjungi link berikut untuk membuka undangan:
-            {{link}}
-            Atas kehadiran dan doanya, kami ucapkan terimakasih.',
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pengajian kami.
+Silahkan kunjungi link berikut untuk membuka undangan:
+{{link}}
+Atas kehadiran dan doanya, kami ucapkan terimakasih.",
             ],
             'event' => [
                 'pembuka' => 'Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara kami',
                 'acara' => 'Acara ini akan dilaksanakan pada:',
                 'penutup' => 'Atas kehadiran Bapak/Ibu/Saudara/i, kami ucapkan terimakasih.',
-                'whatsapp' => 'Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara kami.
-            Silahkan kunjungi link berikut untuk membuka undangan:
-            {{link}}
-            Atas kehadirannya, kami ucapkan terimakasih.',
+                'whatsapp' => "Kepada {{tamu}}, Kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara kami.
+Silahkan kunjungi link berikut untuk membuka undangan:
+{{link}}
+Atas kehadirannya, kami ucapkan terimakasih.",
             ],
             default => [
                 'pembuka' => "Kami mohon do'a & restunya atas pernikahan kami",
@@ -97,6 +98,24 @@ class DataController extends Controller
             Pesan ini merupakan undangan resmi dari kami. Silahkan kunjungi link berikut untuk membuka undangan anda:
             {{link}}
             Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
+            ],
+        };
+
+        $defaultQuote = match ($eventKey) {
+            'birthday' => [
+                'title' => 'بَارَكَ اللَّهُ لَكَ فِي عُمْرِكَ',
+                'qoute' => 'Semoga Allah memberkahi umurmu, melimpahkan kesehatan, kebahagiaan, serta menjadikanmu insan yang bertakwa dan berbakti kepada orang tua.',
+                'subtitle' => 'Doa & Berkah Usia',
+            ],
+            'engagement' => [
+                'title' => 'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',
+                'qoute' => 'Semoga Allah memberkahi langkah awal menuju ikatan suci pernikahan dan menyatukan dalam kebaikan.',
+                'subtitle' => 'Doa Pertunangan',
+            ],
+            default => [
+                'title' => ' وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ',
+                'qoute' => 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu merasa tenang dan tentram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir.',
+                'subtitle' => 'Ar Rum: 21',
             ],
         };
 
@@ -123,12 +142,9 @@ class DataController extends Controller
             ]);
             Qoute::create([
                 'data_id' => $data->id,
-                'title' => ' وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ
-',
-                'qoute' => '
-Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu merasa tenang dan tentram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir.
-            ',
-                'subtitle' => 'Ar Rum: 21',
+                'title' => $defaultQuote['title'],
+                'qoute' => $defaultQuote['qoute'],
+                'subtitle' => $defaultQuote['subtitle'],
             ]);
             DB::commit();
         } catch (\Throwable $exception) {

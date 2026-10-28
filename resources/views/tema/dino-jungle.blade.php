@@ -22,11 +22,37 @@
     $eventEndDateTime = null;
 
     if ($firstEvent?->date) {
-        $eventDate = Carbon::parse($firstEvent->date);
-        $eventDateTime = Carbon::parse($firstEvent->date . ' ' . ($firstEvent->jam_start ?: '00:00'), $timezone);
-        $eventEndDateTime = $firstEvent->jam_end
-            ? Carbon::parse($firstEvent->date . ' ' . $firstEvent->jam_end, $timezone)
-            : $eventDateTime->copy()->addHours(3);
+        try {
+            $eventDate = Carbon::parse($firstEvent->date);
+        } catch (\Throwable $e) {
+            $eventDate = null;
+        }
+
+        if ($eventDate) {
+            $rawStartTime = trim((string) ($firstEvent->jam_start ?: '00:00'));
+            $startTime = preg_match('/^\d{1,2}:\d{2}/', $rawStartTime) ? $rawStartTime : '00:00';
+
+            try {
+                $eventDateTime = Carbon::parse($firstEvent->date . ' ' . $startTime, $timezone);
+            } catch (\Throwable $e) {
+                $eventDateTime = $eventDate->copy()->startOfDay();
+            }
+
+            $rawEndTime = trim((string) $firstEvent->jam_end);
+            $hasValidEndTime = $rawEndTime !== ''
+                && strtolower($rawEndTime) !== 'selesai'
+                && preg_match('/^\d{1,2}:\d{2}/', $rawEndTime);
+
+            if ($hasValidEndTime) {
+                try {
+                    $eventEndDateTime = Carbon::parse($firstEvent->date . ' ' . $rawEndTime, $timezone);
+                } catch (\Throwable $e) {
+                    $eventEndDateTime = $eventDateTime ? $eventDateTime->copy()->addHours(3) : null;
+                }
+            } else {
+                $eventEndDateTime = $eventDateTime ? $eventDateTime->copy()->addHours(3) : null;
+            }
+        }
     }
 
     $venueName = $firstEvent?->vanue ?? $firstEvent?->nama_acara ?? 'Dino Jungle Party';
@@ -219,7 +245,13 @@
             </div>
           @endforeach
         </div>
-        <div class="dress-card reveal"><div class="dress-icon">🧢</div><div><strong>Explorer Dress Code</strong><p data-dress-code>Pakai baju favoritmu warna hijau, cokelat, atau kuning!</p></div></div></section>
+      </section>
+      @endif
+
+      @if ($dressCode)
+        <div class="px-6 pb-6 text-center">
+          <div class="dress-card reveal mx-auto max-w-sm"><div class="dress-icon">🧢</div><div><strong>Explorer Dress Code</strong><p data-dress-code>{{ $dressCode }}</p></div></div>
+        </div>
       @endif
       <!-- GALLERY -->
       <section class="section-pad gallery-section" id="gallery"><p class="eyebrow reveal">SMILES, FUN & MEMORIES</p><h2 class="section-title reveal">Dino Memory<br/><em>Gallery</em></h2><p class="section-caption reveal">Cuplikan petualangan kecil sebelum hari yang besar.</p><div class="gallery-grid grid grid-cols-2 gap-3 mt-6" id="gallery-grid"></div><p class="gallery-hint reveal">Ketuk gambar untuk melihat lebih besar <svg><use href="#i-camera"/></svg></p></section>
@@ -280,7 +312,7 @@
     <!-- Tap-to-open cover: user gesture triggers optional audio. -->
     <div class="cover" id="cover" role="dialog" aria-modal="true" aria-labelledby="cover-title">
       <div class="cover-scene" aria-hidden="true"><img class="cover-bg" src="{{ asset('tema/dino-jungle/assets/images/jungle-scene.svg') }}" alt=""/><img class="cover-leaf cover-leaf-a" src="{{ asset('tema/dino-jungle/assets/images/jungle-leaves.svg') }}" alt=""/><img class="cover-leaf cover-leaf-b" src="{{ asset('tema/dino-jungle/assets/images/jungle-leaves.svg') }}" alt=""/><img class="cover-rex" src="{{ asset('tema/dino-jungle/assets/images/dino-rex-green.svg') }}" alt=""/><img class="cover-bronto" src="{{ asset('tema/dino-jungle/assets/images/dino-bronto-blue.svg') }}" alt=""/><img class="cover-orange" src="{{ asset('tema/dino-jungle/assets/images/dino-trex-orange.svg') }}" alt=""/></div>
-      <div class="cover-body"><div class="cover-stamp">✦ A ROAR-SOME INVITATION ✦</div><p class="cover-roar" aria-hidden="true">ROAR!</p><h2 id="cover-title">You're Invited to<br/><strong><span data-child-name>Raka</span>'s Birthday!</strong></h2><p class="cover-sub">Petualangan dinosaurus menantimu! 🌴🦕</p><div class="guest-invite"><small>KEPADA YTH.</small><strong data-guest-name>Teman Spesial</strong></div><button type="button" id="open-invitation" class="open-invitation"><svg><use href="#i-mail"/></svg> BUKA UNDANGAN <span>➜</span></button><p class="cover-note">Ketuk untuk membuka undangan <span>✦</span> Musik opsional</p></div>
+      <div class="cover-body"><div class="cover-stamp">✦ A ROAR-SOME INVITATION ✦</div><p class="cover-roar" aria-hidden="true">ROAR!</p><h2 id="cover-title">You're Invited to<br/><strong><span data-child-name>Raka</span>'s Birthday!</strong></h2><p class="cover-sub">Petualangan dinosaurus menantimu! 🌴🦕</p><div class="guest-invite"><small>KEPADA YTH.</small><strong data-guest-name>Teman Spesial</strong></div><button type="button" id="open-invitation" class="open-invitation" onclick="if (window.dinoDismissCover) { window.dinoDismissCover(); } else { const c = document.getElementById('cover'); if (c) { c.classList.add('is-dismissed'); c.setAttribute('aria-hidden', 'true'); } document.body.classList.remove('is-closed'); }"><svg><use href="#i-mail"/></svg> BUKA UNDANGAN <span>➜</span></button><p class="cover-note">Ketuk untuk membuka undangan <span>✦</span> Musik opsional</p></div>
     </div>
     <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Pratinjau foto"><button type="button" id="lightbox-close" class="lightbox-close" aria-label="Tutup foto"><svg><use href="#i-x"/></svg></button><img id="lightbox-image" alt=""/><p id="lightbox-caption"></p></div>
   </div>

@@ -381,10 +381,13 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
     public function generateSlug(): void
     {
         $this->authorizeInvitationState();
-        $data = $this->ownedInvitationById($this->dataId, ['pria', 'wanita']);
+        $data = $this->ownedInvitationById($this->dataId, ['pria', 'wanita', 'birthdayProfile', 'eventType']);
 
         $baseText = '';
-        if ($data->pria || $data->wanita) {
+        if ($data->eventType?->key === 'birthday' && $data->birthdayProfile) {
+            $name = $data->birthdayProfile->nickname ?: $data->birthdayProfile->name;
+            $baseText = 'ultah-' . $name;
+        } elseif ($data->pria || $data->wanita) {
             $baseText = $data->couple_name;
         }
 
@@ -410,7 +413,7 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
 
     public function render()
     {
-        $this->authorizeInvitationState();
+        $data = $this->authorizeInvitationState(['eventType', 'birthdayProfile']);
 
         $selectedFont = null;
         if ($this->fontTitle) {
@@ -430,6 +433,8 @@ Atas kehadiran & doa restu dari saudara, kami ucapkan terimakasih.',
         return view(
             'livewire.dashboard.kelola.setting',
             [
+                'data' => $data,
+                'isBirthday' => ($data->eventType?->key === 'birthday'),
                 'fonts' => $fonts,
                 'selectedFont' => $selectedFont,
                 'selectedPara' => $selectedPara,

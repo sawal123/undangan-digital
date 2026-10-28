@@ -1,5 +1,16 @@
 @props(['name', 'title', 'icon' => 'info', 'maxWidth' => 'md'])
 
+@php
+$maxWidthClass = match ($maxWidth) {
+    'sm' => 'max-w-sm',
+    'md' => 'max-w-md',
+    'lg' => 'max-w-lg',
+    'xl' => 'max-w-xl',
+    '2xl' => 'max-w-2xl',
+    default => 'max-w-md',
+};
+@endphp
+
 <div>
     <div x-data="{ show: false }" x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
         x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false"
@@ -14,7 +25,7 @@
             <div class="absolute inset-0" x-on:click="show = false; $dispatch('close-modal', { name: '{{ $name }}' })"></div>
 
             <!-- Modal Card -->
-            <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-{{ $maxWidth }} max-h-[85vh] flex flex-col relative z-10 border border-slate-200 dark:border-slate-700 overflow-hidden"
+            <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full {{ $maxWidthClass }} max-h-[85vh] flex flex-col relative z-10 border border-slate-200 dark:border-slate-700 overflow-hidden"
                 x-transition:enter="transition ease-out duration-300 transform"
                 x-transition:enter-start="opacity-0 scale-95 translate-y-4"
                 x-transition:enter-end="opacity-100 scale-100 translate-y-0">

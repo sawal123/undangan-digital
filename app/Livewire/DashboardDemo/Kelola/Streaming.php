@@ -40,9 +40,13 @@ class Streaming extends Component
         // $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
     }
 
-    public function mount(string $id): void
+    public function mount(string $id)
     {
-        $this->dataId = $this->ownedInvitationByUid($id)->id;
+        $data = $this->ownedInvitationByUid($id, ['eventType']);
+        if ($data->eventType?->key === 'birthday') {
+            return redirect()->route('dashboard.undangan.kelola', ['id' => $data->uid]);
+        }
+        $this->dataId = $data->id;
         $this->fiturStreaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->value('isActive') ?? false;
         $streaming = KelolaUndanganStreaming::where('data_id', $this->dataId)->first();
         if ($streaming) {

@@ -75,8 +75,8 @@
     <!-- Modal Add/Edit Acara -->
     <x-ui.modal name="acara-modal" :title="$selectedAcaraId ? 'Edit Acara' : 'Tambah Acara'" icon="calendar">
         <form wire:submit="save" class="space-y-4">
-            <x-ui.input label="Nama Acara" wire:model="acara" placeholder="Contoh: Akad Nikah" required />
-            <x-ui.input label="Nama Lokasi/Gedung/Venue" wire:model="vanue" placeholder="Contoh: Kediaman Mempelai" required />
+            <x-ui.input label="Nama Acara" wire:model="acara" placeholder="{{ ($isBirthday ?? false) ? 'Contoh: Pesta Ulang Tahun / Tiup Lilin' : 'Contoh: Akad Nikah' }}" required />
+            <x-ui.input label="Nama Lokasi/Gedung/Venue" wire:model="vanue" placeholder="{{ ($isBirthday ?? false) ? 'Contoh: Rumah / Resto / Cafe' : 'Contoh: Kediaman Mempelai' }}" required />
             <x-ui.input label="Alamat" wire:model="alamat" placeholder="Jl. Raya No. 1" required />
             <x-ui.input label="Tanggal Acara" type="date" wire:model="date" required />
             
