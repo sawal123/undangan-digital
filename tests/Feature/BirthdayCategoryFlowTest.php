@@ -48,7 +48,7 @@ class BirthdayCategoryFlowTest extends TestCase
             'theme_id' => $theme->id,
             'event_type_id' => $bdayEvent->id,
             'title' => 'Ulang Tahun Keisha Adelia',
-            'slug' => 'keisha-adelia-' . \Illuminate\Support\Str::random(6),
+            'slug' => 'keisha-adelia-' . strtolower(\Illuminate\Support\Str::random(6)),
             'isActive' => true,
         ]);
 
@@ -170,5 +170,18 @@ class BirthdayCategoryFlowTest extends TestCase
         Livewire::actingAs($user)
             ->test(RundownComponent::class, ['id' => $data->uid])
             ->assertViewHas('isBirthday', true);
+    }
+
+    public function test_check_name_endpoint_validates_slug_availability(): void
+    {
+        [$user, $data] = $this->createBirthdayUserAndInvitation();
+
+        // Cek slug yang sudah terpakai
+        $responseTaken = $this->postJson(route('checkName'), ['name' => $data->slug]);
+        $responseTaken->assertJson(['success' => false]);
+
+        // Cek slug yang masih tersedia
+        $responseAvailable = $this->postJson(route('checkName'), ['name' => 'arashnayaka-' . \Illuminate\Support\Str::random(6)]);
+        $responseAvailable->assertJson(['success' => true]);
     }
 }

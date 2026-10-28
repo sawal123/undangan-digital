@@ -30,7 +30,7 @@
                             <input type="text" class="form-control" id="title" name="title"
                                 placeholder="Harry & Nia" value="{{ old('title') }}">
                             <label for="title">Nama Yang Ingin Ditampilkan</label>
-                            <span class="" style="font-size: 12px">Contoh : <strong>Hendra & Heni</strong></span>
+                            <span id="titleHint" class="" style="font-size: 12px">Contoh : <strong>Hendra & Heni</strong></span>
                             @error('title')
                                 <div class="text-danger mt-1" style="font-size: 12px">{{ $message }}</div>
                             @enderror

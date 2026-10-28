@@ -76,6 +76,14 @@ Tujuan dokumen ini adalah menetapkan langkah-langkah konkret untuk menyelaraskan
   - Tambahkan guard: jika event type bukan `birthday`, alihkan kembali ke hub.
   - Perbaiki UI preview upload foto di `birthday.blade.php` dengan badge status foto dan tombol cancel ✕.
 
+### Fase 6: Auto-Generate Slug pada Halaman /setup & /add-undangan
+- Pada `checkName.js`:
+  - Saat input `#title` ("Nama Yang Ingin Ditampilkan") diketik, otomatis lakukan generate slug ke `#basic-url` ("Your vanity URL").
+  - Berikan fungsi `slugify()` yang bersih (lowercase, konversi `&` menjadi `dan`, spasi menjadi strip `-`).
+  - Lakukan validasi AJAX ketersediaan slug secara debounced (250ms).
+  - Jika pengguna mengedit `#basic-url` secara manual, pertahankan input manual pengguna; jika dikosongkan, kembali otomatis sinkron dengan `#title`.
+  - Sesuaikan placeholder dan teks contoh ("Contoh: ...") secara dinamis saat dropdown jenis undangan dipilih (misal: "Arash Nayaka" atau "Keisha 7th" untuk Ulang Tahun).
+
 ---
 
 ## 4. Validasi & Pengujian
@@ -85,3 +93,4 @@ Tujuan dokumen ini adalah menetapkan langkah-langkah konkret untuk menyelaraskan
   - Uji filter kategori tema otomatis untuk ulang tahun dan ketersediaan tema Quinceanera.
   - Uji render tema ulang tahun (`princess-fairytale`, `dino-jungle`, `spiderman`, `quinceanera`) dengan rundown aktif.
   - Uji route guard pengantin/kisah/streaming vs birthday.
+  - Uji ketersediaan slug pada endpoint `/check-name`.
