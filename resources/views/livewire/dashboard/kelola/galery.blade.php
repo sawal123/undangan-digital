@@ -10,11 +10,11 @@
             @endif
         </div>
         <div class="flex items-center gap-2 w-full sm:w-auto">
-            <button x-on:click="$wire.close(); $dispatch('open-modal', { name: 'photo-modal' })" @if($data->count() >= 10) disabled @endif
+            <button x-on:click="$dispatch('open-modal', { name: 'photo-modal' })" @if($data->count() >= 10) disabled @endif
                 class="flex-1 sm:flex-none inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-all gap-2">
                 <i data-lucide="image" class="w-4 h-4"></i> Tambah Foto
             </button>
-            <button x-on:click="$wire.close(); $dispatch('open-modal', { name: 'video-modal' })" @if($data->count() >= 10) disabled @endif
+            <button x-on:click="$dispatch('open-modal', { name: 'video-modal' })" @if($data->count() >= 10) disabled @endif
                 class="flex-1 sm:flex-none inline-flex items-center justify-center px-4 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-all gap-2">
                 <i data-lucide="video" class="w-4 h-4"></i> Tambah Video
             </button>
@@ -146,7 +146,7 @@
             @endif
 
             <div class="flex justify-end gap-2 mt-6">
-                <x-ui.button variant="secondary" type="button" wire:click="close">Batal</x-ui.button>
+                <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'photo-modal' }); $wire.close()">Batal</x-ui.button>
                 <x-ui.button variant="primary" type="submit" loadingTarget="savePhoto, save" loadingText="Menyimpan...">Simpan Foto</x-ui.button>
             </div>
         </form>
@@ -158,7 +158,7 @@
             <x-ui.input label="Link YouTube" type="url" wire:model="video" placeholder="https://www.youtube.com/watch?v=..." required />
 
             <div class="flex justify-end gap-2 mt-6">
-                <x-ui.button variant="secondary" type="button" wire:click="close">Batal</x-ui.button>
+                <x-ui.button variant="secondary" type="button" x-on:click="$dispatch('close-modal', { name: 'video-modal' }); $wire.close()">Batal</x-ui.button>
                 <x-ui.button variant="primary" type="submit" loadingTarget="saveVideo, save" loadingText="Menyimpan...">Simpan</x-ui.button>
             </div>
         </form>

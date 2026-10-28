@@ -290,14 +290,14 @@
                                             $startDateTime = \Carbon\Carbon::parse(
                                                 $item->date . ' ' . $item->jam_start,
                                             )->format('Ymd\THis\Z');
-                                            $endDateTime =
-                                                $item->jam_end === 'Selesai'
-                                                    ? \Carbon\Carbon::parse($item->date . ' ' . $item->jam_start)
-                                                        ->addHours(2)
-                                                        ->format('Ymd\THis\Z') // default +2 jam
-                                                    : \Carbon\Carbon::parse($item->date . ' ' . $item->jam_end)->format(
-                                                        'Ymd\THis\Z',
-                                                    );
+                                            $isEndTimeValid = !empty($item->jam_end)
+                                                && strtolower(trim($item->jam_end)) !== 'selesai'
+                                                && preg_match('/^\d{1,2}:\d{2}/', trim($item->jam_end));
+                                            $endDateTime = $isEndTimeValid
+                                                ? \Carbon\Carbon::parse($item->date . ' ' . trim($item->jam_end))->format('Ymd\THis\Z')
+                                                : \Carbon\Carbon::parse($item->date . ' ' . ($item->jam_start ?: '00:00'))
+                                                    ->addHours(2)
+                                                    ->format('Ymd\THis\Z');
                                         } else {
                                             $startDateTime = '';
                                             $endDateTime = '';

@@ -22,11 +22,37 @@
     $eventEndDateTime = null;
 
     if ($firstEvent?->date) {
-        $eventDate = Carbon::parse($firstEvent->date);
-        $eventDateTime = Carbon::parse($firstEvent->date . ' ' . ($firstEvent->jam_start ?: '00:00'), $timezone);
-        $eventEndDateTime = $firstEvent->jam_end
-            ? Carbon::parse($firstEvent->date . ' ' . $firstEvent->jam_end, $timezone)
-            : $eventDateTime->copy()->addHours(3);
+        try {
+            $eventDate = Carbon::parse($firstEvent->date);
+        } catch (\Throwable $e) {
+            $eventDate = null;
+        }
+
+        if ($eventDate) {
+            $rawStartTime = trim((string) ($firstEvent->jam_start ?: '00:00'));
+            $startTime = preg_match('/^\d{1,2}:\d{2}/', $rawStartTime) ? $rawStartTime : '00:00';
+
+            try {
+                $eventDateTime = Carbon::parse($firstEvent->date . ' ' . $startTime, $timezone);
+            } catch (\Throwable $e) {
+                $eventDateTime = $eventDate->copy()->startOfDay();
+            }
+
+            $rawEndTime = trim((string) $firstEvent->jam_end);
+            $hasValidEndTime = $rawEndTime !== ''
+                && strtolower($rawEndTime) !== 'selesai'
+                && preg_match('/^\d{1,2}:\d{2}/', $rawEndTime);
+
+            if ($hasValidEndTime) {
+                try {
+                    $eventEndDateTime = Carbon::parse($firstEvent->date . ' ' . $rawEndTime, $timezone);
+                } catch (\Throwable $e) {
+                    $eventEndDateTime = $eventDateTime ? $eventDateTime->copy()->addHours(3) : null;
+                }
+            } else {
+                $eventEndDateTime = $eventDateTime ? $eventDateTime->copy()->addHours(3) : null;
+            }
+        }
     }
 
     $venueName = $firstEvent?->vanue ?? $firstEvent?->nama_acara ?? 'Dino Jungle Party';

@@ -38,6 +38,21 @@ class Galery extends Component
         $this->resetValidation();
     }
 
+    public function openPhotoModal(): void
+    {
+        $this->poto = [];
+        $this->resetValidation();
+        $this->dispatch('open-modal', name: 'photo-modal');
+    }
+
+    public function openVideoModal(): void
+    {
+        $this->video = null;
+        $this->url = null;
+        $this->resetValidation();
+        $this->dispatch('open-modal', name: 'video-modal');
+    }
+
     public function removeSelectedPoto(int $index): void
     {
         if (is_array($this->poto)) {

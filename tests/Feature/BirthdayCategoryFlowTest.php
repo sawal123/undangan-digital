@@ -184,4 +184,42 @@ class BirthdayCategoryFlowTest extends TestCase
         $responseAvailable = $this->postJson(route('checkName'), ['name' => 'arashnayaka-' . \Illuminate\Support\Str::random(6)]);
         $responseAvailable->assertJson(['success' => true]);
     }
+
+    public function test_dino_jungle_theme_renders_when_event_jam_end_is_selesai(): void
+    {
+        [$user, $data, $profile, $theme, $bdayCat, $bdayEvent] = $this->createBirthdayUserAndInvitation();
+
+        $dinoTheme = Theme::create([
+            'nama' => 'Dino Jungle Birthday',
+            'category_id' => $bdayCat->id,
+            'event_type_id' => $bdayEvent->id,
+            'path' => 'tema.dino-jungle',
+            'demo' => 'temademo.dino-jungle',
+        ]);
+
+        $data->update(['theme_id' => $dinoTheme->id]);
+
+        \App\Models\KelolaUndangan\Acara::create([
+            'data_id' => $data->id,
+            'nama_acara' => 'Pesta Ulang Tahun Dino',
+            'vanue' => 'Rumah Kebun',
+            'alamat' => 'Jl. Kebun Raya No. 10',
+            'date' => '2027-02-02',
+            'jam_start' => '10:00',
+            'jam_end' => 'Selesai',
+            'zona_waktu' => 'WIB',
+        ]);
+
+        \App\Models\Transaction::create([
+            'data_id' => $data->id,
+            'user_id' => $user->id,
+            'order_id' => 'ORDER-' . \Illuminate\Support\Str::random(6),
+            'gross_amount' => 50000,
+            'payment_status' => 'SUCCESS',
+        ]);
+
+        $response = $this->get('/u/' . $data->slug);
+        $response->assertStatus(200);
+        $response->assertSee('JUNGLE CLUB');
+    }
 }
