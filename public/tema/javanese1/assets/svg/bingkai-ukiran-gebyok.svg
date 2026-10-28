@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="100%" height="100%">
+                    
+            <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFF8DC"/>
+                    <stop offset="35%" stop-color="#D4AF37"/>
+                    <stop offset="70%" stop-color="#9A6F0A"/>
+                    <stop offset="100%" stop-color="#F6E39F"/>
+                </linearGradient>
+                <linearGradient id="woodRoofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#5C321C"/>
+                    <stop offset="55%" stop-color="#381E11"/>
+                    <stop offset="100%" stop-color="#1E0E07"/>
+                </linearGradient>
+                <radialGradient id="warmLantern" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#FFF9E6" stop-opacity="1"/>
+                    <stop offset="40%" stop-color="#F59E0B" stop-opacity="0.65"/>
+                    <stop offset="100%" stop-color="#D97706" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+        
+                    <path d="M3,3 L62,3 C42,8 34,16 28,28 C16,34 8,42 3,62 Z" fill="url(#goldGrad)" opacity="0.28"/>
+                    <path d="M3,3 L74,3 M3,3 L3,74" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <path d="M10,10 L54,10 C38,14 26,26 22,42 C18,30 14,22 10,54 Z" stroke="url(#goldGrad)" stroke-width="1.5" fill="none"/>
+                    <circle cx="16" cy="16" r="3.5" fill="url(#goldGrad)"/>
+                    <circle cx="62" cy="10" r="2.5" fill="url(#goldGrad)"/>
+                    <circle cx="10" cy="62" r="2.5" fill="url(#goldGrad)"/>
+                </svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -100 120 200" width="100%" height="100%">
+                    
+            <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFF8DC"/>
+                    <stop offset="35%" stop-color="#D4AF37"/>
+                    <stop offset="70%" stop-color="#9A6F0A"/>
+                    <stop offset="100%" stop-color="#F6E39F"/>
+                </linearGradient>
+                <linearGradient id="woodRoofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#5C321C"/>
+                    <stop offset="55%" stop-color="#381E11"/>
+                    <stop offset="100%" stop-color="#1E0E07"/>
+                </linearGradient>
+                <radialGradient id="warmLantern" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#FFF9E6" stop-opacity="1"/>
+                    <stop offset="40%" stop-color="#F59E0B" stop-opacity="0.65"/>
+                    <stop offset="100%" stop-color="#D97706" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+        
+                    <path d="M0,-92 C-28,-54 -52,-10 -48,38 C-44,68 -24,84 0,92 C24,84 44,68 48,38 C52,-10 28,-54 0,-92 Z" fill="url(#goldGrad)" fill-opacity="0.22" stroke="url(#goldGrad)" stroke-width="2.2"/>
+                    <path d="M0,-78 C-22,-45 -42,-6 -38,34 C-35,58 -18,72 0,80 C18,72 35,58 38,34 C42,-6 22,-45 0,-78 Z" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" stroke-dasharray="3,2"/>
+                    <!-- Batang & Sulur Pohon Hayat -->
+                    <path d="M0,80 L0,-55 M0,35 C-18,24 -26,8 -14,-4 M0,35 C18,24 26,8 14,-4 M0,2 C-15,-10 -22,-25 -10,-35 M0,2 C15,-10 22,-25 10,-35" stroke="url(#goldGrad)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                    <!-- Gerbang Candi di Dasar Gunungan -->
+                    <path d="M-20,78 L-20,50 L-26,50 L0,34 L26,50 L20,50 L20,78 Z" fill="url(#goldGrad)" opacity="0.75"/>
+                    <circle cx="0" cy="-58" r="5" fill="#FFF8DC" stroke="url(#goldGrad)" stroke-width="1.5"/>
+                    <circle cx="-14" cy="-4" r="3" fill="#FFF8DC"/>
+                    <circle cx="14" cy="-4" r="3" fill="#FFF8DC"/>
+                </svg>

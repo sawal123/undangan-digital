@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 200" width="100%" height="100%">
+                    
+            <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFF8DC"/>
+                    <stop offset="35%" stop-color="#D4AF37"/>
+                    <stop offset="70%" stop-color="#9A6F0A"/>
+                    <stop offset="100%" stop-color="#F6E39F"/>
+                </linearGradient>
+                <linearGradient id="woodRoofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#5C321C"/>
+                    <stop offset="55%" stop-color="#381E11"/>
+                    <stop offset="100%" stop-color="#1E0E07"/>
+                </linearGradient>
+                <radialGradient id="warmLantern" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#FFF9E6" stop-opacity="1"/>
+                    <stop offset="40%" stop-color="#F59E0B" stop-opacity="0.65"/>
+                    <stop offset="100%" stop-color="#D97706" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+        
+                    <!-- Ranting Utama -->
+                    <path d="M0,0 Q85,35 175,88" stroke="#AA820A" stroke-width="2.8" fill="none"/>
+                    <!-- Helai Daun Tropis Berlapis Emas -->
+                    <path d="M40,18 C68,4 90,20 78,42 C58,44 45,30 40,18 Z" fill="#2A473A" stroke="url(#goldGrad)" stroke-width="0.9"/>
+                    <path d="M88,42 C115,24 142,40 130,64 C104,68 92,54 88,42 Z" fill="#1B3027" stroke="url(#goldGrad)" stroke-width="0.9"/>
+                    <path d="M135,68 C162,54 188,68 178,90 C154,92 142,80 135,68 Z" fill="#2A473A" stroke="url(#goldGrad)" stroke-width="0.9"/>
+                    <path d="M62,32 C46,58 62,82 86,72 C88,52 74,40 62,32 Z" fill="#3B6251" stroke="url(#goldGrad)" stroke-width="0.8"/>
+                    <path d="M112,56 C96,82 114,106 138,94 C138,74 124,64 112,56 Z" fill="#2A473A" stroke="url(#goldGrad)" stroke-width="0.8"/>
+                    <!-- Untaian Ronce Melati 1 -->
+                    <g class="ronce-ayun-1" transform="translate(38, 12)">
+                        <line x1="0" y1="0" x2="0" y2="115" stroke="url(#goldGrad)" stroke-width="1.2" stroke-dasharray="2,2"/>
+                        <circle cx="0" cy="18" r="4" fill="#FFFDF9"/><circle cx="0" cy="34" r="4.5" fill="#FFFDF9"/>
+                        <circle cx="0" cy="50" r="4" fill="#FFFDF9"/><circle cx="0" cy="66" r="4.5" fill="#FFFDF9"/>
+                        <circle cx="0" cy="82" r="4" fill="#FFFDF9"/><circle cx="0" cy="98" r="5.5" fill="#D4AF37"/>
+                        <path d="M0,106 L-4,122 L0,118 L4,122 Z" fill="url(#goldGrad)"/>
+                    </g>
+                    <!-- Untaian Ronce Melati 2 -->
+                    <g class="ronce-ayun-2" transform="translate(92, 42) scale(0.82)">
+                        <line x1="0" y1="0" x2="0" y2="110" stroke="url(#goldGrad)" stroke-width="1.2" stroke-dasharray="2,2"/>
+                        <circle cx="0" cy="18" r="4" fill="#FFFDF9"/><circle cx="0" cy="34" r="4.5" fill="#FFFDF9"/>
+                        <circle cx="0" cy="50" r="4" fill="#FFFDF9"/><circle cx="0" cy="66" r="4.5" fill="#FFFDF9"/>
+                        <circle cx="0" cy="82" r="5" fill="#D4AF37"/>
+                    </g>
+                    <!-- Bunga Melati Mekar -->
+                    <g transform="translate(132, 68)">
+                        <circle cx="0" cy="-7" r="4.5" fill="#FFFDF9"/><circle cx="6" cy="-3" r="4.5" fill="#FFFDF9"/>
+                        <circle cx="6" cy="4" r="4.5" fill="#FFFDF9"/><circle cx="0" cy="7" r="4.5" fill="#FFFDF9"/>
+                        <circle cx="-6" cy="4" r="4.5" fill="#FFFDF9"/><circle cx="-6" cy="-3" r="4.5" fill="#FFFDF9"/>
+                        <circle cx="0" cy="0" r="3.5" fill="url(#goldGrad)"/>
+                    </g>
+                </svg>
