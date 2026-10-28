@@ -195,7 +195,32 @@
       <!-- DETAILS -->
       <section class="section-pad details-section" id="details"><p class="eyebrow reveal">MARK YOUR CALENDAR</p><h2 class="section-title reveal">Your Dino<br/><em>Adventure Pass</em></h2><p class="section-caption reveal">Ini tiket spesialmu untuk masuk ke hutan penuh keseruan.</p><div class="event-ticket reveal"><div class="ticket-header"><span>🎟 EXPLORER PASS</span><span>ADMIT ONE</span></div><div class="ticket-body"><div class="ticket-row"><div class="ticket-icon"><svg><use href="#i-calendar"/></svg></div><div><span class="ticket-kicker">HARI & TANGGAL</span><strong data-event-date>Sabtu, 28 November 2026</strong></div></div><div class="ticket-row"><div class="ticket-icon"><svg><use href="#i-clock"/></svg></div><div><span class="ticket-kicker">WAKTU</span><strong data-event-time>15.00 - 18.00 WIB</strong></div></div><div class="ticket-row"><div class="ticket-icon"><svg><use href="#i-pin"/></svg></div><div><span class="ticket-kicker">TEMPAT</span><strong data-venue>Jungle Party House</strong><small data-address>Alamat lokasi pesta</small></div></div></div><div class="ticket-divider"></div><div class="ticket-footer"><span>✦ DINO JUNGLE CLUB ✦</span><span class="ticket-serial">#DINO-001</span></div></div><div class="button-stack flex flex-col gap-3 reveal"><a href="https://maps.google.com" id="maps-link" class="action-btn action-orange" target="_blank" rel="noopener noreferrer"><svg><use href="#i-pin"/></svg> PETUNJUK LOKASI <span>↗</span></a><button type="button" id="calendar-btn" class="action-btn action-outline"><svg><use href="#i-calendar"/></svg> SIMPAN KE KALENDER <span>↓</span></button></div></section>
       <!-- ITINERARY -->
-      <section class="section-pad agenda-section" id="activities"><p class="eyebrow reveal">WHAT'S THE PLAN?</p><h2 class="section-title reveal">Jurassic<br/><em>Fun Schedule!</em></h2><div id="agenda-list" class="agenda-list"></div><div class="dress-card reveal"><div class="dress-icon">🧢</div><div><strong>Explorer Dress Code</strong><p data-dress-code>Pakai baju favoritmu warna hijau, cokelat, atau kuning!</p></div></div></section>
+      @php
+        $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+      @endphp
+      @if ($activeRundowns->isNotEmpty())
+      <section class="section-pad agenda-section" id="activities"><p class="eyebrow reveal">WHAT'S THE PLAN?</p><h2 class="section-title reveal">Jurassic<br/><em>Fun Schedule!</em></h2>
+        <div id="agenda-list" class="agenda-list flex flex-col gap-3 my-6">
+          @foreach ($activeRundowns as $item)
+            <div class="agenda-card p-4 rounded-2xl bg-amber-50/80 border border-amber-200/60 shadow-sm text-left">
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold text-white bg-amber-600">
+                  ⏰ {{ $item->waktu_mulai }}{{ $item->waktu_selesai ? ' - ' . $item->waktu_selesai : '' }}
+                </span>
+                @if ($item->acara?->nama_acara)
+                  <span class="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+                    {{ $item->acara->nama_acara }}
+                  </span>
+                @endif
+              </div>
+              <h3 class="font-bold text-base text-amber-950">{{ $item->nama_kegiatan }}</h3>
+              @if ($item->keterangan)<p class="text-xs text-amber-900/80 mt-1">{{ $item->keterangan }}</p>@endif
+              @if ($item->lokasi)<p class="text-xs text-amber-700 font-medium mt-1">📍 {{ $item->lokasi }}</p>@endif
+            </div>
+          @endforeach
+        </div>
+        <div class="dress-card reveal"><div class="dress-icon">🧢</div><div><strong>Explorer Dress Code</strong><p data-dress-code>Pakai baju favoritmu warna hijau, cokelat, atau kuning!</p></div></div></section>
+      @endif
       <!-- GALLERY -->
       <section class="section-pad gallery-section" id="gallery"><p class="eyebrow reveal">SMILES, FUN & MEMORIES</p><h2 class="section-title reveal">Dino Memory<br/><em>Gallery</em></h2><p class="section-caption reveal">Cuplikan petualangan kecil sebelum hari yang besar.</p><div class="gallery-grid grid grid-cols-2 gap-3 mt-6" id="gallery-grid"></div><p class="gallery-hint reveal">Ketuk gambar untuk melihat lebih besar <svg><use href="#i-camera"/></svg></p></section>
       <!-- RSVP -->

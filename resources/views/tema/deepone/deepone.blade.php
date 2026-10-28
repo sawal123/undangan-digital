@@ -712,6 +712,15 @@
                 @endforeach
             </section>
 
+            @php
+                $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+            @endphp
+            @if ($activeRundowns->isNotEmpty())
+                <section id="rundownSection">
+                    @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'gold'])
+                </section>
+            @endif
+
             @if ($data->kisah?->isNotEmpty())
                 <section id="storySection">
                     <div class="section-title">Kisah Kami</div>

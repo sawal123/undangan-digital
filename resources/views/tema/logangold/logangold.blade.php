@@ -444,6 +444,15 @@
             </div>
         </div>
 
+        @php
+            $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+        @endphp
+        @if ($activeRundowns->isNotEmpty())
+            <div class="px-5 py-4 scroll-reveal" id="rundown">
+                @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'logangold'])
+            </div>
+        @endif
+
         @if ($data->kisah?->count())
             <div class="px-5 py-4 scroll-reveal" id="lovestory">
                 <h2 class="font-serif text-2xl font-bold text-center gold-text mb-6">Kisah Kami</h2>

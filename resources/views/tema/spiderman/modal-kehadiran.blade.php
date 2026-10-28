@@ -7,7 +7,7 @@
 
 @if ($ucapanIsActive)
     <div id="ModalRspv"
-        class="{{ $errors->any() || session()->has('message') || session()->has('error') ? '' : 'invisible' }} fixed inset-0 flex items-center justify-center font-poppins overflow-hidden"
+        class="{{ (($errors ?? null)?->any() ?? false) || session()->has('message') || session()->has('error') ? '' : 'invisible' }} fixed inset-0 flex items-center justify-center font-poppins overflow-hidden"
         style="z-index: 9999; padding: 16px; background-color: rgba(0, 0, 0, 0.76);">
         <div class="relative w-full max-w-[390px] max-h-[88dvh] overflow-hidden rounded-2xl border-4 text-white shadow-2xl"
             style="padding: 8px; border-color: #ff2d3f; background: linear-gradient(180deg, #7f0713 0%, #b51020 46%, #5b020b 100%); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);">

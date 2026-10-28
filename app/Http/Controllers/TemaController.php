@@ -63,6 +63,7 @@ class TemaController extends Controller
                 'qoute',
                 'teksPenutup',
                 'ucapan.tamu',
+                'rundowns.acara',
             ])
                 ->where('id', $payload['data_id'])
                 ->where('user_id', auth()->id())
@@ -121,6 +122,7 @@ class TemaController extends Controller
                 'qoute',
                 'teksPenutup',
                 'ucapan.tamu',
+                'rundowns.acara',
             ])->where('slug', $slug)->firstOrFail();
 
             if (! $data->canBeShared()) {
@@ -201,6 +203,8 @@ class TemaController extends Controller
             'ucapan' => $data->ucapan()->with('tamu')->latest()->get(),
             'acara' => $acara,
             'thumbnailWa' => $thumbnailWa,
+            'rundowns' => $data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect(),
+            'errors' => session('errors', new \Illuminate\Support\ViewErrorBag()),
         ];
     }
 

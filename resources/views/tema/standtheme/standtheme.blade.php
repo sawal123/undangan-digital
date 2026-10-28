@@ -41,6 +41,14 @@
             @include('tema.standtheme.cover')
             @include('tema.standtheme.opening')
             @include('tema.standtheme.undangan')
+            @php
+                $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+            @endphp
+            @if ($activeRundowns->isNotEmpty())
+                <section id="standRundown" class="stand-section stand-section--accent">
+                    @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'default'])
+                </section>
+            @endif
             @include('tema.standtheme.himbauan-1')
             @include('tema.standtheme.reveal')
             @include('tema.standtheme.album')

@@ -166,9 +166,13 @@ class Ucapan extends Component
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('livewire.ucapan.'.$this->theme, [
-            'listUcapan' => $u,
+        $view = 'livewire.ucapan.' . $this->theme;
+        if (!\Illuminate\Support\Facades\View::exists($view)) {
+            $view = 'livewire.ucapan.darksweet';
+        }
 
+        return view($view, [
+            'listUcapan' => $u,
         ]);
     }
 

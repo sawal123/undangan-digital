@@ -40,6 +40,13 @@
     @include('tema.whitepre.content.pengantin.resepsi')
     <!-- resepsi -->
 
+    @php
+        $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+    @endphp
+    @if ($activeRundowns->isNotEmpty())
+        @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'whitepre'])
+    @endif
+
     <!-- turut mengundang -->
     @include('tema.whitepre.content.pengantin.turut-mengundang')
 

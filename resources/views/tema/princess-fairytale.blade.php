@@ -208,11 +208,33 @@
         <div class="dress-code reveal" data-reveal-delay="170"><span class="dress-icon">♡</span><div><span class="eyebrow">dress code</span><p data-bind="dressCode">Pastel Pink • Lilac • Cream</p></div></div>
       </section>
 
+      @php
+        $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+      @endphp
+      @if ($activeRundowns->isNotEmpty())
       <section class="timeline-section relative px-8 py-16 text-center" id="rundown">
         <p class="eyebrow reveal">the day's little wonders</p>
         <h2 class="section-title reveal">A day of <em>wishes</em></h2>
-        <div class="timeline mt-10 text-left" id="timeline-list"></div>
+        <div class="timeline mt-10 text-left" id="timeline-list">
+          @foreach ($activeRundowns as $item)
+            <div class="timeline-item reveal mb-6" style="padding-left: 1.5rem; border-left: 2px dashed #f4a2b8; position: relative;">
+              <span style="position: absolute; left: -7px; top: 0; width: 12px; height: 12px; border-radius: 50%; background: #e06d8a;"></span>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background: linear-gradient(135deg, #e06d8a, #c84b6c);">
+                  {{ $item->waktu_mulai }}{{ $item->waktu_selesai ? ' - ' . $item->waktu_selesai : '' }}
+                </span>
+                @if ($item->acara?->nama_acara)
+                  <span class="text-xs text-pink-700 opacity-80">({{ $item->acara->nama_acara }})</span>
+                @endif
+              </div>
+              <h3 class="font-bold text-base text-gray-800" style="font-family: inherit;">{{ $item->nama_kegiatan }}</h3>
+              @if ($item->keterangan)<p class="text-xs text-gray-600 mt-0.5">{{ $item->keterangan }}</p>@endif
+              @if ($item->lokasi)<p class="text-xs text-pink-600 mt-1">📍 {{ $item->lokasi }}</p>@endif
+            </div>
+          @endforeach
+        </div>
       </section>
+      @endif
 
       <section class="gallery-section relative px-6 pb-16 pt-16 text-center" id="galeri" aria-labelledby="gallery-heading">
         <span class="section-small-icon reveal">✿</span>

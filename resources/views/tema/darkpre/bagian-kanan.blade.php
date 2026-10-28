@@ -26,6 +26,13 @@
     @include('tema.darkpre.content.pengantin.himbauan-1')
     @include('tema.darkpre.content.pengantin.acara')
 
+    @php
+        $activeRundowns = $rundowns ?? ($data->rundowns ? $data->rundowns->where('is_active', true)->values() : collect());
+    @endphp
+    @if ($activeRundowns->isNotEmpty())
+        @include('tema.partials.rundown', ['rundowns' => $activeRundowns, 'variant' => 'darkpre'])
+    @endif
+
     <div class="darkpre-divider" aria-hidden="true">
         <img src="{{ asset('tema/darkpre/src/img/pembatas.png') }}" alt="">
     </div>
