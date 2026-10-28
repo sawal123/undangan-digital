@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Livewire\DashboardDemo\Kelola\Acara as AcaraComponent;
+use App\Livewire\DashboardDemo\Kelola\Galery as GaleryComponent;
 use App\Livewire\DashboardDemo\Kelola\Setting as SettingComponent;
 use App\Livewire\DashboardDemo\Kelola\Tamu as TamuComponent;
 use App\Livewire\DashboardDemo\Kelola\Tema as TemaComponent;
@@ -10,6 +11,7 @@ use App\Models\Category;
 use App\Models\Data;
 use App\Models\EventType;
 use App\Models\KelolaUndangan\Acara;
+use App\Models\KelolaUndangan\Galery;
 use App\Models\KelolaUndangan\Pria;
 use App\Models\KelolaUndangan\Tamu;
 use App\Models\KelolaUndangan\Wanita;
@@ -17,6 +19,7 @@ use App\Models\Theme;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -191,5 +194,81 @@ class KelolaEnhancementsTest extends TestCase
             ->assertViewHas('tema', function ($themes) use ($cat2) {
                 return $themes->every(fn($t) => $t->category_id === $cat2->id);
             });
+    }
+
+    public function test_gallery_bulk_upload_multiple_photos_simultaneously(): void
+    {
+        Storage::fake('public');
+        [$user, $data] = $this->createUserWithInvitation();
+        $this->actingAs($user);
+
+        $photos = [
+            UploadedFile::fake()->image('poto1.jpg', 600, 600),
+            UploadedFile::fake()->image('poto2.png', 800, 600),
+            UploadedFile::fake()->image('poto3.webp', 1024, 768),
+        ];
+
+        Livewire::test(GaleryComponent::class, ['id' => $data->uid])
+            ->set('poto', $photos)
+            ->call('savePhoto')
+            ->assertHasNoErrors();
+
+        $savedItems = Galery::where('data_id', $data->id)->orderBy('sort')->get();
+        $this->assertCount(3, $savedItems);
+        $this->assertEquals(1, $savedItems[0]->sort);
+        $this->assertEquals(2, $savedItems[1]->sort);
+        $this->assertEquals(3, $savedItems[2]->sort);
+
+        foreach ($savedItems as $item) {
+            $this->assertNotNull($item->poto);
+            Storage::disk('public')->assertExists($item->poto);
+        }
+    }
+
+    public function test_gallery_remove_selected_photo_from_preview_list(): void
+    {
+        [$user, $data] = $this->createUserWithInvitation();
+        $this->actingAs($user);
+
+        $photos = [
+            UploadedFile::fake()->image('poto1.jpg'),
+            UploadedFile::fake()->image('poto2.jpg'),
+            UploadedFile::fake()->image('poto3.jpg'),
+        ];
+
+        Livewire::test(GaleryComponent::class, ['id' => $data->uid])
+            ->set('poto', $photos)
+            ->call('removeSelectedPoto', 1)
+            ->assertCount('poto', 2);
+    }
+
+    public function test_gallery_bulk_upload_validates_remaining_slots_quota(): void
+    {
+        Storage::fake('public');
+        [$user, $data] = $this->createUserWithInvitation();
+        $this->actingAs($user);
+
+        // Pre-create 8 gallery items
+        for ($i = 1; $i <= 8; $i++) {
+            Galery::create([
+                'data_id' => $data->id,
+                'sort' => $i,
+                'poto' => "galery/existing_{$i}.jpg",
+            ]);
+        }
+
+        $photos = [
+            UploadedFile::fake()->image('poto1.jpg'),
+            UploadedFile::fake()->image('poto2.jpg'),
+            UploadedFile::fake()->image('poto3.jpg'),
+        ];
+
+        // 8 existing + 3 new = 11 > 10 max
+        Livewire::test(GaleryComponent::class, ['id' => $data->uid])
+            ->set('poto', $photos)
+            ->call('savePhoto')
+            ->assertHasErrors(['poto']);
+
+        $this->assertEquals(8, Galery::where('data_id', $data->id)->count());
     }
 }

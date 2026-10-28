@@ -20,7 +20,7 @@ class Galery extends Component
     #[Locked]
     public int $dataId;
 
-    public $poto;
+    public $poto = [];
 
     public ?string $video = null;
 
@@ -31,9 +31,21 @@ class Galery extends Component
     public function close(): void
     {
         $this->dispatch('close-modal', name: 'delete-modal');
-        $this->poto = null;
+        $this->dispatch('close-modal', name: 'photo-modal');
+        $this->dispatch('close-modal', name: 'video-modal');
+        $this->poto = [];
         $this->video = null;
         $this->resetValidation();
+    }
+
+    public function removeSelectedPoto(int $index): void
+    {
+        if (is_array($this->poto)) {
+            unset($this->poto[$index]);
+            $this->poto = array_values($this->poto);
+        } else {
+            $this->poto = [];
+        }
     }
 
     public function delete(int $id): void
@@ -90,7 +102,7 @@ class Galery extends Component
         $this->dataId = $this->ownedInvitationByUid($id)->id;
     }
 
-    public function save(): void
+    public function savePhoto(): void
     {
         $this->authorizeInvitationState();
 
@@ -98,66 +110,129 @@ class Galery extends Component
 
         if ($count >= 10) {
             $this->dispatch('close-modal', name: 'photo-modal');
+            session()->flash('error', 'Galeri Anda telah mencapai batas maksimal (10 item).');
+            return;
+        }
+
+        $files = is_array($this->poto) ? $this->poto : ($this->poto ? [$this->poto] : []);
+        $files = array_values(array_filter($files));
+
+        if (empty($files)) {
+            $this->addError('poto', 'Silakan pilih minimal 1 foto untuk diunggah.');
+            return;
+        }
+
+        $remaining = 10 - $count;
+        if (count($files) > $remaining) {
+            $this->addError('poto', "Maksimal kapasitas galeri adalah 10 item. Tersisa {$remaining} slot, namun Anda memilih " . count($files) . " foto.");
+            return;
+        }
+
+        try {
+            if (is_array($this->poto)) {
+                $this->validate([
+                    'poto' => 'required|array|min:1',
+                    'poto.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+                ], [
+                    'poto.required' => 'File foto wajib dipilih.',
+                    'poto.array' => 'File foto tidak valid.',
+                    'poto.min' => 'Silakan pilih minimal 1 foto.',
+                    'poto.*.image' => 'Setiap file harus berupa gambar valid.',
+                    'poto.*.mimes' => 'Format gambar yang didukung: JPG, JPEG, PNG, WEBP.',
+                    'poto.*.max' => 'Ukuran maksimal setiap foto adalah 2MB.',
+                ]);
+            } else {
+                $this->validate([
+                    'poto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+                ], [
+                    'poto.required' => 'File foto wajib dipilih.',
+                    'poto.image' => 'File harus berupa gambar valid.',
+                    'poto.mimes' => 'Format gambar yang didukung: JPG, JPEG, PNG, WEBP.',
+                    'poto.max' => 'Ukuran maksimal foto adalah 2MB.',
+                ]);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $e->validator->errors()->add('poto', $e->validator->errors()->first());
+            $this->addError('poto', $e->validator->errors()->first());
+            throw $e;
+        }
+
+        $storedPaths = [];
+        try {
+            DB::transaction(function () use ($files, &$count, &$storedPaths) {
+                foreach ($files as $file) {
+                    $count++;
+                    $imagePath = $file->store('galery', 'public');
+                    $storedPaths[] = $imagePath;
+
+                    KelolaUndanganGalery::create([
+                        'data_id' => $this->dataId,
+                        'sort' => $count,
+                        'poto' => $imagePath,
+                    ]);
+                }
+            });
+
+            $totalUploaded = count($storedPaths);
+            session()->flash('message', "{$totalUploaded} foto galeri berhasil tersimpan.");
+        } catch (\Throwable $e) {
+            foreach ($storedPaths as $path) {
+                Storage::disk('public')->delete($path);
+            }
+            session()->flash('error', 'Gagal menyimpan foto galeri: ' . $e->getMessage());
+        }
+
+        $this->dispatch('close-modal', name: 'photo-modal');
+        $this->poto = [];
+        $this->resetValidation();
+    }
+
+    public function saveVideo(): void
+    {
+        $this->authorizeInvitationState();
+
+        $count = KelolaUndanganGalery::where('data_id', $this->dataId)->count();
+
+        if ($count >= 10) {
             $this->dispatch('close-modal', name: 'video-modal');
             session()->flash('error', 'Galeri Anda telah mencapai batas maksimal (10 item).');
             return;
         }
 
-        if ($this->poto !== null) {
-            $this->validate([
-                'poto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-            ], [
-                'poto.required' => 'File foto wajib dipilih.',
-                'poto.image' => 'File harus berupa gambar valid.',
-            ]);
+        $this->validate([
+            'video' => 'required|url|max:255',
+        ], [
+            'video.required' => 'URL video YouTube wajib diisi.',
+            'video.url' => 'URL video YouTube harus berformat tautan yang valid.',
+        ]);
 
-            $imagePath = $this->poto->store('galery', 'public');
-
-            try {
-                DB::transaction(function () use ($count, $imagePath) {
-                    KelolaUndanganGalery::create([
-                        'data_id' => $this->dataId,
-                        'sort' => $count + 1,
-                        'poto' => $imagePath,
-                    ]);
-                });
-
-                session()->flash('message', 'Foto galeri berhasil tersimpan.');
-            } catch (\Throwable $e) {
-                if ($imagePath) {
-                    Storage::disk('public')->delete($imagePath);
-                }
-                session()->flash('error', 'Gagal menyimpan foto galeri: ' . $e->getMessage());
-            }
-        } else {
-            $this->validate([
-                'video' => 'required|url|max:255',
-            ], [
-                'video.required' => 'URL video YouTube wajib diisi.',
-            ]);
-
-            $this->convertUrl();
-            if (!$this->url) {
-                return;
-            }
-
-            DB::transaction(function () use ($count) {
-                KelolaUndanganGalery::create([
-                    'data_id' => $this->dataId,
-                    'sort' => $count + 1,
-                    'video' => $this->url,
-                ]);
-            });
-
-            session()->flash('message', 'Video galeri berhasil tersimpan.');
+        $this->convertUrl();
+        if (!$this->url) {
+            return;
         }
 
-        $this->dispatch('close-modal', name: 'photo-modal');
+        DB::transaction(function () use ($count) {
+            KelolaUndanganGalery::create([
+                'data_id' => $this->dataId,
+                'sort' => $count + 1,
+                'video' => $this->url,
+            ]);
+        });
+
+        session()->flash('message', 'Video galeri berhasil tersimpan.');
         $this->dispatch('close-modal', name: 'video-modal');
-        $this->poto = null;
         $this->video = null;
         $this->url = null;
         $this->resetValidation();
+    }
+
+    public function save(): void
+    {
+        if (!empty($this->poto)) {
+            $this->savePhoto();
+        } else {
+            $this->saveVideo();
+        }
     }
 
     public function previous(int $sort): void
