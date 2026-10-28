@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -60 200 120" width="100%" height="100%">
+                    
+            <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFF8DC"/>
+                    <stop offset="35%" stop-color="#D4AF37"/>
+                    <stop offset="70%" stop-color="#9A6F0A"/>
+                    <stop offset="100%" stop-color="#F6E39F"/>
+                </linearGradient>
+                <linearGradient id="woodRoofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#5C321C"/>
+                    <stop offset="55%" stop-color="#381E11"/>
+                    <stop offset="100%" stop-color="#1E0E07"/>
+                </linearGradient>
+                <radialGradient id="warmLantern" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#FFF9E6" stop-opacity="1"/>
+                    <stop offset="40%" stop-color="#F59E0B" stop-opacity="0.65"/>
+                    <stop offset="100%" stop-color="#D97706" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+        
+                    <!-- Daun Dasar -->
+                    <path d="M-80,20 C-50,-10 -20,0 0,20 C-25,35 -55,35 -80,20 Z" fill="#2A473A" stroke="url(#goldGrad)" stroke-width="1"/>
+                    <path d="M80,20 C50,-10 20,0 0,20 C25,35 55,35 80,20 Z" fill="#2A473A" stroke="url(#goldGrad)" stroke-width="1"/>
+                    <path d="M-45,-15 C-25,-35 -5,-20 0,10 C-20,10 -35,0 -45,-15 Z" fill="#3B6251" stroke="url(#goldGrad)" stroke-width="0.9"/>
+                    <path d="M45,-15 C25,-35 5,-20 0,10 C20,10 35,0 45,-15 Z" fill="#3B6251" stroke="url(#goldGrad)" stroke-width="0.9"/>
+                    <!-- Bunga Cempaka Emas Tengah -->
+                    <g transform="translate(0, 12) scale(1.6)">
+                        <path d="M0,0 C-8,-10 -5,-24 0,-30 C5,-24 8,-10 0,0 Z" fill="url(#goldGrad)"/>
+                        <path d="M0,0 C-8,-10 -5,-24 0,-30 C5,-24 8,-10 0,0 Z" fill="url(#goldGrad)" transform="rotate(42)" opacity="0.9"/>
+                        <path d="M0,0 C-8,-10 -5,-24 0,-30 C5,-24 8,-10 0,0 Z" fill="url(#goldGrad)" transform="rotate(-42)" opacity="0.9"/>
+                        <path d="M0,0 C-6,-8 -4,-18 0,-22 C4,-18 6,-8 0,0 Z" fill="#FFFDF9" transform="rotate(20)"/>
+                        <path d="M0,0 C-6,-8 -4,-18 0,-22 C4,-18 6,-8 0,0 Z" fill="#FFFDF9" transform="rotate(-20)"/>
+                    </g>
+                    <!-- Bunga Melati Kiri & Kanan -->
+                    <g transform="translate(-38, 16) scale(1.3)">
+                        <circle cx="0" cy="-6" r="4" fill="#FFFDF9"/><circle cx="5" cy="-3" r="4" fill="#FFFDF9"/>
+                        <circle cx="5" cy="3" r="4" fill="#FFFDF9"/><circle cx="0" cy="6" r="4" fill="#FFFDF9"/>
+                        <circle cx="-5" cy="3" r="4" fill="#FFFDF9"/><circle cx="-5" cy="-3" r="4" fill="#FFFDF9"/>
+                        <circle cx="0" cy="0" r="3" fill="url(#goldGrad)"/>
+                    </g>
+                    <g transform="translate(38, 16) scale(1.3)">
+                        <circle cx="0" cy="-6" r="4" fill="#FFFDF9"/><circle cx="5" cy="-3" r="4" fill="#FFFDF9"/>
+                        <circle cx="5" cy="3" r="4" fill="#FFFDF9"/><circle cx="0" cy="6" r="4" fill="#FFFDF9"/>
+                        <circle cx="-5" cy="3" r="4" fill="#FFFDF9"/><circle cx="-5" cy="-3" r="4" fill="#FFFDF9"/>
+                        <circle cx="0" cy="0" r="3" fill="url(#goldGrad)"/>
+                    </g>
+                </svg>
